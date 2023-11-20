@@ -1,0 +1,15 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+# Build files
+/build
+
+# Logs
+*.log
+
+# Dependency lock files
+yarn.lock
+package-lock.json
