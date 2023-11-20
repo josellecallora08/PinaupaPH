@@ -14,3 +14,4 @@ mongoose.connect(process.env.MONGODB_URI)
         console.log(`Connected to DB and Listening to PORT: ${process.env.PORT}`)
     })
 })
+
