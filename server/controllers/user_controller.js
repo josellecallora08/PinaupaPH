@@ -70,11 +70,20 @@ module.exports.signin = async (req, res) => {
 
 module.exports.admin_update_profile = async (req,res) => {
     try{
-        const {name, username, password, birthday, mobile_no} = req.body;
+        const {_id, name, username, password, birthday, mobile_no} = req.body;
+        let response = await OWNERMODEL.findByIdAndUpdate({_id, name, username, password, birthday, mobile_no})
+        if(!response){
+            response = await TENANTMODEL.findByIdAndUpdate({_id, name, username, password, birthday, mobile_no})
+            if(!response){
+                res.status(400).json({error: "Invalid Updating of information"}) //Change the error handling
+            }
+        }
         
+        res.status(200).json({msg: "Information Updated Successfully!"})
     }
-    catch(error){
-
+    catch(err){
+        console.error({error: err.message})
+        res.status(500).json({error: "Server Error..."});
     }
 }
 
