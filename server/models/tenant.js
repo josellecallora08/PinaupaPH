@@ -43,10 +43,36 @@ const PETMODEL = new mongoose.Schema({
 }, {timestamps: true})
 
 const TENANTMODEL = new mongoose.Schema({
-    user_id:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'USERMODEL',
+    name:{
+        type: String,
         required: true
+    },
+    username:{
+        type:String,
+        unique:true,
+        required:true
+    },
+    email:{
+        type:String,
+        unqiue:true,
+        required:true,
+    },
+    password:{
+        type:String,
+        unique:true,
+        required:true
+    },
+    mobile_no:{
+        type:Number,
+        unique:true,
+        required: true
+    },
+    birthday:{
+        type:Date,
+        required: true,
+    },
+    profile_image:{
+        type:String,
     },
     unit_id:{
         type:mongoose.Schema.Types.ObjectId,
@@ -61,9 +87,9 @@ const TENANTMODEL = new mongoose.Schema({
     monthly_due:{
         type:Date
     },
-    payment_history:[PAYMENTMODEL],
+    payment:[PAYMENTMODEL],
     household: [HOUSEHOLDMODEL],
     pet: [PETMODEL]
-})
+},{timestamps: true})
 
 module.exports = mongoose.model('tenant', TENANTMODEL)

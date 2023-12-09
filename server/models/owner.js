@@ -43,20 +43,20 @@ const RECEIPTMODEL = new mongoose.Schema({
     date_payment:{
         type:Date
     }
-},{timestamps})
+},{timestamps: true})
 
-const UNITMODEL = new mongoose.Schema({
-    occupied:{
-        type:Boolean,
-        default:false
-    },
-    monthly_rent:{
-        type:Number
-    },
-    unit_no:{
-        type:String
-    }
-})
+// const UNITMODEL = new mongoose.Schema({
+//     occupied:{
+//         type:Boolean,
+//         default:false
+//     },
+//     monthly_rent:{
+//         type:Number
+//     },
+//     unit_no:{
+//         type:String
+//     }
+// })
 
 const CCTVMODEL = new mongoose.Schema({
     username:{
@@ -71,13 +71,39 @@ const CCTVMODEL = new mongoose.Schema({
     ip_address:{
         type:String
     }
-})
+},{timestamps: true})
 
 const OWNERMODEL = new mongoose.Schema({
-    user_id:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'USERMODEL',
+    name:{
+        type: String,
         required: true
+    },
+    username:{
+        type:String,
+        unique:true,
+        required:true
+    },
+    email:{
+        type:String,
+        unqiue:true,
+        required:true,
+    },
+    password:{
+        type:String,
+        unique:true,
+        required:true
+    },
+    mobile_no:{
+        type:Number,
+        unique:true,
+        required: true
+    },
+    birthday:{
+        type:Date,
+        required: true,
+    },
+    profile_image:{
+        type:String,
     },
     business_name:{
         type: String
@@ -87,7 +113,6 @@ const OWNERMODEL = new mongoose.Schema({
     },
     contracts:[CONTRACTMODEL],
     receitps:[RECEIPTMODEL],
-    units:[UNITMODEL],
     cctvs:[CCTVMODEL],
 },{timestamps:true})
 
