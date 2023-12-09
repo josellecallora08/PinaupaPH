@@ -7,7 +7,7 @@ const createToken = ({_id,username, role}) => {
     return jwt.sign({_id,username,role}, process.env.SECRET, {expiresIn: "3d"})
 }
 
-module.exports.signup = async (req, res) => {
+module.exports.sign_up = async (req, res) => {
     try{
         const {name, username, email, password, mobile_no, birthday} = req.body
 
@@ -42,7 +42,7 @@ module.exports.signup = async (req, res) => {
     }
 }
 
-module.exports.signin = async (req, res) => {
+module.exports.sign_in = async (req, res) => {
     try {
         const { username, password } = req.body;
         
@@ -68,14 +68,14 @@ module.exports.signin = async (req, res) => {
     }
 };
 
-module.exports.admin_update_profile = async (req,res) => {
+module.exports.update_admin_profile = async (req,res) => {
     try{
         const {_id, name, username, password, birthday, mobile_no} = req.body;
-        let response = await OWNERMODEL.findByIdAndUpdate({_id, name, username, password, birthday, mobile_no})
+        let response = await OWNERMODEL.findByIdAndUpdate(_id, {name, username, password, birthday, mobile_no})
         if(!response){
-            response = await TENANTMODEL.findByIdAndUpdate({_id, name, username, password, birthday, mobile_no})
+            response = await TENANTMODEL.findByIdAndUpdate(_id, {name, username, password, birthday, mobile_no})
             if(!response){
-                res.status(400).json({error: "Invalid Updating of information"}) //Change the error handling
+                res.status(400).json({error: "Failed to update information"})
             }
         }
         
@@ -87,3 +87,79 @@ module.exports.admin_update_profile = async (req,res) => {
     }
 }
 
+module.exports.create_cctv = async (req, res) => {
+    try{
+        const {_id, name, username, password, port, ip_address} = req.body
+        const response = await OWNERMODEL.findById(_id)
+        if(!response){
+            res.status(400).json({error: "Failed to add cctv camera"})
+        }
+        const details = {username, password, port, ip_address}
+        const index = response.cctvs.findIndex(item => item.name.toString() === name)
+        if(index === -1){
+            response.cctvs.push(details)
+        } else {
+            res.status(400).json({error: "CCTV already exists."})
+        }
+        
+        res.status(200).json({msg: "Successfully added cctv..."})
+    }
+    catch(err){
+        console.error({error: err.message})
+        res.status(500).json({error: err.message})
+    }
+}
+
+module.exports.create_pet = async (req, res) => {
+    try{
+        const {_id, name, birthday, species} = req.body;
+        const response = await TENANTMODEL.findById(_id)
+        if(!response){
+            res.status(400).json({error: "Invalid to create pet..."}) 
+        }
+        const details = {name, birthday, species}
+        const pet_index = response.pet.findIndex(item => item.name.toString() === name)
+        if(pet_index === -1){
+            response.pet.push(details)
+        } else {
+            res.status(400).json({error: "Pet already exists."})
+        }
+
+        const saved_response = await response.save();
+        if(!saved_response){
+            res.status(400).json({error: "Failed to save pet information"})
+        }
+        res.status(200).json({msg: "Created pet successfully!"})
+    }
+    catch(err){
+        console.error({error: err.message})
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+module.exports.create_household = async (req, res) => {
+    try{
+        const {_id, name, birthday, mobile_no} = req.body;
+        const response = await TENANTMODEL.findById(_id)
+        if(!response){
+            res.status(400).json({error: "Invalid to create household..."}) 
+        }
+        const details = {name, birthday, mobile_no}
+        const household_index = response.household.findIndex(item => item.name.toString() === name)
+        if(household_index === -1){
+            response.household.push(details)
+        } else {
+            res.status(400).json({error: "Household already exists."})
+        }
+
+        const saved_response = await response.save();
+        if(!saved_response){
+            res.status(400).json({error: "Failed to save household information"})
+        }
+        res.status(200).json({msg: "Created household successfully!"})
+    }
+    catch(err){
+        console.error({error: err.message})
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
