@@ -5,6 +5,10 @@ const COMMENTMODEL = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'TENANTMODEL'
     },
+    owner_id:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'OWNERMODEL'
+    },
     description:{
         type:String,
         required:true

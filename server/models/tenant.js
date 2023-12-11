@@ -11,7 +11,7 @@ const PAYMENTMODEL = new mongoose.Schema({
     },
     payment_status:{
         type:Boolean,
-        default:'Unpaid'
+        default:false
     },
     date_payment:{
         type:Date

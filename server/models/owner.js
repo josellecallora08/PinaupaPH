@@ -113,6 +113,7 @@ const OWNERMODEL = new mongoose.Schema({
     },
     contracts:[CONTRACTMODEL],
     receitps:[RECEIPTMODEL],
+    invoice:[INVOICEMODEL],
     cctvs:[CCTVMODEL],
 },{timestamps:true})
 

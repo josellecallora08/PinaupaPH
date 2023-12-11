@@ -163,3 +163,23 @@ module.exports.create_household = async (req, res) => {
         return res.status(500).json({ error: "Internal Server Error" });
     }
 }
+
+
+// Change Profile Picture
+module.exports.update_profile_picture = async (req, res) => {
+    try{
+        const {_id, profile_image} = req.body
+        let response = await TENANTMODEL.findByIdAndUpdate(_id,{profile_image})
+        if(!response){
+            response = await OWNERMODEL.findByIdAndUpdate(_id,{profile_image})
+            if(!response){
+                res.status(400).json({error: "Failed to change image"})
+            }
+        }
+        res.status(200).json({msg: "Profile has been changed"})
+    }
+    catch(err){
+        console.error({error: err.message})
+        res.status(500).json({error: `Server Error: ${err.message}`})
+    }
+}
