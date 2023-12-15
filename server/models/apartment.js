@@ -1,4 +1,4 @@
-const {mongoose} = require('mongoose')
+const mongoose = require('mongoose')
 
 const UNITMODEL = new mongoose.Schema({
     occupied:{
@@ -14,9 +14,9 @@ const UNITMODEL = new mongoose.Schema({
 },{timestamps: true})
 
 const APARTMENTMODEL = new mongoose.Schema({
-    owner_id:{
+    user_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'OWNERMODEL'
+        ref:'USERMODEL'
     },
     name:{
         type: String,
