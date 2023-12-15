@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const {mongoose} = require('mongoose')
 
 const UNITMODEL = new mongoose.Schema({
     occupied:{
@@ -17,6 +17,10 @@ const APARTMENTMODEL = new mongoose.Schema({
     owner_id:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'OWNERMODEL'
+    },
+    name:{
+        type: String,
+        required: true
     },
     address:{
         type:String,

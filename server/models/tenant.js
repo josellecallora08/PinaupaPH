@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const {mongoose} = require('mongoose')
 
 const PAYMENTMODEL = new mongoose.Schema({
     receipt_id:{
