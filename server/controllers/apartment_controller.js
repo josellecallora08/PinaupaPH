@@ -1,1 +1,1 @@
-const {APARTMENTMODEL} = require('../models/apartment')
+const APARTMENTMODEL = require('../models/apartment')

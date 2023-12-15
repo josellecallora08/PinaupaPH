@@ -17,17 +17,14 @@ const USERMODEL = new mongoose.Schema({
     },
     password:{
         type:String,
-        unique:true,
         required:true
     },
     mobile_no:{
         type:Number,
         unique:true,
-        required: true
     },
     birthday:{
         type:Date,
-        required: true,
     },
     profile_image:{
         type:String,
