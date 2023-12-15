@@ -1,4 +1,4 @@
-const {mongoose} = require('mongoose')
+const mongoose = require('mongoose')
 
 const PAYMENTMODEL = new mongoose.Schema({
     receipt_id:{
@@ -43,36 +43,9 @@ const PETMODEL = new mongoose.Schema({
 }, {timestamps: true})
 
 const TENANTMODEL = new mongoose.Schema({
-    name:{
-        type: String,
-        required: true
-    },
-    username:{
-        type:String,
-        unique:true,
-        required:true
-    },
-    email:{
-        type:String,
-        unqiue:true,
-        required:true,
-    },
-    password:{
-        type:String,
-        unique:true,
-        required:true
-    },
-    mobile_no:{
-        type:Number,
-        unique:true,
-        required: true
-    },
-    birthday:{
-        type:Date,
-        required: true,
-    },
-    profile_image:{
-        type:String,
+    user_id:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'USERMODEL'
     },
     unit_id:{
         type:mongoose.Schema.Types.ObjectId,

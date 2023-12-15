@@ -1,13 +1,9 @@
-const {mongoose} = require('mongoose')
+const mongoose = require('mongoose')
 
 const COMMENTMODEL = new mongoose.Schema({
-    tenant_id:{
+    user_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'TENANTMODEL'
-    },
-    owner_id:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'OWNERMODEL'
+        ref:'USERMODEL'
     },
     description:{
         type:String,
@@ -16,9 +12,9 @@ const COMMENTMODEL = new mongoose.Schema({
 },{timestamps: true})
 
 const REPORTMODEL = new mongoose.Schema({
-    tenant_id:{
+    user_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'TENANTMODEL'
+        ref:'USERMODEL'
     },
     unit_id:{
         type:mongoose.Schema.Types.ObjectId,

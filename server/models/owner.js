@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
 
 const CONTRACTMODEL = new mongoose.Schema({
-    tenant_id:{
+    user_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'TENANTMODEL',
+        ref:'USERMODEL',
     },
     unit_id:{
         type:mongoose.Schema.Types.ObjectId,
@@ -21,9 +21,9 @@ const CONTRACTMODEL = new mongoose.Schema({
 }, {timestamps: true})
 
 const RECEIPTMODEL = new mongoose.Schema({
-    tenant_id:{
+    user_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'TENANTMODEL',
+        ref:'USERMODEL',
         required: true
     },
     unit_id:{
@@ -46,9 +46,9 @@ const RECEIPTMODEL = new mongoose.Schema({
 
 
 const INVOICEMODEL = new mongoose.Schema({
-    tenant_id:{
+    user_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'TENANTMODEL'
+        ref:'USERMODEL'
     },
     unit_id:{
         type:mongoose.Schema.Types.ObjectId,
@@ -88,36 +88,9 @@ const CCTVMODEL = new mongoose.Schema({
 },{timestamps: true})
 
 const OWNERMODEL = new mongoose.Schema({
-    name:{
-        type: String,
-        required: true
-    },
-    username:{
-        type:String,
-        unique:true,
-        required:true
-    },
-    email:{
-        type:String,
-        unqiue:true,
-        required:true,
-    },
-    password:{
-        type:String,
-        unique:true,
-        required:true
-    },
-    mobile_no:{
-        type:Number,
-        unique:true,
-        required: true
-    },
-    birthday:{
-        type:Date,
-        required: true,
-    },
-    image:{
-        type:String,
+    user_id:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "USERMODEL"
     },
     contracts:[CONTRACTMODEL],
     receitps:[RECEIPTMODEL],

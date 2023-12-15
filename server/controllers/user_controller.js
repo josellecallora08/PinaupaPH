@@ -1,5 +1,7 @@
 const OWNERMODEL = require('../models/owner')
 const TENANTMODEL = require('../models/tenant')
+const USERMODEL = require('../models/user')
+const httpStatusCodes = require('../constants/constants')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 
@@ -11,34 +13,35 @@ module.exports.sign_up = async (req, res) => {
     try{
         const {name, username, email, password, mobile_no, birthday} = req.body
 
-        if(await TENANTMODEL.findOne({username})){
-            res.status(400).json({error:"Username already exists"})
+        if(await USERMODEL.findOne({username})){
+            res.status(httpStatusCodes.BAD_REQUEST).json({error:"Username already exists"})
         }  
-        if(await TENANTMODEL.findOne({email})){
-            res.status(400).json({error:"Email already exists"})
+        if(await USERMODEL.findOne({email})){
+            res.status(httpStatusCodes.BAD_REQUEST).json({error:"Email already exists"})
         } 
-        if(await TENANTMODEL.findOne({mobile_no})){
-            res.status(400).json({error:"Mobile Number already exists."})
+        if(await USERMODEL.findOne({mobile_no})){
+            res.status(httpStatusCodes.BAD_REQUEST).json({error:"Mobile Number already exists."})
         }
-
+        
         const salt = await bcrypt.genSalt(10);
+
         const hashed = await bcrypt.hash(password, salt)
         if(!hashed){
-            res.status(400).json({error:"Error hashing the password."})
+            res.status(httpStatusCodes.BAD_REQUEST).json({error:"Error hashing the password."})
         }
 
-        const response = await TENANTMODEL.create({name,username,email,password:hashed,mobile_no,birthday})
+        const response = await USERMODEL.create({name,username,email,password:hashed,mobile_no,birthday})
         if(!response){
-            res.status(400).json({msg:"Unsuccessful registration. Please try again later."})
+            res.status(httpStatusCodes.BAD_REQUEST).json({msg:"Unsuccessful registration. Please try again later."})
         }
     
         const token = createToken(response._id, response.username, response.role)
-        res.status(201).json({msg:"Logged in successfully!", role:response.tole, token})
+        res.status(httpStatusCodes.OK).json({msg:"Created Account successfully!", role:response.tole, token})
         
     }
     catch(err){
         console.error({error:err.message})
-        res.status(500).json({error:err.message})
+        res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({error:err.message})
     }
 }
 
@@ -46,44 +49,40 @@ module.exports.sign_in = async (req, res) => {
     try {
         const { username, password } = req.body;
         
-        let user_response = await OWNERMODEL.findOne({ username });
+        let user_response = await USERMODEL.findOne({ username });
         if (!user_response) {
-            user_response = await TENANTMODEL.findOne({ email: username });
+            user_response = await USERMODEL.findOne({ email: username });
             if (!user_response) {
-                return res.status(400).json({ error: "Invalid Credentials (temp - Username)" });
+                return res.status(httpStatusCodes.BAD_REQUEST).json({ error: "Invalid Credentials (temp - Username)" });
             }
         }
 
         const match = await bcrypt.compare(password, user_response.password);
         if (!match) {
-            return res.status(400).json({ error: "Invalid Credentials (temp - Password)" });
+            return res.status(httpStatusCodes.BAD_REQUEST).json({ error: "Invalid Credentials (temp - Password)" });
         }
 
         const token = createToken(user_response._id, user_response.username, user_response.role);
 
-        res.status(201).json({ msg: "Login Successfully!", role: user_response.role, token });
+        res.status(httpStatusCodes.OK).json({ msg: "Login Successfully!", role: user_response.role, token });
     } catch (err) {
         console.error({ error: err.message });
-        res.status(500).json({ error: "Server Error..." });
+        res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server Error..." });
     }
 };
 
 module.exports.update_admin_profile = async (req,res) => {
     try{
         const {_id, name, username, password, birthday, mobile_no} = req.body;
-        let response = await OWNERMODEL.findByIdAndUpdate(_id, {name, username, password, birthday, mobile_no})
+        let response = await USERMODEL.findByIdAndUpdate(_id, {name, username, password, birthday, mobile_no})
         if(!response){
-            response = await TENANTMODEL.findByIdAndUpdate(_id, {name, username, password, birthday, mobile_no})
-            if(!response){
-                res.status(400).json({error: "Failed to update information"})
-            }
+                res.status(httpStatusCodes.BAD_REQUEST).json({error: "Failed to update information"})
         }
-        
-        res.status(200).json({msg: "Information Updated Successfully!"})
+        res.status(httpStatusCodes.CREATED).json({msg: "Information Updated Successfully!"})
     }
     catch(err){
         console.error({error: err.message})
-        res.status(500).json({error: "Server Error..."});
+        res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({error: "Server Error..."});
     }
 }
 
@@ -92,21 +91,21 @@ module.exports.create_cctv = async (req, res) => {
         const {_id, name, username, password, port, ip_address} = req.body
         const response = await OWNERMODEL.findById(_id)
         if(!response){
-            res.status(400).json({error: "Failed to add cctv camera"})
+            res.status(httpStatusCodes.BAD_REQUEST).json({error: "Failed to add cctv camera"})
         }
         const details = {username, password, port, ip_address}
         const index = response.cctvs.findIndex(item => item.name.toString() === name)
         if(index === -1){
             response.cctvs.push(details)
         } else {
-            res.status(400).json({error: "CCTV already exists."})
+            res.status(httpStatusCodes.BAD_REQUEST).json({error: "CCTV already exists."})
         }
         
-        res.status(200).json({msg: "Successfully added cctv..."})
+        res.status(httpStatusCodes.CREATED).json({msg: "Successfully added cctv..."})
     }
     catch(err){
         console.error({error: err.message})
-        res.status(500).json({error: err.message})
+        res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({error: err.message})
     }
 }
 
@@ -115,25 +114,25 @@ module.exports.create_pet = async (req, res) => {
         const {_id, name, birthday, species} = req.body;
         const response = await TENANTMODEL.findById(_id)
         if(!response){
-            res.status(400).json({error: "Invalid to create pet..."}) 
+            res.status(httpStatusCodes.BAD_REQUEST).json({error: "Invalid to create pet..."}) 
         }
         const details = {name, birthday, species}
         const pet_index = response.pet.findIndex(item => item.name.toString() === name)
         if(pet_index === -1){
             response.pet.push(details)
         } else {
-            res.status(400).json({error: "Pet already exists."})
+            res.status(httpStatusCodes.BAD_REQUEST).json({error: "Pet already exists."})
         }
 
         const saved_response = await response.save();
         if(!saved_response){
-            res.status(400).json({error: "Failed to save pet information"})
+            res.status(httpStatusCodes.BAD_REQUEST).json({error: "Failed to save pet information"})
         }
-        res.status(200).json({msg: "Created pet successfully!"})
+        res.status(httpStatusCodes.CREATED).json({msg: "Created pet successfully!"})
     }
     catch(err){
         console.error({error: err.message})
-        return res.status(500).json({ error: "Internal Server Error" });
+        return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
     }
 }
 
@@ -142,25 +141,25 @@ module.exports.create_household = async (req, res) => {
         const {_id, name, birthday, mobile_no} = req.body;
         const response = await TENANTMODEL.findById(_id)
         if(!response){
-            res.status(400).json({error: "Invalid to create household..."}) 
+            res.status(httpStatusCodes.BAD_REQUEST).json({error: "Invalid to create household..."}) 
         }
         const details = {name, birthday, mobile_no}
         const household_index = response.household.findIndex(item => item.name.toString() === name)
         if(household_index === -1){
             response.household.push(details)
         } else {
-            res.status(400).json({error: "Household already exists."})
+            res.status(httpStatusCodes.BAD_REQUEST).json({error: "Household already exists."})
         }
 
         const saved_response = await response.save();
         if(!saved_response){
-            res.status(400).json({error: "Failed to save household information"})
+            res.status(httpStatusCodes.BAD_REQUEST).json({error: "Failed to save household information"})
         }
-        res.status(200).json({msg: "Created household successfully!"})
+        res.status(httpStatusCodes.CREATED).json({msg: "Created household successfully!"})
     }
     catch(err){
         console.error({error: err.message})
-        return res.status(500).json({ error: "Internal Server Error" });
+        return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
     }
 }
 
@@ -169,17 +168,14 @@ module.exports.create_household = async (req, res) => {
 module.exports.update_profile_picture = async (req, res) => {
     try{
         const {_id, profile_image} = req.body
-        let response = await TENANTMODEL.findByIdAndUpdate(_id,{profile_image})
+        let response = await USERMODEL.findByIdAndUpdate(_id,{profile_image})
         if(!response){
-            response = await OWNERMODEL.findByIdAndUpdate(_id,{profile_image})
-            if(!response){
-                res.status(400).json({error: "Failed to change image"})
-            }
+            res.status(httpStatusCodes.BAD_REQUEST).json({error: "Failed to change image"})
         }
-        res.status(200).json({msg: "Profile has been changed"})
+        res.status(httpStatusCodes.OK).json({msg: "Profile has been changed"})
     }
     catch(err){
         console.error({error: err.message})
-        res.status(500).json({error: `Server Error: ${err.message}`})
+        res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({error: `Server Error: ${err.message}`})
     }
 }
