@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const {mongoose} = require('mongoose')
 
 const COMMENTMODEL = new mongoose.Schema({
     tenant_id:{

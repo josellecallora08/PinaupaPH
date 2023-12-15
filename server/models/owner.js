@@ -1,10 +1,9 @@
 const mongoose = require('mongoose')
 
 const CONTRACTMODEL = new mongoose.Schema({
-    user_id:{
+    tenant_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'USERMODEL',
-        required: true
+        ref:'TENANTMODEL',
     },
     unit_id:{
         type:mongoose.Schema.Types.ObjectId,
@@ -13,18 +12,18 @@ const CONTRACTMODEL = new mongoose.Schema({
     number_months:{
         type:Number,
     },
-    from_month:{
+    from:{
         type: Date
     },
-    to_month:{
+    month:{
         type:Date
     }
 }, {timestamps: true})
 
 const RECEIPTMODEL = new mongoose.Schema({
-    user_id:{
+    tenant_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'USERMODEL',
+        ref:'TENANTMODEL',
         required: true
     },
     unit_id:{
@@ -45,20 +44,35 @@ const RECEIPTMODEL = new mongoose.Schema({
     }
 },{timestamps: true})
 
-// const UNITMODEL = new mongoose.Schema({
-//     occupied:{
-//         type:Boolean,
-//         default:false
-//     },
-//     monthly_rent:{
-//         type:Number
-//     },
-//     unit_no:{
-//         type:String
-//     }
-// })
+
+const INVOICEMODEL = new mongoose.Schema({
+    tenant_id:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'TENANTMODEL'
+    },
+    unit_id:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'UNITMODEL'
+    },
+    amount:{
+        type:Number,
+        required:true
+    },
+    from:{
+        type:Date
+    },
+    to:{
+        type:Date
+    },
+    due:{
+        type:Date
+    }
+}, {timestamps: true})
 
 const CCTVMODEL = new mongoose.Schema({
+    name:{
+        type:String
+    },
     username:{
         type:String,
     },
@@ -102,14 +116,8 @@ const OWNERMODEL = new mongoose.Schema({
         type:Date,
         required: true,
     },
-    profile_image:{
+    image:{
         type:String,
-    },
-    business_name:{
-        type: String
-    },
-    business_address:{
-        type:String
     },
     contracts:[CONTRACTMODEL],
     receitps:[RECEIPTMODEL],
