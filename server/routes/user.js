@@ -7,7 +7,7 @@ router.post('/', sign_up)
 router.get('/', sign_in)
 router.put('/update_profile/:_id', update_profile)
 router.post('/create_cctv/:_id', create_cctv)
-router.post('/create_household', create_household)
-router.post('/create_pet', create_pet)
+router.post('/create_household/:_id', create_household)
+router.post('/create_pet/:_id', create_pet)
 
 module.exports = router
