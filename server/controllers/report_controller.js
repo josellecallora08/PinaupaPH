@@ -1,11 +1,13 @@
 const REPORTMODEL = require('../models/report')
 const TENANTMODEL = require('../models/tenant')
 const OWNERMODEL = require('../models/owner')
+const USERMODEL = require('../models/user')
 
 module.exports.report = async (req, res) => {
     try{
-        const {unit_id, tenant_id, title, description, type} = req.body;
-        const response = await REPORTMODEL.create({unit_id, tenant_id, title, description, type});
+        const {_id} = req.params
+        const {unit_id, title, description, type} = req.body;
+        const response = await REPORTMODEL.create({unit_id, user_id:_id, title, description, type});
         if(!response){
             res.status(400).json({error: "Failed to report an issue"});
         }

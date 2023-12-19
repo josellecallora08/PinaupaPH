@@ -1,6 +1,20 @@
 const mongoose = require('mongoose')
 
 const UNITMODEL = new mongoose.Schema({
+    unit_id:{
+        type:String,
+        unique:true,
+        default: function () {
+            // Use the first letter of each word in the apartment building name
+            // and concatenate it with an ObjectId
+            const initials = this.name
+                .split(' ')
+                .map(word => word[0])
+                .join('');
+            
+            return `${initials}-${mongoose.Types.ObjectId()}`;
+        }
+    },
     occupied:{
         type:Boolean,
         default:false
