@@ -152,12 +152,13 @@ module.exports.create_cctv = async (req, res) => {
 
 module.exports.create_pet = async (req, res) => {
     try{
-        const {_id, name, birthday, species} = req.body;
-        const response = await TENANTMODEL.findById(_id)
+        const {_id} = req.params
+        const {name, image, birthday, species} = req.body;
+        const response = await TENANTMODEL.findOne({user_id:_id})
         if(!response){
             return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Invalid to create pet..."}) 
         }
-        const details = {name, birthday, species}
+        const details = {name, image, birthday, species}
         const pet_index = response.pet.findIndex(item => item.name.toString() === name)
         if(pet_index === -1){
             response.pet.push(details)
@@ -179,8 +180,9 @@ module.exports.create_pet = async (req, res) => {
 
 module.exports.create_household = async (req, res) => {
     try{
-        const {_id, name, birthday, mobile_no} = req.body;
-        const response = await TENANTMODEL.findById(_id)
+        const {_id} = req.params;
+        const {name, image, birthday, mobile_no} = req.body;
+        const response = await TENANTMODEL.findOne({user_id:_id})
         if(!response){
             return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Invalid to create household..."}) 
         }
