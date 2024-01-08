@@ -13,34 +13,37 @@ import { BiConversation } from "react-icons/bi";
 import { RxPerson } from "react-icons/rx";
 import { Link } from 'react-router-dom';
 import { TbBellRinging } from "react-icons/tb";
+import { RiArrowDropRightLine } from "react-icons/ri";
 
 const Menus = [
   {
   title: "Dashboard",
   path: "/dashboard",
-  icon: <MdOutlineDashboard />
+  icon: <MdOutlineDashboard size={30} />
+  
   },
   {
     title: "Tenant",
     path: "/tenant",
-    icon: <BsPersonPlus />
+    icon: <BsPersonPlus size={30}/>
   },
   {
     title: "Apartment",
     path: "/apartment",
-    icon: <BsHouses />
+    icon: <BsHouses size={30}/>
+
     
   },
   {
     title: "Security",
     path: "/security",
-    icon: <BiCctv />
+    icon: <BiCctv size={30}/>
     
   },  
   {
     title: 'Documents',
     path: '/document',
-    icon: <HiOutlineDocumentDuplicate />,
+    icon: <HiOutlineDocumentDuplicate size={30}/>,
 
 
     subMenus: [
@@ -60,14 +63,14 @@ const Menus = [
   {
       title: "Concern and Issue",
       path: "/concern&issue",
-      icon: <BiConversation />
+      icon: <BiConversation size={30}/>
       
       
   },
   {
     title: "Profile",
     path: "/profile",
-    icon: <RxPerson />
+    icon: <RxPerson size={30}/>
    
  }
     
@@ -89,6 +92,7 @@ const Sidebar = () => {
   const [Menu, SetMenu] = useState(Menus);
   const [isOpen, setIsOpen] = useState(true);
   const [Open, setOpen] = useState(true);
+  const [MenuOpen, setMenuOpen] = useState(true);
 
   const setSubMenuOpen = (index) => {
     SetMenu((prevMenus) =>
@@ -107,10 +111,18 @@ const Sidebar = () => {
   const togglepfp = () => {
     setOpen(!Open);
   };
+  const toggleMenu = () => {
+    setMenuOpen(!MenuOpen);
+    SetMenu((prevMenus  ) => prevMenus.map((menu) => ({ ...menu, isOpen: false })));
+  
+  }
+
+
 
   const toggleDocumentsSubMenu = () => {
-    // Toggle the submenu for "Documents" separately
+    toggleMenu();
     setSubMenuOpen(4); 
+   ;
   };
 
   return (
@@ -124,7 +136,7 @@ const Sidebar = () => {
      
         <div className='ml-auto flex items-center'>
           <TbBellRinging />
-          <img src={pfp} alt="" className='w-6 h-6 rounded-full ml-2 relative cursor-pointer' onClick={togglepfp} />
+          <img src={pfp} alt="" className={`w-6 h-6 rounded-full ml-2 relative cursor-pointer  `} onClick={togglepfp} />
         </div>
     
         {
@@ -145,16 +157,23 @@ const Sidebar = () => {
         
       </div>
 
-      <div className={`lg:block lg:pl-6 ${isOpen ? 'hidden ' : 'w-48 px-2'}bg-white text-black shadow-xl z-[999] w-[20rem] max-w-[16rem] h-screen overflow-hidden `}>
-        
-        <Link to="/dashboard" className="cursor-pointer"><img src={logo} alt="" className='m-auto' /></Link>
+      <div className={`lg:block lg:pl-6 ${isOpen ? 'hidden ' : 'w-48 px-2'}${MenuOpen ?" w-72":"w-20"} bg-white text-black shadow-xl z-[999] w-[20rem] max-w-[16rem] h-screen overflow-hidden lg:overflow-visible lg:relative  `}>
+        <div className={`lg:cursor-pointer lg:absolute lg:top-1/2 lg:-right-5 lg:bg-white lg:border-2 lg:rounded-full lg:duration-200  ${!MenuOpen &&"rotate-180"}`} >
+          <RiArrowDropRightLine size={30} className='hidden lg:block'onClick={toggleMenu}/>
+        </div>
+          {/*Desktop */}
+        <Link to='/dashboard' className={`lg:items-center lg:justify-center lg:mt-10 hidden lg:block lg:italic lg:text-dark-blue`}>
+        {MenuOpen ? <img src={logo} alt="logo" />:<span className='text-3xl lg:text-5xl'>P</span>}
+        </Link>
+        {/*mobile */}
+        <Link to='/dashboard' className={` lg:items-center lg:justify-center lg:mt-10 lg:hidden`}>
+        <img src={logo} alt="logo" />
+        </Link>
 
-        <h1 className="py-5 text-xl ml-20 mt-10">
-          <div className="block">
-            Menu
-          </div>
-        </h1>
-        <div className="mt-4">
+
+
+
+        <div className="mt-10" >
           {Menu.map((menu, index) => (
             <div key={index}>
               <div>
@@ -162,12 +181,12 @@ const Sidebar = () => {
                   <div>
                     <Link
                       to={menu.path}
-                      className="flex items-center cursor-pointer p-3"
+                      className={`flex items-center cursor-pointer p-3 pl-0 ` }
                       onClick={() => setSubMenuOpen(index)}
                     >
                       <div className="mr-2">{menu.icon}</div>
-                      <div>{menu.title}</div>
-                      {menu.isOpen ? <FaAngleUp className='ml-14' /> : <FaAngleDown className='ml-14' />}
+                      <div className={`lg:${!MenuOpen && "hidden"}`} >{menu.title}</div>
+                      {menu.isOpen ? <FaAngleUp className='ml-10' /> : <FaAngleDown className='ml-10' />}
                     </Link>
                     {menu.isOpen && menu.subMenus && (
                       <div className="ml-4">
@@ -181,9 +200,9 @@ const Sidebar = () => {
                     )}
                   </div>
                 ) : (
-                  <Link to={menu.path} className="flex items-center cursor-pointer p-3">
-                    <div className="mr-2">{menu.icon}</div>
-                    <div>{menu.title}</div>
+                  <Link to={menu.path} className={`flex items-center cursor-pointer p-3 pl-0  `} >
+                    <div className={`mr-2`}>{menu.icon}</div>
+                    <div className={`lg:${!MenuOpen && "hidden"} lg:duration-200`}>{menu.title}</div>
                   </Link>
                 )}
               </div>
