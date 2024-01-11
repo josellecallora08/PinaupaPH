@@ -42,7 +42,6 @@ const Menus = [
   },  
   {
     title: 'Documents',
-    path: '/document',
     icon: <HiOutlineDocumentDuplicate size={30}/>,
 
 
@@ -50,13 +49,13 @@ const Menus = [
       {
         title: 'Least Agreement',
         path: '/document/LeastAgreement',
-        cName: 'sub-nav',
+        
       },
       {
         title: 'Invoice',
         path: '/document/invoice',
 
-        cName: 'sub-nav',
+       
       }
     ],
     isOpen: false},
@@ -89,11 +88,14 @@ const pfpmenu = [
 ]
 
 const Sidebar = () => {
+
+  //useState to trach the changes of properties :D
   const [Menu, SetMenu] = useState(Menus);
   const [isOpen, setIsOpen] = useState(true);
-  const [Open, setOpen] = useState(true);
-  const [MenuOpen, setMenuOpen] = useState(true);
+  const [Open, setOpen] = useState(false);
+  const [MenuOpen, setMenuOpen] = useState(false);
 
+  //SubMenu Function to control the open and close of Sub Menu
   const setSubMenuOpen = (index) => {
     SetMenu((prevMenus) =>
       prevMenus.map((menu, i) => {
@@ -104,13 +106,15 @@ const Sidebar = () => {
       })
     );
   };
-
+  //To toggle the Sidebar for Mobile View
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
+  //Toggle the profiel Picture menu
   const togglepfp = () => {
     setOpen(!Open);
   };
+  //To Open and Close the Sidebar for Desktop
   const toggleMenu = () => {
     setMenuOpen(!MenuOpen);
     SetMenu((prevMenus  ) => prevMenus.map((menu) => ({ ...menu, isOpen: false })));
@@ -119,6 +123,7 @@ const Sidebar = () => {
 
 
 
+//It toggle to close the submenu of Documents
   const toggleDocumentsSubMenu = () => {
     toggleMenu();
     setSubMenuOpen(4); 
@@ -129,21 +134,18 @@ const Sidebar = () => {
     <>
       <div className='lg:hidden bg-light-blue text-white px-4 h-10 flex items-center '>
         <div>
-        <div className='cursor-pointer'>
-          {isOpen ? <FaBars onClick={toggleSidebar} /> : <FaX onClick={toggleSidebar} />}
-        </div>
+  
         </div>
      
         <div className='ml-auto flex items-center'>
-          <TbBellRinging />
+          <TbBellRinging color='white' />
           <img src={pfp} alt="" className={`w-6 h-6 rounded-full ml-2 relative cursor-pointer  `} onClick={togglepfp} />
         </div>
     
         {
           Open &&(
-            <div className='absolute top-10 right-2 text-black bg-red rounded-bl-md rounded-br-md    '>
+            <div className='absolute top-10 right-2 text-black bg-white rounded-bl-md rounded-br-md    '>
           <ul>
-        
            {
             pfpmenu.map((menu, index) => (
               <li key={index} className='text-sm font-medium w-32 py-1  hover:bg-gray pl-3 '><Link to={menu.path}>{menu.title}</Link></li>
@@ -157,42 +159,54 @@ const Sidebar = () => {
         
       </div>
 
-      <div className={`lg:block lg:pl-6 ${isOpen ? 'hidden ' : 'w-48 px-2'}${MenuOpen ?" w-72":"w-20"} bg-white text-black shadow-xl z-[999] w-[20rem] max-w-[16rem] h-screen overflow-hidden lg:overflow-visible lg:relative  `}>
+
+      <div className='cursor-pointer fixed top-3 left-7 z-[999] lg:hidden'>
+          {isOpen ? <FaBars onClick={toggleSidebar} size={20}color='white' /> : <FaX onClick={toggleSidebar} size={20}color={`$!isOpen?'white':'black'`}/>}
+        </div>
+
+
+        <div className={`lg:block lg:pl-6 bg-white text-black shadow-xl h-screen max-h-full lg:sticky overflow-hidden lg:overflow-visible z-[99] ${isOpen ? 'hidden' : 'w-64 px-2 fixed top-0'} lg:${MenuOpen ? 'w-24 duration-200' : 'w-48 duration-200'}`}>
+
+        
         <div className={`lg:cursor-pointer lg:absolute lg:top-1/2 lg:-right-5 lg:bg-white lg:border-2 lg:rounded-full lg:duration-200  ${!MenuOpen &&"rotate-180"}`} >
-          <RiArrowDropRightLine size={30} className='hidden lg:block'onClick={toggleMenu}/>
+          <RiArrowDropRightLine size={30} className='hidden lg:block' onClick={toggleMenu}/>
         </div>
           {/*Desktop */}
-        <Link to='/dashboard' className={`lg:items-center lg:justify-center lg:mt-10 hidden lg:block lg:italic lg:text-dark-blue`}>
+        <Link to='/dashboard' className={`lg:items-center lg:justify-center lg:mt-10 hidden lg:block lg:italic lg:text-dark-blue z-[999]`}>
         {MenuOpen ? <img src={logo} alt="logo" />:<span className='text-3xl lg:text-5xl'>P</span>}
         </Link>
         {/*mobile */}
-        <Link to='/dashboard' className={` lg:items-center lg:justify-center lg:mt-10 lg:hidden`}>
-        <img src={logo} alt="logo" />
+        <Link to='/dashboard' className={`lg:hidden`}>
+        <img src={logo} alt="logo" className='mt-10' />
         </Link>
 
 
 
 
         <div className="mt-10" >
+          {/*To move inside the array called Menu*/}
           {Menu.map((menu, index) => (
             <div key={index}>
+              {/*To check if the item inside the menu has submenu*/}
               <div>
+                {/*If there's submenu render it*/}
                 {menu.subMenus ? (
+                  
                   <div>
                     <Link
                       to={menu.path}
                       className={`flex items-center cursor-pointer p-3 pl-0 ` }
-                      onClick={() => setSubMenuOpen(index)}
-                    >
-                      <div className="mr-2">{menu.icon}</div>
+                      onClick={() => setSubMenuOpen(index)}>
+                    
+                      <div className="mr-2"onClick={toggleMenu}>{menu.icon}</div>
                       <div className={`lg:${!MenuOpen && "hidden"}`} >{menu.title}</div>
-                      {menu.isOpen ? <FaAngleUp className='ml-10' /> : <FaAngleDown className='ml-10' />}
-                    </Link>
+                      
+                      {menu.isOpen ? <FaAngleUp className={`ml-10 lg:${!MenuOpen && "hidden"}`}  /> : <FaAngleDown className={`ml-10 lg:${!MenuOpen && "hidden"}`} />}  </Link>
                     {menu.isOpen && menu.subMenus && (
                       <div className="ml-4">
                         {menu.subMenus.map((subMenu, subIndex) => (
-                          <Link key={subIndex} to={subMenu.path} className="flex items-center">
-                            <div className="mr-6 mb-10">{subMenu.icon}</div>
+                          <Link key={subIndex} to={subMenu.path} className={`flex items-center lg:${!MenuOpen && "hidden"} `}   >
+                            <div className="mr-6 mb-10" ></div>
                             <div>{subMenu.title}</div>
                           </Link>
                         ))}

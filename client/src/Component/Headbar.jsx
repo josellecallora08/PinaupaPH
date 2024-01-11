@@ -15,20 +15,21 @@ const pfpmenu = [
   }
 ]
 const Headbar = () => {
-  const [Open, setOpen] = useState(true);
+  const [Open, setOpen] = useState(false);
   const togglepfp = () => {
     setOpen(!Open);
   };
   return (
+    
 <div className='hidden lg:bg-light-blue lg:flex justify-end items-center px-10 pt-5 pb-3 w-auto relative  '>
       <div className='flex items-center'>
-        <TbBellRinging size={25} />
+        <TbBellRinging size={25} color='white' />
         <img src={pfp} alt='' className=' w-10 h-10 rounded-full ml-2  cursor-pointer' onClick={togglepfp} />
       </div>
       {
         Open&&(
           <ul>
-      <div className='absolute top-full right-2 text-black bg-red rounded-bl-md rounded-br-md    '>
+      <div className='absolute top-full right-2 text-black rounded-bl-md rounded-br-md shadow-2xl shadow-light-gray  '>
           <ul>
         {}
            {

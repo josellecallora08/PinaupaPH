@@ -1,7 +1,6 @@
 
 
 import {Route,Routes} from "react-router-dom"
-import Practice from "./Component/Practice"
 import Dashboard from "./Page/Dashboard"
 import Sidebar from "./Component/Sidebar"
 import Layout from "./Component/Layout"
@@ -12,14 +11,13 @@ import Concern from "./Page/Concern"
 import Profile from "./Page/Profile"
 import Least from "./Page/Least"
 import Invoice from "./Page/Invoice"
-import Headbar from "./Component/Headbar"
+
 function App() {
   
 
   return (
  <>
   <Layout>
-    
     <Routes>
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/tenant" element={<Tenant />} />

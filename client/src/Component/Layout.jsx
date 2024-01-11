@@ -5,8 +5,7 @@ import Headbar from './Headbar'
 const Layout = ({children}) => {
   return (
     <div className="flex flex-col lg:flex-row ">
-      
-       <Sidebar />
+       <Sidebar/>
      
     <div className='w-full'>
       <Headbar />
