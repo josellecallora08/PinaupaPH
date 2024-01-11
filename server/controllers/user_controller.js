@@ -6,8 +6,8 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 
-const createToken = ({user_id,username, role}) => {
-    return jwt.sign({user_id,username,role}, process.env.SECRET, {expiresIn: "3d"})
+const createToken = ({id,username, role}) => {
+    return jwt.sign({id,username,role}, process.env.SECRET, {expiresIn: "3d"})
 }
 
 module.exports.sign_up = async (req, res) => {
