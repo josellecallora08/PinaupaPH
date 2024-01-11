@@ -22,6 +22,9 @@ const HOUSEHOLDMODEL = new mongoose.Schema({
     name:{
         type:String
     },
+    relationship:{
+        type:String
+    },
     birthday:{
         type:Date
     },
