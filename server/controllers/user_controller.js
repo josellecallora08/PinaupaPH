@@ -12,6 +12,7 @@ const createToken = ({id,username, role}) => {
 
 module.exports.sign_up = async (req, res) => {
     try{
+        // Suggestion: We could include role in client side in order to differentiate admin and tenant.
         const {name, username, email, password, mobile_no, birthday} = req.body
 
         if(await USERMODEL.findOne({username})){
@@ -35,20 +36,24 @@ module.exports.sign_up = async (req, res) => {
         if(!response){
             return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Unsuccessful registration. Please try again later."})
         }
-        const owner = await OWNERMODEL.create({user_id:response._id})
-        if(!owner){
-            return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Failed to create Owner Data. Please try again later."})
+        
+        if(response.role === "Admin"){
+            const owner = await OWNERMODEL.create({user_id:response._id})
+            if(!owner){
+                return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Failed to create Owner Data. Please try again later."})
+            }
         }
-        const tenant = await TENANTMODEL.create({user_id:response._id})
-        if(!tenant){
-            return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Failed to create Owner Data. Please try again later."})
+        if(response.role === "Tenant"){
+            const tenant = await TENANTMODEL.create({user_id:response._id})
+            if(!tenant){
+                return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Failed to create Tenant Data. Please try again later."})
+            }
         }
         
         // Add apartment and report
 
         const token = createToken(response._id, response.username, response.role)
-        return res.status(httpStatusCodes.OK).json({msg:"Created Account successfully!", role:response.tole, token})
-        
+        return res.status(httpStatusCodes.OK).json({msg:"Created Account successfully!", role:response.role, token})
     }
     catch(err){
         console.error({error:err.message})
@@ -90,7 +95,7 @@ module.exports.create_cctv = async (req, res) => {
         const response = await OWNERMODEL.findOne({ user_id: user_id});
 
         if (!response) {
-            return res.status(httpStatusCodes.UNAUTHORIZED).json({ error: "Unable to CCTV Surveillance." });
+            return res.status(httpStatusCodes.UNAUTHORIZED).json({ error: "Unable to Create CCTV Surveillance." });
         }
 
         const details = { name, username, password, port, ip_address };
@@ -113,13 +118,13 @@ module.exports.create_cctv = async (req, res) => {
 
 module.exports.create_pet = async (req, res) => {
     try{
-        const {_id} = req.params
-        const {name, image, birthday, species} = req.body;
-        const response = await TENANTMODEL.findOne({user_id:_id})
+        const {user_id} = req.params
+        const {name, birthday, species} = req.body;
+        const response = await TENANTMODEL.findOne({user_id:user_id})
         if(!response){
             return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Invalid to create pet..."}) 
         }
-        const details = {name, image, birthday, species}
+        const details = {name, birthday, species}
         const pet_index = response.pet.findIndex(item => item.name.toString() === name)
         if(pet_index === -1){
             response.pet.push(details)
@@ -147,7 +152,7 @@ module.exports.create_household = async (req, res) => {
         if(!response){
             return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Invalid to create household..."}) 
         }
-        const details = {name, relationship, birthday, mobile_no}
+        const details = {name, relationship, birthday, mobile}
         const household_index = response.household.findIndex(item => item.name.toString() === name)
         if(household_index === -1){
             response.household.push(details)
@@ -267,5 +272,120 @@ module.exports.update_household = async(req, res) =>{
     catch(err){
         console.error({error: err.message})
         return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({error: "Server Error..."})
+    }
+}
+
+module.exports.update_pet = async (req, res) => {
+    try{
+        const {user_id, pet_id} = req.params
+        const {name, birthday, species } = req.body
+        const details = {name, birthday, species}
+
+        const response = await TENANTMODEL.findOne({user_id:user_id})
+        if(!response){
+            return res.status(httpStatusCodes.UNAUTHORIZED).json({error: "Unable to Update Information..."})
+        }
+
+        const index = response.pet.findIndex(item => item._id.toString() === pet_id)
+        if(index === -1){
+            return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Unable to Locate Pet"})
+        }
+        Object.keys(details).forEach(item => {
+            if(details[item] !== ""){
+                response.pet[index][item] = details[item]
+            }
+        })
+        await response.save()
+        return res.status(httpStatusCodes.OK).json({msg: "Information Updated..."})
+    }
+    catch(err){
+        console.error({error: err.message})
+        return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({error: "Server Error..."})
+    }
+}
+
+module.exports.delete_tenant = async (req, res) => {
+    try{
+        const {user_id} = req.params
+        
+        const response = await USERMODEL.findByIdAndDelete({_id:user_id})
+        if(!response){
+            return res.status(httpStatusCodes.NOT_FOUND).json({error: "User not found..."})
+        }
+        if(response.role === "Admin"){
+            await OWNERMODEL.findOneAndDelete({user_id:user_id})
+        } 
+        if(response.role === "Tenant"){
+            await TENANTMODEL.findOneAndDelete({user_id:user_id})
+        }
+        return res.status(httpStatusCodes.OK).json({msg: "Removed Successfully..."})
+    }  
+    catch(err){
+        console.error({error: err.message})
+        return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({error: "Server Error..."})
+    }
+}
+
+module.exports.delete_cctv = async(req, res) => {
+    try{
+        const {user_id, cctv_id} = req.params
+        const response = await OWNERMODEL.findOne({user_id:user_id})
+        if(!response){
+            return res.status(httpStatusCodes.NOT_FOUND).json({error: "User Not Found"})
+        }
+        const index = response.cctvs.findIndex(item => item._id.toString() === cctv_id)
+        if(index === -1){
+            return res.status(httpStatusCodes.UNAUTHORIZED).json({error: "Unable to remove CCTV"})
+        }
+        response.cctvs.splice(index, 1)
+
+        await response.save();
+        return res.status(httpStatusCodes.OK).json({ message: "CCTV deleted successfully"});
+    }
+    catch(err){
+        console.error({error:err.message})
+        return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({error: "Server Error..."})
+    }
+}
+
+module.exports.delete_household = async(req, res) => {
+    try{
+        const {user_id, household_id} = req.params
+        const response = await TENANTMODEL.findOne({user_id:user_id})
+        if(!response){
+            return res.status(httpStatusCodes.NOT_FOUND).json({error: "User not found"})
+        }
+        const index = response.household.findIndex(item => item._id.toString() === household_id)
+        if(index === -1){
+            return res.status(httpStatusCodes.NOT_FOUND).json({error: "Unable to locate household"})
+        }
+        response.household.splice(index, 1)
+        await response.save()
+        return res.status(httpStatusCodes.OK).json({msg: "Removed household"})
+    }
+    catch(err){
+        console.error({error: err.message})
+        return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({error: "Server Error..."})
+    }
+}
+
+module.exports.delete_pet = async(req, res) => {
+    try{
+        const {user_id, pet_id} = req.params
+        const response = await TENANTMODEL.findOne({user_id:user_id})
+        if(!response){
+            return res.status(httpStatusCodes.NOT_FOUND).json({error: "User not found"})
+        }
+        const index = response.pet.findIndex(item => item._id.toString() === pet_id)
+        if(index === -1){
+            return res.status(httpStatusCodes.NOT_FOUND).json({error: "Pet not found"})
+        }
+        response.pet.splice(index, 1)
+        await response.save()
+        return res.status(httpStatusCodes.OK).json({msg: "Removed Pet"})
+    }
+    catch(err){
+        console.error({error: err.message})
+        return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({error: "Server Error."})
     }
 }

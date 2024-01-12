@@ -51,8 +51,7 @@ const TENANTMODEL = new mongoose.Schema({
         ref:'USERMODEL'
     },
     unit_id:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'UNITMODEL'
+        type:String
     },
     deposit:{
         type:Number,
