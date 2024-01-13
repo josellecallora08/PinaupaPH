@@ -129,7 +129,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className='lg:hidden bg-light-blue text-white px-4 h-12 flex items-center'>
+      <div className='lg:hidden bg-dark-blue text-white px-4 h-12 flex items-center'>
         <div className='cursor-pointer lg:hidden'>
           <FaBars onClick={toggleSidebar} size={20}color='white'  /> 
         </div>
@@ -159,7 +159,7 @@ const Sidebar = () => {
       
 
 
-        <div className={`lg:block lg:pl-6 bg-white text-black shadow-xl h-screen max-h-full lg:sticky lg:top-0 lg:overflow-visible z-[99] ${isOpen ? 'hidden' : 'w-64 px-2 fixed top-0'} lg:${MenuOpen ? 'w-24 duration-200' : 'w-48 duration-200'}`}>
+        <div className={`lg:block lg:pl-6 bg-white text-black shadow-xl h-screen max-h-full lg:sticky lg:top-0 lg:overflow-visible z-[99] ${isOpen ? 'hidden' : 'w-64 px-2 fixed top-0'} lg:${MenuOpen ? 'w-[10rem] duration-200' : 'w-[40rem] duration-200'}`}>
           <FaX onClick={toggleSidebar} size={20}color={`$!isOpen?'white':'black'`} className='lg:hidden cursor-pointer ml-2 mt-2'/>
         
           <div className={`lg:cursor-pointer lg:absolute lg:top-1/2 lg:-right-3 lg:bg-white lg:border-2 lg:rounded-full lg:duration-200  ${!MenuOpen &&"rotate-180"}`} >

@@ -8,7 +8,7 @@ const Dashboard = () => {
 
   return (
     
-    <div className='flex flex-col lg:overflow-hidden'>
+    <div className='lg:ml-3 flex flex-col lg:overflow-hidden'>
       {/* Top of Dashboard> */}
       <h1 className=' m-4 my-7 text-4xl font-medium'>Dashboard</h1>
       <div className=' flex  bg-white mx-4 justify-between  pr-3 rounded-br-xl rounded-bl-xl shadow-xl shadow-dark-gray'>

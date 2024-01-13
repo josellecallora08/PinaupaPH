@@ -3,10 +3,7 @@
 @tailwind utilities;
 
 
-button{
-  @apply bg-light-blue hover:opacity-75 ;
-}
 
-*{
-  font-family: Lato, sans-serif;
+body {
+  font-family: 'Lato', sans-serif;
 }

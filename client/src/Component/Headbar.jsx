@@ -21,7 +21,7 @@ const Headbar = () => {
   };
   return (
     
-<div className='hidden lg:bg-light-blue lg:flex justify-end items-center px-10 pt-5 pb-3 w-auto relative  '>
+<div className='hidden lg:bg-dark-blue lg:flex justify-end items-center px-10 pt-5 pb-3 w-auto relative   '>
       <div className='flex items-center'>
         <TbBellRinging size={25} color='white' />
         <img src={pfp} alt='' className=' w-10 h-10 rounded-full ml-2  cursor-pointer' onClick={togglepfp} />
@@ -29,7 +29,7 @@ const Headbar = () => {
       {
         Open&&(
           <ul>
-      <div className='absolute top-full right-2 text-black rounded-bl-md rounded-br-md shadow-2xl shadow-light-gray  '>
+      <div className='absolute top-full right-2 text-black rounded-bl-md rounded-br-md shadow-2xl bg-white shadow-light-gray   '>
           <ul>
         {}
            {
