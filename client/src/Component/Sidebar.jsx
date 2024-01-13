@@ -120,9 +120,6 @@ const Sidebar = () => {
     SetMenu((prevMenus  ) => prevMenus.map((menu) => ({ ...menu, isOpen: false })));
   
   }
-
-
-
 //It toggle to close the submenu of Documents
   const toggleDocumentsSubMenu = () => {
     toggleMenu();
@@ -132,19 +129,18 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className='lg:hidden bg-light-blue text-white px-4 h-10 flex items-center '>
-        <div>
-  
+      <div className='lg:hidden bg-light-blue text-white px-4 h-12 flex items-center'>
+        <div className='cursor-pointer lg:hidden'>
+          <FaBars onClick={toggleSidebar} size={20}color='white'  /> 
         </div>
-     
         <div className='ml-auto flex items-center'>
-          <TbBellRinging color='white' />
-          <img src={pfp} alt="" className={`w-6 h-6 rounded-full ml-2 relative cursor-pointer  `} onClick={togglepfp} />
+          <TbBellRinging color='white' size={20} />
+          <img src={pfp} alt="" className={`w-8 h-auto rounded-full ml-2 relative cursor-pointer  `} onClick={togglepfp} />
         </div>
     
         {
           Open &&(
-            <div className='absolute top-10 right-2 text-black bg-white rounded-bl-md rounded-br-md    '>
+            <div className='absolute top-12 right-2 text-black bg-white rounded-bl-md rounded-br-md    '>
           <ul>
            {
             pfpmenu.map((menu, index) => (
@@ -160,69 +156,67 @@ const Sidebar = () => {
       </div>
 
 
-      <div className='cursor-pointer fixed top-3 left-7 z-[999] lg:hidden'>
-          {isOpen ? <FaBars onClick={toggleSidebar} size={20}color='white' /> : <FaX onClick={toggleSidebar} size={20}color={`$!isOpen?'white':'black'`}/>}
-        </div>
+      
 
 
-        <div className={`lg:block lg:pl-6 bg-white text-black shadow-xl h-screen max-h-full lg:sticky overflow-hidden lg:overflow-visible z-[99] ${isOpen ? 'hidden' : 'w-64 px-2 fixed top-0'} lg:${MenuOpen ? 'w-24 duration-200' : 'w-48 duration-200'}`}>
-
+        <div className={`lg:block lg:pl-6 bg-white text-black shadow-xl h-screen max-h-full lg:sticky lg:top-0 lg:overflow-visible z-[99] ${isOpen ? 'hidden' : 'w-64 px-2 fixed top-0'} lg:${MenuOpen ? 'w-24 duration-200' : 'w-48 duration-200'}`}>
+          <FaX onClick={toggleSidebar} size={20}color={`$!isOpen?'white':'black'`} className='lg:hidden cursor-pointer ml-2 mt-2'/>
         
-        <div className={`lg:cursor-pointer lg:absolute lg:top-1/2 lg:-right-5 lg:bg-white lg:border-2 lg:rounded-full lg:duration-200  ${!MenuOpen &&"rotate-180"}`} >
-          <RiArrowDropRightLine size={30} className='hidden lg:block' onClick={toggleMenu}/>
-        </div>
-          {/*Desktop */}
-        <Link to='/dashboard' className={`lg:items-center lg:justify-center lg:mt-10 hidden lg:block lg:italic lg:text-dark-blue z-[999]`}>
-        {MenuOpen ? <img src={logo} alt="logo" />:<span className='text-3xl lg:text-5xl'>P</span>}
-        </Link>
-        {/*mobile */}
-        <Link to='/dashboard' className={`lg:hidden`}>
-        <img src={logo} alt="logo" className='mt-10' />
-        </Link>
+          <div className={`lg:cursor-pointer lg:absolute lg:top-1/2 lg:-right-3 lg:bg-white lg:border-2 lg:rounded-full lg:duration-200  ${!MenuOpen &&"rotate-180"}`} >
+            <RiArrowDropRightLine size={25} className='hidden lg:block' onClick={toggleMenu}/>
+          </div>
+            {/*Desktop */}
+          <Link to='/dashboard' className={`lg:items-center lg:justify-center lg:mt-10 hidden lg:block lg:italic lg:text-dark-blue z-[999]`}>
+          {MenuOpen ? <img src={logo} alt="logo" />:<span className='text-3xl lg:text-5xl'>P</span>}
+          </Link>
+          {/*mobile */}
+          <Link to='/dashboard' className={`lg:hidden`}>
+          <img src={logo} alt="logo" className='mt-10' />
+          </Link>
 
 
 
 
-        <div className="mt-10" >
-          {/*To move inside the array called Menu*/}
-          {Menu.map((menu, index) => (
-            <div key={index}>
-              {/*To check if the item inside the menu has submenu*/}
-              <div>
-                {/*If there's submenu render it*/}
-                {menu.subMenus ? (
-                  
-                  <div>
-                    <Link
-                      to={menu.path}
-                      className={`flex items-center cursor-pointer p-3 pl-0 ` }
-                      onClick={() => setSubMenuOpen(index)}>
+          <div className="mt-10" >
+            {/*To move inside the array called Menu*/}
+            {Menu.map((menu, index) => (
+              <div key={index}>
+                {/*To check if the item inside the menu has submenu*/}
+                <div>
+                  {/*If there's submenu render it*/}
+                  {menu.subMenus ? (
                     
-                      <div className="mr-2"onClick={toggleMenu}>{menu.icon}</div>
-                      <div className={`lg:${!MenuOpen && "hidden"}`} >{menu.title}</div>
+                    <div>
+                      <Link
+                        to={menu.path}
+                        className={`flex items-center cursor-pointer p-3 pl-0 ` }
+                        onClick={() => setSubMenuOpen(index)}>
                       
-                      {menu.isOpen ? <FaAngleUp className={`ml-10 lg:${!MenuOpen && "hidden"}`}  /> : <FaAngleDown className={`ml-10 lg:${!MenuOpen && "hidden"}`} />}  </Link>
-                    {menu.isOpen && menu.subMenus && (
-                      <div className="ml-4">
-                        {menu.subMenus.map((subMenu, subIndex) => (
-                          <Link key={subIndex} to={subMenu.path} className={`flex items-center lg:${!MenuOpen && "hidden"} `}   >
-                            <div className="mr-6 mb-10" ></div>
-                            <div>{subMenu.title}</div>
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <Link to={menu.path} className={`flex items-center cursor-pointer p-3 pl-0  `} >
-                    <div className={`mr-2`}>{menu.icon}</div>
-                    <div className={`lg:${!MenuOpen && "hidden"} lg:duration-200`}>{menu.title}</div>
-                  </Link>
-                )}
+                        <div className="mr-2"onClick={toggleMenu}>{menu.icon}</div>
+                        <div className={`lg:${!MenuOpen && "hidden"}`} >{menu.title}</div>
+                        
+                        {menu.isOpen ? <FaAngleUp className={`ml-10 lg:${!MenuOpen && "hidden"}`}  /> : <FaAngleDown className={`ml-10 lg:${!MenuOpen && "hidden"}`} />}  </Link>
+                      {menu.isOpen && menu.subMenus && (
+                        <div className="ml-4">
+                          {menu.subMenus.map((subMenu, subIndex) => (
+                            <Link key={subIndex} to={subMenu.path} className={`flex items-center lg:${!MenuOpen && "hidden"} `}   >
+                              <div className="mr-6 mb-10" ></div>
+                              <div>{subMenu.title}</div>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <Link to={menu.path} className={`flex items-center cursor-pointer p-3 pl-0  `} >
+                      <div className={`mr-2`}>{menu.icon}</div>
+                      <div className={`lg:${!MenuOpen && "hidden"} lg:duration-200`}>{menu.title}</div>
+                    </Link>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
       </div>
     </>
   );
