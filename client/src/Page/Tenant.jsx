@@ -2,7 +2,7 @@ import React from 'react'
 
 const Tenant = () => {
   return (
-    <div>Tenant</div>
+    <div>Hello</div>
   )
 }
 
