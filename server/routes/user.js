@@ -1,14 +1,16 @@
 const { Router } = require('express')
-const { sign_up, sign_in, 
+const { fetch_user, sign_up, sign_in, 
         create_cctv, create_household, create_pet, 
         update_cctv, update_household, update_profile, update_pet,
         delete_tenant, delete_cctv, delete_household, delete_pet
     } = require('../controllers/user_controller')
+const requireAuth = require('../middleware/requireAuth')
 
 const router = Router()
 
+router.get('/', requireAuth, fetch_user)
 router.post('/', sign_up)
-router.get('/', sign_in)
+router.post('/login', sign_in)
 router.post('/:user_id/create_cctv', create_cctv)
 router.post('/:user_id/create_household', create_household)
 router.post('/:user_id/create_pet', create_pet)
