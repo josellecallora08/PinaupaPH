@@ -11,6 +11,7 @@ import Concern from "./Page/Concern"
 import Profile from "./Page/Profile"
 import Least from "./Page/Least"
 import Invoice from "./Page/Invoice"
+import Login from "./Page/Login"
 
 function App() {
   
@@ -21,7 +22,7 @@ function App() {
     <Routes>
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/tenant" element={<Tenant />} />
-      <Route path="/apartment" element={<Apartment />} />
+      <Route path="/apartment" element={<Apartment />} /> 
       <Route path="/security" element={<Security />} />
       <Route path="/concern&issue" element={<Concern />} />
       <Route path="/profile" element={<Profile />} />
@@ -29,8 +30,6 @@ function App() {
       <Route path="/document/invoice" element={<Invoice />} />
     </Routes>
   </Layout>
-
-
  </>
    
   )

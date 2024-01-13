@@ -1,13 +1,34 @@
 import logImg from '../Image/Login.png'
 import logo from '../Image/logo.png'
-import { useState } from 'react'
-const Login = () => {
-  const handleSubmit = (e) => {
+import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux';
+import {login, is_login} from '../features/authentication'
+import {useNavigate} from 'react-router-dom'
 
+const Login = () => {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [credentials, setCredentials] = useState({
+    username: '',
+    password: ''
+  });
+  
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCredentials((prevCredentials) => ({
+      ...prevCredentials,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async(e) => {
     e.preventDefault()
+    dispatch(login(credentials, navigate))
   }
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    dispatch(is_login(navigate))
+  }, [dispatch, navigate])
 
   return (
     <div className=' overflow-hidden max-h-screen max-w-screen'>
@@ -28,7 +49,7 @@ const Login = () => {
                 </div>
                 
               </div>
-              <form action="" className='flex flex-col gap-2 w-full px-20 lg:w-1/2'onSubmit={handleSubmit}>
+              <form className='flex flex-col gap-2 w-full px-20 lg:w-1/2' onSubmit={handleSubmit}>
                   <div className=' hidden lg:block -mt-40'>
                     <h1 className='text-light-blue text-4xl font-medium'>Login</h1>
                     <p className='text-dark-gray text-xl '>Log in to your apartment rental management software.</p>
@@ -36,14 +57,14 @@ const Login = () => {
                   <p className='text-dark-gray text-left mb-3 lg:hidden'>Login to your Account</p>
                   <div>
                     <label className='relative cursor-pointer'>
-                      <input type="email" placeholder="Email" value={email}  className=' text-lg text-black font-normal bg-gray rounded-lg  outline-none placeholder-dark-gray placeholder-opacity-0 pt-7 pl-2 pb-2 w-full'onChange={(e) => setEmail(e.target.value)}  />
+                      <input type="text" placeholder="Username" name='username' value={credentials.username}  className=' text-lg text-black font-normal bg-gray rounded-lg  outline-none placeholder-dark-gray placeholder-opacity-0 pt-7 pl-2 pb-2 w-full'onChange={handleInputChange}  />
                       <span className='text-medium text-light-gray text-opacity-80  absolute left-1 bottom-5 px-1 '>Email</span>
                     </label>
                     
                   </div>
                   <div>
                     <label className='relative cursor-pointer'>
-                      <input type="password" placeholder="Password" value={password}  className=' text-lg text-black font-normal bg-gray rounded-lg  outline-none placeholder-dark-gray placeholder-opacity-0 pt-7 pl-2 pb-2 w-full' onChange={(e) => setPassword(e.target.value)} />
+                      <input type="password" placeholder="Password"  name='password' value={credentials.password}  className=' text-lg text-black font-normal bg-gray rounded-lg  outline-none placeholder-dark-gray placeholder-opacity-0 pt-7 pl-2 pb-2 w-full' onChange={handleInputChange} />
                       <span className='text-medium text-light-gray text-opacity-80  absolute left-1 bottom-5 px-1 '>Password</span>
                     </label>
                   </div>
@@ -55,11 +76,8 @@ const Login = () => {
               <div className='hidden lg:block mb-40 mt-20'>
                 <img src={logImg} alt="login" className=' w-9/12' />
           </div>
-
       </div>
-
 </div>
-
   )
 }
 

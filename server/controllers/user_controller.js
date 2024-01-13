@@ -10,6 +10,21 @@ const createToken = ({id,username, role}) => {
     return jwt.sign({id,username,role}, process.env.SECRET, {expiresIn: "3d"})
 }
 
+module.exports.fetch_user = async (req, res) => {
+    try{
+        const _id = req.user._id
+        const response = await USERMODEL.findById(_id)
+        if(!response){
+            return res.status(httpStatusCodes.NOT_FOUND).json({error: "User not found"})
+        }
+        return res.status(httpStatusCodes.OK).json({msg: "User found"})
+    }
+    catch(err){
+        console.error({ error: err.message });
+        return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server Error..." });
+    }
+}
+
 module.exports.sign_up = async (req, res) => {
     try{
         // Suggestion: We could include role in client side in order to differentiate admin and tenant.
@@ -79,7 +94,6 @@ module.exports.sign_in = async (req, res) => {
         }
 
         const token = createToken(response._id, response.username, response.role);
-
         return res.status(httpStatusCodes.OK).json({ msg: "Login Successfully!", role: response.role, token });
     } catch (err) {
         console.error({ error: err.message });
