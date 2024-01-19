@@ -8,6 +8,7 @@ require('dotenv').config()
 // import routes
 const user_route = require('./routes/user')
 const report_route = require('./routes/report')
+const apartment_route = require('./routes/apartment')
 
 const app = express()
 app.use(express.json())
@@ -32,3 +33,4 @@ mongoose.connect(process.env.MONGODB_URI)
 
 app.use('/api/user', user_route)
 app.use('/api/report', report_route)
+app.use('/api/apartment', apartment_route)
