@@ -1,10 +1,10 @@
 import React from 'react'
 import { useState } from 'react'
-import TenantProfileInfo from '../Data/TenantProfileInfo';
+import TenantProfileInfo from '../../Data/TenantProfileInfo';
 import { FaEdit } from "react-icons/fa";
-import EditTenantDetails from '../Component/EditTenantDetails';
-import EditTenantAccount from '../Component/EditTenantAccount';
-import EditFamilyMem from '../Component/EditFamilyMem';
+import EditTenantDetails from '../../Component/EditTenantDetails';
+import EditTenantAccount from '../../Component/EditTenantAccount';
+import EditFamilyMem from '../../Component/EditFamilyMem';
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditTenantDetailForm, setIsEditTenantDetailForm] = useState(false)

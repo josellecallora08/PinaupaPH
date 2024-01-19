@@ -1,19 +1,19 @@
 
 
 import {Route,Routes} from "react-router-dom"
-import Dashboard from "./Page/Dashboard"
+import Dashboard from "./Page/Admin/Dashboard"
 import Sidebar from "./Component/Sidebar"
 import Layout from "./Component/Layout"
-import Tenant from "./Page/Tenant"
-import Apartment from "./Page/Apartment"
-import Security from "./Page/Security"
-import Concern from "./Page/Concern"
-import Profile from "./Page/Profile"
-import Least from "./Page/Least"
-import Invoice from "./Page/Invoice"
+import Tenant from "./Page/Admin/Tenant"
+import Apartment from "./Page/Admin/Apartment"
+import Security from "./Page/Admin/Security"
+import Concern from "./Page/Admin/Concern"
+import Profile from "./Page/Admin/Profile"
+import Least from "./Page/Admin/Least"
+import Invoice from "./Page/Admin/Invoice"
 import Login from "./Page/Login"
 import TenantCard from "./Component/TenantCard"
-import TenantProfile from "./Page/TenantProfile"
+import TenantProfile from "./Page/Admin/TenantProfile"
 
 function App() {
   

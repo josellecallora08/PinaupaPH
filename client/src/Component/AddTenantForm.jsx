@@ -1,8 +1,8 @@
 import React from 'react'
 import { useState } from 'react'
 const AddTenantForm = () => {
-
   const [isFormOpen, setIsFormOpen] = useState(false)
+  
   return (
   <div className=''>
       <h1 className="text-3xl font-bold mb-4">Add Tenant</h1>

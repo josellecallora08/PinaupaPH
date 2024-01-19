@@ -1,9 +1,9 @@
 import React from 'react'
-import TenantCard from '../Component/TenantCard'
-import SearchBar from '../Component/SearchBar'
+import TenantCard from '../../Component/TenantCard'
+import SearchBar from '../../Component/SearchBar'
 import { FaPlus } from "react-icons/fa6";
 import { useState } from 'react'
-import AddTenantForm from '../Component/AddTenantForm';
+import AddTenantForm from '../../Component/AddTenantForm';
 
 const Tenant = () => {
  const [searchItem, setSearchItem] = useState("")

@@ -1,5 +1,5 @@
 import React from 'react'
-import pfp from '../Image/pfp.png'
+import pfp from '/pfp.svg'
 import { useState } from 'react'
 import { TbBellRinging } from "react-icons/tb";
 import { Link } from 'react-router-dom';

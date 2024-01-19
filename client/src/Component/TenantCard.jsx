@@ -1,5 +1,5 @@
 
-import pfp from '../Image/pfp.png'
+import pfp from '/pfp.svg'
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { Link } from 'react-router-dom';
 const TenantCard = () => {

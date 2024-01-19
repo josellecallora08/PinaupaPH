@@ -1,5 +1,5 @@
-import logImg from '../Image/Login.png'
-import logo from '../Image/logo.png'
+import logImg from '/login.svg'
+import logo from '/pinaupa-logo.svg'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import {login, is_login} from '../features/authentication'

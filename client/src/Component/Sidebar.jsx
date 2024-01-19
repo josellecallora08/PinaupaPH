@@ -1,6 +1,6 @@
 
-import logo from '../Image/logo.png'
-import pfp from '../Image/pfp.png'
+import logo from '/mobile-pinaupa-logo.svg'
+import pfp from '/pfp.svg'
 import { useState } from 'react' 
 import {FaBars,FaX} from 'react-icons/fa6'
 import { MdOutlineDashboard } from "react-icons/md";

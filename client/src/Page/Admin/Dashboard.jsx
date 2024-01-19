@@ -1,6 +1,6 @@
-import City from '../Image/city.png'
-import BarChart from '../Component/BarChart'
-import RecentAct from '../Data/RecentAct'
+import City from '/city.svg'
+import BarChart from '../../Component/BarChart'
+import RecentAct from '../../Data/RecentAct'
 
 
 
@@ -26,9 +26,9 @@ const Dashboard = () => {
       <div className='lg:flex lg:mt-5 '>
       
         {/* center-left of Dashboard> */}
-        <div className=' h-auto lg:w-7/12 pr-3 rounded-br-xl rounded-bl-xl shadow-xl shadow-dark-gray  mx-4 pt-4 pl-5   '>
+        <div className='h-auto lg:w-7/12 pr-3 rounded-br-xl rounded-bl-xl shadow-xl shadow-dark-gray  mx-4 pt-4 pl-5   '>
           <div>
-          <h1 className=' m-4 my-7 text-xl font-medium '>Revenue Overview</h1>
+          <h1 className='m-4 my-7 text-xl font-medium '>Revenue Overview</h1>
           <div className='w-full'>
             <div className='px-1 py-2 border-2 w-1/2 border-light-blue flex flex-col items-center text-dark-blue'>
               <h1 className='font-black text-xl'>31,894.20</h1>
