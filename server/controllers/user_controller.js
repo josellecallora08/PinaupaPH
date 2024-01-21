@@ -53,7 +53,7 @@ module.exports.sign_up = async (req, res) => {
         }
         
         if(response.role === "Admin"){
-            const owner = await OWNERMODEL.create({user_id:response.household_id})
+            const owner = await OWNERMODEL.create({user_id:response._id})
             if(!owner){
                 return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Failed to create Owner Data. Please try again later."})
             }

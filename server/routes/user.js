@@ -8,7 +8,7 @@ const requireAuth = require('../middleware/requireAuth')
 
 const router = Router()
 
-router.get('/', fetch_user)
+router.get('/', requireAuth, fetch_user)
 router.post('/', sign_up)
 router.post('/login', sign_in)
 router.post('/:user_id/create_cctv', create_cctv)

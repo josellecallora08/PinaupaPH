@@ -9,6 +9,9 @@ const CONTRACTMODEL = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'units'
     },
+    advance:{
+        type:Number
+    },
     from_date:{
         type: Date
     },
