@@ -1,5 +1,5 @@
 
-import img from "../Image/pfp.png";
+import img from "/pfp.svg";
 const TenantProfileInfo = [
   {
     Account:[

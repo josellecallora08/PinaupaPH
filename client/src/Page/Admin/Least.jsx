@@ -2,8 +2,8 @@ import React from 'react'
 
 const Least = () => {
   return (
-    <div>Least</div>
-  )
+    <div>Lease</div>
+    )
 }
 
 export default Least
