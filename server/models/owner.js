@@ -3,19 +3,16 @@ const mongoose = require('mongoose')
 const CONTRACTMODEL = new mongoose.Schema({
     user_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'USERMODEL',
+        ref:'user',
     },
     unit_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'UNITMODEL'
+        ref:'units'
     },
-    number_months:{
-        type:Number,
-    },
-    from:{
+    from_date:{
         type: Date
     },
-    month:{
+    to_date:{
         type:Date
     }
 }, {timestamps: true})
@@ -23,12 +20,12 @@ const CONTRACTMODEL = new mongoose.Schema({
 const RECEIPTMODEL = new mongoose.Schema({
     user_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'USERMODEL',
+        ref:'user',
         required: true
     },
     unit_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'UNITMODEL'
+        ref:'units'
     },
     amount:{
         type:Number
@@ -44,15 +41,14 @@ const RECEIPTMODEL = new mongoose.Schema({
     }
 },{timestamps: true})
 
-
 const INVOICEMODEL = new mongoose.Schema({
     user_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'USERMODEL'
+        ref:'user'
     },
     unit_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'UNITMODEL'
+        ref:'units'
     },
     amount:{
         type:Number,
@@ -90,7 +86,7 @@ const CCTVMODEL = new mongoose.Schema({
 const OWNERMODEL = new mongoose.Schema({
     user_id:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "USERMODEL"
+        ref: "user"
     },
     contracts:[CONTRACTMODEL],
     receitps:[RECEIPTMODEL],

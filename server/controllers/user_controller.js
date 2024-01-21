@@ -28,7 +28,7 @@ module.exports.fetch_user = async (req, res) => {
 module.exports.sign_up = async (req, res) => {
     try{
         // Suggestion: We could include role in client side in order to differentiate admin and tenant.
-        const {name, username, email, password, mobile_no, birthday} = req.body
+        const {name, username, email, password, mobile_no, birthday, unit_id} = req.body
 
         if(await USERMODEL.findOne({username})){
             return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Username already exists"})
@@ -53,13 +53,13 @@ module.exports.sign_up = async (req, res) => {
         }
         
         if(response.role === "Admin"){
-            const owner = await OWNERMODEL.create({user_id:response._id})
+            const owner = await OWNERMODEL.create({user_id:response.household_id})
             if(!owner){
                 return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Failed to create Owner Data. Please try again later."})
             }
         }
         if(response.role === "Tenant"){
-            const tenant = await TENANTMODEL.create({user_id:response._id})
+            const tenant = await TENANTMODEL.create({user_id:response._id, unit_id: unit_id})
             if(!tenant){
                 return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Failed to create Tenant Data. Please try again later."})
             }

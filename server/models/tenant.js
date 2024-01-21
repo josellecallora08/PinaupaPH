@@ -48,19 +48,28 @@ const PETMODEL = new mongoose.Schema({
 const TENANTMODEL = new mongoose.Schema({
     user_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'USERMODEL'
+        ref:'user'
     },
     unit_id:{
-        type:String
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'units',
+        required: true
     },
     deposit:{
         type:Number,
+        default: null,
+    },
+    advance:{
+        type:Number,
+        default: null
     },
     balance:{
         type:Number,
+        default: null,
     },
     monthly_due:{
-        type:Date
+        type:Date,
+        default: null
     },
     payment:[PAYMENTMODEL],
     household: [HOUSEHOLDMODEL],
