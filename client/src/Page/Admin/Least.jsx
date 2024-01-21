@@ -1,8 +1,10 @@
 import React from 'react'
-
+import GenerateContractBtn from '../../Component/GenerateContractBtn'
 const Least = () => {
   return (
-    <div>Lease</div>
+    <div>
+      <GenerateContractBtn />
+    </div>
     )
 }
 

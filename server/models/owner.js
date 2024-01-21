@@ -88,7 +88,8 @@ const OWNERMODEL = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "user"
     },
-    contracts:[CONTRACTMODEL],
+    contracts:[{type:mongoose.Schema.Types.ObjectId,
+                ref:'contracts'}],
     receitps:[RECEIPTMODEL],
     invoice:[INVOICEMODEL],
     cctvs:[CCTVMODEL],
