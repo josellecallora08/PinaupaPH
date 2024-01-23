@@ -18,7 +18,6 @@ const APARTMENTMODEL = new mongoose.Schema({
         type:String
     },
     units:[{type:mongoose.Schema.Types.ObjectId, ref: "units"}],
-    cctv:[{type:mongoose.Schema.Types.ObjectId, ref: "cctv"}]
 
 },{timestamps: true})
 

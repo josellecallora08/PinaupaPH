@@ -41,6 +41,9 @@ module.exports.edit_apartment = async (req, res) => {
         const {name, address, province, barangay} = req.body
         const details = {}
         if(name !== ''){
+            if(await APARTMENTMODEL.findOne({name})) 
+                return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Apartment Building Exists"})
+
             details.name = name
         }
         if(address !== ''){
@@ -131,13 +134,14 @@ module.exports.edit_apartment_unit = async (req, res) => {
         const details = {} 
             
         if (unit_no !== '') {
+            if(await UNITMODEL.findOne({unit_no}))
+                return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Unit Number exists"})
+
             details.unit_no = unit_no;
         }
 
-        if (rent !== '') {
-            details.rent = rent;
-        }
-
+        if (rent !== '') details.rent = rent;
+        
         const response = await UNITMODEL.findByIdAndUpdate({_id:unit_id},details)
         if(!response){
             return res.status(httpStatusCodes.NOT_FOUND).json({error: `Apartment Not Found`})

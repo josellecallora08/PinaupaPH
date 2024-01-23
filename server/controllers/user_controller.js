@@ -19,8 +19,7 @@ module.exports.search_bar = async(req, res) => {
 }
 
 module.exports.fetch_user = async (req, res) => {
-    const _id = req.user._id
-    const response = await USERMODEL.findById(_id)
+    const response = await USERMODEL.findOne({role: "Tenant"})
     try{
         if(!response){
             return res.status(httpStatusCodes.NOT_FOUND).json({error: "User not found"})
@@ -35,8 +34,22 @@ module.exports.fetch_user = async (req, res) => {
 
 module.exports.sign_up = async (req, res) => {
     const {name, username, email, password, mobile_no, birthday, unit_id, deposit} = req.body
+    const details = {}
+    if(name !== "") details.name = name
+    if(username !== "") details.username = username
+    if(email !== "") details.email = email
+    if(password !== "") {
 
-    try{
+        const salt = await bcrypt.genSalt(10);
+        const hashed = await bcrypt.hash(password, salt)
+        if(!hashed) 
+            return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Error hashing the password."})
+
+        details.password = hashed
+    }
+    if(mobile_no !== "") details.mobile_no = mobile_no
+    if(birthday !== "") details.birthday = birthday
+    try{ 
         if(await USERMODEL.findOne({username})) 
             return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Username already exists"})
         if(await USERMODEL.findOne({email})) 
@@ -44,12 +57,7 @@ module.exports.sign_up = async (req, res) => {
         if(await USERMODEL.findOne({mobile_no})) 
             return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Mobile Number already exists."})
         
-        const salt = await bcrypt.genSalt(10);
-        const hashed = await bcrypt.hash(password, salt)
-        if(!hashed) 
-            return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Error hashing the password."})
-
-        const response = await USERMODEL.create({name,username,email,password:hashed,mobile_no,birthday})
+        const response = await USERMODEL.create(details)
         if(!response)
             return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Unsuccessful registration. Please try again later."})
                 
@@ -169,23 +177,28 @@ module.exports.update_profile_picture = async (req, res) => {
 }
 
 module.exports.update_profile = async (req,res) => {
-    try{
-        const {user_id} = req.params
-        const {name, username, email, password, mobile_no, birthday} = req.body;
-        let response = await USERMODEL.findById({user_id: user_id})
-        if(!response){
-            return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Failed to update information"})
-        }
+    const {user_id} = req.params
+    const {name, username, email, password, mobile_no, birthday} = req.body;
+    const details = {}
+    if(name !== "") details.name = name
+    if(username !== "") details.username = username
+    if(email !== "") details.email = email
+    if(password !== "") {
 
-        const salt = await bcrypt.genSalt(10)
+        const salt = await bcrypt.genSalt(10);
         const hashed = await bcrypt.hash(password, salt)
-        if(!hashed){
-            return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Failed to update the password"})
-        }
-        response = await USERMODEL.findByIdAndUpdate(_id, {name, username, email, password:hashed, mobile_no, birthday})
-        if(!response){
+        if(!hashed) 
+            return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Error hashing the password."})
+
+        details.password = hashed
+    }
+    if(mobile_no !== "") details.mobile_no = mobile_no
+    if(birthday !== "") details.birthday = birthday
+    try{
+        const response = await USERMODEL.findByIdAndUpdate({_id:user_id}, details)
+        if(!response)
             return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Failed to update information(2)"})
-        }
+        
         return res.status(httpStatusCodes.CREATED).json({msg: "Information Updated Successfully!"})
     }
     catch(err){
@@ -205,8 +218,15 @@ module.exports.update_household = async(req, res) =>{
         if(!response){
             return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Unable to Update."})
         }
-        
-        const index = response.household.findIndex((item) => item._id.toString() === household_id)
+        const match = response.household.forEach((data, index) => {
+            response.household[index].name.toString() === name
+        })
+        if(match){
+            return res.status(httpStatusCodes.UNAUTHORIZED.json({error: "Unable to Update Household Information."}))
+        }
+        const index = response.household.findIndex((item) => {
+            item._id.toString() === household_id && item.name.toString() === name
+        })
         if(index === -1){
             return res.status(httpStatusCodes.UNAUTHORIZED.json({error: "Unable to Update Household Information."}))
         }
