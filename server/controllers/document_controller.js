@@ -3,16 +3,13 @@ const TENANTMODEL = require('../models/tenant');
 const USERMODEL = require('../models/user');
 const CONTRACTMODEL = require('../models/contract');
 const UNITMODEL = require('../models/unit');
-const OWNERMODEL = require('../models/owner')
 const path = require('path');
 const pdf = require('html-pdf');
 const fs = require('fs').promises
 const pdf_template = require('../documents');
 
 module.exports.generate_contract = async (req, res) => {
-    const { owner_id } = req.params;
     const { deposit, advance, user_id, unit_id, from_date, to_date } = req.body;
-
     try {
         const user_response = await USERMODEL.findById(user_id);
         const unit_response = await UNITMODEL.findById(unit_id);
@@ -47,19 +44,7 @@ module.exports.generate_contract = async (req, res) => {
             });
 
             const contractResponse = await CONTRACTMODEL.create({ user_id, unit_id, advance, from_date, to_date });
-
-            if (!contractResponse) {
-                return res.status(httpStatusCodes.NOT_FOUND).json({ error: "Contract Not found" });
-            }
-
-            const owner_response = await OWNERMODEL.findOne({ user_id: owner_id });
-
-            if (!owner_response) {
-                return res.status(httpStatusCodes.NOT_FOUND).json({ error: "Owner Not found" });
-            }
-
-            owner_response.contracts.push(contractResponse._id);
-            await owner_response.save();
+            if (!contractResponse) return res.status(httpStatusCodes.NOT_FOUND).json({ error: "Contract Not found" });
 
             return res.status(httpStatusCodes.CREATED).json({
                 message: "Created Contract and Successfully saved to Database",
@@ -77,14 +62,12 @@ module.exports.fetch_contract = async (req, res) => {
     try{
         const { user_id, unit_id } = req.params;
     const user_response = await USERMODEL.findById({ _id: user_id });
-    if (!user_response) {
-        return res.status(httpStatusCodes.NOT_FOUND).json({ error: "User Not found" });
-    }
+    if (!user_response) return res.status(httpStatusCodes.NOT_FOUND).json({ error: "User Not found" });
+    
 
     const unit_response = await UNITMODEL.findById({ _id: unit_id });
-    if (!unit_response) {
-        return res.status(httpStatusCodes.NOT_FOUND).json({ error: "Unit Not found" });
-    }
+    if (!unit_response) return res.status(httpStatusCodes.NOT_FOUND).json({ error: "Unit Not found" });
+    
   
     const filePath = path.join(__dirname, '../contracts', `${unit_response.unit_no}-${user_response._id}.pdf`);
  
@@ -102,25 +85,24 @@ module.exports.fetch_contract = async (req, res) => {
 };
 
 module.exports.edit_contract = async (req, res) => {
-    try{
-        const {contract_id} = req.params
-        const {advance, from_date, to_date} = req.body
-        const details = {}
-        
-        if(!advance == ""){
-            details.advance = advance
-        }
-        if(!from_date == ""){
-            details.from_date = from_date
-        }
-        if(!to_date == ""){
-            details.to_date = to_date
-        }
+    const {contract_id} = req.params
+    const {advance, from_date, to_date} = req.body
+    const details = {}
+    
+    if(!advance == ""){
+        details.advance = advance
+    }
+    if(!from_date == ""){
+        details.from_date = from_date
+    }
+    if(!to_date == ""){
+        details.to_date = to_date
+    }
 
+    try{
         const response = await CONTRACTMODEL.findByIdAndUpdate({_id:contract_id},details)
-        if(!response){
-            return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Unable to update contract"})
-        }
+        if(!response) return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Unable to update contract"})
+
         return res.status(httpStatusCodes.OK).json({msg: "Updated contract"})
     }
     catch(err){
@@ -131,34 +113,18 @@ module.exports.edit_contract = async (req, res) => {
 
 module.exports.remove_contract = async (req, res) => {
     try{
-        const {owner_id, contract_id} = req.params
+        const {contract_id} = req.params
         const response = await CONTRACTMODEL.findByIdAndDelete({_id:contract_id})
-        if(!response){
-            return res.status(httpStatusCodes.NOT_FOUND).json({error: "Failed to delete contract1"})
-        }
+        if(!response) return res.status(httpStatusCodes.NOT_FOUND).json({error: "Failed to delete contract1"})
+
         const user_response = await TENANTMODEL.findOne({user_id:response.user_id})
-        if(!user_response){
-            return res.status(httpStatusCodes.NOT_FOUND).json({error: "Failed to delete contract2"})
-        }
+        if(!user_response) return res.status(httpStatusCodes.NOT_FOUND).json({error: "Failed to delete contract2"})
+        
         const unit_response = await UNITMODEL.findById({_id:response.unit_id})
-
-        if(!unit_response){
-            return res.status(httpStatusCodes.NOT_FOUND).json({error: "Unit not found"})
-        }
+        if(!unit_response) return res.status(httpStatusCodes.NOT_FOUND).json({error: "Unit not found"})
+        
         const pdf_file_path = `contracts/${unit_response.unit_no}-${user_response.user_id}.pdf`
-
         await fs.unlink(pdf_file_path)
-
-        const owner_response = await OWNERMODEL.findOne({user_id:owner_id})
-        if(!owner_response){
-            return res.status(httpStatusCodes.NOT_FOUND).json({error: "Owner not found"})
-        }
-        const index = owner_response.contracts.findIndex(item => item.toString() === contract_id)
-        if(index === -1){
-            return res.status(httpStatusCodes.NOT_FOUND).json({error: "Contract not found"})
-        }
-        owner_response.contracts.splice(index, 1)
-        await owner_response.save()
         return res.status(httpStatusCodes.OK).json({msg: "Contract Deleted"})
     }
     catch(err){

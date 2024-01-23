@@ -1,6 +1,5 @@
 const REPORTMODEL = require('../models/report')
 const TENANTMODEL = require('../models/tenant')
-const OWNERMODEL = require('../models/owner')
 const USERMODEL = require('../models/user')
 
 module.exports.report = async (req, res) => {
@@ -21,12 +20,7 @@ module.exports.report = async (req, res) => {
 
 module.exports.comment = async (req, res) => {
     try{
-        const {_id, description} = req.body
-        let response = await OWNERMODEL.findByIdAndUpdate(_id,{description})
-        if(!response){
-            response = await TENANTMODEL.findByIdAndUpdate(_id,{description})
-        }
-    
+      
         res.status(200).json({msg: "Made a comment."})
     }
     catch(err){

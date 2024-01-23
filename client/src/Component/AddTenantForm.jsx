@@ -1,12 +1,60 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState } from 'react'
+import Cookies from 'js-cookie'
+import { base_url } from '../utils/constants'
+
 const AddTenantForm = () => {
   const [isFormOpen, setIsFormOpen] = useState(false)
-  
+  const [field, setField] = useState({
+    "name": null,
+    "username":null,
+    "birthday": null,
+    "contact": null,
+    "email": null,
+    "password": null,
+    "unit_id": null,
+    "deposit": null
+  })
+
+  const handleChange = (name, value) => {
+    setField((fields) => ({
+      ...fields,
+      [name]:value
+    }))
+  } 
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const Token = Cookies.get('Token');
+    const details = Object.entries(fields).reduce((acc,[key, value]) => {
+      if(value !== null){
+        acc[key] = value
+      }
+      return acc;
+    }, {})
+    
+    try{
+      const request = await fetch(`${base_url}/`,{
+        method: POST,
+        headers: {
+          Auhorization: `Bearer ${Token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(details)
+      })
+      if(!request.ok){
+        throw new Error("Unable to add tenant")
+      }
+    }
+    catch(err){
+      console.log({error: err.message})
+    }
+  }
+
   return (
   <div className=''>
       <h1 className="text-3xl font-bold mb-4">Add Tenant</h1>
-        <form action="" className="lg:w-[30rem] w-[20rem] h-[20rem] px-3 overflow-y-auto">
+        <form onSubmit={handleSubmit} className="lg:w-[30rem] w-[20rem] h-[20rem] px-3 overflow-y-auto">
         <h1 className="text-xl font-bold mb-4">Personal Details</h1>
             <div className="mb-4">
               <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
