@@ -1,8 +1,13 @@
 const mongoose = require('mongoose')
 
 const CCTVMODEL = new mongoose.Schema({
+    apartment_id:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref: 'apartment'
+    },
     name:{
-        type:String
+        type:String,
+        unique:true
     },
     username:{
         type:String,

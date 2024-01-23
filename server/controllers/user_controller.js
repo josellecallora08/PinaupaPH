@@ -1,4 +1,3 @@
-const OWNERMODEL = require('../models/owner')
 const TENANTMODEL = require('../models/tenant')
 const USERMODEL = require('../models/user')
 const httpStatusCodes = require('../constants/constants')
@@ -9,15 +8,24 @@ const mongoose = require('mongoose')
 const createToken = ({id,username, role}) => {
     return jwt.sign({id,username,role}, process.env.SECRET, {expiresIn: "3d"})
 }
+module.exports.search_bar = async(req, res) => {
+
+    try{
+
+    }
+    catch(err){
+
+    }
+}
 
 module.exports.fetch_user = async (req, res) => {
+    const _id = req.user._id
+    const response = await USERMODEL.findById(_id)
     try{
-        const _id = req.user._id
-        const response = await USERMODEL.findById(_id)
         if(!response){
             return res.status(httpStatusCodes.NOT_FOUND).json({error: "User not found"})
         }
-        return res.status(httpStatusCodes.OK).json({msg: "User found"})
+        return res.status(httpStatusCodes.OK).json({msg: "User found", response})
     }
     catch(err){
         console.error({ error: err.message });
@@ -26,49 +34,35 @@ module.exports.fetch_user = async (req, res) => {
 }
 
 module.exports.sign_up = async (req, res) => {
-    try{
-        // Suggestion: We could include role in client side in order to differentiate admin and tenant.
-        const {name, username, email, password, mobile_no, birthday, unit_id} = req.body
+    const {name, username, email, password, mobile_no, birthday, unit_id, deposit} = req.body
 
-        if(await USERMODEL.findOne({username})){
+    try{
+        if(await USERMODEL.findOne({username})) 
             return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Username already exists"})
-        }  
-        if(await USERMODEL.findOne({email})){
-            return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Email already exists"})
-        } 
-        if(await USERMODEL.findOne({mobile_no})){
+        if(await USERMODEL.findOne({email})) 
+            return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Email already exists"}) 
+        if(await USERMODEL.findOne({mobile_no})) 
             return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Mobile Number already exists."})
-        }
         
         const salt = await bcrypt.genSalt(10);
-
         const hashed = await bcrypt.hash(password, salt)
-        if(!hashed){
+        if(!hashed) 
             return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Error hashing the password."})
-        }
 
         const response = await USERMODEL.create({name,username,email,password:hashed,mobile_no,birthday})
-        if(!response){
+        if(!response)
             return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Unsuccessful registration. Please try again later."})
-        }
-        
-        if(response.role === "Admin"){
-            const owner = await OWNERMODEL.create({user_id:response._id})
-            if(!owner){
-                return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Failed to create Owner Data. Please try again later."})
-            }
-        }
+                
         if(response.role === "Tenant"){
-            const tenant = await TENANTMODEL.create({user_id:response._id, unit_id: unit_id})
-            if(!tenant){
+            const tenant = await TENANTMODEL.create({user_id:response._id, unit_id: unit_id, deposit})
+            if(!tenant)
                 return res.status(httpStatusCodes.BAD_REQUEST).json({error:"Failed to create Tenant Data. Please try again later."})
-            }
         }
         
         // Add apartment and report
 
         const token = createToken(response._id, response.username, response.role)
-        return res.status(httpStatusCodes.OK).json({msg:"Created Account successfully!", role:response.role, token})
+        return res.status(httpStatusCodes.OK).json({msg:"Created Account successfully!", response, token})
     }
     catch(err){
         console.error({error:err.message})
@@ -77,57 +71,28 @@ module.exports.sign_up = async (req, res) => {
 }
 
 module.exports.sign_in = async (req, res) => {
+    const { username, password } = req.body;
     try {
-        const { username, password } = req.body;
-        
         let response = await USERMODEL.findOne({ username });
         if (!response) {
             response = await USERMODEL.findOne({ email: username });
-            if (!response) {
+            if (!response) 
                 return res.status(httpStatusCodes.BAD_REQUEST).json({ error: "Invalid Credentials (temp - Username)" });
-            }
         }
 
         const match = await bcrypt.compare(password, response.password);
-        if (!match) {
+        if (!match) 
             return res.status(httpStatusCodes.BAD_REQUEST).json({ error: "Invalid Credentials (temp - Password)" });
-        }
 
         const token = createToken(response._id, response.username, response.role);
-        return res.status(httpStatusCodes.OK).json({ msg: "Login Successfully!", role: response.role, token });
+        return res.status(httpStatusCodes.OK).json({ msg: "Login Successfully!", response, token });
     } catch (err) {
         console.error({ error: err.message });
         return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server Error..." });
     }
 };
 
-module.exports.create_cctv = async (req, res) => {
-    try {
-        const { user_id } = req.params;
-        const { name, username, password, port, ip_address } = req.body;
 
-        const response = await OWNERMODEL.findOne({ user_id: user_id});
-
-        if (!response) {
-            return res.status(httpStatusCodes.UNAUTHORIZED).json({ error: "Unable to Create CCTV Surveillance." });
-        }
-
-        const details = { name, username, password, port, ip_address };
-
-        const index = response.cctvs.findIndex(item => item.name.toString() === name);
-
-        if (index === -1) {
-            response.cctvs.push(details);
-            await response.save();
-            return res.status(httpStatusCodes.CREATED).json({ msg: "Successfully added CCTV camera." });
-        } else {
-            return res.status(httpStatusCodes.BAD_REQUEST).json({ error: "CCTV already exists." });
-        }
-    } catch (err) {
-        console.error({ error: err.message });
-        return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server Error." });
-    }
-};
 
 
 module.exports.create_pet = async (req, res) => {
@@ -229,36 +194,6 @@ module.exports.update_profile = async (req,res) => {
     }
 }
 
-module.exports.update_cctv = async (req, res) => {
-    try{
-        const {user_id, cctv_id} = req.params
-        const {name, username, password, port, ip_address} = req.body
-        const details = {name, username, password, port, ip_address}
-        
-        let response = await OWNERMODEL.findOne({user_id:user_id})
-        if(!response){
-            return res.status(httpStatusCodes.UNAUTHORIZED).json({error: "Unable Update Surveillance Information."})
-        }
-        
-        const index = response.cctvs.findIndex(item => item._id.toString() === cctv_id)
-        if(index === -1){
-            return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Unable to locate CCTV"})
-        }
-        
-        Object.keys(details).forEach(field => {
-            if(details[field] !== undefined){
-                response.cctvs[index][field] = details[field]
-            }
-        })
-
-        await response.save()
-        return res.status(httpStatusCodes.OK).json({msg: "Successfully Updated!"})
-    }
-    catch(err){
-        console.error({ error: err.message });
-        return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Server Error." });
-    }
-}
 
 module.exports.update_household = async(req, res) =>{
     try{
@@ -326,9 +261,6 @@ module.exports.delete_tenant = async (req, res) => {
         if(!response){
             return res.status(httpStatusCodes.NOT_FOUND).json({error: "User not found..."})
         }
-        if(response.role === "Admin"){
-            await OWNERMODEL.findOneAndDelete({user_id:user_id})
-        } 
         if(response.role === "Tenant"){
             await TENANTMODEL.findOneAndDelete({user_id:user_id})
         }
@@ -340,27 +272,6 @@ module.exports.delete_tenant = async (req, res) => {
     }
 }
 
-module.exports.delete_cctv = async(req, res) => {
-    try{
-        const {user_id, cctv_id} = req.params
-        const response = await OWNERMODEL.findOne({user_id:user_id})
-        if(!response){
-            return res.status(httpStatusCodes.NOT_FOUND).json({error: "User Not Found"})
-        }
-        const index = response.cctvs.findIndex(item => item._id.toString() === cctv_id)
-        if(index === -1){
-            return res.status(httpStatusCodes.UNAUTHORIZED).json({error: "Unable to remove CCTV"})
-        }
-        response.cctvs.splice(index, 1)
-
-        await response.save();
-        return res.status(httpStatusCodes.OK).json({ message: "CCTV deleted successfully"});
-    }
-    catch(err){
-        console.error({error:err.message})
-        return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({error: "Server Error..."})
-    }
-}
 
 module.exports.delete_household = async(req, res) => {
     try{

@@ -5,6 +5,7 @@ import { FaEdit } from "react-icons/fa";
 import EditTenantDetails from '../../Component/EditTenantDetails';
 import EditTenantAccount from '../../Component/EditTenantAccount';
 import EditFamilyMem from '../../Component/EditFamilyMem';
+import {payment_url} from '../../utils/constants'
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditTenantDetailForm, setIsEditTenantDetailForm] = useState(false)
@@ -28,10 +29,7 @@ const TenantProfile = () => {
 
   };
 
-
-
-
-
+  
   
   return (
     <div className='bg-white1'>
@@ -76,7 +74,6 @@ const TenantProfile = () => {
                             <h2 className=''>{profile.ApartmentDetails[0].aparmentunit}</h2>
                           </div>
                   </div>
-
                         {/*Profile Content */}
         {/*Account */}
                         <div className='relative'>
@@ -274,6 +271,7 @@ const TenantProfile = () => {
           <div>
             {/* Documents content goes here */}
             <h2>Transaction</h2>
+
             {/* ... display documents */}
           </div>
         )}
