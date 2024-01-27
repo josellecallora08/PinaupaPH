@@ -57,6 +57,15 @@ const RecentAct = [
     date: "2022-01-01",
     status: "Bill has Paid via Paypal",
   },
+  ,
+  {
+    img: img ,
+    fname: "Jane",
+    lname: "Doe",
+    date: "2022-01-01",
+    status: "Bill has Paid via Paypal",
+  },
+  
   
 ];
 
