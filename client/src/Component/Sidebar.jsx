@@ -1,5 +1,5 @@
 
-import logo from '/mobile-pinaupa-logo.svg'
+import logo from '/public/pinaupa-logo.svg'
 import pfp from '/pfp.svg'
 import { useState } from 'react' 
 import {FaBars,FaX} from 'react-icons/fa6'
