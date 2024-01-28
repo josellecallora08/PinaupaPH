@@ -10,26 +10,26 @@ This is our Academic Capstone Project.
 ## Members
 - **Joselle E. Callora**
   - Project Manager/Lead Programmer
-  - [Facebook](https://www.facebook.com/josellecallora08/)
-  - [LinkedIn](https://www.linkedin.com/in/josellecallora08/)
-  - [GitHub](https://github.com/josellecallora08)
+   - [Facebook](https://www.facebook.com/josellecallora08/)
+   - [LinkedIn](https://www.linkedin.com/in/josellecallora08/)
+   - [GitHub](https://github.com/josellecallora08)
 
 - **Roland Q. Angeles Jr**
   - FrontEnd Developer
-  - [Facebook](https://www.facebook.com/rj.angeles.125)
-  - [LinkedIn](https://www.linkedin.com/in/roland-angeles-53a33a26b/)
-  - [GitHub](https://github.com/Rj-design)
+   - [Facebook](https://www.facebook.com/rj.angeles.125)
+   - [LinkedIn](https://www.linkedin.com/in/roland-angeles-53a33a26b/)
+   - [GitHub](https://github.com/Rj-design)
 
 - **Juan Carlos V. Marquez**
   - UI/UX Designer
-  - [Facebook](https://www.facebook.com/profile.php?id=100006204128322)
-  - [GitHub](https://github.com/Carlosken1001)
+   - [Facebook](https://www.facebook.com/profile.php?id=100006204128322)
+   - [GitHub](https://github.com/Carlosken1001)
   <!-- [LinkedIn](https://www.linkedin.com/in/josellecallora08/) -->
 
 - **Christian Andrei V. Dy**
   - Data Researcher
-  - [LinkedIn](https://www.linkedin.com/in/christian-andrei-dy-323a1927a/)
-  - [GitHub](https://github.com/dy-chrstn)
+   - [LinkedIn](https://www.linkedin.com/in/christian-andrei-dy-323a1927a/)
+   - [GitHub](https://github.com/dy-chrstn)
   <!-- [Facebook](https://www.facebook.com/josellecallora08/) -->
 
 
