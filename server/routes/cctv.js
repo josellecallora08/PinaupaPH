@@ -4,8 +4,8 @@ const { create_cctv, fetch_cctv, update_cctv, delete_cctv } = require('../contro
 const router = Router()
 
 router.get('/', fetch_cctv)
-router.post('/', create_cctv)
+router.post('/:apartment_id', create_cctv)
 router.patch('/:cctv_id', update_cctv)
-router.delete('/:cctv_id', delete_cctv)
+router.delete('/:apartment_id/delete_cctv/:cctv_id', delete_cctv)
 
 module.exports = router
