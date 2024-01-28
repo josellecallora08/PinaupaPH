@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 
 const CCTVMODEL = new mongoose.Schema({
+    apartment_id:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref: 'apartment'
+    },
     name:{
         type:String,
         unique:true
@@ -19,4 +23,4 @@ const CCTVMODEL = new mongoose.Schema({
     }
 },{timestamps: true})
 
-module.exports = mongoose.model("cctvs", CCTVMODEL)
+module.exports = mongoose.model("cctv", CCTVMODEL)

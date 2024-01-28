@@ -5,7 +5,7 @@ const httpStatusCodes = require('../constants/constants')
 
 module.exports.fetch_cctv = async(req, res) => {
     try{
-        const response = await APARTMENTMODEL.find().populate('cctvs')
+        const response = await CCTVMODEL.find({})
         if(!response) return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Unable to fetch CCTV"})
 
         console.log(response)
@@ -17,8 +17,7 @@ module.exports.fetch_cctv = async(req, res) => {
 }
 
 module.exports.create_cctv = async (req, res) => {
-        const {apartment_id} = req.params
-        const { name, username, password, port, ip_address} = req.body;
+        const { name, username, password, port, ip_address, apartment_id } = req.body;
         const details = {}
         if(name !== ""){
             details.name = name
@@ -35,6 +34,9 @@ module.exports.create_cctv = async (req, res) => {
         if(ip_address !== ""){
             details.ip_address = ip_address
         }
+        if(apartment_id !== ""){
+            details.apartment_id = apartment_id
+        }
     try {
         if(await CCTVMODEL.findOne({name:name})){ // Check if CCTV is existing
             return res.status(httpStatusCodes.BAD_REQUEST).json({error: "CCTV Exists"})  
@@ -42,11 +44,6 @@ module.exports.create_cctv = async (req, res) => {
 
         const response = await CCTVMODEL.create(details); // Save CCTV Details on the DATABASE
         if(!response) return res.status(httpStatusCodes.UNAUTHORIZED).json({ error: "Unable to Create CCTV Surveillance." });
-
-        const apartment_response = await APARTMENTMODEL.findById({_id:apartment_id})
-        if(!apartment_response) return res.status(httpStatusCodes.UNAUTHORIZED).json({ error: "Unable to Create CCTV Surveillance." });
-        apartment_response.cctvs.push(response._id)
-        await apartment_response.save()
 
         return res.status(httpStatusCodes.CREATED).json({ msg: "Successfully added CCTV camera." });
 
@@ -90,16 +87,8 @@ module.exports.update_cctv = async (req, res) => {
 }
 
 module.exports.delete_cctv = async(req, res) => {
-    const {apartment_id, cctv_id} = req.params
-    try{ 
-        const apartment_response = await APARTMENTMODEL.findById({_id:apartment_id})
-        if(!apartment_response) return res.status(httpStatusCodes.UNAUTHORIZED).json({ error: "Unable to Delete CCTV Surveillance." });
-        
-        const index = apartment_response.cctvs.findIndex(item => item._id.toString() === cctv_id)
-        if(index === -1) return res.status(httpStatusCodes.UNAUTHORIZED).json({ error: "Unable to Delete on array CCTV Surveillance." });
-        apartment_response.cctvs.splice(index, 1)
-
-        await apartment_response.save()
+    const {cctv_id} = req.params
+    try{   
         const response = await CCTVMODEL.findByIdAndDelete({_id:cctv_id})
         if(!response) return res.status(httpStatusCodes.NOT_FOUND).json({error: "User Not Found"})
 
