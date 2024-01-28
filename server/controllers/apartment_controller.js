@@ -86,7 +86,7 @@ module.exports.delete_apartment = async (req, res) => {
 // units
 module.exports.fetch_units = async (req, res) => {
     try{
-        let response = await UNITMODEL.find()
+        let response = await APARTMENTMODEL.find().populate('units')
         if(!response){
             return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Unable to fetch units"})
         }
