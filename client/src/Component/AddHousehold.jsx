@@ -3,62 +3,22 @@ import Cookies from 'js-cookie'
 import { base_url } from '../utils/constants'
 import { IoClose } from "react-icons/io5";
 
-const AddTenantForm = () => {
+const AddHousehold = () => {
   const [isFormOpen, setIsFormOpen] = useState(false)
-  const [isForm, issetForm] = useState(false)
-  const [field, setField] = useState({
-    "name": null,
-    "username":null,
-    "birthday": null,
-    "contact": null,
-    "email": null,
-    "password": null,
-    "unit_id": null,
-    "deposit": null
-  })
+
+
   const toggleForm = () => {
-    isFormsetForm(!issetForm)
- 
-    console.log(isFormOpen)
+    setIsFormOpen(!isFormOpen);
   }
 
-  const handleChange = (name, value) => {
-    setField((fields) => ({
-      ...fields,
-      [name]:value
-    }))
-  } 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    toggleForm()
-    const Token = Cookies.get('Token');
-    const details = Object.entries(fields).reduce((acc,[key, value]) => {
-      if(value !== null){
-        acc[key] = value
-      }
-      return acc;
-    }, {})
-    
-    try{
-      const request = await fetch(`${base_url}/`,{
-        method: POST,
-        headers: {
-          Auhorization: `Bearer ${Token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(details)
-        
-      })
-      if(!request.ok){
-        throw new Error("Unable to add tenant")
-        
-      }
+  const handleSubmit = () => {
+    console.log('Form submitted')
+    toggleForm();
+   
     }
-    catch(err){
-      console.log({error: err.message})
-    }
-  }
+   
+  
 
   return (
   <div className='relative'>
@@ -189,4 +149,4 @@ const AddTenantForm = () => {
   )
 }
 
-export default AddTenantForm
+export default AddHousehold

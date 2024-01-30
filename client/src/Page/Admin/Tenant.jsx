@@ -4,6 +4,7 @@ import SearchBar from '../../Component/SearchBar'
 import { FaPlus } from "react-icons/fa6";
 import { useState } from 'react'
 import AddTenantForm from '../../Component/AddTenantForm';
+import AddHousehold from '../../Component/AddHousehold';
 
 const Tenant = () => {
  const [searchItem, setSearchItem] = useState("")
@@ -35,28 +36,16 @@ const Tenant = () => {
       </div>
 
       {/* Body of Tenant Tab */}
-      <div>
+      <div className='overflow-y-auto h-auto flex flex-wrap mt-10 '>
         <TenantCard/>
+        <TenantCard/>
+        <TenantCard/>
+        
       </div>
       {isAddTenantFormOpen && (
         <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50'>
           <div className='bg-white p-8 rounded-md'>
             <AddTenantForm />
-            <div className='flex justify-end mt-5 gap-3'>
-
-                <button onClick={handleSubmit} className=' bg-light-blue text-white font-bold py-2 px-4 rounded'>
-                  Submit
-                </button>
-
-                <button
-                  className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded'
-                  onClick={toggleAddTenantForm}
-                >
-                  Close
-                </button>
-               
-            </div>
-            
           </div>
         </div>
       )}
