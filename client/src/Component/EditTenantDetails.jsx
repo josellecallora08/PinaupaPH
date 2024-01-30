@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
+import { IoIosArrowBack } from "react-icons/io";
 const EditTenantDetails = () => {
   const [name, setName] = useState('')
   const [birthday, setBirthday] = useState('')
@@ -8,13 +9,25 @@ const EditTenantDetails = () => {
   const [apartment_unit, setApartment_unit] = useState('')
   const [deposit, setDeposit] = useState('')
   const [dateofin, setDateofin] = useState('')
-
   const [isFormOpen, setIsFormOpen] = useState(false)
+  const toggleForm = (e) => {
+
+    setIsFormOpen(!isFormOpen);
+  }
+  const handleSubmit = () => {
+  console.log('Form submitted');
+  toggleForm();
+  }
+  
   return (
-  <div className=''>
-      <h1 className="text-3xl font-bold mb-4">Edit Personal Details</h1>
-        <form action="" className="lg:w-[30rem] w-[20rem] h-[20rem] px-3 overflow-y-auto">
-        <h1 className="text-xl font-bold mb-4">Personal Details</h1>
+  <div className='relative'>
+      
+        <form action="" className="lg:w-full w-[20rem] h-[20rem] px-3 overflow-y-auto">
+          <div className='flex items-center mb-5 gap-4'>
+            <button className=''><IoIosArrowBack onClick={toggleForm} size={30} color='blue' /></button>
+            <h1 className="lg:text-3xl text-2xl font-bold ">Edit Tenant Detail</h1>
+          </div>
+        
             <div className="mb-4">
               <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
                 Name
@@ -109,6 +122,17 @@ const EditTenantDetails = () => {
                 placeholder="Enter your Date of Occupant In"
                 className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
+            </div>
+            <div className='flex justify-end mt-8 gap-3'>
+
+              <button onClick={handleSubmit} className=' bg-light-blue text-white font-bold py-2 px-4 rounded'>
+                Submit
+              </button>
+
+              <button onClick={toggleForm} className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded'>
+                Close
+              </button>
+
             </div>
         </form>
      

@@ -6,7 +6,7 @@ const TenantCard = () => {
 
   return (
     <Link to={"/tenantprofile"}>
-      <div className='lg:w-1/2 lg:h-52 lg:flex-wrap flex p-4 w-96 h-48 bg-white  ml-4 mt-5 rounded-md relative shadow-2xl shadow-light-gray'>
+      <div className='lg:w-[555px] md:w-[300px] md:flex md:flex-wrap lg:h-52 lg:flex-wrap flex p-4 w-96  bg-white  ml-2 mt-5 rounded-md relative shadow-sm shadow-light-gray'>
       <div>
         <img src={pfp} alt="" className='lg:w-20 lg:h-20 lg:mt-10 w-12 h-12 rounded-full' />
       </div>
