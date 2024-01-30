@@ -24,23 +24,23 @@ const Tenant = () => {
  }
 
   return (
-    <div className='lg:ml-3'>
+    <div className='lg:ml-3 lg:mr-5 '>
       {/* Top of Tenant Tab */}
       <h1 className='lg:text-5xl m-4 my-7 ml-8 text-4xl font-bold'>List of Tenant </h1>
-      <div className='lg:justify-between flex gap-2 w-full'>
+      <div className='lg:justify-between md:justify-between flex gap-2 w-full'>
         <SearchBar onSearch={handleSearch} className='lg:w-1/2 flex-1 '/>
-        <button className='lg:w-32 lg:mr-10 w-1/3  ml-5 text-white rounded-lg bg-dark-blue flex items-center justify-center gap-2 ' onClick={toggleAddTenantForm}>
+        <button className='lg:w-64 lg:mr-10 md:w-56 md:mr-10 w-48 mr-4 px-2  ml-5 text-white rounded-lg bg-dark-blue flex items-center justify-center gap-2 ' onClick={toggleAddTenantForm}>
           <FaPlus/>
           Add Tenant
         </button>
       </div>
 
       {/* Body of Tenant Tab */}
-      <div className='overflow-y-auto h-auto flex flex-wrap mt-10 '>
+      <div className='lg:grid-cols-2 md:grid-cols-2 grid  grid-cols-1'>
         <TenantCard/>
         <TenantCard/>
         <TenantCard/>
-        
+  
       </div>
       {isAddTenantFormOpen && (
         <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50'>

@@ -22,6 +22,7 @@ const TenantProfileInfo = [
         aparmentunit: "Unit 1",
         deposit: "100",
         dateofmovein: "2022-01-01",
+        dateofrenewal: "2022-02-10",
       }
     ],
     FamilyMembers:[

@@ -14,6 +14,7 @@ import Invoice from "./Page/Admin/Invoice"
 import Login from "./Page/Login"
 import TenantCard from "./Component/TenantCard"
 import TenantProfile from "./Page/Admin/TenantProfile"
+import ApartmentProfile from "./Page/Admin/ApartmentProfile"
 
 function App() {
   
@@ -26,6 +27,7 @@ function App() {
       <Route path="/tenant" element={<Tenant />} />
       <Route path="/tenantprofile" element={<TenantProfile />} />
       <Route path="/apartment" element={<Apartment />} /> 
+      <Route path="/apartmentprofile" element={<ApartmentProfile />} /> 
       <Route path="/security" element={<Security />} />
       <Route path="/concern&issue" element={<Concern />} />
       <Route path="/profile" element={<Profile />} />

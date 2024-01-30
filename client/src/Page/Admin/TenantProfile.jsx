@@ -9,6 +9,7 @@ import EditPet from '../../Component/EditPet';
 import EditFamilyMem from '../../Component/EditFamilyMem';
 import {payment_url} from '../../utils/constants'
 import DocumentCard from '../../Component/DocumentCard';
+import Transaction from '../../Component/Transaction';
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditTenantDetailForm, setIsEditTenantDetailForm] = useState(false)
@@ -39,7 +40,7 @@ const TenantProfile = () => {
   
   
   return (
-    <div className='bg-white1'>
+    <div className='bg-white1 '>
       
       {/* Tenant Profile Header */}
       <div className='lg:flex lg:items-center lg:justify-between'>
@@ -228,19 +229,20 @@ const TenantProfile = () => {
         )}
 
         {activeTab === 'documents' && (
-          <div>
+          <div className='grid grid-cols-1 lg:grid-cols-2 gap-2'>
             {/* Documents content goes here */}
-            <h2>Documents</h2>
             {/* ... display documents */}
             <DocumentCard />
+            <DocumentCard />
+            <DocumentCard />
+            
           </div>
         )}
 
         {activeTab === 'transaction' && (
           <div>
             {/* Documents content goes here */}
-            <h2>Transaction</h2>
-
+              <Transaction />
             {/* ... display documents */}
           </div>
         )}

@@ -6,18 +6,18 @@ const TenantCard = () => {
 
   return (
     <Link to={"/tenantprofile"}>
-      <div className='lg:w-[555px] md:w-[300px] md:flex md:flex-wrap lg:h-52 lg:flex-wrap flex p-4 w-96  bg-white  ml-2 mt-5 rounded-md relative shadow-sm shadow-light-gray'>
+      <div className='lg:text-base lg:mx-1 flex p-4 md:mx-2 mx-5 my-2 rounded-md relative text-xs shadow-sm shadow-light-gray'>
       <div>
         <img src={pfp} alt="" className='lg:w-20 lg:h-20 lg:mt-10 w-12 h-12 rounded-full' />
       </div>
-      <div className='lg:ml-10 text-sm ml-2 mt-8 flex flex-col gap-1 '>
-        <p className='font-black text-xl'>Name: Roland Angeles Jr</p>
+      <div className='lg:ml-10 ml-2 mt-8 flex flex-col gap-1 '>
+        <p className='lg:text-xl font-black text-lg'>Name: Roland Angeles Jr</p>
         <p>Contacts: 09568741247</p>
         <p>Monthly Rent: ₱10,000</p>
         <p>Deposit: ₱10,000</p>
         <p>Date of Occupancy: 10/24/24</p>
       </div>
-      <div className=' lg:right-8 lg:h-28 lg:w-16 h-28 w-14 absolute top-0 right-2 bg-blue   text-white font-bold text-sm'> 
+      <div className=' lg:right-8 lg:h-28 lg:w-16 h-28 w-14 absolute top-0 right-2 bg-blue text-white font-bold text-sm'> 
         <div className='flex flex-col mt-2 items-center'>
           <span className='-ml-1 '>Unit</span>
           <span className='lg:text-xl text-xl font-black'>001</span>
