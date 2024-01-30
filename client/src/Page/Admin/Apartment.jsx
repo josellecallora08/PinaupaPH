@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import { payment_url } from '../../utils/constants';
+import { FaPlus } from "react-icons/fa6"; 
+import TenantCard from '../../Component/TenantCard'
+import SearchBar from '../../Component/SearchBar'
+import AddTenantForm from '../../Component/AddTenantForm';
+import ApartmentCard from '../../Component/ApartmentCard';
 
 const Apartment = () => { 
   const [intent_id, setIntentId] = useState('')
@@ -105,13 +110,59 @@ const handlePayment = async (req, res) => {
       console.error('Error:', err.message);
     }
   }
+
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log('Form submitted')
+    setIsAddTenantFormOpen(!isAddTenantFormOpen)
+  }
+   const toggleAddTenantForm = () => {
+     setIsAddTenantFormOpen(!isAddTenantFormOpen);
+   }
+   const handleSearch = (e) => {
+     setSearchItem(e.target.value);
+   }
+   const [searchItem, setSearchItem] = useState("")
+   const [isAddTenantFormOpen, setIsAddTenantFormOpen] = useState(false)
+
+
+
+
+
+
   return (
-    <div>
-      <button onClick={handleCheckout}>Checkout again</button>
-      <button onClick={handleDetails}>1st</button>
-      <br></br>
-      <button onClick={handlePayment}>2nde</button>
+    <div className='lg:ml-3 lg:mr-5 h-full w-full bg-white1 '>
+    {/* Top of Tenant Tab */}
+    <h1 className='lg:text-5xl m-4 my-7 ml-8 text-4xl font-bold'>Apartments Listing </h1>
+    <div className='lg:justify-between md:justify-between flex gap-2 w-full mb-5'>
+      <SearchBar onSearch={handleSearch} className='lg:w-1/2 flex-1 '/>
+      <button className='lg:w-64 lg:mr-10 lg:text-base md:text-base md:w-56 md:mr-10 w-56 mr-4 px-2  ml-5 text-xs text-white rounded-lg bg-dark-blue flex items-center justify-center gap-2 ' onClick={toggleAddTenantForm}>
+        <FaPlus/>
+        Add Apartment
+      </button>
     </div>
+
+    {/* Body of Tenant Tab */}
+    <div className='lg:grid-cols-2 grid grid-cols-1 gap-4 mr-5' >
+        <ApartmentCard/>
+        <ApartmentCard/>
+        <ApartmentCard/>
+        <ApartmentCard/>
+    </div>
+    {isAddTenantFormOpen && (
+      <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50'>
+        <div className='bg-white p-8 rounded-md'>
+          
+        </div>
+      </div>
+    )}
+   
+
+ 
+    
+  </div>
   );
 };
 

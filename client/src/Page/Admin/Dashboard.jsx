@@ -10,7 +10,7 @@ const Dashboard = () => {
    
 <div className='lg:ml-3 flex flex-col lg:overflow-hidden'>
 {/* Top of Dashboard> */}
-<h1 className=' m-4 my-7 text-4xl font-medium'>Dashboard</h1>
+<h1 className='lg:text-5xl m-4 my-7  text-4xl font-black'>Dashboard</h1>
 <div className=' flex  bg-white mx-4 justify-between  pr-3 rounded-br-xl rounded-bl-xl shadow-sm shadow-dark-gray'>
     <img src={City} alt="" className=' w-40 h-auto lg:w-52 lg:h-auto '/>
     <div className='py-2'>
