@@ -6,7 +6,7 @@ const UNITMODEL = require('../models/unit');
 const path = require('path');
 const pdf = require('html-pdf');
 const fs = require('fs').promises
-const pdf_template = require('../documents');
+const pdf_template = require('../template/contract');
 
 module.exports.generate_contract = async (req, res) => {
     const { deposit, advance, user_id, unit_id, from_date, to_date } = req.body;
@@ -18,7 +18,7 @@ module.exports.generate_contract = async (req, res) => {
             return res.status(httpStatusCodes.NOT_FOUND).json({ error: "User or Unit Not found" });
         }
 
-        const filePath = path.join(__dirname, '../contracts', `${unit_response.unit_no}-${user_response._id}.pdf`);
+        const filePath = path.join(__dirname, '../documents/contracts', `${unit_response.unit_no}-${user_response._id}.pdf`);
 
         try {
             // Check if the file already exists
@@ -69,7 +69,7 @@ module.exports.fetch_contract = async (req, res) => {
     if (!unit_response) return res.status(httpStatusCodes.NOT_FOUND).json({ error: "Unit Not found" });
     
   
-    const filePath = path.join(__dirname, '../contracts', `${unit_response.unit_no}-${user_response._id}.pdf`);
+    const filePath = path.join(__dirname, '../documents/contracts', `${unit_response.unit_no}-${user_response._id}.pdf`);
  
     res.sendFile(filePath, (err) => {
         if (err) {
@@ -123,7 +123,7 @@ module.exports.remove_contract = async (req, res) => {
         const unit_response = await UNITMODEL.findById({_id:response.unit_id})
         if(!unit_response) return res.status(httpStatusCodes.NOT_FOUND).json({error: "Unit not found"})
         
-        const pdf_file_path = `contracts/${unit_response.unit_no}-${user_response.user_id}.pdf`
+        const pdf_file_path = `documents/contracts/${unit_response.unit_no}-${user_response.user_id}.pdf`
         await fs.unlink(pdf_file_path)
         return res.status(httpStatusCodes.OK).json({msg: "Contract Deleted"})
     }
