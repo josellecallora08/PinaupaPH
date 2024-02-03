@@ -1,7 +1,7 @@
-
 import { IoClose } from "react-icons/io5";
 import React, { useState } from 'react'
-const AddApartment = () => {
+
+const AddRoom = () => {
   const [isFormOpen, setIsFormOpen] = useState(false)
   const toggleForm = () => {
     setIsFormOpen(!isFormOpen);
@@ -11,9 +11,9 @@ const AddApartment = () => {
     console.log('Form submitted')
     setIsFormOpen(!isFormOpen)
   }
-
   return (
-    <div className='relative'>
+    <>
+        <div className='relative'>
     <h1 className="lg:text-3xl text-2xl font-bold mb-4">Add Apartment building</h1>
       <form onSubmit={handleSubmit} className="lg:w-[30rem] w-[20rem] h-[22rem] px-3 ">
       <button className='absolute top-1 right-0'><IoClose onClick={toggleForm} size={30} color='red' /></button>
@@ -85,7 +85,8 @@ const AddApartment = () => {
       </form>
    
 </div>
+    </>
   )
 }
 
-export default AddApartment
+export default AddRoom

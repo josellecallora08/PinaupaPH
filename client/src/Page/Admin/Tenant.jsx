@@ -4,7 +4,7 @@ import SearchBar from '../../Component/SearchBar'
 import { FaPlus } from "react-icons/fa6";
 import { useState } from 'react'
 import AddTenantForm from '../../Component/AddTenantForm';
-import AddHousehold from '../../Component/AddHousehold';
+
 
 const Tenant = () => {
  const [searchItem, setSearchItem] = useState("")
@@ -29,7 +29,7 @@ const Tenant = () => {
       <h1 className='lg:text-5xl m-4 my-7 ml-8 text-4xl font-bold'>List of Tenant </h1>
       <div className='lg:justify-between md:justify-between flex gap-2 w-full'>
         <SearchBar onSearch={handleSearch} className='lg:w-1/2 flex-1 '/>
-        <button className='lg:w-64 lg:mr-10 md:w-56 md:mr-10 w-48 mr-4 px-2  ml-5 text-white rounded-lg bg-dark-blue flex items-center justify-center gap-2 ' onClick={toggleAddTenantForm}>
+        <button onClick={toggleAddTenantForm} className='lg:w-64 lg:mr-10 md:w-56 md:mr-10 w-48 mr-4 px-2  ml-5 text-white rounded-lg bg-dark-blue flex items-center justify-center gap-2 ' >
           <FaPlus/>
           Add Tenant
         </button>
@@ -40,6 +40,7 @@ const Tenant = () => {
         <TenantCard/>
         <TenantCard/>
         <TenantCard/>
+        
   
       </div>
       {isAddTenantFormOpen && (
