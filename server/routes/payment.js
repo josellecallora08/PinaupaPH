@@ -1,5 +1,9 @@
-const {Router} = require('express')
-const { checkout, create_intent, payment_method } = require('../controllers/payment_controller')
+const { Router } = require('express')
+const {
+  checkout,
+  create_intent,
+  payment_method,
+} = require('../controllers/payment_controller')
 
 const router = Router()
 

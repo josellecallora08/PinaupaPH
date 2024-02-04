@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const {report, comment} = require('../controllers/report_controller')
+const { report, comment } = require('../controllers/report_controller')
 const router = Router()
 
 router.post('/:_id', report)

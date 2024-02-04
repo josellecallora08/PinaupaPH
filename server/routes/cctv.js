@@ -1,5 +1,10 @@
 const Router = require('express')
-const { create_cctv, fetch_cctv, update_cctv, delete_cctv } = require('../controllers/cctv_controller')
+const {
+  create_cctv,
+  fetch_cctv,
+  update_cctv,
+  delete_cctv,
+} = require('../controllers/cctv_controller')
 
 const router = Router()
 

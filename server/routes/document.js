@@ -1,5 +1,10 @@
 const Router = require('express')
-const { generate_contract, fetch_contract, edit_contract, remove_contract } = require('../controllers/document_controller')
+const {
+  generate_contract,
+  fetch_contract,
+  edit_contract,
+  remove_contract,
+} = require('../controllers/document_controller')
 
 const router = Router()
 

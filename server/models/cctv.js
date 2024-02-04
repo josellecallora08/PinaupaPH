@@ -1,22 +1,25 @@
 const mongoose = require('mongoose')
 
-const CCTVMODEL = new mongoose.Schema({
-    name:{
-        type:String,
-        unique:true
+const CCTVMODEL = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      unique: true,
     },
-    username:{
-        type:String,
+    username: {
+      type: String,
     },
-    password:{
-        type:String
+    password: {
+      type: String,
     },
-    port:{
-        type:Number
+    port: {
+      type: Number,
     },
-    ip_address:{
-        type:String
-    }
-},{timestamps: true})
+    ip_address: {
+      type: String,
+    },
+  },
+  { timestamps: true },
+)
 
-module.exports = mongoose.model("cctvs", CCTVMODEL)
+module.exports = mongoose.model('cctvs', CCTVMODEL)
