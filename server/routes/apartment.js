@@ -13,11 +13,11 @@ const {
 const router = Router()
 
 router.get('/building', fetch_apartment)
-router.get('/units', fetch_units)
+router.get('/:apartment_id/units', fetch_units)
 router.post('/create_apartment', create_apartment)
 router.post('/:apartment_id/create_apartment_unit', create_apartment_unit)
 router.patch('/:apartment_id/edit_apartment', edit_apartment)
-router.patch('/edit_apartment_unit/:unit_id', edit_apartment_unit)
+router.patch('/:apartment_id/edit_apartment_unit/:unit_id', edit_apartment_unit)
 router.delete('/:apartment_id', delete_apartment)
 router.delete(
   '/:apartment_id/delete_apartment_unit/:unit_id',

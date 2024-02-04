@@ -11,11 +11,13 @@ const {
   delete_tenant,
   delete_household,
   delete_pet,
+  search_user,
 } = require('../controllers/user_controller')
 const requireAuth = require('../middleware/requireAuth')
 
 const router = Router()
 
+router.post('/search', search_user)
 router.get('/', fetch_user)
 router.post('/', sign_up)
 router.post('/login', sign_in)

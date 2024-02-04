@@ -11,7 +11,6 @@ const UNITMODEL = new mongoose.Schema(
     },
     unit_no: {
       type: String,
-      unique: true,
     },
   },
   { timestamps: true },
