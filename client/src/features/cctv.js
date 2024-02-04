@@ -1,12 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit'
 
-
-const cctvSlice = createSlice ({
-    name: 'cctv',
-    initialState: [],
-    reducers:{
-
-    }
+const cctvSlice = createSlice({
+  name: 'cctv',
+  initialState: [],
+  reducers: {},
 })
 
 export default cctvSlice.reducer

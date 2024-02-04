@@ -1,23 +1,30 @@
 const mongoose = require('mongoose')
 
-const CONTRACTMODEL = new mongoose.Schema({
-    user_id:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'user',
-    },
-    unit_id:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'units'
-    },
-    advance:{
-        type:Number
-    },
-    from_date:{
-        type: Date
-    },
-    to_date:{
-        type:Date
-    }
-}, {timestamps: true})
+const WITNESSMODEL = new mongoose.Schema({
+  name: {
+    type: String,
+  },
+})
 
-module.exports = mongoose.model("contract", CONTRACTMODEL)
+const CONTRACTMODEL = new mongoose.Schema(
+  {
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user',
+    },
+    unit_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'units',
+    },
+    contract_id: {
+      type: String,
+    },
+    advance: {
+      type: Number,
+    },
+    witnesses: [WITNESSMODEL],
+  },
+  { timestamps: true },
+)
+
+module.exports = mongoose.model('contract', CONTRACTMODEL)

@@ -1,44 +1,43 @@
-
-import img from "/pfp.svg";
+import img from '/pfp.svg'
 const TenantProfileInfo = [
   {
-    Account:[
+    Account: [
       {
-        pfp:img,
-        username: "John",
-        password: "password",
-      }
+        pfp: img,
+        username: 'John',
+        password: 'password',
+      },
     ],
-    PersonalDetails:[
+    PersonalDetails: [
       {
-        name: "John Doe",
-        email: "joe@me.com",
-        contact: "1234567890",
-        birthday: "2022-01-01",
-      }
+        name: 'John Doe',
+        email: 'joe@me.com',
+        contact: '1234567890',
+        birthday: '2022-01-01',
+      },
     ],
-    ApartmentDetails:[
+    ApartmentDetails: [
       {
-        aparmentunit: "Unit 1",
-        deposit: "100",
-        dateofmovein: "2022-01-01",
-        dateofrenewal: "2022-02-10",
-      }
+        aparmentunit: 'Unit 1',
+        deposit: '100',
+        dateofmovein: '2022-01-01',
+        dateofrenewal: '2022-02-10',
+      },
     ],
-    FamilyMembers:[
+    FamilyMembers: [
       {
-        name: "Jane Doe",
-        relationship: "Sibling",
-        phone: "1234567890",
-      }
+        name: 'Jane Doe',
+        relationship: 'Sibling',
+        phone: '1234567890',
+      },
     ],
-    Pets:[
+    Pets: [
       {
-        name: "Arfie",
-        species: "Dog",
-        age: "2",
-      }
-    ]
-  }
+        name: 'Arfie',
+        species: 'Dog',
+        age: '2',
+      },
+    ],
+  },
 ]
-export default TenantProfileInfo;
+export default TenantProfileInfo
