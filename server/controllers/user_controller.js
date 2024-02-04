@@ -1,5 +1,6 @@
 const TENANTMODEL = require('../models/tenant')
 const USERMODEL = require('../models/user')
+const UNITMODEL = require('../models/unit')
 const httpStatusCodes = require('../constants/constants')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
@@ -11,9 +12,23 @@ const createToken = ({ id, username, role }) => {
   })
 }
 
-module.exports.search_bar = async (req, res) => {
+module.exports.search_user = async (req, res) => {
   try {
-  } catch (err) {}
+    const {filter} = req.body
+    let search = await USERMODEL.find({
+        $or:[
+            {name: { $regex: filter, $options: 'i'}}
+        ]
+    }).sort({createdAt: -1})
+   
+    return res
+        .status(httpStatusCodes.FOUND).json({search})
+  } catch (err) {
+    console.error({ error: err.message })
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Server Error...' })
+  }
 }
 
 module.exports.fetch_user = async (req, res) => {
@@ -61,7 +76,7 @@ module.exports.sign_up = async (req, res) => {
   if (mobile_no !== '') details.mobile_no = mobile_no
   if (birthday !== '') details.birthday = birthday
   try {
-    if (await USERMODEL.findOne({ username }))
+    if (await USERMODEL.findOne({ username  }))
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Username already exists' })
@@ -73,6 +88,12 @@ module.exports.sign_up = async (req, res) => {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Mobile Number already exists.' })
+
+    const unit_status = await UNITMODEL.findById({_id:unit_id})
+    if(unit_status.occupied === true)
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unit is Occupied.' })
 
     const response = await USERMODEL.create(details)
     if (!response)
@@ -94,7 +115,11 @@ module.exports.sign_up = async (req, res) => {
           })
     }
 
-    // Add apartment and report
+    const unit = await UNITMODEL.findByIdAndUpdate({_id:unit_id},{occupied: true})
+    if(!unit)
+        return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({error: "Failed to update occupancy status at Unit Collection."})
 
     const token = createToken(response._id, response.username, response.role)
     return res
@@ -309,6 +334,7 @@ module.exports.update_household = async (req, res) => {
         }),
       )
     }
+    
     Object.keys(details).forEach((detail) => {
       if (details[detail] !== undefined) {
         response.household[index][detail] = details[detail]
