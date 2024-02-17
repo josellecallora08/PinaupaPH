@@ -33,6 +33,7 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/document/LeastAgreement" element={<Least />} />
       <Route path="/document/invoice" element={<Invoice />} />
+      <Route path="/authentication" element={<Login/>}  />
     </Routes>
   </Layout>
  </>

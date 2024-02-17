@@ -22,7 +22,7 @@ module.exports.search_user = async (req, res) => {
     }).sort({createdAt: -1})
    
     return res
-        .status(httpStatusCodes.FOUND).json({search})
+        .status(httpStatusCodes.FOUND).json(search)
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -31,8 +31,8 @@ module.exports.search_user = async (req, res) => {
   }
 }
 
-module.exports.fetch_user = async (req, res) => {
-  const user = await USERMODEL.findOne({ role: 'Tenant' })
+module.exports.fetch_users = async (req, res) => {
+  const user = await USERMODEL.find({ role: 'Tenant' })
   try {
     if (!user) {
       return res
@@ -47,6 +47,8 @@ module.exports.fetch_user = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
+
+// Add fetch user
 
 module.exports.sign_up = async (req, res) => {
   const {
@@ -122,9 +124,12 @@ module.exports.sign_up = async (req, res) => {
         .json({error: "Failed to update occupancy status at Unit Collection."})
 
     const token = createToken(response._id, response.username, response.role)
+    res.cookie('token', token, {maxAge: 900000})
+
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Created Account successfully!', response, token })
+      .json({ msg: 'Created Account successfully!',response,token})
+
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -152,6 +157,9 @@ module.exports.sign_in = async (req, res) => {
         .json({ error: 'Invalid Credentials (temp - Password)' })
 
     const token = createToken(response._id, response.username, response.role)
+
+    res.cookie( 'token',token,{maxAge: 100000})
+    
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: 'Login Successfully!', response, token })
@@ -293,7 +301,7 @@ module.exports.update_profile = async (req, res) => {
 
     return res
       .status(httpStatusCodes.CREATED)
-      .json({ msg: 'Information Updated Successfully!' })
+      .json({ msg: 'Information Updated Successfully!', response})
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -405,7 +413,7 @@ module.exports.delete_tenant = async (req, res) => {
     }
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Removed Successfully...' })
+      .json({ msg: 'Removed Successfully...', response})
   } catch (err) {
     console.error({ error: err.message })
     return res

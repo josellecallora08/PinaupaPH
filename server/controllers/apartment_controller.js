@@ -250,7 +250,7 @@ module.exports.delete_apartment_unit = async (req, res) => {
         .json({ error: 'Unit Not Found' })
     }
 
-    return res.status(httpStatusCodes.OK).json({ msg: `Deleted Unit` })
+    return res.status(httpStatusCodes.OK).json({ msg: `Deleted Unit`, response})
   } catch (err) {
     console.error({ error: err.message })
     return res

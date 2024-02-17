@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const {
-  fetch_user,
+  fetch_users,
   sign_up,
   sign_in,
   create_household,
@@ -18,7 +18,9 @@ const requireAuth = require('../middleware/requireAuth')
 const router = Router()
 
 router.post('/search', search_user)
-router.get('/', fetch_user)
+router.get('/', fetch_users)
+//make fetch_users
+
 router.post('/', sign_up)
 router.post('/login', sign_in)
 router.post('/:user_id/create_household', create_household)
