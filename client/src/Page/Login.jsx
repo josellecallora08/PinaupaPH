@@ -2,7 +2,7 @@ import logImg from '/login.svg'
 import logo from '/pinaupa-logo.svg'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
-import {login, is_login} from '../features/authentication'
+import {isLogin, isLoggedin} from '../features/authentication'
 import {useNavigate} from 'react-router-dom'
 
 const Login = () => {
@@ -23,11 +23,12 @@ const Login = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault()
-    dispatch(login(credentials, navigate))
+    console.log(credentials)
+    dispatch(isLogin(credentials, navigate))
   }
 
   useEffect(() => {
-    dispatch(is_login(navigate))
+    dispatch(isLoggedin(navigate))
   }, [dispatch, navigate])
 
   return (

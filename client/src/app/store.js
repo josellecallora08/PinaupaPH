@@ -4,6 +4,7 @@ import apartmentReducer from '../features/apartment'
 import unitReducer from '../features/unit'
 import cctvReducer from '../features/cctv'
 import documentReducer from '../features/documents'
+import userReducer from '../features/user'
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     unit: unitReducer,
     cctv: cctvReducer,
     docs: documentReducer,
+    user: userReducer
   },
 })

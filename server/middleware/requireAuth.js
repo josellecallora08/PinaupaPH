@@ -13,7 +13,6 @@ const requireAuth = async (req, res, next) => {
     const decode_token = jwt.verify(token, process.env.SECRET)
 
     req.user = decode_token
-    req.user._id
     next()
   } catch (err) {
     console.error({ error: err.message })

@@ -1,0 +1,123 @@
+import { createSlice } from "@reduxjs/toolkit";
+import { base_url } from "../utils/constants";
+import Cookies from 'js-cookie'
+const token = Cookies.get("token")
+const userSlice = createSlice({
+    name:"user",
+    initialState: {
+        loading: false,
+        error: null,
+        data: null
+    },
+    reducers:{
+        fetchUserStart: (state) => {
+            state.loading = true
+            state.error = null
+        },
+        fetchUserSuccess: (state, action) => {
+            state.loading = false
+            state.data = action.payload
+        },
+        deleteUserSuccess: (state, action) => {
+            state.loading = false
+            state.data = state.data.filter(user => user._id !== action.payload.response._id)
+        },
+        editUserSuccess: (state, action) => {
+            state.loading = false
+            state.data = state.data.map(user => user._id === action.payload._id ? {...user, ...action.payload.response} : user)
+        },
+        actionUserFailed: (state, action) => {
+            state.loading = false
+            state.error = action.payload
+        }
+    }
+
+})
+
+export const {fetchUserStart, fetchUserSuccess,deleteUserSuccess, editUserSuccess, actionUserFailed} = userSlice.actions
+
+export const fetchUser = () => async(dispatch) => {
+    try{
+        dispatch(fetchUserStart())
+        const user = await fetch(`${base_url}/`,{
+            headers:{
+            Authorization: `Bearer ${token}`
+            }
+        })
+    
+        if(!user.ok){
+            throw new Error("Failed to fetch user")
+        }
+        const json = await user.json()
+        dispatch(fetchUserSuccess(json))
+  
+    }catch(err){
+        dispatch(actionUserFailed())
+    }
+  }
+  
+  export const fetchUsers = () => async(dispatch) => {
+    try{    
+        dispatch(fetchUserStart())
+        const user = await fetch(`${base_url}/`, {
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if(!user.ok){
+            throw new Error("Failed to fetch all user...")
+        }
+        const json = await user.json()
+        dispatch(fetchUserSuccess(json))
+    }catch(err){
+      dispatch(actionUserFailed(err.message))
+    }
+  }
+  
+  export const editUser = (userId, credentials) => async(dispatch) => {
+    try{
+        dispatch(fetchUserStart())
+        const user = await fetch(`${base_url}/${userId}/update_profile`, {
+            method:"PATCH",
+            headers:{
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(credentials)
+        })
+
+        if(!user.ok){
+            throw new Error("Failed to update information...")
+        }
+
+        const json = await user.json()
+        dispatch(editUserSuccess(json))
+    }catch(err){
+        dispatch(actionUserFailed(err.message))
+    }
+  }
+
+export const deleteUser = (userId) => async(dispatch) => {
+    try{
+            dispatch(fetchUserStart())
+        const deleteUser = await fetch(`${base_url}/${userId}/delete_tenant`,{
+            method: "DELETE",
+            headers:{
+            Authorization: `Bearer ${token}`
+            },
+        })
+    
+        if(!deleteUser.ok){
+            throw new Error("Failed to delete tenant...")
+        }
+        const json = await deleteUser.json()
+
+        dispatch(deleteUserSuccess(json))
+    }catch(err){
+        dispatch(actionUserFailed(err.message))
+    }
+  }
+  
+
+
+  
+  export default userSlice.reducer
