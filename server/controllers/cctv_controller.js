@@ -3,7 +3,7 @@ const USERMODEL = require('../models/user')
 const APARTMENTMODEL = require('../models/apartment')
 const httpStatusCodes = require('../constants/constants')
 
-module.exports.fetch_cctv = async (req, res) => {
+module.exports.fetch_cctvs = async (req, res) => {
   try {
     const response = await APARTMENTMODEL.find().populate('cctvs')
     if (!response)
@@ -11,10 +11,9 @@ module.exports.fetch_cctv = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to fetch CCTV' })
 
-    console.log(response)
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Fetched CCTV', response })
+      .json(response)
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -22,7 +21,9 @@ module.exports.fetch_cctv = async (req, res) => {
       .json({ error: 'Server Error.' })
   }
 }
-
+module.exports.fetch_cctv = async(req, res) => {
+  
+}
 module.exports.create_cctv = async (req, res) => {
   const { apartment_id } = req.params
   const { name, username, password, port, ip_address } = req.body

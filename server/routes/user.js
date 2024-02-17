@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const {
   fetch_users,
+  fetch_user,
   sign_up,
   sign_in,
   create_household,
@@ -19,7 +20,7 @@ const router = Router()
 
 router.post('/search', search_user)
 router.get('/', fetch_users)
-//make fetch_users
+router.get('/:user_id', fetch_user)
 
 router.post('/', sign_up)
 router.post('/login', sign_in)

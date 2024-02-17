@@ -10,7 +10,7 @@ const UNITMODEL = new mongoose.Schema(
       type: Number,
     },
     unit_no: {
-      type: String,
+      type: Number,
     },
   },
   { timestamps: true },

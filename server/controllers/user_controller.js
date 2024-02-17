@@ -15,12 +15,9 @@ const createToken = ({ id, username, role }) => {
 module.exports.search_user = async (req, res) => {
   try {
     const {filter} = req.body
-    let search = await USERMODEL.find({
-        $or:[
-            {name: { $regex: filter, $options: 'i'}}
-        ]
-    }).sort({createdAt: -1})
-   
+    let search = await USERMODEL.find({ name: { $regex: filter, $options: 'i' } })
+    .sort({ createdAt: -1 });
+  
     return res
         .status(httpStatusCodes.FOUND).json(search)
   } catch (err) {
@@ -32,14 +29,49 @@ module.exports.search_user = async (req, res) => {
 }
 
 module.exports.fetch_users = async (req, res) => {
-  const user = await USERMODEL.find({ role: 'Tenant' })
+  const user = await TENANTMODEL.find().populate({
+    path: 'user_id',
+    model: USERMODEL,
+    select: 'name username'
+  }).populate({
+    path: 'unit_id',
+    model: UNITMODEL,
+    select: 'unit_no rent'
+  }).select('-payment -household -pet -createdAt -updatedAt')
   try {
     if (!user) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'User not found' })
     }
-    return res.status(httpStatusCodes.OK).json({ msg: 'User found', user })
+    return res.status(httpStatusCodes.OK).json(user)
+  } catch (err) {
+    console.error({ error: err.message })
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Server Error...' })
+  }
+}
+
+
+module.exports.fetch_user = async (req, res) => {
+  const {user_id} = req.params
+  const user = await TENANTMODEL.findOne({user_id: user_id}).populate({
+    path: 'user_id',
+    model: USERMODEL,
+    select: 'name username'
+  }).populate({
+    path: 'unit_id',
+    model: UNITMODEL,
+    select: 'unit_no rent'
+  }).select('-payment -household -pet -createdAt -updatedAt')
+  try {
+    if (!user) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'User not found' })
+    }
+    return res.status(httpStatusCodes.OK).json(user)
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -154,7 +186,7 @@ module.exports.sign_in = async (req, res) => {
     if (!match)
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid Credentials (temp - Password)' })
+        .json({ error: 'Invalid Credentials (tewmp - Password)' })
 
     const token = createToken(response._id, response.username, response.role)
 

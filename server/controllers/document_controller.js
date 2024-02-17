@@ -23,12 +23,12 @@ module.exports.generate_contract = async (req, res) => {
     const filePath = path.join(
       __dirname,
       '../documents/contracts',
-      `Lease_Agreement_${unit_response.unit_no}-${user_response._id}.pdf`,
+      `Lease_Agreement_${unit_response.unit_no}-${user_response.name}.pdf`,
     )
 
     try {
       // Check if the file already exists
-      await fs.access(filePath)
+      await fs.access(filePath);
       return res
         .status(httpStatusCodes.FOUND)
         .json({ error: 'Contract Exists' })
@@ -79,7 +79,7 @@ module.exports.generate_contract = async (req, res) => {
   }
 }
 
-module.exports.fetch_contract = async (req, res) => {
+module.exports.generate_pdf = async (req, res) => {
   try {
     const { user_id, unit_id } = req.params
     const user_response = await USERMODEL.findById({ _id: user_id })
@@ -97,8 +97,9 @@ module.exports.fetch_contract = async (req, res) => {
     const filePath = path.join(
       __dirname,
       '../documents/contracts',
-      `Lease_Agreement_${unit_response.unit_no}-${user_response._id}.pdf`,
+      `Lease_Agreement_${unit_response.unit_no}-${user_response.name}.pdf`,
     )
+    
 
     res.sendFile(filePath, (err) => {
       if (err) {
@@ -106,11 +107,19 @@ module.exports.fetch_contract = async (req, res) => {
         res.status(500).send('Error sending PDF')
       }
     })
+  
   } catch (err) {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: 'Server Error' })
+  }
+}
+module.exports.fetch_contract = async (req, res) => {
+  try{
+
+  }catch(err){
+
   }
 }
 
@@ -138,6 +147,8 @@ module.exports.edit_contract = async (req, res) => {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to update contract' })
+    
+    await this.generate_contract()
 
     return res.status(httpStatusCodes.OK).json({ msg: 'Updated contract' })
   } catch (err) {

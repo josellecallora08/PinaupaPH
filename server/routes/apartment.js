@@ -1,7 +1,7 @@
 const Router = require('express')
 const {
   create_apartment,
-  fetch_apartment,
+  fetch_apartments,
   fetch_units,
   create_apartment_unit,
   edit_apartment,
@@ -12,8 +12,10 @@ const {
 
 const router = Router()
 
-router.get('/building', fetch_apartment)
+router.get('/building', fetch_apartments)
+// fetch_apartment
 router.get('/:apartment_id/units', fetch_units)
+// fetch_unit
 router.post('/create_apartment', create_apartment)
 router.post('/:apartment_id/create_apartment_unit', create_apartment_unit)
 router.patch('/:apartment_id/edit_apartment', edit_apartment)

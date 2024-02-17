@@ -20,11 +20,11 @@ const userSlice = createSlice({
         },
         deleteUserSuccess: (state, action) => {
             state.loading = false
-            state.data = state.data.filter(user => user._id !== action.payload.response._id)
+            state.data = state.data.filter(user => user._id !== action.payload)
         },
         editUserSuccess: (state, action) => {
             state.loading = false
-            state.data = state.data.map(user => user._id === action.payload._id ? {...user, ...action.payload.response} : user)
+            state.data = state.data.map(user => user._id === action.payload ? {...user, ...action.payload.response} : user)
         },
         actionUserFailed: (state, action) => {
             state.loading = false
@@ -80,7 +80,8 @@ export const fetchUser = () => async(dispatch) => {
         const user = await fetch(`${base_url}/${userId}/update_profile`, {
             method:"PATCH",
             headers:{
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
+                'Content-type': 'application/json'
             },
             body: JSON.stringify(credentials)
         })
@@ -89,8 +90,8 @@ export const fetchUser = () => async(dispatch) => {
             throw new Error("Failed to update information...")
         }
 
-        const json = await user.json()
-        dispatch(editUserSuccess(json))
+        // const json = await user.json()
+        dispatch(editUserSuccess(userId))
     }catch(err){
         dispatch(actionUserFailed(err.message))
     }
@@ -109,9 +110,9 @@ export const deleteUser = (userId) => async(dispatch) => {
         if(!deleteUser.ok){
             throw new Error("Failed to delete tenant...")
         }
-        const json = await deleteUser.json()
+        // const json = await deleteUser.json()
 
-        dispatch(deleteUserSuccess(json))
+        dispatch(deleteUserSuccess(userId))
     }catch(err){
         dispatch(actionUserFailed(err.message))
     }
