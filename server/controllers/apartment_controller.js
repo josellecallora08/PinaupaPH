@@ -2,7 +2,7 @@ const APARTMENTMODEL = require('../models/apartment')
 const UNITMODEL = require('../models/unit')
 const httpStatusCodes = require('../constants/constants')
 
-module.exports.fetch_apartment = async (req, res) => {
+module.exports.fetch_apartments = async (req, res) => {
   try {
     const response = await APARTMENTMODEL.find()
     if (!response) {
@@ -104,7 +104,7 @@ module.exports.delete_apartment = async (req, res) => {
     }
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: `Apartment building Deleted` })
+      .json({ msg: `Apartment building Deleted`})
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -117,7 +117,12 @@ module.exports.delete_apartment = async (req, res) => {
 module.exports.fetch_units = async (req, res) => {
   try {
     const {apartment_id} = req.params
-    let response = await APARTMENTMODEL.findById({_id:apartment_id}).populate('units')
+    let response = await APARTMENTMODEL.findById({_id:apartment_id}).populate({
+      path: 'units',
+      model: UNITMODEL,
+      select: 'rent unit_no',
+      options: { sort: { unit_no: 1 } } 
+    }).select('units')
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -140,7 +145,11 @@ module.exports.create_apartment_unit = async (req, res) => {
 
     const apartment = await APARTMENTMODEL.findById({
       _id: apartment_id
-    }).populate('units')
+    }).populate({
+      path: 'units',
+      model: UNITMODEL,
+      select: 'rent unit_no '
+    }).select('units')
     if (!apartment) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -181,7 +190,11 @@ module.exports.edit_apartment_unit = async (req, res) => {
     const { unit_no, rent } = req.body
     const details = {}
 
-    const apartment = await APARTMENTMODEL.findById({_id:apartment_id}).populate('units')
+    const apartment = await APARTMENTMODEL.findById({_id:apartment_id}).populate({
+      path: 'units',
+      model: UNITMODEL,
+      select: 'rent unit_no '
+    }).select('units')
     if (!apartment) {
       return res
         .status(httpStatusCodes.NOT_FOUND)

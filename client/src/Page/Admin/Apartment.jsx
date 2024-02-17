@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { payment_url } from '../../utils/constants';
 import { FaPlus } from "react-icons/fa6"; 
 import SearchBar from '../../Component/SearchBar'
 import ApartmentCard from '../../Component/ApartmentCard';
 import AddApartment from '../../Component/AddApartment';
-
+import {useDispatch, useSelector} from 'react-redux'
+import { fetchUnits } from '../../features/unit';
 
 const Apartment = () => { 
+  const dispatch = useDispatch()
+  const unitLoading = useSelector(state => state.unit.loading)
+  const unit = useSelector(state => state.unit.data)
   const [intent_id, setIntentId] = useState('')
   const [client_id, setClientId] = useState('')
  
@@ -123,10 +127,7 @@ const handlePayment = async (req, res) => {
    const toggleAddApartmentForm = () => {
     setIsAddApartmentFormOpen(!isAddApartmentFormOpen);
   }
-
-
-
-
+  console.log(unit)
 
   return (
     <div className='lg:ml-3 lg:mr-5  '>
@@ -139,7 +140,6 @@ const handlePayment = async (req, res) => {
         Add Apartment
       </button>
     </div>
-
     {/* Body of Tenant Tab */}
     <div className='lg:grid-cols-2 grid grid-cols-1 gap-4 mr-5' >
         <ApartmentCard/>
