@@ -31,15 +31,14 @@ const userSlice = createSlice({
             state.error = action.payload
         }
     }
-
 })
 
 export const {fetchUserStart, fetchUserSuccess,deleteUserSuccess, editUserSuccess, actionUserFailed} = userSlice.actions
 
-export const fetchUser = () => async(dispatch) => {
+export const fetchUser = (userId) => async(dispatch) => {
     try{
         dispatch(fetchUserStart())
-        const user = await fetch(`${base_url}/`,{
+        const user = await fetch(`${base_url}/${userId}`,{
             headers:{
             Authorization: `Bearer ${token}`
             }
@@ -50,7 +49,6 @@ export const fetchUser = () => async(dispatch) => {
         }
         const json = await user.json()
         dispatch(fetchUserSuccess(json))
-  
     }catch(err){
         dispatch(actionUserFailed())
     }

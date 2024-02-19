@@ -35,6 +35,16 @@ const USERMODEL = new mongoose.Schema(
       default: 'Tenant',
     },
   },
+  {
+    toJSON:
+    {
+    transform:(doc, ret) => {
+      delete ret.password
+      delete ret.__v
+      return ret
+    }
+    }
+  },
   { timestamps: true },
 )
 
