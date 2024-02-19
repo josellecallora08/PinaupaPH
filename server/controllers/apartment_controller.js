@@ -1,7 +1,9 @@
 const APARTMENTMODEL = require('../models/apartment')
 const UNITMODEL = require('../models/unit')
+const CCTVMODEL = require('../models/cctv')
 const httpStatusCodes = require('../constants/constants')
 
+// ? Tested API
 module.exports.fetch_apartments = async (req, res) => {
   try {
     const response = await APARTMENTMODEL.find()
@@ -18,7 +20,26 @@ module.exports.fetch_apartments = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
+// ? Tested API
+module.exports.fetch_apartment = async(req, res) => {
+  try{
+    const {apartment_id} = req.params
+    const response = await APARTMENTMODEL.findById({_id:apartment_id})
+    if (!response) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unable to fetch apartment' })
+    }
+    return res.status(httpStatusCodes.OK).json(response)
+  }catch(err){
+    console.error({ error: err.message })
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Server Error...' })
+  }
+}
 
+// ? Tested API
 module.exports.create_apartment = async (req, res) => {
   try {
     const { name, address, province, barangay } = req.body
@@ -49,7 +70,7 @@ module.exports.create_apartment = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
-
+// ? Tested API
 module.exports.edit_apartment = async (req, res) => {
   try {
     const { apartment_id } = req.params
@@ -90,7 +111,7 @@ module.exports.edit_apartment = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
-
+// ? Tested API
 module.exports.delete_apartment = async (req, res) => {
   try {
     const { apartment_id } = req.params
@@ -102,9 +123,17 @@ module.exports.delete_apartment = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: `Unable to remove apartment building` })
     }
+    const cctv = response.cctvs.map(async(item) => {
+      await CCTVMODEL.findByIdAndDelete({_id: item})
+    })
+    const units = response.units.map(async(item) => {
+      await UNITMODEL.findByIdAndDelete({_id: item})
+    })
+
+    await Promise.all([...cctv, ...units]);
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: `Apartment building Deleted`})
+      .json({ msg: `Apartment building Deleted`, cctv, units})
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -112,17 +141,57 @@ module.exports.delete_apartment = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
-
-// units
-module.exports.fetch_units = async (req, res) => {
-  try {
-    const {apartment_id} = req.params
-    let response = await APARTMENTMODEL.findById({_id:apartment_id}).populate({
+// ? Tested API
+module.exports.fetch_unit = async(req, res) => {
+  try{
+    const {apartment_id, unit_id} = req.params
+    let response = await APARTMENTMODEL.findById({ _id: apartment_id })
+    .populate({
       path: 'units',
       model: UNITMODEL,
       select: 'rent unit_no',
-      options: { sort: { unit_no: 1 } } 
-    }).select('units')
+      options: { sort: { unit_no: 1 } },
+    })
+    .select('units')
+  if (!response) {
+    return res
+      .status(httpStatusCodes.BAD_REQUEST)
+      .json({ error: 'Unable to fetch units' })
+  }
+  const unit = response.units.filter(item => item._id.toString() === unit_id)
+  return res.status(httpStatusCodes.OK).json(unit)
+  }catch(err){
+    console.error({ error: err.message })
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Server Error...' })
+  }
+}
+
+// ? Tested API
+module.exports.fetch_unit_apartment = async(req, res)=> {
+  const { apartment_id } = req.params
+  let response = await APARTMENTMODEL.findById({ _id: apartment_id })
+    .populate({
+      path: 'units',
+      model: UNITMODEL,
+      select: 'rent unit_no',
+      options: { sort: { unit_no: 1 } },
+    })
+    .select('name units')
+  if (!response) {
+    return res
+      .status(httpStatusCodes.BAD_REQUEST)
+      .json({ error: 'Unable to fetch units' })
+  }
+  return res.status(httpStatusCodes.OK).json(response)
+}
+
+// ? Tested API
+module.exports.fetch_units = async (req, res) => {
+  try {
+    let response = await UNITMODEL.find()
+  
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -137,6 +206,7 @@ module.exports.fetch_units = async (req, res) => {
   }
 }
 
+// ? Tested API
 module.exports.create_apartment_unit = async (req, res) => {
   try {
     const { apartment_id } = req.params
@@ -144,22 +214,24 @@ module.exports.create_apartment_unit = async (req, res) => {
     const details = { rent, unit_no }
 
     const apartment = await APARTMENTMODEL.findById({
-      _id: apartment_id
-    }).populate({
-      path: 'units',
-      model: UNITMODEL,
-      select: 'rent unit_no '
-    }).select('units')
+      _id: apartment_id,
+    })
+      .populate({
+        path: 'units',
+        model: UNITMODEL,
+        select: 'rent unit_no ',
+      })
+      .select('units')
     if (!apartment) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to find apartment' })
     }
-    const match_unit = apartment.units.some(item => item.unit_no === unit_no)
-    if(match_unit){
+    const match_unit = apartment.units.some((item) => item.unit_no === unit_no)
+    if (match_unit) {
       return res
-      .status(httpStatusCodes.BAD_REQUEST)
-      .json({ error: 'Unit exists' })
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unit exists' })
     }
 
     let response = await UNITMODEL.create(details)
@@ -168,7 +240,7 @@ module.exports.create_apartment_unit = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to create unit' })
     }
-   
+
     apartment.units.push(response._id)
 
     await response.save()
@@ -184,17 +256,20 @@ module.exports.create_apartment_unit = async (req, res) => {
   }
 }
 
+// ? Tested API
 module.exports.edit_apartment_unit = async (req, res) => {
   try {
     const { apartment_id, unit_id } = req.params
     const { unit_no, rent } = req.body
     const details = {}
 
-    const apartment = await APARTMENTMODEL.findById({_id:apartment_id}).populate({
-      path: 'units',
-      model: UNITMODEL,
-      select: 'rent unit_no '
-    }).select('units')
+    const apartment = await APARTMENTMODEL.findById({ _id: apartment_id })
+      .populate({
+        path: 'units',
+        model: UNITMODEL,
+        select: 'rent unit_no ',
+      })
+      .select('units')
     if (!apartment) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
@@ -203,8 +278,10 @@ module.exports.edit_apartment_unit = async (req, res) => {
 
     details.unit_no = unit_no
 
-    const is_unit_exist = apartment.units.some(item => item.unit_no === unit_no)
-    if(is_unit_exist){
+    const is_unit_exist = apartment.units.some(
+      (item) => item.unit_no === unit_no,
+    )
+    if (is_unit_exist) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unit Number exists' })
@@ -232,6 +309,7 @@ module.exports.edit_apartment_unit = async (req, res) => {
   }
 }
 
+// ? Tested API
 module.exports.delete_apartment_unit = async (req, res) => {
   try {
     const { apartment_id, unit_id } = req.params
@@ -263,7 +341,9 @@ module.exports.delete_apartment_unit = async (req, res) => {
         .json({ error: 'Unit Not Found' })
     }
 
-    return res.status(httpStatusCodes.OK).json({ msg: `Deleted Unit`, response})
+    return res
+      .status(httpStatusCodes.OK)
+      .json({ msg: `Deleted Unit`, response })
   } catch (err) {
     console.error({ error: err.message })
     return res

@@ -17,14 +17,16 @@ const payment_route = require('./routes/payment')
 const { scheduledInvoice } = require('./controllers/invoice_controller')
 const app = express()
 app.use(express.json())
-const allowedOrigin = 'http://localhost:5173'; 
-app.use(cors({
-  origin: allowedOrigin,
-  credentials: true,
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  optionsSuccessStatus: 204,
-  allowedHeaders: 'Content-Type, Authorization',
-}))
+const allowedOrigin = 'http://localhost:5173'
+app.use(
+  cors({
+    origin: allowedOrigin,
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    optionsSuccessStatus: 204,
+    allowedHeaders: 'Content-Type, Authorization',
+  }),
+)
 app.use(body_parser.urlencoded({ extended: true }))
 app.use(body_parser.json())
 // Cloudinary Configuration

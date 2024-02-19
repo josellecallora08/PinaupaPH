@@ -28,7 +28,7 @@ module.exports.generate_contract = async (req, res) => {
 
     try {
       // Check if the file already exists
-      await fs.access(filePath);
+      await fs.access(filePath)
       return res
         .status(httpStatusCodes.FOUND)
         .json({ error: 'Contract Exists' })
@@ -99,7 +99,6 @@ module.exports.generate_pdf = async (req, res) => {
       '../documents/contracts',
       `Lease_Agreement_${unit_response.unit_no}-${user_response.name}.pdf`,
     )
-    
 
     res.sendFile(filePath, (err) => {
       if (err) {
@@ -107,7 +106,6 @@ module.exports.generate_pdf = async (req, res) => {
         res.status(500).send('Error sending PDF')
       }
     })
-  
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -116,11 +114,8 @@ module.exports.generate_pdf = async (req, res) => {
   }
 }
 module.exports.fetch_contract = async (req, res) => {
-  try{
-
-  }catch(err){
-
-  }
+  try {
+  } catch (err) {}
 }
 
 module.exports.edit_contract = async (req, res) => {
@@ -147,7 +142,7 @@ module.exports.edit_contract = async (req, res) => {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to update contract' })
-    
+
     await this.generate_contract()
 
     return res.status(httpStatusCodes.OK).json({ msg: 'Updated contract' })

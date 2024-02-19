@@ -33,12 +33,11 @@ const authSlice = createSlice({
 
 export const { loginStart, loginSuccess, loginFailed, logout } = authSlice.actions
 
-export const isLoggedin = (navigate, token) => async (dispatch) => {
+export const isLoggedin = (navigate, token, userId) => async (dispatch) => {
   if (token) {
-    const response = await fetch(`${base_url}/`, {
+    const response = await fetch(`${base_url}/${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-type': 'application/json',
       },
     })
     const data = await response.json()

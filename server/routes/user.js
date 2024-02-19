@@ -18,7 +18,7 @@ const requireAuth = require('../middleware/requireAuth')
 
 const router = Router()
 
-router.post('/search', search_user)
+router.post('/search/:filter', search_user)
 router.get('/', fetch_users)
 router.get('/:user_id', fetch_user)
 
