@@ -52,24 +52,16 @@ const TENANTMODEL = new mongoose.Schema({
     },
     unit_id:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'units',
-        required: true
+        ref:'units'
     },
     deposit:{
         type:Number,
-        default: null,
-    },
-    advance:{
-        type:Number,
-        default: null
     },
     balance:{
         type:Number,
-        default: null,
     },
     monthly_due:{
-        type:Date,
-        default: null
+        type:Date
     },
     payment:[PAYMENTMODEL],
     household: [HOUSEHOLDMODEL],
