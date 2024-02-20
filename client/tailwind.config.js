@@ -2,7 +2,11 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      height: {
+        "inherit" : "calc(100% - 80)"
+      }
+    },
     colors: {
       'light-blue': '#0099FF',
       black: '#000000',

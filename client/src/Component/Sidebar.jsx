@@ -1,225 +1,149 @@
-
-import logo from '/public/pinaupa-logo.svg'
-import pfp from '/pfp.svg'
 import { useState } from 'react' 
-import {FaBars,FaX} from 'react-icons/fa6'
-import { MdOutlineDashboard } from "react-icons/md";
-import { FaAngleDown,FaAngleUp } from 'react-icons/fa6'
-import { BsPersonPlus } from "react-icons/bs";
-import { BsHouses } from "react-icons/bs";
-import { BiCctv } from "react-icons/bi";
-import { HiOutlineDocumentDuplicate } from "react-icons/hi2";
-import { BiConversation } from "react-icons/bi";
-import { RxPerson } from "react-icons/rx";
-import { Link } from 'react-router-dom';
-import { TbBellRinging } from "react-icons/tb";
-import { RiArrowDropRightLine } from "react-icons/ri";
-
-const Menus = [
-  {
-  title: "Dashboard",
-  path: "/dashboard",
-  icon: <MdOutlineDashboard size={30} />
+import { useSelector } from 'react-redux';
+import logo from '/logo.svg'
+import m_logo from '/mobile-logo.svg'
+import { Link } from 'react-router-dom'
+import dashboard from '/dashboard.svg'
+import tenant from '/tenant.svg'
+import apartment from '/apartment.svg'
+import security from '/security.svg'
+import document from '/document.svg'
+import report from '/report.svg'
+// const Menus = [
+//   {
+//   title: "Dashboard",
+//   path: "/dashboard",
+//   icon: <MdOutlineDashboard size={30} />
   
-  },
-  {
-    title: "Tenant",
-    path: "/tenant",
-    icon: <BsPersonPlus size={30}/>
-  },
-  {
-    title: "Apartment",
-    path: "/apartment",
-    icon: <BsHouses size={30}/>
+//   },
+//   {
+//     title: "Tenant",
+//     path: "/tenant",
+//     icon: <BsPersonPlus size={30}/>
+//   },
+//   {
+//     title: "Apartment",
+//     path: "/apartment",
+//     icon: <BsHouses size={30}/>
 
     
-  },
-  {
-    title: "Security",
-    path: "/security",
-    icon: <BiCctv size={30}/>
+//   },
+//   {
+//     title: "Security",
+//     path: "/security",
+//     icon: <BiCctv size={30}/>
     
-  },  
-  {
-    title: 'Documents',
-    icon: <HiOutlineDocumentDuplicate size={30}/>,
+//   },  
+//   {
+//     title: 'Documents',
+//     icon: <HiOutlineDocumentDuplicate size={30}/>,
 
 
-    subMenus: [
-      {
-        title: 'Least Agreement',
-        path: '/document/LeastAgreement',
+//     subMenus: [
+//       {
+//         title: 'Least Agreement',
+//         path: '/document/LeastAgreement',
         
-      },
-      {
-        title: 'Invoice',
-        path: '/document/invoice',
+//       },
+//       {
+//         title: 'Invoice',
+//         path: '/document/invoice',
 
        
-      }
-    ],
-    isOpen: false},
-  {
-      title: "Concern and Issue",
-      path: "/concern&issue",
-      icon: <BiConversation size={30}/>
+//       }
+//     ],
+//     isOpen: false},
+//   {
+//       title: "Concern and Issue",
+//       path: "/concern&issue",
+//       icon: <BiConversation size={30}/>
       
       
-  },
-  {
-    title: "Profile",
-    path: "/profile",
-    icon: <RxPerson size={30}/>
+//   },
+//   {
+//     title: "Profile",
+//     path: "/profile",
+//     icon: <RxPerson size={30}/>
    
- }
+//  }
     
-]
+// ]
 
-const pfpmenu = [
-  {
-    title: "Profile",
-    path: "/profile",
-  },
-  {
-    title: "Logout",
-    path: "/logout",
+// const pfpmenu = [
+//   {
+//     title: "Profile",
+//     path: "/profile",
+//   },
+//   {
+//     title: "Logout",
+//     path: "/logout",
 
-  }
-]
+//   }
+// ]
 
 const Sidebar = () => {
 
-  //useState to trach the changes of properties :D
-  const [Menu, SetMenu] = useState(Menus);
-  const [isOpen, setIsOpen] = useState(true);
-  const [Open, setOpen] = useState(false);
-  const [MenuOpen, setMenuOpen] = useState(false);
-
-  //SubMenu Function to control the open and close of Sub Menu
-  const setSubMenuOpen = (index) => {
-    SetMenu((prevMenus) =>
-      prevMenus.map((menu, i) => {
-        if (i === index) {
-          return { ...menu, isOpen: !menu.isOpen };
-        }
-        return menu;
-      })
-    );
-  };
-  //To toggle the Sidebar for Mobile View
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
-  //Toggle the profiel Picture menu
-  const togglepfp = () => {
-    setOpen(!Open);
-  };
-  //To Open and Close the Sidebar for Desktop
-  const toggleMenu = () => {
-    setMenuOpen(!MenuOpen);
-    SetMenu((prevMenus  ) => prevMenus.map((menu) => ({ ...menu, isOpen: false })));
-  
-  }
-//It toggle to close the submenu of Documents
-  const toggleDocumentsSubMenu = () => {
-    toggleMenu();
-    setSubMenuOpen(4); 
-   ;
-  };
-
+  const menu = useSelector(state => state.menu.sidebar)
   return (
-    <>
-      <div className='lg:hidden bg-dark-blue text-white px-4 h-12 flex items-center'>
-        <div className='cursor-pointer lg:hidden'>
-          <FaBars onClick={toggleSidebar} size={20}color='white'  /> 
-        </div>
-        <div className='ml-auto flex items-center'>
-          <TbBellRinging color='white' size={20} />
-          <img src={pfp} alt="" className={`w-8 h-auto rounded-full ml-2 relative cursor-pointer  `} onClick={togglepfp} />
-        </div>
-    
-        {
-          Open &&(
-            <div className='absolute top-12 right-2 text-black bg-white rounded-bl-md rounded-br-md    '>
-          <ul>
-           {
-            pfpmenu.map((menu, index) => (
-              <li key={index} className='text-sm font-medium w-32 py-1  hover:bg-gray pl-3 '><Link to={menu.path}>{menu.title}</Link></li>
-            ))
-           }  
-          </ul>
-        </div>
-          )
-        }
-
-        
-      </div>
-
-
-      
-
-
-        <div className={`lg:block lg:pl-6 bg-white text-black shadow-xl h-screen max-h-full lg:sticky lg:top-0 lg:overflow-visible z-[99] ${isOpen ? 'hidden' : 'w-64 px-2 fixed top-0'} lg:${MenuOpen ? 'w-[10rem] duration-200' : 'w-[40rem] duration-200'}`}>
-          <FaX onClick={toggleSidebar} size={20}color={`$!isOpen?'white':'black'`} className='lg:hidden cursor-pointer ml-2 mt-2'/>
-        
-          <div className={`lg:cursor-pointer lg:absolute lg:top-1/2 lg:-right-3 lg:bg-white lg:border-2 lg:rounded-full lg:duration-200  ${!MenuOpen &&"rotate-180"}`} >
-            <RiArrowDropRightLine size={25} className='hidden lg:block' onClick={toggleMenu}/>
-          </div>
-            {/*Desktop */}
-          <Link to='/dashboard' className={`lg:items-center lg:justify-center lg:mt-10 hidden lg:block lg:italic lg:text-dark-blue z-[999]`}>
-          {MenuOpen ? <img src={logo} alt="logo" />:<span className='text-3xl lg:text-5xl'>P</span>}
-          </Link>
-          {/*mobile */}
-          <Link to='/dashboard' className={`lg:hidden`}>
-          <img src={logo} alt="logo" className='mt-10' />
-          </Link>
-
-
-
-
-          <div className="mt-10" >
-            {/*To move inside the array called Menu*/}
-            {Menu.map((menu, index) => (
-              <div key={index}>
-                {/*To check if the item inside the menu has submenu*/}
-                <div>
-                  {/*If there's submenu render it*/}
-                  {menu.subMenus ? (
-                    
-                    <div>
-                      <Link
-                        to={menu.path}
-                        className={`flex items-center cursor-pointer p-3 pl-0 ` }
-                        onClick={() => setSubMenuOpen(index)}>
-                      
-                        <div className="mr-2"onClick={toggleMenu}>{menu.icon}</div>
-                        <div className={`lg:${!MenuOpen && "hidden"}`} >{menu.title}</div>
-                        
-                        {menu.isOpen ? <FaAngleUp className={`ml-10 lg:${!MenuOpen && "hidden"}`}  /> : <FaAngleDown className={`ml-10 lg:${!MenuOpen && "hidden"}`} />}  </Link>
-                      {menu.isOpen && menu.subMenus && (
-                        <div className="ml-4">
-                          {menu.subMenus.map((subMenu, subIndex) => (
-                            <Link key={subIndex} to={subMenu.path} className={`flex items-center lg:${!MenuOpen && "hidden"} `}   >
-                              <div className="mr-6 mb-10" ></div>
-                              <div>{subMenu.title}</div>
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <Link to={menu.path} className={`flex items-center cursor-pointer p-3 pl-0  `} >
-                      <div className={`mr-2`}>{menu.icon}</div>
-                      <div className={`lg:${!MenuOpen && "hidden"} lg:duration-200`}>{menu.title}</div>
-                    </Link>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-      </div>
-    </>
-  );
-};
-
+    <div className={`fixed z-10 md:static w-3/5 h-full left-0 top-20 bg-white ${menu ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 flex flex-col md:max-w-[200px] ${menu ? 'md:w-full' :  'md:w-16'} duration-150 ease-in-out shadow-xl md:shadow-md`}>
+      <figure className="max-h-20 h-full w-full flex justify-center items-center">
+        <Link>
+          <img src={menu ? logo : m_logo} alt="" className='duration-300 ease-in-out' />
+        </Link>
+      </figure>
+      <nav className='w-full h-full'>
+        <ul className='w-3/5 m-auto flex flex-col gap-5 mt-5 md:mt-10 text-sm'>
+          <li className='w-full h-full'>
+            <Link to={'/dashboard'}className={`flex items-center center w-full h-full active:bg-red-900`}>
+              <figure className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}>
+                <img src={dashboard} alt="" className='max-w-5 max-h-5 object-contain' />
+              </figure>
+              {menu ? <span className=''>Dashboard</span> : ''}
+            </Link>
+          </li>
+          <li className='w-full h-full'>
+            <Link to={'/tenant'} className='flex items-center center w-full h-full'>
+              <figure className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}>
+                <img src={tenant} alt="" />
+              </figure>
+              {menu ? <span>Tenant</span> : ''}
+            </Link>
+          </li>
+          <li className='w-full h-full'>
+            <Link to={'/apartment'} className='flex items-center center w-full h-full'>
+              <figure className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}>
+                <img src={apartment} alt="" />
+              </figure>
+              {menu ? <span className=''>Apartment</span> : ''}
+            </Link>
+          </li>
+          <li className='w-full h-full'>
+            <Link to={`/security`} className='flex items-center center w-full h-full'>
+              <figure className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}>
+                <img src={security} alt="" />
+              </figure>
+              {menu ? <span>Security</span> : ''}
+            </Link>
+          </li>
+          <li className='w-full h-full'>
+            <Link className='flex items-center center w-full h-full'>
+              <figure className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}>
+                <img src={document} alt="" />
+              </figure>
+              {menu ? <span>Document</span> : ''}
+            </Link>
+          </li>
+          <li className='w-full h-full'>
+            <Link to={`/concern&issue`} className='flex items-center center w-full h-full'>
+              <figure className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}>
+                <img src={report} alt="" />
+              </figure>
+              {menu ? <span>Reports and Concern</span> : ''}
+            </Link>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  )
+}
 export default Sidebar;
