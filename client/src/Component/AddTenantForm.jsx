@@ -2,19 +2,21 @@ import React, { useState } from 'react'
 import Cookies from 'js-cookie'
 import { base_url } from '../utils/constants'
 import { IoClose } from "react-icons/io5";
+import { useDispatch } from 'react-redux';
+import { createTenant } from '../features/user';
 
 const AddTenantForm = () => {
   
-  
-  const [field, setField] = useState({
-    "name": null,
-    "username":null,
-    "birthday": null,
-    "contact": null,
-    "email": null,
-    "password": null,
-    "unit_id": null,
-    "deposit": null
+  const dispatch = useDispatch()
+  const [fields, setFields] = useState({
+    "name": '',
+    "username":'',
+    "birthday": '',
+    "contact": '',
+    "email": '',
+    "password": '',
+    "unit_id": '',
+    "deposit": ''
   })
   const [isFormOpen, setIsFormOpen] = useState(false)
 
@@ -22,41 +24,27 @@ const AddTenantForm = () => {
     
     setIsFormOpen(!isFormOpen);
   }
-  const handleChange = (name, value) => {
-    setField((fields) => ({
+  const handleInput = (e) => {
+    const {name, value} = e.target
+    setFields((fields) => ({
       ...fields,
       [name]:value
     }))
   } 
 
   const handleSubmit = async (e) => {
-  
-    const Token = Cookies.get('Token');
-    const details = Object.entries(fields).reduce((acc,[key, value]) => {
-      if(value !== null){
-        acc[key] = value
-      }
-      return acc;
-    }, {})
-    
-    try{
-      const request = await fetch(`${base_url}/`,{
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${Token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(details)
-        
-      })
-      if(!request.ok){
-        throw new Error("Unable to add tenant")
-        
-      }
-    }
-    catch(err){
-      console.log({error: err.message})
-    }
+  e.preventDefault()
+  dispatch(createTenant(fields))
+  setFields({
+    "name": '',
+    "username":'',
+    "birthday": '',
+    "contact": '',
+    "email": '',
+    "password": '',
+    "unit_id": '',
+    "deposit": ''
+  })
   }
 
   return (

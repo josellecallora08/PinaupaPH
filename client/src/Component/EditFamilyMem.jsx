@@ -6,6 +6,12 @@ import { useState } from 'react';
 import { FaPlus } from "react-icons/fa6";
 import AddHousehold from './AddHousehold';
 const EditFamilyMem = () => {
+  const [fields, setFields] = useState({
+    name: '',
+    relationship: '',
+    birthday: '',
+    mobile: ''
+  })
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [ishouseFormOpen, setIsHouseFormOpen] = useState(false);
   const toggleAddHouseForm = () => {

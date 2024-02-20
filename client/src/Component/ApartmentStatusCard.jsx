@@ -1,8 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { MdOutlineModeEditOutline, MdOutlineClose} from "react-icons/md";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUnit } from '../features/unit';
+import apartment from '../features/apartment';
 
 
-const ApartmentStatusCard = () => {
+const ApartmentStatusCard = ({apartmentId, unitId}) => {
+  const dispatch = useDispatch()
+  const unit = useSelector(state => state.unit.data)
+  const loading = useSelector(state => state.unit.loading)
+  useEffect(() => {
+    dispatch(fetchUnit(apartmentId, unitId))
+  }, [dispatch, loading])
   return (
     <>
       <div className="relative flex  overflow-hidden shadow-md shadow-gray rounded-lg">
