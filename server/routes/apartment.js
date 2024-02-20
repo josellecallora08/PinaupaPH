@@ -1,17 +1,33 @@
 const Router = require('express')
-const { create_apartment, fetch_apartment, fetch_units, create_apartment_unit, edit_apartment, edit_apartment_unit, delete_apartment, delete_apartment_unit } = require('../controllers/apartment_controller')
+const {
+  create_apartment,
+  fetch_apartments,
+  fetch_units,
+  create_apartment_unit,
+  edit_apartment,
+  edit_apartment_unit,
+  delete_apartment,
+  delete_apartment_unit,
+  fetch_unit,
+  fetch_unit_apartment,
+  fetch_apartment,
+} = require('../controllers/apartment_controller')
 
 const router = Router()
 
-router.get('/building', fetch_apartment)
+router.get('/building', fetch_apartments)
+router.get('/building/:apartment_id', fetch_apartment)
 router.get('/units', fetch_units)
+router.get('/:apartment_id/units', fetch_unit_apartment)
+router.get('/:apartment_id/unit/:unit_id', fetch_unit)
 router.post('/create_apartment', create_apartment)
 router.post('/:apartment_id/create_apartment_unit', create_apartment_unit)
 router.patch('/:apartment_id/edit_apartment', edit_apartment)
-router.patch('/edit_apartment_unit/:unit_id', edit_apartment_unit)
+router.patch('/:apartment_id/edit_apartment_unit/:unit_id', edit_apartment_unit)
 router.delete('/:apartment_id', delete_apartment)
-router.delete('/:apartment_id/delete_apartment_unit/:unit_id', delete_apartment_unit)
-
-
+router.delete(
+  '/:apartment_id/delete_apartment_unit/:unit_id',
+  delete_apartment_unit,
+)
 
 module.exports = router

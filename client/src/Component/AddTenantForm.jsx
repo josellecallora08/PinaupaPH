@@ -4,8 +4,8 @@ import { base_url } from '../utils/constants'
 import { IoClose } from "react-icons/io5";
 
 const AddTenantForm = () => {
-  const [isFormOpen, setIsFormOpen] = useState(false)
-  const [isForm, issetForm] = useState(false)
+  
+  
   const [field, setField] = useState({
     "name": null,
     "username":null,
@@ -16,12 +16,12 @@ const AddTenantForm = () => {
     "unit_id": null,
     "deposit": null
   })
-  const toggleForm = () => {
-    isFormsetForm(!issetForm)
- 
-    console.log(isFormOpen)
-  }
+  const [isFormOpen, setIsFormOpen] = useState(false)
 
+  const toggleForm = (e) => {
+    
+    setIsFormOpen(!isFormOpen);
+  }
   const handleChange = (name, value) => {
     setField((fields) => ({
       ...fields,
@@ -30,8 +30,7 @@ const AddTenantForm = () => {
   } 
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    toggleForm()
+  
     const Token = Cookies.get('Token');
     const details = Object.entries(fields).reduce((acc,[key, value]) => {
       if(value !== null){
@@ -42,9 +41,9 @@ const AddTenantForm = () => {
     
     try{
       const request = await fetch(`${base_url}/`,{
-        method: POST,
+        method: 'POST',
         headers: {
-          Auhorization: `Bearer ${Token}`,
+          Authorization: `Bearer ${Token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(details)
@@ -64,8 +63,8 @@ const AddTenantForm = () => {
   <div className='relative'>
       <h1 className="text-3xl font-bold mb-4">Add Tenant</h1>
         <form onSubmit={handleSubmit} className="lg:w-[30rem] w-[20rem] h-[20rem] px-3 overflow-y-auto">
-        <button className='absolute top-1 right-0'><IoClose onClick={toggleForm} size={30} color='red' /></button>
-        <h1 className="text-xl font-bold mb-4">Personal Details</h1>
+          <button onClick={toggleForm}  className='absolute top-1 right-0'><IoClose size={30} color='red' /></button>
+            <h1 className="text-xl font-bold mb-4">Personal Details</h1>
             <div className="mb-4">
               <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
                 Name
@@ -173,12 +172,13 @@ const AddTenantForm = () => {
             </div>
             <div className='flex justify-end mt-5 gap-3'>
 
-                    <button onClick={handleSubmit} className=' bg-light-blue text-white font-bold py-2 px-4 rounded'>
+                    <button type='submit' className=' bg-light-blue text-white font-bold py-2 px-4 rounded'>
                       Submit
                     </button>
 
                     <button
-                      className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded' onClick={toggleForm}>
+                      onClick={toggleForm}
+                      className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded' >
                       Close
                     </button>
                   

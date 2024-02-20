@@ -2,7 +2,7 @@ import React from 'react'
 import { CiSearch } from "react-icons/ci";
 const SearchBar = ({onSearch}) => {
   return (
-    <div className="lg:w-1/2 lg:ml-8 relative ml-8 ">
+    <div className="lg:w-1/2 lg:ml-8 relative ml-5 ">
       <input
         type="text"
         placeholder="Search..."

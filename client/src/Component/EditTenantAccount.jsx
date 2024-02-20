@@ -9,7 +9,7 @@ const [confirmPassword, setConfirmPassword] = useState('')
 const [isFormOpen, setIsFormOpen] = useState(false)
 
 const toggleForm = () => {
-  console.log('Form toggled');
+
   setIsFormOpen(!isFormOpen);
 }
 const handleSubmit = () => {
@@ -19,17 +19,11 @@ toggleForm();
 }
   return (
   <div className='relative'>
-    <div className='flex justify-between items-center'>
-      
-    </div>
-
         <form action="" onSubmit={handleSubmit} className="lg:w-full w-[20rem] h-auto px-3 ">
         <div className='flex items-center mb-5 gap-4'>
             <button className=''><IoIosArrowBack onClick={toggleForm} size={30} color='blue' /></button>
             <h1 className="lg:text-3xl text-2xl font-bold ">Edit Tenant Detail</h1>
           </div>
-            
-
                 <div className="mb-4">
                   <label htmlFor="oldpassword" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
                     Old Password

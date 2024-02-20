@@ -1,71 +1,91 @@
 const mongoose = require('mongoose')
 
-const PAYMENTMODEL = new mongoose.Schema({
-    receipt_id:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref: 'RECEIPTMODEL',
-        required:true
+const PAYMENTMODEL = new mongoose.Schema(
+  {
+    receipt_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'RECEIPTMODEL',
+      required: true,
     },
-    payment_method:{
-        type:String
+    payment_method: {
+      type: String,
     },
-    payment_status:{
-        type:Boolean,
-        default:false
+    payment_status: {
+      type: Boolean,
+      default: false,
     },
-    date_payment:{
-        type:Date
-    }
-}, {timestamps: true})
+    date_payment: {
+      type: Date,
+    },
+  },
+  { timestamps: true },
+)
 
-const HOUSEHOLDMODEL = new mongoose.Schema({
-    name:{
-        type:String
-    },
-    relationship:{
-        type:String
-    },
-    birthday:{
-        type:Date
-    },
-    mobile:{
-        type:Number
-    }
-}, {timestamps: true})
-
-const PETMODEL = new mongoose.Schema({
+const HOUSEHOLDMODEL = new mongoose.Schema(
+  {
     name: {
-        type:String,
+      type: String,
     },
-    species: {
-        type: String,
+    relationship: {
+      type: String,
     },
     birthday: {
-        type: Date
-    }
-}, {timestamps: true})
+      type: Date,
+    },
+    mobile: {
+      type: Number,
+    },
+  },
+  { timestamps: true },
+)
 
-const TENANTMODEL = new mongoose.Schema({
-    user_id:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'user'
+const PETMODEL = new mongoose.Schema(
+  {
+    name: {
+      type: String,
     },
-    unit_id:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'units'
+    species: {
+      type: String,
     },
-    deposit:{
-        type:Number,
+    birthday: {
+      type: Date,
     },
-    balance:{
-        type:Number,
+  },
+  { timestamps: true },
+)
+
+const TENANTMODEL = new mongoose.Schema(
+  {
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user',
     },
-    monthly_due:{
-        type:Date
+    unit_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'units',
+      required: true,
     },
-    payment:[PAYMENTMODEL],
+    deposit: {
+      type: Number,
+      default: null,
+    },
+    advance: {
+      type: Number,
+      default: null,
+    },
+    balance: {
+      type: Number,
+      default: null,
+    },
+    monthly_due: {
+      type: Date,
+      default: null,
+    },
+    payment: [PAYMENTMODEL],
     household: [HOUSEHOLDMODEL],
-    pet: [PETMODEL]
-},{timestamps: true})
+    pet: [PETMODEL],
+  },
+  { timestamps: true },
+)
 
 module.exports = mongoose.model('tenant', TENANTMODEL)

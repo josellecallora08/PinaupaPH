@@ -1,14 +1,27 @@
 const { Router } = require('express')
-const { fetch_user, sign_up, sign_in, 
-        create_household, create_pet, 
-        update_household, update_profile, update_pet,
-        delete_tenant, delete_household, delete_pet
-    } = require('../controllers/user_controller')
+const {
+  fetch_users,
+  fetch_user,
+  sign_up,
+  sign_in,
+  create_household,
+  create_pet,
+  update_household,
+  update_profile,
+  update_pet,
+  delete_tenant,
+  delete_household,
+  delete_pet,
+  search_user,
+} = require('../controllers/user_controller')
 const requireAuth = require('../middleware/requireAuth')
 
 const router = Router()
 
-router.get('/', fetch_user)
+router.post('/search/:filter', search_user)
+router.get('/', fetch_users)
+router.get('/:user_id', fetch_user)
+
 router.post('/', sign_up)
 router.post('/login', sign_in)
 router.post('/:user_id/create_household', create_household)

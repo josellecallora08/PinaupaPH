@@ -1,61 +1,97 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { base_url } from "../utils/constants";
-import Cookies from 'js-cookie'; // Make sure to import the Cookies library if you haven't
-
+import { createSlice } from '@reduxjs/toolkit'
+import { base_url } from '../utils/constants'
 const authSlice = createSlice({
-    name: 'auth',
-    initialState: {isAuthenticated: false, role: null},
-    reducers: {
-        login_success: (state, action) => {
-            const { role } = action.payload;
-            return { isAuthenticated: true, role };
-        },
-        logout: (state) => {
-            return { isAuthenticated: false, role: null };
-        }
-    }
+  name: 'auth',
+  initialState: { 
+    loading: false, 
+    isAuthenticated: false, 
+    token: null,
+    user: null, 
+    error: null},
+  reducers: {
+    loginStart: (state,action) => {
+      state.loading = true
+      state.error = null
+    },
+    loginSuccess: (state, action) => {
+        state.loading = false
+        state.isAuthenticated = true
+        state.token = action.payload.token
+        state.user = action.payload.response
+    },
+    loginFailed: (state,action) => {
+      state.loading = false
+      state.error = action.payload
+    },
+    logout: (state) => {
+      state.loading = false
+      state.isAuthenticated = false
+      state.user = null
+    },
+  },
 })
 
-export const {login_success, logout} = authSlice.actions
+export const { loginStart, loginSuccess, loginFailed, logout } = authSlice.actions
 
-export const login = (credentials,navigate) => async (dispatch) => {
+export const isLoggedin = (navigate, token, userId) => async (dispatch) => {
+  if (token) {
+    const response = await fetch(`${base_url}/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    const data = await response.json()
+    dispatch(loginSuccess(data))
+    navigate('/dashboard')
+  }
+}
+
+export const isLogin = (credentials, navigate) => async (dispatch) => {
   try {
+    dispatch(loginStart())
     const response = await fetch(`${base_url}/login`, {
-      method: 'POST', 
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(credentials),
-    });
+      credentials: 'include'
+    })
     if (!response.ok) {
-      throw new Error("Login Failed.");
+      throw new Error('Login Failed.')
     }
-    
-    const data = await response.json();
-    Cookies.set("Token", data.token, { expires: 1 });
+
+    const data = await response.json()
+    dispatch(loginSuccess(data))
     navigate('/dashboard')
-    dispatch(login_success(data));
-
-  } catch (error) {
-    console.error("Login failed:", error);
+  } catch (err) {
+    dispatch(loginFailed(err.message))
   }
-};
-
-export const is_login = (navigate) => async (dispatch) => {
-    const token = Cookies.get('Token')
-    console.log("hello")
-    if(token){
-        const response = await fetch(`${base_url}/`,{
-            headers:{
-                'Authorization':`Bearer ${token}`,
-                'Content-type': 'application/json'
-            }
-        })
-        const data = await response.json()
-        console.log(data.Role)
-        navigate('/dashboard')
-        dispatch(login_success(data));
-    }
 }
 
-export default authSlice.reducer;
+export const isRegister = (navigate, credentials) => async(dispatch) => {
+  try{
+    dispatch(loginStart())
+    const userRegister = await fetch(`${base_url}/`,{
+      method: "POST",
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(credentials),
+      credentials: 'include'
+    })
+
+    if(!userRegister.ok){
+      throw new Error("Failed to register...")
+    }
+
+    const json = await userRegister.json()
+    dispatch(loginSuccess(json))
+    navigate('/dashboard')
+  }catch(error){
+    dispatch(loginFailed(err.message))
+  }
+}
+
+
+export default authSlice.reducer
