@@ -5,6 +5,7 @@ import unitReducer from '../features/unit'
 import cctvReducer from '../features/cctv'
 import documentReducer from '../features/documents'
 import userReducer from '../features/user'
+import paymentReducer from '../features/payment'
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     unit: unitReducer,
     cctv: cctvReducer,
     docs: documentReducer,
-    user: userReducer
+    user: userReducer,
+    payment: paymentReducer,
   },
 })

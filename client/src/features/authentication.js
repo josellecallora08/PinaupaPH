@@ -2,24 +2,25 @@ import { createSlice } from '@reduxjs/toolkit'
 import { base_url } from '../utils/constants'
 const authSlice = createSlice({
   name: 'auth',
-  initialState: { 
-    loading: false, 
-    isAuthenticated: false, 
+  initialState: {
+    loading: false,
+    isAuthenticated: false,
     token: null,
-    user: null, 
-    error: null},
+    user: null,
+    error: null,
+  },
   reducers: {
-    loginStart: (state,action) => {
+    loginStart: (state, action) => {
       state.loading = true
       state.error = null
     },
     loginSuccess: (state, action) => {
-        state.loading = false
-        state.isAuthenticated = true
-        state.token = action.payload.token
-        state.user = action.payload.response
+      state.loading = false
+      state.isAuthenticated = true
+      state.token = action.payload.token
+      state.user = action.payload.response
     },
-    loginFailed: (state,action) => {
+    loginFailed: (state, action) => {
       state.loading = false
       state.error = action.payload
     },
@@ -31,7 +32,8 @@ const authSlice = createSlice({
   },
 })
 
-export const { loginStart, loginSuccess, loginFailed, logout } = authSlice.actions
+export const { loginStart, loginSuccess, loginFailed, logout } =
+  authSlice.actions
 
 export const isLoggedin = (navigate, token, userId) => async (dispatch) => {
   if (token) {
@@ -55,7 +57,7 @@ export const isLogin = (credentials, navigate) => async (dispatch) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(credentials),
-      credentials: 'include'
+      credentials: 'include',
     })
     if (!response.ok) {
       throw new Error('Login Failed.')
@@ -68,30 +70,5 @@ export const isLogin = (credentials, navigate) => async (dispatch) => {
     dispatch(loginFailed(err.message))
   }
 }
-
-export const isRegister = (navigate, credentials) => async(dispatch) => {
-  try{
-    dispatch(loginStart())
-    const userRegister = await fetch(`${base_url}/`,{
-      method: "POST",
-      headers:{
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(credentials),
-      credentials: 'include'
-    })
-
-    if(!userRegister.ok){
-      throw new Error("Failed to register...")
-    }
-
-    const json = await userRegister.json()
-    dispatch(loginSuccess(json))
-    navigate('/dashboard')
-  }catch(error){
-    dispatch(loginFailed(err.message))
-  }
-}
-
 
 export default authSlice.reducer

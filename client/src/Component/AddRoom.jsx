@@ -1,13 +1,22 @@
 import { IoClose } from "react-icons/io5";
 import React, { useState } from 'react'
+import { useDispatch } from "react-redux";
+import { createUnit } from "../features/unit";
 
-const AddRoom = () => {
+const AddRoom = ({apartment_id}) => {
   const [isFormOpen, setIsFormOpen] = useState(false)
+  const dispatch = useDispatch()
+  const [fields, setFields] = useState({
+    name: '',
+    rent: '',
+    unit_no: ''
+  })
   const toggleForm = () => {
     setIsFormOpen(!isFormOpen);
   }
   const handleSubmit = (e) => {
- 
+    e.preventDefault()
+    dispatch(createUnit(fields, apartment_id))
     console.log('Form submitted')
     setIsFormOpen(!isFormOpen)
   }

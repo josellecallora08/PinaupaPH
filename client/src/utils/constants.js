@@ -3,4 +3,3 @@ export const document_url = 'http://localhost:5000/api/documents'
 export const payment_url = 'http://localhost:5000/api/payment'
 export const apartment_url = 'http://localhost:5000/api/apartment'
 export const cctv_url = 'http://localhost:5000/api/cctv'
-
