@@ -6,6 +6,7 @@ import { IoClose } from "react-icons/io5";
 const AddHousehold = () => {
   const [isFormOpen, setIsFormOpen] = useState(false)
 
+
   const toggleForm = () => {
     setIsFormOpen(!isFormOpen);
   }

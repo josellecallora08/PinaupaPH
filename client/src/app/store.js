@@ -6,7 +6,6 @@ import cctvReducer from '../features/cctv'
 import documentReducer from '../features/documents'
 import userReducer from '../features/user'
 import paymentReducer from '../features/payment'
-import toggleReducer from '../features/toggle'
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +16,5 @@ export const store = configureStore({
     docs: documentReducer,
     user: userReducer,
     payment: paymentReducer,
-    menu: toggleReducer
   },
 })

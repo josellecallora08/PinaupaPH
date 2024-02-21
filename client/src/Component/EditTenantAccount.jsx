@@ -1,22 +1,16 @@
 import React from 'react'
 import { useState } from 'react'
 import { IoIosArrowBack } from "react-icons/io";
-import { useSelector } from 'react-redux';
 const EditTenantAccount = () => {
-  const user = useSelector((state) => state.user.data)
-  const [fields, setFields] = useState({
-    username: user?.username || '',
-    password: '',
-    confirmPassword: ''
-  })
+const [newUsername, setNewUsername] = useState('')
+const [oldPassword, setOldPassword] = useState('')
+const [newPassword, setNewPassword] = useState('')
+const [confirmPassword, setConfirmPassword] = useState('')
 const [isFormOpen, setIsFormOpen] = useState(false)
 
 const toggleForm = () => {
 
   setIsFormOpen(!isFormOpen);
-}
-const handleInput = (e) => {
-
 }
 const handleSubmit = () => {
 console.log('Form submitted');
@@ -37,24 +31,23 @@ toggleForm();
                   <input
                     type="password"
                     id="password"
-                    onChange={handleInput}
+                    onChange={(e) => setOldPassword(e.target.value)}
                     name="password"
-                    value={fields.password}
+                    
                     placeholder="Enter your Old Password"
                     className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
                 </div>
 
                 <div className="mb-4">
-                  <label htmlFor="newpassword" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
+                  <label htmlFor="contact" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
                     New Password
                   </label>
                   <input
                     type="password"
                     id="newpassword"
-                    name="confirmPassword"
-                    onChange={handleInput}
-                    value={fields.confirmPassword}
+                    name="newpassword"
+                    onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Enter your New Password"
                     className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
@@ -67,16 +60,16 @@ toggleForm();
                   <input
                     type="password"
                     id="confirmPassword"
-                    onChange={handleInput}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     name="consfirmPassword"
-                    value={fields.confirmPassword}
+
                     placeholder="Enter your Confirm Password"
                     className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
                 </div>
                 <div className='flex justify-end mt-5 gap-3'>
 
-                  <button className=' bg-light-blue text-white font-bold py-2 px-4 rounded'>
+                  <button onClick={handleSubmit} className=' bg-light-blue text-white font-bold py-2 px-4 rounded'>
                     Submit
                   </button>
 

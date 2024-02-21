@@ -1,26 +1,18 @@
 import React from 'react'
 import { useState } from 'react'
 import { IoIosArrowBack } from "react-icons/io";
-import { useSelector } from 'react-redux';
 const EditTenantDetails = () => {
-  const user = useSelector((state) => state.user.data)
-  const [fields, setFields] = useState({
-    name: user?.name || '',
-    birthday: user?.birthday || '',
-    mobile_no: user?.mobile_no || '',
-    email: user?.email || '',
-    unit_id: user?.unit_id || '',
-    deposit: user?.deposit || '',
-    occupancy: user?.occupancy || ''
-  })
-
+  const [name, setName] = useState('')
+  const [birthday, setBirthday] = useState('')
+  const [contact, setContact] = useState('')
+  const [email, setEmail] = useState('')
+  const [apartment_unit, setApartment_unit] = useState('')
+  const [deposit, setDeposit] = useState('')
+  const [dateofin, setDateofin] = useState('')
   const [isFormOpen, setIsFormOpen] = useState(false)
   const toggleForm = (e) => {
 
     setIsFormOpen(!isFormOpen);
-  }
-  const handleInput = (e) => {
-
   }
   const handleSubmit = () => {
   console.log('Form submitted');
@@ -30,7 +22,7 @@ const EditTenantDetails = () => {
   return (
   <div className='relative'>
       
-        <form onSubmit={handleSubmit} className="lg:w-full w-[20rem] h-[20rem] px-3 overflow-y-auto">
+        <form action="" className="lg:w-full w-[20rem] h-[20rem] px-3 overflow-y-auto">
           <div className='flex items-center mb-5 gap-4'>
             <button className=''><IoIosArrowBack onClick={toggleForm} size={30} color='blue' /></button>
             <h1 className="lg:text-3xl text-2xl font-bold ">Edit Tenant Detail</h1>
@@ -44,8 +36,7 @@ const EditTenantDetails = () => {
                 type="text"
                 id="name"
                 name="name"
-                onChange={handleInput}
-                value = {fields.name}
+                onChange={(e) => setName(e.target.value)}
                 placeholder="Enter your name"
                 className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
@@ -59,8 +50,7 @@ const EditTenantDetails = () => {
                 type="text"
                 id="birthday"
                 name="birthday"
-                onChange={handleInput}
-                value={fields.birthday}
+                onChange={(e) => setBirthday(e.target.value)}
                 placeholder="Enter your birthday"
                 className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
@@ -73,9 +63,8 @@ const EditTenantDetails = () => {
               <input
                 type="tel"
                 id="contact"
-                name="mobile_no"
-                onChange={handleInput}
-                value={fields.mobile_no}
+                name="contact"
+                onChange={(e) => setContact(e.target.value)}
                 placeholder="Enter your contact number"
                 className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
@@ -89,8 +78,7 @@ const EditTenantDetails = () => {
                 type="email"
                 id="email"
                 name="email"
-                onChange={handleInput}
-                value={fields.email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
@@ -104,8 +92,7 @@ const EditTenantDetails = () => {
                 type="text"
                 id="apartment_unit"
                 name="apartment_unit"
-                value={fields.unit_id}
-                onChange={handleInput}
+                onChange={(e) => setApartment_unit(e.target.value)}
                 placeholder="Enter your Apartment Unit"
                 className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
@@ -118,8 +105,7 @@ const EditTenantDetails = () => {
                 type="text"
                 id="deposit"
                 name="deposit"
-                value={fields.deposit}
-                onChange={handleInput}
+                onChange={(e) => setDeposit(e.target.value)}
                 placeholder="Enter your Deposit"
                 className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
@@ -131,16 +117,15 @@ const EditTenantDetails = () => {
               <input
                 type="text"
                 id="dateofin"
-                name="occupancy"
-                value={fields.occupancy}
-                onChange={handleInput}
+                name="dateofin"
+                onChange={(e) => setDateofin(e.target.value)}
                 placeholder="Enter your Date of Occupant In"
                 className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
             <div className='flex justify-end mt-8 gap-3'>
 
-              <button className=' bg-light-blue text-white font-bold py-2 px-4 rounded'>
+              <button onClick={handleSubmit} className=' bg-light-blue text-white font-bold py-2 px-4 rounded'>
                 Submit
               </button>
 

@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { apartment_url } from '../utils/constants'
+import {apartment_url} from '../utils/constants'
 const apartmentSlice = createSlice({
   name: 'apartment',
   initialState: {
     loading: false,
     error: null,
-    data: null,
+    data: null
   },
   reducers: {
     apartmentStart: (state) => {
@@ -18,9 +18,7 @@ const apartmentSlice = createSlice({
     },
     editApartmentSuccess: (state, action) => {
       state.loading = false
-      state.data = state.data.map((item) =>
-        item._id === action.payload._id ? { ...item, ...action.payload } : item,
-      )
+      state.data = state.data.map(item => item._id === action.payload._id ? {...item, ...action.payload} : item)
     },
     deleteApartmentSuccess: (state, action) => {
       state.loading = false
@@ -29,116 +27,107 @@ const apartmentSlice = createSlice({
     actionApartmentFailed: (state, action) => {
       state.loading = false
       state.error = action.payload
-    },
+    }
   },
 })
 
-export const {
-  apartmentStart,
-  fetchApartmentSuccess,
-  editApartmentSuccess,
-  deleteApartmentSuccess,
-  actionApartmentFailed,
-} = apartmentSlice.actions
+export const { apartmentStart, fetchApartmentSuccess, editApartmentSuccess, deleteApartmentSuccess, actionApartmentFailed } = apartmentSlice.actions
 
-export const createApartment = (fields) => async (dispatch) => {
-  try {
+export const createApartment = (fields) => async(dispatch) => {
+  try{
     dispatch(apartmentStart())
     const apartment = await fetch(`${apartment_url}/create_apartment`, {
-      method: 'POST',
-      headers: {
+      method:"POST",
+      headers:{
         Authorization: `Bearer ${token}`,
-        'Content-type': 'application/json',
+        'Content-type': 'application/json'
       },
-      body: JSON.stringify(fields),
+      body: JSON.stringify(fields)
     })
 
-    if (!apartment.ok) {
-      throw new Error('Failed to create apartment')
+    if(!apartment.ok){
+      throw new Error("Failed to create apartment")
     }
     const json = await apartment.json()
     dispatch(fetchApartmentSuccess(json))
-  } catch (err) {
+  }catch(err){
     dispatch(actionApartmentFailed(err.message))
   }
 }
 
-export const fetchApartments = () => async (dispatch) => {
-  try {
+export const fetchApartments = () => async(dispatch) => {
+  try{
     dispatch(apartmentStart())
     const apartment = await fetch(`${apartment_url}/building`, {
-      headers: {
+      headers:{
         Authorization: `Bearer ${token}`,
-      },
+      }
     })
 
-    if (!apartment.ok) {
-      throw new Error('Failed to create apartment')
+    if(!apartment.ok){
+      throw new Error("Failed to create apartment")
     }
     const json = await apartment.json()
     dispatch(fetchApartmentSuccess(json))
-  } catch (err) {
+  }catch(err){
     dispatch(actionApartmentFailed(err.message))
   }
 }
 
-export const fetchApartment = (apartmentId) => async (dispatch) => {
-  try {
+export const fetchApartment = (apartmentId) => async(dispatch) => {
+  try{
     dispatch(apartmentStart())
     const apartment = await fetch(`${apartment_url}/${apartmentId}/building`, {
-      headers: {
+      headers:{
         Authorization: `Bearer ${token}`,
-      },
+      }
     })
 
-    if (!apartment.ok) {
-      throw new Error('Failed to create apartment')
+    if(!apartment.ok){
+      throw new Error("Failed to create apartment")
     }
     const json = await apartment.json()
     dispatch(fetchApartmentSuccess(json))
-  } catch (err) {
+  }catch(err){
     dispatch(actionApartmentFailed(err.message))
   }
 }
 
-export const editApartment = (fields, apartmentId) => async (dispatch) => {
-  try {
+export const editApartment = (fields,apartmentId) => async(dispatch) => {
+  try{
     dispatch(apartmentStart())
-    const apartment = await fetch(
-      `${apartment_url}/${apartmentId}/edit_apartment`,
-      {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(fields),
+    const apartment = await fetch(`${apartment_url}/${apartmentId}/edit_apartment`, {
+      method: "PATCH",
+      headers:{
+        Authorization: `Bearer ${token}`,
       },
-    )
+      body: JSON.stringify(fields)
+    })
 
-    if (!apartment.ok) {
-      throw new Error('Failed to create apartment')
+    if(!apartment.ok){
+      throw new Error("Failed to create apartment")
     }
     const json = await apartment.json()
     dispatch(editApartmentSuccess(json))
-  } catch (err) {
+  }catch(err){
     dispatch(actionApartmentFailed(err.message))
   }
 }
 
-export const deleteApartment = (apartmentId) => async (dispatch) => {
-  try {
+export const deleteApartment = (apartmentId) => async(dispatch) => {
+  try{
     dispatch(apartmentStart())
     const apartment = await fetch(`${apartment_url}/${apartmentId}`, {
-      method: 'DELETE',
-      headers: {
+      method: "DELETE",
+      headers:{
         Authorization: `Bearer ${token}`,
       },
     })
-    if (!apartment.ok) {
-      throw new Error('Failed to create apartment')
+    if(!apartment.ok){
+      throw new Error("Failed to create apartment")
     }
     dispatch(deleteApartmentSuccess(apartmentId))
-  } catch (err) {
+  }catch(err){
     dispatch(actionApartmentFailed(err.message))
   }
 }

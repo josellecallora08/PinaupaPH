@@ -251,12 +251,12 @@ module.exports.sign_up = async (req, res) => {
           error: 'Failed to update occupancy status at Unit Collection.',
         })
 
-    // const token = createToken(response._id, response.username, response.role)
-    // res.cookie('token', token, { maxAge: 900000 })
+    const token = createToken(response._id, response.username, response.role)
+    res.cookie('token', token, { maxAge: 900000 })
 
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Created Account successfully!', response })
+      .json({ msg: 'Created Account successfully!', response, token })
   } catch (err) {
     console.error({ error: err.message })
     return res
