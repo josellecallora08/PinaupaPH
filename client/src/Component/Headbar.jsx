@@ -3,6 +3,8 @@ import pfp from '/pfp.svg'
 import { useState } from 'react'
 import { TbBellRinging } from "react-icons/tb";
 import { Link } from 'react-router-dom';
+import {useSelector, useDispatch} from 'react-redux'
+import { toggleProfile, toggleSidebar } from '../features/menu';
 const pfpmenu = [
   {
     title: "Profile",
@@ -15,10 +17,24 @@ const pfpmenu = [
   }
 ]
 const Headbar = () => {
+  const sidebar = useSelector(state => state.toggle.sidebar) //for sidebar ternary
+  const profile = useSelector(state => state.toggle.profile) //for profile ternary
+  const dispatch = useDispatch()
   const [Open, setOpen] = useState(false);
   const togglepfp = () => {
     setOpen(!Open);
   };
+
+  //function for sidebar toggle buttons
+  const handleSidebar = () => { 
+    dispatch(toggleSidebar())
+  }
+
+  //function for profile toggle buttons
+  const handleProfile = () => {
+    dispatch(toggleProfile())
+  }
+
   return (
     
 <div className='hidden lg:bg-dark-blue lg:flex justify-end items-center px-10 pt-5 pb-3 w-auto relative   '>

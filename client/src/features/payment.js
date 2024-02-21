@@ -30,7 +30,7 @@ const paymentSlice = createSlice({
 })
 
 export const { startLoading, paymentSuccess, fetchKeySuccess, actionFailed } =
-  paymentSlide.actions
+  paymentSlice.actions
 
 export const createPaymentIntent = (userId, fields) => async (dispatch) => {
   /* fields {
