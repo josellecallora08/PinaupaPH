@@ -47,7 +47,7 @@ const Dashboard = () => {
     </div>
    
   </div>
-  {/* center right of Dashboard recent Activity */}
+  {/* center right of Dashboard recent Activity this one */}
   
   <div className=' lg:w-1/2 lg:h-full w-auto  mx-4 p-3 rounded-br-xl rounded-bl-xl shadow-sm shadow-dark-gray  '>
   <h1 className='  m-2 text-2xl font-black '>Recent Activity</h1>
@@ -58,7 +58,6 @@ const Dashboard = () => {
             <img src={act.img} alt="Profile" />
             <div>
               <div className=" text-sm font-black">{act.fname} {act.lname}</div>
-              
               <div className="text-light-gray">{act.date}</div>
             </div>
 

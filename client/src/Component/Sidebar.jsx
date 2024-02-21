@@ -89,7 +89,7 @@ const pfpmenu = [
 
 const Sidebar = () => {
 
-  //useState to trach the changes of properties :D
+  //useState to trach the changes of propert1ies :D
   const [Menu, SetMenu] = useState(Menus);
   const [isOpen, setIsOpen] = useState(true);
   const [Open, setOpen] = useState(false);
