@@ -1,10 +1,11 @@
-import { IoClose } from "react-icons/io5";
+
 import React, { useState } from 'react'
 import { useDispatch } from "react-redux";
 import { createUnit } from "../features/unit";
-
+import { IoIosArrowBack } from "react-icons/io";
 const AddRoom = ({apartment_id}) => {
   const [isFormOpen, setIsFormOpen] = useState(false)
+  const [Open, setOpen] = useState(false)
   const dispatch = useDispatch()
   const [fields, setFields] = useState({
     name: '',
@@ -14,18 +15,22 @@ const AddRoom = ({apartment_id}) => {
   const toggleForm = () => {
     setIsFormOpen(!isFormOpen);
   }
+
   const handleSubmit = (e) => {
-    e.preventDefault()
+    
     dispatch(createUnit(fields, apartment_id))
     console.log('Form submitted')
-    setIsFormOpen(!isFormOpen)
+    toggleForm()
   }
   return (
     <>
         <div className='relative'>
-    <h1 className="lg:text-3xl text-2xl font-bold mb-4">Add Apartment building</h1>
-      <form onSubmit={handleSubmit} className="lg:w-[30rem] w-[20rem] h-[22rem] px-3 ">
-      <button className='absolute top-1 right-0'><IoClose onClick={toggleForm} size={30} color='red' /></button>
+    
+      <form className="lg:w-[30rem] w-[20rem] h-[25rem] px-3 ">
+          <div className='flex items-center mb-5 gap-4'>
+            <button className=''><IoIosArrowBack onClick={toggleForm} size={30} color='blue' /></button>
+            <h1 className="lg:text-3xl text-2xl font-bold ">Add Apartment building</h1>
+          </div>
           <div className="mb-4">
             <label htmlFor="aptname" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
               Apartment Name

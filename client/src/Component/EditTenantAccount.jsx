@@ -26,7 +26,7 @@ toggleForm();
   return (
   <div className='relative'>
         <form action="" onSubmit={handleSubmit} className="lg:w-full w-[20rem] h-auto px-3 ">
-        <div className='flex items-center mb-5 gap-4'>
+          <div className='flex items-center mb-5 gap-4'>
             <button className=''><IoIosArrowBack onClick={toggleForm} size={30} color='blue' /></button>
             <h1 className="lg:text-3xl text-2xl font-bold ">Edit Tenant Detail</h1>
           </div>

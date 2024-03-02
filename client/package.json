@@ -23,7 +23,8 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
     "react-redux": "^9.1.0",
-    "react-router-dom": "^6.21.1"
+    "react-router-dom": "^6.21.1",
+    "rsuite": "^5.55.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

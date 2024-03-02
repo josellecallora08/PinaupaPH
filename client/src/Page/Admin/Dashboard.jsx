@@ -8,14 +8,14 @@ const Dashboard = () => {
 
   return (
    
-<div className='lg:ml-3 flex flex-col lg:overflow-hidden'>
+<div className='lg:ml-3  flex flex-col lg:overflow-hidden'>
 {/* Top of Dashboard> */}
-<h1 className='lg:text-5xl m-4 my-7  text-4xl font-black'>Dashboard</h1>
-<div className=' flex  bg-white mx-4 justify-between  pr-3 rounded-br-xl rounded-bl-xl shadow-sm shadow-dark-gray'>
-    <img src={City} alt="" className=' w-40 h-auto lg:w-52 lg:h-auto '/>
+<h1 className='lg:text-4xl lg:my-3 m-4 my-7  text-4xl font-black'>Dashboard</h1>
+<div className=' flex bg-white mx-4 justify-between pr-3 rounded-br-xl rounded-bl-xl shadow-sm shadow-dark-gray'>
+    <img src={City} alt="" className='lg:h-auto lg:w-40 w-40 h-auto   '/>
     <div className='py-2'>
-      <h1 className='text-3xl text-dark-blue lg:text-5xl'>Welcome Elizabeth,</h1>
-      <div className='flex text-dark-blue justify-end font-medium lg:text-2xl'>
+      <h1 className='text-3xl text-dark-blue lg:text-3xl'>Welcome Elizabeth,</h1>
+      <div className=' lg:py-2 flex text-dark-blue justify-end font-medium lg:text-2xl'>
         <h3>11:03AM </h3>
         <h3>1 January 2024</h3>
       </div>
@@ -26,7 +26,7 @@ const Dashboard = () => {
 <div className='lg:flex lg:mt-5 mt-5 '>
 
   {/* center-left of Dashboard> */}
-  <div className='h-auto lg:w-7/12 pr-3 rounded-br-xl rounded-bl-xl shadow-sm shadow-dark-gray  mx-4 pt-4 pl-5   '>
+  <div className=' lg:w-7/12 lg:mb-0 pr-3 rounded-br-xl h-auto rounded-bl-xl shadow-sm shadow-dark-gray mb-5  mx-4 pt-4 pl-5   '>
     <div>
     <h1 className=' text-2xl font-black'>Revenue Overview</h1>
     <p className='text-dark-gray text-sm mb-2'>Show overview Each Month</p>
@@ -51,7 +51,7 @@ const Dashboard = () => {
   
   <div className=' lg:w-1/2 lg:h-full w-auto  mx-4 p-3 rounded-br-xl rounded-bl-xl shadow-sm shadow-dark-gray  '>
   <h1 className='  m-2 text-2xl font-black '>Recent Activity</h1>
-    <div className=' overflow-y-auto h-96 text-xs' >
+    <div className=' lg:h-96 overflow-y-auto h-96 text-xs' >
       <ul className="flex flex-wrap lg:m-0">
         {RecentAct.map((act, index) => (
           <li key={index} className="flex items-center gap-10 lg:gap-15 py-2 pl-3 lg:px-3">
@@ -71,8 +71,6 @@ const Dashboard = () => {
    
   </div>
 </div>
-
-
 {/* Bottom of Dashboard> */}
 <div className=' flex gap-2 mx-4 m-5 h-auto  ml-4'>
 
@@ -112,6 +110,8 @@ const Dashboard = () => {
             </div>
         </div>           
   </div>
+
+
 </div>
 
   )

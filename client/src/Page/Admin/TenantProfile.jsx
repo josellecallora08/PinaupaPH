@@ -188,7 +188,7 @@ const TenantProfile = () => {
                 <EditFamilyMem />    
               </div>
             </div>
-          )}
+          )} 
            {/*Pets */}
            <div className='lg:overflow-y-auto relative'>
                     <h1 className='lg:text-3xl lg:mb-4 text-xl font-bold mt-4'>Pets</h1>
