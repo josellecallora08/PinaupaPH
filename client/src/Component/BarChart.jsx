@@ -32,7 +32,7 @@ const BarChart = () => {
   return (
     <div className=''>
 
-      <div className=' w-full'>
+      <div className='w-full'>
         <Bar data={data} options={options} />
       </div>
       

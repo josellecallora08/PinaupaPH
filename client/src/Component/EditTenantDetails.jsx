@@ -29,13 +29,13 @@ const EditTenantDetails = () => {
   
   return (
   <div className='relative'>
-      
+
         <form onSubmit={handleSubmit} className="lg:w-full w-[20rem] h-[20rem] px-3 overflow-y-auto">
-          <div className='flex items-center mb-5 gap-4'>
+        <div className='flex sticky top-0 pb-3 bg-white items-center mb-5 gap-4'>
             <button className=''><IoIosArrowBack onClick={toggleForm} size={30} color='blue' /></button>
             <h1 className="lg:text-3xl text-2xl font-bold ">Edit Tenant Detail</h1>
           </div>
-        
+        <h1 className="text-xl font-bold mb-2">Personal Details</h1>
             <div className="mb-4">
               <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
                 Name

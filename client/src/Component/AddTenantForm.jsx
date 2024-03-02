@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import Cookies from 'js-cookie'
 import { base_url } from '../utils/constants'
-import { IoClose } from "react-icons/io5";
+
 import { useDispatch } from 'react-redux';
 import { createTenant } from '../features/user';
-
+import { IoIosArrowBack } from "react-icons/io";
 const AddTenantForm = () => {
   
   const dispatch = useDispatch()
@@ -19,7 +19,12 @@ const AddTenantForm = () => {
     "deposit": ''
   })
   const [isFormOpen, setIsFormOpen] = useState(false)
+  const [selectUnit, setSelectUnit] = useState('')
+  
 
+  const handleSelect = (e) => {
+    setSelectUnit(e.target.value)
+  }
   const toggleForm = (e) => {
     
     setIsFormOpen(!isFormOpen);
@@ -49,9 +54,12 @@ const AddTenantForm = () => {
 
   return (
   <div className='relative'>
-      <h1 className="text-3xl font-bold mb-4">Add Tenant</h1>
-        <form onSubmit={handleSubmit} className="lg:w-[30rem] w-[20rem] h-[20rem] px-3 overflow-y-auto">
-          <button onClick={toggleForm}  className='absolute top-1 right-0'><IoClose size={30} color='red' /></button>
+      
+        <form className="lg:w-[30rem] w-[20rem] h-[25rem] px-3 overflow-y-auto">
+        <div className='flex sticky top-0 pb-3 bg-white items-center mb-5 gap-4'>
+            <button className=''><IoIosArrowBack onClick={toggleForm} size={30} color='blue' /></button>
+            <h1 className="lg:text-3xl text-2xl font-bold ">Add Tenant</h1>
+          </div>
             <h1 className="text-xl font-bold mb-4">Personal Details</h1>
             <div className="mb-4">
               <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
@@ -125,13 +133,12 @@ const AddTenantForm = () => {
               <label htmlFor="apartment_unit" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
               Apartment Unit
               </label>
-              <input
-                type="text"
-                id="apartment_unit"
-                name="apartment_unit"
-                placeholder="Enter your Apartment Unit"
-                className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
+              <select name='ApartmentUnit' defaultValue="Room1" className='w-full py-2 px-3 border rounded'>
+                <option className='rounded-none' value="someOption">Some option</option>
+                <option value="otherOption">Other option</option>
+                <option value="otherOption">Other option</option>
+                <option value="otherOption">Room1</option>
+              </select>
             </div>
             <div className="mb-4">
               <label htmlFor="deposit" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
