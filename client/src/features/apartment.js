@@ -85,7 +85,7 @@ export const fetchApartments = () => async (dispatch) => {
 export const fetchApartment = (apartmentId) => async (dispatch) => {
   try {
     dispatch(apartmentStart())
-    const apartment = await fetch(`${apartment_url}/${apartmentId}/building`, {
+    const apartment = await fetch(`${apartment_url}/building/${apartmentId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

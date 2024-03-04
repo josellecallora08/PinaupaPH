@@ -1,7 +1,6 @@
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
-const multer = require('multer')
 const cloudinary = require('cloudinary').v2
 const body_parser = require('body-parser')
 const cron = require('node-cron')
@@ -36,8 +35,8 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
-const storage = multer.memoryStorage()
-const upload = multer({ storage: storage })
+
+
 // Connect to DB
 mongoose.connect(process.env.MONGODB_URI).then(() => {
   app.listen(process.env.PORT, () => {

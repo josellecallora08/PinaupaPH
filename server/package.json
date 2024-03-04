@@ -8,7 +8,6 @@
     "start": "nodemon server.js",
     "format": "prettier --write \"**/*.js\"",
     "check-format": "prettier --check \"**/*.js\""
-  
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +25,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.1",
     "multer": "^1.4.5-lts.1",
+    "multer-storage-cloudinary": "^4.0.0",
     "node-cron": "^3.0.3",
     "nodemon": "^3.0.1",
     "path": "^0.12.7",

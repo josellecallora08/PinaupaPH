@@ -1,4 +1,6 @@
 const { Router } = require('express')
+const cloudinary = require('cloudinary').v2
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const {
   fetch_users,
   fetch_user,
@@ -13,8 +15,13 @@ const {
   delete_household,
   delete_pet,
   search_user,
+  update_profile_picture,
 } = require('../controllers/user_controller')
+const multer = require('multer')
+
 const requireAuth = require('../middleware/requireAuth')
+const storage = multer.memoryStorage()
+const upload = multer({ storage })
 
 const router = Router()
 
@@ -27,6 +34,7 @@ router.post('/login', sign_in)
 router.post('/:user_id/create_household', create_household)
 router.post('/:user_id/create_pet', create_pet)
 
+router.patch('/:user_id/display_picture', upload.single('profile_image'), update_profile_picture)
 router.patch('/:user_id/update_profile', update_profile)
 router.patch('/:user_id/update_household/:household_id', update_household)
 router.put('/:user_id/update_pet/:pet_id', update_pet)

@@ -4,7 +4,7 @@ const UNITMODEL = require('../models/unit')
 const httpStatusCodes = require('../constants/constants')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-
+const cloudinary = require('cloudinary').v2
 const createToken = ({ id, username, role }) => {
   return jwt.sign({ id, username, role }, process.env.SECRET, {
     expiresIn: '3d',
@@ -202,6 +202,7 @@ module.exports.sign_up = async (req, res) => {
   }
   if (mobile_no !== '') details.mobile_no = mobile_no
   if (birthday !== '') details.birthday = birthday
+  
   try {
     if (await USERMODEL.findOne({ username }))
       return res
@@ -216,6 +217,7 @@ module.exports.sign_up = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Mobile Number already exists.' })
 
+ 
     const unit_status = await UNITMODEL.findById({ _id: unit_id })
     if (unit_status.occupied === true)
       return res
@@ -223,10 +225,24 @@ module.exports.sign_up = async (req, res) => {
         .json({ error: 'Unit is Occupied.' })
 
     let response = await USERMODEL.create(details)
+    console.log(response)
     if (!response)
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unsuccessful registration. Please try again later.' })
+
+        const imageUpload = await cloudinary.uploader.upload(`./template/profile-default.svg`,{
+          quality: 'auto:low',
+          folder:'PinaupaPH/Profile',
+          resource_type: 'auto',
+        })
+         
+    if(!imageUpload || !imageUpload.secure_url){
+      return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Failed to upload profile."})
+    }
+    
+    response.profile_image.image_url = imageUpload.secure_url
+    response.profile_image.public_id = imageUpload.public_id
 
     if (response.role === 'Tenant') {
       const tenant = await TENANTMODEL.create({
@@ -240,6 +256,9 @@ module.exports.sign_up = async (req, res) => {
       })
     }
 
+  
+
+    await response.save()
     const unit = await UNITMODEL.findByIdAndUpdate(
       { _id: unit_id },
       { occupied: true },
@@ -258,7 +277,7 @@ module.exports.sign_up = async (req, res) => {
       .status(httpStatusCodes.OK)
       .json({ msg: 'Created Account successfully!', response })
   } catch (err) {
-    console.error({ error: err.message })
+    console.error({ error: err })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: err.message })
@@ -380,18 +399,43 @@ module.exports.create_household = async (req, res) => {
 // Change Profile Picture
 module.exports.update_profile_picture = async (req, res) => {
   try {
-    const { _id, profile_image } = req.body
-    let response = await USERMODEL.findByIdAndUpdate(_id, { profile_image })
+    const { user_id, public_id } = req.params
+    const profile_image = req.file
+    // console.log(profile_image)
+    const b64 = Buffer.from(profile_image.buffer).toString('base64');
+    let dataURI = 'data:' + profile_image.mimetype + ';base64,' + b64;
+    console.log(`dataURI: ${dataURI}`)
+      uploadedImage = await cloudinary.uploader.upload(dataURI, {
+        public_id: public_id,
+        overwrite: true,
+        quality: 'auto:low',
+        resource_type: 'auto',
+        folder: 'PinaupaPH/Profile',
+      });
+  
+    console.log(uploadedImage)
+    
+    if(!uploadedImage || !uploadedImage.secure_url){
+      return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Failed to upload profile."})
+    }
+    const url = uploadedImage.secure_url
+    const response = await USERMODEL.findByIdAndUpdate({_id: user_id}, {
+      profile_image: {
+        image_url: url,
+        public_id: public_id,
+      },
+    });
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to change image' })
     }
+
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: 'Profile has been changed' })
   } catch (err) {
-    console.error({ error: err.message })
+    console.error({ err })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: `Server Error: ${err.message}` })
