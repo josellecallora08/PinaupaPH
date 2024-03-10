@@ -256,8 +256,6 @@ module.exports.sign_up = async (req, res) => {
       })
     }
 
-  
-
     await response.save()
     const unit = await UNITMODEL.findByIdAndUpdate(
       { _id: unit_id },
@@ -445,36 +443,41 @@ module.exports.update_profile_picture = async (req, res) => {
 // ? Done checking on POSTMAN API
 module.exports.update_profile = async (req, res) => {
   const { user_id } = req.params
-  const { name, username, email, password, mobile_no, birthday } = req.body
+  const { name, username, email, new_password, password, mobile_no, birthday, unit_id, deposit } = req.body
+  const salt = await bcrypt.genSalt(10)
   const details = {}
   if (name !== '') details.name = name
   if (username !== '') details.username = username
   if (email !== '') details.email = email
-  if (password) {
-    const salt = await bcrypt.genSalt(10)
-    const hashed = await bcrypt.hash(password, salt)
-    if (!hashed)
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Error hashing the password.' })
-
-    details.password = hashed
-  }
   if (mobile_no !== '') details.mobile_no = mobile_no
   if (birthday !== '') details.birthday = birthday
   try {
     let response = await USERMODEL.findByIdAndUpdate(
       { _id: user_id },
       details,
-    ).select('name username email phone birthday role')
+    ).select('name username password email phone birthday role')
     if (!response)
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to update information(2)' })
 
+    if(password && new_password){
+      if(bcrypt.compareSync(password, response.password)){
+        const hashed = await bcrypt.hash(new_password, salt)
+        if (!hashed)
+        return res
+          .status(httpStatusCodes.BAD_REQUEST)
+          .json({ error: 'Error hashing the password.' })
+  
+        response.password = hashed
+      }
+    }
+
+    await response.save()
+
     return res
       .status(httpStatusCodes.CREATED)
-      .json({ msg: 'Information Updated Successfully!', response })
+      .json({ msg: 'Information Updated Successfully!', response},)
   } catch (err) {
     console.error({ error: err.message })
     return res

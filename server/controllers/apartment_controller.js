@@ -2,7 +2,7 @@ const APARTMENTMODEL = require('../models/apartment')
 const UNITMODEL = require('../models/unit')
 const CCTVMODEL = require('../models/cctv')
 const httpStatusCodes = require('../constants/constants')
-
+const cloudinary = require('cloudinary').v2
 // ? Tested API
 module.exports.fetch_apartments = async (req, res) => {
   try {
@@ -59,6 +59,20 @@ module.exports.create_apartment = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to create apartment building...' })
     }
+
+    const imageUpload = await cloudinary.uploader.upload(`./template/apartment-default.svg`,{
+      quality: 'auto:low',
+      folder:'PinaupaPH/Apartment',
+      resource_type: 'auto',
+    })
+     
+    if(!imageUpload || !imageUpload.secure_url){
+      return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Failed to upload profile."})
+    }
+
+    response.image.apartment_image_url = imageUpload.secure_url
+    response.image.apartment_public_id = imageUpload.public_id
+
     await response.save()
     return res
       .status(httpStatusCodes.OK)
@@ -70,6 +84,52 @@ module.exports.create_apartment = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
+
+module.exports.change_apartment_image = async (req, res) => {
+  try{
+    const {apartment_id, apartment_public_id} = req.params
+    const apartment_image = req.file
+    const b64 = Buffer.from(profile_image.buffer).toString('base64')
+    let dataURI = `data:${apartment_image.mimetype};base64,${b64}`
+
+    console.log(`dataURI: ${dataURI}`)
+      uploadedImage = await cloudinary.uploader.upload(dataURI, {
+        public_id: apartment_public_id,
+        overwrite: true,
+        quality: 'auto:low',
+        resource_type: 'auto',
+        folder: 'PinaupaPH/Apartment',
+      });
+  
+    console.log(uploadedImage)
+    
+    if(!uploadedImage || !uploadedImage.secure_url){
+      return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Failed to upload profile."})
+    }
+    const url = uploadedImage.secure_url
+    const response = await APARTMENTMODEL.findByIdAndUpdate({_id: apartment_id}, {
+      profile_image: {
+        apartment_image_url: url,
+        apartment_public_id: apartment_public_id,
+      },
+    });
+    if (!response) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Failed to change image' })
+    }
+
+    return res
+    .status(httpStatusCodes.OK)
+    .json({ msg: 'Apartment Image has been changed' })
+  }catch(err){
+    console.error({ err })
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: `Server Error: ${err.message}` })
+  }
+}
+
 // ? Tested API
 module.exports.edit_apartment = async (req, res) => {
   try {

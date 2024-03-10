@@ -26,7 +26,7 @@ const HOUSEHOLDMODEL = new mongoose.Schema(
     name: {
       type: String,
     },
-    relationship: {
+    relationship:{
       type: String,
     },
     birthday: {
@@ -67,15 +67,15 @@ const TENANTMODEL = new mongoose.Schema(
     },
     deposit: {
       type: Number,
-      default: null,
+      default: 0,
     },
     advance: {
       type: Number,
-      default: null,
+      default: 0,
     },
     balance: {
       type: Number,
-      default: null,
+      default: 0,
     },
     monthly_due: {
       type: Date,

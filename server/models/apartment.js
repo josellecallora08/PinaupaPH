@@ -17,6 +17,10 @@ const APARTMENTMODEL = new mongoose.Schema(
     barangay: {
       type: String,
     },
+    image:{
+      apartment_image_url: String,
+      apartment_public_id: String
+    },
     units: [{ type: mongoose.Schema.Types.ObjectId, ref: 'units' }],
     cctvs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'cctvs' }],
   },
