@@ -36,7 +36,7 @@ module.exports.scheduledInvoice = () => {
             item.balance += unit_response.rent
             await item.save()
             response = await INVOICEMODEL.create({
-              user_id: item._id,
+              user_id: item.user_id,
               reference,
               amount: 6000,
             })
