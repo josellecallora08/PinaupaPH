@@ -129,7 +129,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className='lg:hidden bg-dark-blue text-white px-4 h-12 flex items-center'>
+      <div className=' lg:hidden bg-dark-blue text-white px-4 h-12 flex items-center'>
         <div className='cursor-pointer lg:hidden'>
           <FaBars onClick={toggleSidebar} size={20}color='white'  /> 
         </div>
