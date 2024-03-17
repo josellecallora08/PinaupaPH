@@ -25,8 +25,8 @@ const Apartment = () => {
   return (
     <div className='lg:ml-3 lg:mr-5  '>
     {/* Top of Apartment Tab */}
-    <h1 className='lg:text-5xl m-4 my-7 ml-8 text-4xl font-bold'>Apartments Listing </h1>
-    <div className='lg:justify-between md:justify-between flex gap-2 w-full mb-5'>
+    <h1 className='uppercase font-bold py-5 pl-5'>Apartments Listing </h1>
+    <div className='lg:justify-between md:justify-between lg:pl-5 flex gap-2 w-full mb-5'>
       <SearchBar onSearch={handleSearch} className='lg:w-1/2 flex-1 '/>
       <button onClick={toggleAddApartmentForm} className='lg:w-64 lg:mr-10 lg:text-base md:text-base md:w-56 md:mr-10 w-56 mr-4 px-2  ml-5 text-xs text-white rounded-lg bg-dark-blue flex items-center justify-center gap-2 ' >
         <FaPlus/>
@@ -42,8 +42,8 @@ const Apartment = () => {
     </div>
     {isAddApartmentFormOpen && (
       <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50'>
-        <div className='bg-white p-8 rounded-md'>
-          <AddApartment />
+        <div className='bg-white  rounded-md'>
+          <AddApartment setIsAddApartmentFormOpen={setIsAddApartmentFormOpen} />
         </div>
       </div>
     )}

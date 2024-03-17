@@ -5,11 +5,14 @@ import { IoIosArrowDown } from 'react-icons/io';
 import ApartmentStatusCard from '../../Component/ApartmentStatusCard';
 import AddRoom from '../../Component/AddRoom';
 import EditApartment from '../../Component/EditApartment';
+import pfEditApartmentDetails from '../../Component/pfApartmentDetails';
 const ApartmentProfile = () => {
   const [searchItem, setSearchItem] = useState("")
   const [isAddRoomFormOpen, setIsAddRoomFormOpen] = useState(false)
   const [dropdownOpen, setdropdownOpen] = useState(false);
   const [isEditApartmentFormOpen, setIsEditApartmentFormOpen] = useState(false);
+  const [isEditApartmentDetailsFormOpen, setIsEditApartmentDetailsFormOpen] = useState(false);
+  const [isEditApartmentForm, setIsEditApartmentForm] = useState(false)
   const handleSearch = (e) => {
     setSearchItem(e.target.value);
   }
@@ -36,7 +39,7 @@ const ApartmentProfile = () => {
     <div>
       <div className='mb-10'>
         {/* Upper part of Apartment Profile */}
-        <h1 className='text-3xl font-black m-5'>
+        <h1 className='uppercase font-bold px-10 p-5'>
           View Apartment
         </h1>
         <div className=' flex bg-white gap-10 mx-5 px-5 py-4 rounded-md shadow-md shadow-gray '>
@@ -48,8 +51,8 @@ const ApartmentProfile = () => {
               Total Unit : 2
             </p>
             <div className='flex gap-5 mt-16 '>
-              <button onClick={toggleEditApartmentForm} className='lg:text-xl lg:px-5 lg:py-2 bg-light-blue text-white  py-2 px-6 rounded-md'>Edit</button>
-              <button className='lg:text-xl lg:px-5 lg:py-2 bg-red text-white  py-2 px-4 rounded-md'>Delete</button>
+              <button onClick={toggleEditApartmentForm} className='lg:text-xl lg:px-5 lg:py-2 bg-dark-blue text-white  py-2 px-6 rounded-md'>Edit</button>
+              <button className='lg:text-xl lg:px-5 lg:py-2 bg-red-600 text-white  py-2 px-4 rounded-md'>Delete</button>
             </div>
           </div>
         <div className='lg:w-1/2 lg:text-xl md:w-1/2 md:text-xl md:ml-16 flex flex-col '>
@@ -107,15 +110,15 @@ const ApartmentProfile = () => {
       </div>
       {isAddRoomFormOpen && (
       <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50'>
-        <div className='bg-white p-8 rounded-md'>
-          <AddRoom />
+        <div className='bg-white  rounded-md'>
+          <AddRoom setIsAddRoomFormOpen={setIsAddRoomFormOpen}  />
         </div>
       </div>
     )}
           {isEditApartmentFormOpen && (
       <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50'>
-        <div className='bg-white p-8 rounded-md'>
-          <EditApartment />
+        <div className='lg:w-1/2 bg-white rounded-lg'>
+          <EditApartment setIsEditApartmentForm={setIsEditApartmentForm} />
         </div>
       </div>
     )}

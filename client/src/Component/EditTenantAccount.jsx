@@ -1,8 +1,9 @@
 import React from 'react'
 import { useState } from 'react'
-import { IoIosArrowBack } from "react-icons/io";
+
+import { IoMdClose } from "react-icons/io";
 import { useSelector } from 'react-redux';
-const EditTenantAccount = () => {
+const EditTenantAccount = ({setIsEditTenantAccountForm}) => {
   const user = useSelector((state) => state.user.data)
   const [fields, setFields] = useState({
     username: user?.username || '',
@@ -25,13 +26,13 @@ toggleForm();
 }
   return (
   <div className='relative'>
-        <form action="" onSubmit={handleSubmit} className="lg:w-full w-[20rem] h-auto px-3 ">
-          <div className='flex items-center mb-5 gap-4'>
-            <button className=''><IoIosArrowBack onClick={toggleForm} size={30} color='blue' /></button>
-            <h1 className="lg:text-3xl text-2xl font-bold ">Edit Tenant Detail</h1>
-          </div>
+      <div className='relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center '>
+            <h1 className="lg:text-xl  ml-5 text-lg font-bold ">Edit Tenant Detail</h1>
+      </div>
+        <form action="" onSubmit={handleSubmit} className="lg:w-full w-[20rem] h-auto px-3 py-4 ">
+        <button className='absolute top-4 right-6'><IoMdClose onClick={() => setIsEditTenantAccountForm(prevState => !prevState)} size={25} color='white' /></button>
                 <div className="mb-4">
-                  <label htmlFor="oldpassword" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
+                  <label htmlFor="oldpassword" className="block text-gray-700 text-sm font-bold mb-2 ">
                     Old Password
                   </label>
                   <input
@@ -46,7 +47,7 @@ toggleForm();
                 </div>
 
                 <div className="mb-4">
-                  <label htmlFor="newpassword" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
+                  <label htmlFor="newpassword" className="block text-gray-700 text-sm font-bold mb-2 ">
                     New Password
                   </label>
                   <input
@@ -61,7 +62,7 @@ toggleForm();
                 </div>
 
                 <div className="mb-4">
-                  <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
+                  <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2 ">
                     Confirm Password
                   </label>
                   <input
@@ -76,11 +77,11 @@ toggleForm();
                 </div>
                 <div className='flex justify-end mt-5 gap-3'>
 
-                  <button className=' bg-light-blue text-white font-bold py-2 px-4 rounded'>
+                  <button className=' bg-dark-blue text-white font-bold py-2 px-4 rounded'>
                     Submit
                   </button>
 
-                  <button onClick={toggleForm} className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded'>
+                  <button onClick={() => setIsEditTenantAccountForm(prevState => !prevState)} className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded'>
                     Close
                   </button>
                 

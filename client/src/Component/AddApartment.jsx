@@ -1,16 +1,16 @@
 
-import { IoClose } from "react-icons/io5";
+import { IoMdClose } from "react-icons/io";
 import React, { useState } from 'react'
 import {useDispatch} from 'react-redux'
 import { createApartment } from "../features/apartment";
-const AddApartment = () => {
+const AddApartment = ({setIsAddApartmentFormOpen}) => {
   const dispatch = useDispatch()
-  const [fields, setFields] = {
+  const [fields, setFields] = useState({
     name: '',
     address: '',
     province: '',
     barangay: '',
-  }
+  })
 
   const [isFormOpen, setIsFormOpen] = useState(false)
   const toggleForm = () => {
@@ -38,11 +38,13 @@ const AddApartment = () => {
 
   return (
     <div className='relative'>
-    <h1 className="lg:text-3xl text-2xl font-bold mb-4">Add Apartment building</h1>
-      <form onSubmit={handleSubmit} className="lg:w-[30rem] w-[20rem] h-[22rem] px-3 ">
-      <button className='absolute top-1 right-0'><IoClose onClick={toggleForm} size={30} color='red' /></button>
+    <div className='relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center '>
+            <h1 className="lg:text-xl  ml-5 text-lg font-bold ">Add Apartment</h1>
+      </div>
+      <form onSubmit={handleSubmit} className="lg:w-[30rem] py-4 w-[20rem] h-[25rem] px-3  ">
+      <button type='button' className='absolute top-4 right-6'><IoMdClose onClick={() => setIsAddApartmentFormOpen(prevState => !prevState)} size={25} color='white' /></button>
           <div className="mb-4">
-            <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
+            <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 ">
               Apartment Name
             </label>
             <input
@@ -57,7 +59,7 @@ const AddApartment = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="address" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
+            <label htmlFor="address" className="block text-gray-700 text-sm font-bold mb-2 ">
               Address
             </label>
             <input
@@ -72,7 +74,7 @@ const AddApartment = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="province" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
+            <label htmlFor="province" className="block text-gray-700 text-sm font-bold mb-2 ">
               Province/City
             </label>
             <input
@@ -87,7 +89,7 @@ const AddApartment = () => {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="barangay" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
+            <label htmlFor="barangay" className="block text-gray-700 text-sm font-bold mb-2 ">
               Barangay
             </label>
             <input
@@ -101,10 +103,10 @@ const AddApartment = () => {
             />
           </div>
           <div className='flex justify-end mt-5 gap-3'>
-            <button type="submit" className=' bg-light-blue text-white font-bold py-2 px-4 rounded'>
+            <button type="submit" className=' bg-dark-blue text-white font-bold py-2 px-4 rounded'>
               Submit
             </button>
-            <button className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded' onClick={toggleForm}>
+            <button className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded' onClick={() => setIsAddApartmentFormOpen(prevState => !prevState)}>
               Close
             </button>
           </div>
