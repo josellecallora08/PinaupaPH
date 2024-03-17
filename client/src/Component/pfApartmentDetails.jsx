@@ -4,7 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { editApartment, fetchApartment } from '../features/apartment';
 
-const EditApartment = ({apartmentId, setIsEditApartmentForm}) => {
+const pfEditApartmentDetails = ({apartmentId, setIsEditApartmentForm}) => {
 const dispatch = useDispatch()
 const apartment = useSelector(state => state.apartment.data)
 const [fields, setFields] = useState({
@@ -75,39 +75,49 @@ toggleForm(!isFormOpen);
                 </div>
 
                 <div className="mb-4">
-            <label
-              htmlFor="name"
-              className="block text-gray-700 text-sm font-bold mb-2 "
-            >
-              Deposit
-            </label>
-            <input
-              type="number"
-              id="deposit"
-              onChange={handleInput}
-              name="deposit"
-              value={fields.deposit}
-              placeholder="Enter your Deposit"
-              className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="name"
-              className="block text-gray-700 text-sm font-bold mb-2 "
-            >
-              Date of Move In
-            </label>
-            <input
-              type="text"
-              id="movein"
-              onChange={handleInput}
-              name="movein"
-              value={fields.movein}
-              placeholder="Enter your Date of Move In"
-              className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-          </div>
+                  <label htmlFor="contact" className="block text-gray-700 text-sm font-bold mb-2 ">
+                    Address
+                  </label>
+                  <input
+                    type="text"
+                    id="address"
+                    name="address"
+                    onChange={handleInput}
+                    value={fields.address}
+                    placeholder="Enter your Address"
+                    className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label htmlFor="location" className="block text-gray-700 text-sm font-bold mb-2 ">
+                    Province/City
+                  </label>
+                  <input
+                    type="text"
+                    id="location"
+                    onChange={handleInput}
+                    value={fields.location}
+                    name="location"
+                    placeholder="Enter your Province/City"
+                    className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label htmlFor="barangay" className="block text-gray-700 text-sm font-bold mb-2 ">
+                   Baranggay
+                  </label>
+                  <input
+                    type="text"
+                    id="barangay"
+                    onChange={handleInput}
+                    value={fields.barangay}
+                    name="barangay"
+                    placeholder="Enter your Baranggay"
+                    className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
                 <div className='flex justify-end mt-5 gap-3'>
                   <button className=' bg-dark-blue text-white font-bold py-2 px-4 rounded'>
                     Submit
@@ -122,4 +132,4 @@ toggleForm(!isFormOpen);
   )
 }
 
-export default EditApartment
+export default pfEditApartmentDetails

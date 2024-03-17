@@ -27,7 +27,7 @@ const ApartmentStatusCard = ({apartmentId, unitId}) => {
             </div>
             
         </div>
-        <div className="absolute top-3 -right-9 w-28 h-8 bg-light-blue text-white p-2 rotate-45">
+        <div className="absolute top-3 -right-9 w-28 h-8 bg-dark-blue text-white p-2 rotate-45">
           <p className="text-xs text-center text-white font-bold uppercase">Rented</p>
         </div>
     </div>

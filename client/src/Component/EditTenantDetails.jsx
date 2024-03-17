@@ -1,17 +1,15 @@
 import React from 'react'
 import { useState } from 'react'
-import { IoIosArrowBack } from "react-icons/io";
+import { IoMdClose } from "react-icons/io";
 import { useSelector } from 'react-redux';
-const EditTenantDetails = () => {
+const EditTenantDetails = ({setIsEditTenantDetailForm}) => {
   const user = useSelector((state) => state.user.data)
   const [fields, setFields] = useState({
     name: user?.name || '',
     birthday: user?.birthday || '',
     mobile_no: user?.mobile_no || '',
     email: user?.email || '',
-    unit_id: user?.unit_id || '',
-    deposit: user?.deposit || '',
-    occupancy: user?.occupancy || ''
+    
   })
 
   const [isFormOpen, setIsFormOpen] = useState(false)
@@ -29,15 +27,14 @@ const EditTenantDetails = () => {
   
   return (
   <div className='relative'>
-
-        <form onSubmit={handleSubmit} className="lg:w-full w-[20rem] h-[20rem] px-3 overflow-y-auto">
-        <div className='flex sticky top-0 pb-3 bg-white items-center mb-5 gap-4'>
-            <button className=''><IoIosArrowBack onClick={toggleForm} size={30} color='blue' /></button>
-            <h1 className="lg:text-3xl text-2xl font-bold ">Edit Tenant Detail</h1>
-          </div>
+    <div className='relative w-full h-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center '>
+            <h1 className="lg:text-xl  ml-5 text-lg font-bold ">Edit Tenant Detail</h1>
+      </div>
+        <form onSubmit={handleSubmit} className="lg:w-full h-full w-[20rem]  p-3 overflow-y-auto">
+        <button className='absolute top-4 right-6'><IoMdClose onClick={() => setIsEditTenantDetailForm(prevState => !prevState)} size={25} color='white' /></button>
         <h1 className="text-xl font-bold mb-2">Personal Details</h1>
             <div className="mb-4">
-              <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
+              <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 ">
                 Name
               </label>
               <input
@@ -52,7 +49,7 @@ const EditTenantDetails = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="birthday" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
+              <label htmlFor="birthday" className="block text-gray-700 text-sm font-bold mb-2 ">
                 Birthday
               </label>
               <input
@@ -67,7 +64,7 @@ const EditTenantDetails = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="contact" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
+              <label htmlFor="contact" className="block text-gray-700 text-sm font-bold mb-2 ">
                 Contact
               </label>
               <input
@@ -82,7 +79,7 @@ const EditTenantDetails = () => {
             </div>
 
             <div className="mb-4">
-              <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
+              <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2 ">
                 Email
               </label>
               <input
@@ -95,56 +92,14 @@ const EditTenantDetails = () => {
                 className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
-          <h1 className="text-xl font-bold mb-4">Apartment Details</h1>
-          <div className="mb-4">
-              <label htmlFor="apartment_unit" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
-              Apartment Unit
-              </label>
-              <input
-                type="text"
-                id="apartment_unit"
-                name="apartment_unit"
-                value={fields.unit_id}
-                onChange={handleInput}
-                placeholder="Enter your Apartment Unit"
-                className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="deposit" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
-                Deposit
-              </label>
-              <input
-                type="text"
-                id="deposit"
-                name="deposit"
-                value={fields.deposit}
-                onChange={handleInput}
-                placeholder="Enter your Deposit"
-                className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="dateofin" className="block text-gray-700 text-sm font-bold mb-2 text-dark-gray">
-                Date of Occupant In 
-              </label>
-              <input
-                type="text"
-                id="dateofin"
-                name="occupancy"
-                value={fields.occupancy}
-                onChange={handleInput}
-                placeholder="Enter your Date of Occupant In"
-                className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              />
-            </div>
-            <div className='flex justify-end mt-8 gap-3'>
+          
+            <div className='flex justify-end mt-3 gap-3'>
 
-              <button className=' bg-light-blue text-white font-bold py-2 px-4 rounded'>
+              <button className=' bg-dark-blue text-white font-bold py-2 px-4 rounded'>
                 Submit
               </button>
 
-              <button onClick={toggleForm} className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded'>
+              <button onClick={() => setIsEditTenantDetailForm(prevState => !prevState)} className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded'>
                 Close
               </button>
 

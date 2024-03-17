@@ -18,13 +18,13 @@ const data = {
     {
       label:  'Sales for 2020',
       data: [40000,50000,20000,10000,25000],
-      backgroundColor: 'rgb(14,103,180)',
+      backgroundColor: '#183044',
       borderWidth: 1,
     },
     {
       label:  'Sales for 2021',
       data: [60000,70000,30000,40000,55000],
-      backgroundColor:'rgb(0,153,255)',
+      backgroundColor:'gray',
     },
   ]
 }
