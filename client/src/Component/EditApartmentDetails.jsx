@@ -4,7 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { editApartment, fetchApartment } from '../features/apartment';
 
-const PFApartmentDetails = ({apartmentId}) => {
+const EditApartmentDetails = ({apartmentId}) => {
 const dispatch = useDispatch()
 const apartment = useSelector(state => state.apartment.data)
 const [fields, setFields] = useState({
@@ -132,4 +132,4 @@ toggleForm(!isFormOpen);
   )
 }
 
-export default PFApartmentDetails
+export default EditApartmentDetails
