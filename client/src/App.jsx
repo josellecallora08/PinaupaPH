@@ -83,7 +83,7 @@ function App() {
         }
       />
       <Route
-        path="/document/LeastAgreement"
+        path="/document/lease-agreement"
         element={
           <Layout className="bg-white1">
             <Least />

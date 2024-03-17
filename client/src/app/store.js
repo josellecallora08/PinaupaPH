@@ -17,6 +17,6 @@ export const store = configureStore({
     docs: documentReducer,
     user: userReducer,
     payment: paymentReducer,
-    toggle: menuReducer
+    toggle: menuReducer,
   },
 })
