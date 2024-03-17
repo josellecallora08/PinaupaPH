@@ -5,7 +5,7 @@ import { IoIosArrowDown } from 'react-icons/io';
 import ApartmentStatusCard from '../../Component/ApartmentStatusCard';
 import AddRoom from '../../Component/AddRoom';
 import EditApartment from '../../Component/EditApartment';
-import pfEditApartmentDetails from '../../Component/pfApartmentDetails';
+import PFApartmentDetails from '../../Component/PFApartmentDetails';
 const ApartmentProfile = () => {
   const [searchItem, setSearchItem] = useState("")
   const [isAddRoomFormOpen, setIsAddRoomFormOpen] = useState(false)
@@ -118,7 +118,7 @@ const ApartmentProfile = () => {
           {isEditApartmentFormOpen && (
       <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50'>
         <div className='lg:w-1/2 bg-white rounded-lg'>
-          <EditApartment setIsEditApartmentForm={setIsEditApartmentForm} />
+          <PFApartmentDetails setIsEditApartmentForm={setIsEditApartmentForm} />
         </div>
       </div>
     )}
