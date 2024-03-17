@@ -13,7 +13,7 @@ const Progressbar = () => {
           <p className="lg:text-xl lg:font-bold md:text-xl text-xs  text-gray-800">Total Paid</p>
         </div>
         <div className='flex items-center w-full justify-evenly'>
-          <div className="lg:p-2 rounded-full bg-gray-300 p-1">
+          <div className="lg:p-2 rounded-full bg-dark-gray p-1">
             <img src={rent} alt="" className="w-9 p-1" />
           </div>
 
@@ -34,7 +34,7 @@ const Progressbar = () => {
           <p className="lg:text-xl lg:font-bold md:text-xl text-xs">Occupancy Rate</p>
         </div>
         <div className='flex items-center w-full justify-evenly'>
-          <div className="lg:p-2 rounded-full bg-gray-300 p-1">
+          <div className="lg:p-2 rounded-full bg-dark-gray p-1">
             <img src={occupancy} alt="" className=" p-1 w-9" />
           </div>
 
@@ -55,7 +55,7 @@ const Progressbar = () => {
           <p className="lg:text-xl lg:font-bold md:text-xl text-xs ">Deliquency Rate</p>
         </div>
         <div className='flex items-center w-full justify-evenly'>
-          <div className=" lg:p-2 rounded-full bg-gray-300 p-1 ">
+          <div className=" lg:p-2 rounded-full bg-dark-gray p-1 ">
             <img src={pay} alt="" className="w-9" />
           </div>
 
@@ -76,7 +76,7 @@ const Progressbar = () => {
           <p className="lg:text-xl lg:font-bold md:text-xl text-xs">Renewal Rate</p>
         </div>
         <div className='flex items-center w-full justify-evenly'>
-          <div className="lg:p-2 rounded-full bg-gray-300 p-1">
+          <div className="lg:p-2 rounded-full bg-dark-gray p-1">
             <img src={renew} alt="" className="p-1 w-9" />
           </div>
 

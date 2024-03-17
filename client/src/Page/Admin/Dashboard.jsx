@@ -1,10 +1,11 @@
 import City from '/city.svg'
 import BarChart from '../../Component/BarChart'
 import RecentAct from '../../Data/RecentAct'
-import ProgressBar from '../../Component/progressbar'
+
 
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import Progressbar from '../../Component/Progressbar';
 
 const Dashboard = () => {
   const percentage = 20;
@@ -66,12 +67,12 @@ const Dashboard = () => {
  <div className='lg:flex-row lg:gap-10 flex flex-col-reverse mx-4'>
           {/* Bottom-left of Dashboard> */}
     <div className='mb-4 lg:w-1/2'>
-          <ProgressBar/>
+          <Progressbar/>
     </div>
     {/* Bottom-right of Dashboard> */}
     <div className='min-[1440px]:w-[47%] lg:w-1/2 lg:ml-24  lg:mx-auto lg:pl-7  md:w-full  bg-white p-3 my-3 rounded-lg shadow-sm shadow-gray-400'>
       <h1 className='md:text-center text-xl'>Concern and Issue Resolved</h1>
-      <CircularProgressbar className='lg:mx-auto lg:w-40 md:mx-auto md:w-40 w-32 mt-4' value={percentage} minValue={0} maxValue={maxValue} text={percentage +'/'+ maxValue} strokeWidth={15} styles={buildStyles({textColor: '#183044',pathColor: '#183044', trailColor: '#E7E8E9' })} />
+      <CircularProgressbar className='mx-auto lg:w-40 md:mx-auto md:w-40 w-32 mt-4' value={percentage} minValue={0} maxValue={maxValue} text={percentage +'/'+ maxValue} strokeWidth={15} styles={buildStyles({textColor: '#183044',pathColor: '#183044', trailColor: '#E7E8E9' })} />
     </div>
  </div>
 

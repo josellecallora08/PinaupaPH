@@ -3,7 +3,7 @@ import TenantCard from '../../Component/TenantCard'
 import SearchBar from '../../Component/SearchBar'
 import { FaPlus } from 'react-icons/fa6'
 import { useState } from 'react'
-
+import AddTenantForm from '../../Component/AddTenantForm'
 
 
 
@@ -76,7 +76,7 @@ const Tenant = () => {
       {isAddTenantFormOpen && (
         <div className="fixed top-6 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white  rounded-md rounded-tl-lg rounded-tr-lg">
-            <AddTenantForm />
+            <AddTenantForm setIsAddTenantFormOpen={setIsAddTenantFormOpen} />
           </div>
         </div>
       )}
