@@ -20,7 +20,7 @@ const Least = () => {
         />
       )}
       <div className="lg:ml-3 mr-3 flex flex-col ">
-        <h1 className="lg:text-2xl m-4 my-7 ml-8 text-4xl font-bold">
+        <h1 className="lg:text-base m-4 my-7 ml-8 text-xl font-bold">
           DOCUMENTS / LEASE AGREEMENTS
         </h1>
         <div className="flex flex-row justify-between items-center">
@@ -34,7 +34,7 @@ const Least = () => {
           </button>
         </div>
 
-        <div className="lg:grid-cols-3 md:grid-cols-2 grid grid-cols-1 mt-3">
+        <div className="xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid grid-cols-1 mt-3">
           <LeaseCard />
           <LeaseCard />
           <LeaseCard />
@@ -48,4 +48,5 @@ const Least = () => {
     </>
   )
 }
+
 export default Least
