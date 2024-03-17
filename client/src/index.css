@@ -7,3 +7,26 @@
 body {
   font-family: 'Lato', sans-serif;
 }
+
+::-webkit-scrollbar{
+  background: #183044;
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb{
+  background-color: #183044;
+}
+::-webkit-scrollbar-button{
+  background-color: #183044;
+  height: 48px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+}

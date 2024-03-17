@@ -5,26 +5,18 @@ import { TbBellRinging } from "react-icons/tb";
 import { Link } from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux'
 import { toggleProfile, toggleSidebar } from '../features/menu';
-const pfpmenu = [
-  {
-    title: "Profile",
-    path: "/profile",
-  },
-  {
-    title: "Logout",
-    path: "/logout",
+import menu from '/menu.svg'
+import close from '/close.svg'
+import { logout } from '../features/authentication';
 
-  }
-]
 const Headbar = () => {
   const sidebar = useSelector(state => state.toggle.sidebar) //for sidebar ternary
   const profile = useSelector(state => state.toggle.profile) //for profile ternary
   const dispatch = useDispatch()
-  const [Open, setOpen] = useState(false);
-  const togglepfp = () => {
-    setOpen(!Open);
-  };
 
+  const handleLogout = () => {
+    dispatch(logout())
+  }
   //function for sidebar toggle buttons
   const handleSidebar = () => { 
     dispatch(toggleSidebar())
@@ -35,19 +27,33 @@ const Headbar = () => {
     dispatch(toggleProfile())
   }
 
+  const pfpmenu = [
+    {
+      title: "Profile",
+      path: "/profile",
+    },
+    {
+      title: "Logout",
+      path: handleLogout,
+  
+    }
+  ]
+    
   return (
     
-<div className='hidden lg:bg-dark-blue lg:flex justify-end items-center px-10 pt-5 pb-3 w-auto relative   '>
+<div className='w-full h-full max-h-20 sticky top-0 z-10 bg-primary'>
+  <div className=' flex justify-between items-center p-5 w-full relative m-auto  '>
+    <button onClick={handleSidebar} className='flex items-center'>
+      <figure className='w-full h-full max-w-10 max-h-10'>
+        <img src={sidebar ? close : menu} className='w-full h-full' alt="" />
+      </figure>
+    </button>
       <div className='flex items-center'>
         <TbBellRinging size={25} color='white' />
-        <img src={pfp} alt='' className=' w-10 h-10 rounded-full ml-2  cursor-pointer' onClick={togglepfp} />
-      </div>
-      {
-        Open&&(
-          <ul>
+        <img src={pfp} alt='' className=' w-10 h-10 rounded-full ml-2  cursor-pointer' onClick={handleProfile} />
+        {profile ?   <ul>
       <div className='absolute top-full right-2 text-black rounded-bl-md rounded-br-md shadow-2xl bg-white shadow-light-gray   '>
           <ul>
-        {}
            {
             pfpmenu.map((menu, index) => (
               <li key={index} className='text-sm font-medium w-32 py-1  hover:bg-gray pl-3 '><Link to={menu.path}>{menu.title}</Link></li>
@@ -55,12 +61,10 @@ const Headbar = () => {
            }  
           </ul>
         </div>
-      </ul>
-        )
-      }
-      
-
+      </ul> : '' }
+      </div>
     </div>
+</div>
   );
 }
 

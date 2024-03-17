@@ -2,8 +2,13 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
-    extend: {},
+    extend: {
+      height: {
+        inherit: 'calc(100% - 80px)'
+      }
+    },
     colors: {
+      'primary': '#183044',
       'light-blue': '#0099FF',
       black: '#000000',
       gray: '#E8E8E8',
@@ -17,6 +22,7 @@ export default {
       'dark-gray': '#9E9C9C',
       'light-gray': '#7A7A7A',
     },
+
   },
   plugins: [],
 }
