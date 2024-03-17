@@ -5,7 +5,7 @@ import { IoIosArrowDown } from 'react-icons/io';
 import ApartmentStatusCard from '../../Component/ApartmentStatusCard';
 import AddRoom from '../../Component/AddRoom';
 import EditApartment from '../../Component/EditApartment';
-import PFApartmentDetails from '../../Component/PFApartmentDetails';
+import PFApartmentDetails from '../../Component/EditApartmentDetails';
 const ApartmentProfile = () => {
   const [searchItem, setSearchItem] = useState("")
   const [isAddRoomFormOpen, setIsAddRoomFormOpen] = useState(false)

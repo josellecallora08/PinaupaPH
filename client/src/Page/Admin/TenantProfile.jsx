@@ -11,7 +11,7 @@ import { payment_url } from '../../utils/constants'
 import DocumentCard from '../../Component/DocumentCard'
 import AddHousehold from '../../Component/AddHousehold'
 import EditApartment from '../../Component/EditApartment';
-import PfApartmentDetails from '../../Component/pfApartmentDetails';
+import PfApartmentDetails from '../../Component/EditApartmentDetails';
 import TransactionTable from '../../Component/TransactionTable';
 import TransactionMobile from '../../Component/TransactionMobile';
 import { GrFormView,GrFormAdd } from "react-icons/gr";
