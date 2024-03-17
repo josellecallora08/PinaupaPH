@@ -6,7 +6,7 @@ import { IoMdClose } from "react-icons/io";
 import { useDispatch } from 'react-redux';
 import { createTenant } from '../features/user';
 
-const AddTenantForm = () => {
+const AddTenantForm = ({setIsAddTenantFormOpen}) => {
   
   const dispatch = useDispatch()
   const [fields, setFields] = useState({
@@ -59,7 +59,7 @@ const AddTenantForm = () => {
             <h1 className="lg:text-xl relative lg:ml-5 text-2xl font-bold ">Add Tenant Details</h1>
       </div>
         <form className="lg:w-[30rem] w-[20rem] h-[25rem] px-3 overflow-y-auto">
-        <button className='absolute top-4 right-6'><IoMdClose onClick={toggleForm} size={25} color='white' /></button>
+        <button className='absolute top-4 right-6'><IoMdClose onClick={() => setIsAddTenantFormOpen((prevState) => !prevState)} size={25} color='white' /></button>
             <h1 className="lg:mt-5 text-xl font-bold mb-4">Personal Details</h1>
             <div className="mb-4">
               <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 ">
@@ -172,7 +172,7 @@ const AddTenantForm = () => {
                     </button>
 
                     <button
-                      onClick={toggleForm}
+                      onClick={() => setIsAddTenantFormOpen((prevState) => !prevState)}
                       className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded' >
                       Close
                     </button>
