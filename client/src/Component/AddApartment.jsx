@@ -37,9 +37,9 @@ const AddApartment = ({setIsAddApartmentFormOpen}) => {
   }
 
   return (
-    <div className='relative'>
-    <div className='relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center '>
-            <h1 className="lg:text-xl  ml-5 text-lg font-bold ">Add Apartment</h1>
+    <>
+    <div className='relative w-full flex py-4 rounded-t-md bg-dark-blue text-white items-center '>
+            <h1 className="lg:text-md  ml-5 text-lg font-bold uppercase ">Add Apartment</h1>
       </div>
       <form onSubmit={handleSubmit} className="lg:w-[30rem] py-4 w-[20rem] h-[25rem] px-3  ">
       <button type='button' className='absolute top-4 right-6'><IoMdClose onClick={() => setIsAddApartmentFormOpen(prevState => !prevState)} size={25} color='white' /></button>
@@ -54,7 +54,7 @@ const AddApartment = ({setIsAddApartmentFormOpen}) => {
               value={fields.name}
               placeholder="Enter your Apartment Name"
               onChange={handleInput}
-              className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
 
@@ -69,7 +69,7 @@ const AddApartment = ({setIsAddApartmentFormOpen}) => {
               value={fields.address}
               onChange={handleInput}
               placeholder="Enter your Address"
-              className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
 
@@ -84,7 +84,7 @@ const AddApartment = ({setIsAddApartmentFormOpen}) => {
               value={fields.province}
               onChange={handleInput}
               placeholder="Enter your Province/City"
-              className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
 
@@ -99,7 +99,7 @@ const AddApartment = ({setIsAddApartmentFormOpen}) => {
               value={fields.barangay}
               onChange={handleInput}
               placeholder="Enter your email"
-              className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
           <div className='flex justify-end mt-5 gap-3'>
@@ -112,7 +112,7 @@ const AddApartment = ({setIsAddApartmentFormOpen}) => {
           </div>
       </form>
    
-</div>
+</>
   )
 }
 

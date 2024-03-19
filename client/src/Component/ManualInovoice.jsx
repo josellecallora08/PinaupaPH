@@ -24,7 +24,7 @@ const ManualInovoice = ({setModal}) => {
   }, []);
 
   return (
-    <div  className='fixed w-full h-full flex items-center justify-center '>
+    <div  className='fixed w-full h-full flex  items-center justify-center z-10 '>
       <div onClick={() => setModal(state => state = false)} className='absolute w-full h-full flex items-center justify-center bg-black/20 backdrop-blur-sm'></div>
       <div  className='w-full md:w-1/5 h-fit bg-white z-10 rounded-md shadow-md flex flex-col overflow-hidden'>
         <h1 className='bg-primary uppercase font-bold tracking-wider text-white p-3'>Prepare Invoice</h1>

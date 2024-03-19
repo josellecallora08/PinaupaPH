@@ -13,7 +13,7 @@ const Security = () => {
       {/* 3 CAMERAS BOTTOM */}
 
       <div className='w-11/12 md:h-[280px]  grid md:grid-cols-3 grid-cols-2 md:gap-6 gap-4 m-auto mt-4'>
-        <div className='w-full h-full bg-[#183044] rounded-md shadow-md flex justify-center items-center'>
+        {/* <div className='w-full h-full bg-[#183044] rounded-md shadow-md flex justify-center items-center'>
           <div className='md:w-[350px] md:h-[220px] h-[180px] w-[150px] rounded-md bg-white my-4'>1</div>
         </div>
         <div className='w-full h-full bg-[#183044] rounded-md shadow-md flex justify-center items-center'>
@@ -21,7 +21,7 @@ const Security = () => {
         </div>
         <div className='w-full h-full bg-[#183044] rounded-md shadow-md flex justify-center items-center'>
           <div className='md:w-[350px] md:h-[220px] h-[180px] w-[150px] rounded-md bg-white my-4'>1</div>
-        </div>
+        </div> */}
       </div>
       
 

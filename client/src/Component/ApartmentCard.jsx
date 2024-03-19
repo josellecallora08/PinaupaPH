@@ -12,7 +12,7 @@ const ApartmentCard = () => {
   return (
     <>
      <Link to={"/apartmentprofile"}>
-    <div className='  flex mx-3 shadow-md shadow-dark-gray relative '>
+    <div className='flex shadow-md shadow-dark-gray relative '>
       <div className=' lg:text-base lg:pl-10 text-sm flex gap-9 py-4  w-80 pl-5 pr-1 rounded-tl-lg rounded-bl-lg'>
         <div className=' '>
           <p className=' font-black'>Name</p>

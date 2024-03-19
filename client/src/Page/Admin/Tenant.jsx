@@ -33,26 +33,26 @@ const Tenant = () => {
   }
 
   return (
-    <div className="w-11/12 m-auto">
+    <div className='w-full h-full'>
+    <div className="w-11/12 flex flex-col m-auto">
       {/* Top of Tenant Tab */}
       <h1 className="uppercase font-bold py-5 ">List of Tenant </h1>
-      <div className="lg:w-full lg:flex-nowrap  flex flex-wrap justify-between items-center">
-        <div className="lg:w-[40%]">
+      <div className="lg:w-full lg:flex-nowrap  flex flex-wrap justify-end lg:justify-between items-center">
+        <div className="w-full md:max-w-60 max-w-full">
           <SearchBar onSearch={handleSearch} />
         </div>
-        
-          
-            <button
+           <div className='flex items-center gap-5 py-5'>
+           <button
               onClick={toggleAddTenantForm}
-              className="lg:w-40 lg:px-4 lg:py-3 lg:text-lg w-28 h-full lg:order-last p-2 text-sm text-white rounded-lg bg-dark-blue flex items-center justify-center gap-2 "
+              className="h-full lg:order-last p-2 uppercase text-sm text-white rounded-md bg-primary flex items-center justify-center gap-2 "
             >
               <FaPlus />
               Add Tenant
             </button>
 
-            <div className="lg:mt-0 lg:mx-auto lg:mr-2 flex items-center justify-center mt-5">
+            <div className="flex items-center justify-center">
               <select
-                className="lg:px-4 lg:py-4 lg:w-48 w-40 bg-white border  border-gray-400 hover:border-gray-500 px-3 py-1 rounded-md shadow leading-tight focus:outline-none focus:shadow-outline"
+                className=" bg-white border  border-gray-400 hover:border-gray-500 rounded-md shadow leading-tight focus:outline-none focus:shadow-outline p-2 cursor-pointer appearance-none"
                 value={selectedOption}
                 onChange={handleOptionChange}
                 style={{ color: selectedOption ? 'black' : 'gray' }}
@@ -63,8 +63,7 @@ const Tenant = () => {
                 <option value="option3" className=''>Option 3</option>
               </select>
             </div>
-         
-        
+           </div>
       </div>
 
       {/* Body of Tenant Tab */}
@@ -80,6 +79,7 @@ const Tenant = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   )
 }

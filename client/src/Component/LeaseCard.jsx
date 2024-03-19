@@ -13,12 +13,12 @@ const LeaseCard = () => {
       </div>
 
       <div className="flex items-center justify-end gap-3  w-full mr-6">
-        <button className="bg-[#183044] inline-flex py-2 px-6 flex-row items-center rounded-md">
-          <h1 className="text-white mr-3">View</h1>
+        <button className="bg-[#183044] inline-flex lg:px-3 py-2 px-6 flex-row items-center rounded-md">
+          <h1 className="text-white mr-3 text-xs">View</h1>
           <MdOutlineRemoveRedEye color="white" size={20} />
         </button>
         <button className="bg-[#FF0000] inline-flex py-2 px-6 flex-row items-center rounded-md">
-          <MdOutlineClose color="white" size={24} />
+          <MdOutlineClose color="white" size={18} />
         </button>
       </div>
     </div>

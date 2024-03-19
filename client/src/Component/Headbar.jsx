@@ -41,10 +41,10 @@ const Headbar = () => {
     
   return (
     
-<div className='w-full h-full max-h-20 sticky top-0 z-10 bg-primary'>
+<div className='w-full h-full max-h-20 sticky top-0 z-20 bg-primary'>
   <div className=' flex justify-between items-center p-5 w-full relative m-auto  '>
     <button onClick={handleSidebar} className='flex items-center'>
-      <figure className='w-full h-full max-w-10 max-h-10'>
+      <figure className='w-full h-full max-w-5 max-h-5'>
         <img src={sidebar ? close : menu} className='w-full h-full' alt="" />
       </figure>
     </button>

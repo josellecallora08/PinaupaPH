@@ -26,7 +26,7 @@ const Invoice = () => {
 
   return (
     <>
-    <div className=' w-full h-full'>
+    <div className=' w-full h-full bg-gray'>
         <div className='w-11/12 m-auto h-full flex flex-col'>
           <h1 className='font-bold py-5 tracking-wider'>DOCUMENTS / INVOICE</h1>
           <div className='w-full h-full flex items-center justify-between max-h-24 '>
@@ -57,7 +57,7 @@ const Invoice = () => {
                     <th className='text-white p-3 w-1/5'>Action</th>
                   </tr>
                 </thead>
-                <tbody className='w-full h-auto bg-gray'>
+                <tbody className='w-full h-auto bg-white'>
                   <tr className='text-center text-xs md:text-base'>
                     <td className='text-primary p-3'>INV-1892381923-12309812</td>
                     <td className='text-sm md:text-base text-primary p-3'>Joselle E. Callora</td>

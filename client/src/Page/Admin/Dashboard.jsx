@@ -1,83 +1,218 @@
 import City from '/city.svg'
-import BarChart from '../../Component/BarChart'
-import RecentAct from '../../Data/RecentAct'
-
-
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import { BarChart, ColumnChart, LineChart, PieChart } from 'react-chartkick'
+import 'chartkick/chart.js'
+import user from '/pfp.svg'
 import 'react-circular-progressbar/dist/styles.css';
-import Progressbar from '../../Component/Progressbar';
-
+import peso from '/peso.svg'
+import delay from '/delay.svg'
+import house from '/house.svg'
+import renew from '/renew.svg'
 const Dashboard = () => {
-  const percentage = 20;
-  const maxValue = 40;
+  const data = [
+    {name: "Completed", data: {"2021-01-01": 3}},
+    {name: "Incomplete", data: {"2021-01-01": 5}}
+  ];
   return (
-   
-<div className='min-[1440px]:mr-10 lg:pl-3 bg-white1  flex flex-col lg:overflow-hidden'>
-{/* Top of Dashboard> */}
-<h1 className='uppercase font-bold p-5'>Dashboard</h1>
-
-<div className='lg:items-center flex mx-4 justify-between pr-3 '>
-    <img src={City} alt="" className='lg:h-auto lg:w-52 w-30 h-auto   '/>
-    <div className='py-2'>
-      <h1 className='lg:text-4xl text-xl font-bold text-dark-blue '>Welcome Elizabeth</h1>
-    </div>
-</div>
-{/* Center of Dashboard> */}
-<div className='lg:flex lg:mt-5 mt-5 '>
-
-  {/* center-left of Dashboard> */}
-  <div className=' lg:w-7/12  lg:mb-0 bg-white pr-3 rounded-br-xl h-auto rounded-bl-xl shadow-sm shadow-dark-gray mb-5  mx-4 pt-4 pl-5   '>
-    <div>
-    <h1 className=' text-2xl font-black'>Revenue Overview</h1>
-    <p className='text-dark-gray text-sm mb-2'>Show overview Each Month</p>
-    <div className='w-full pt-5'>
-      
-      <BarChart/>
-    </div>
-
-    </div>
-   
-  </div>
-  {/* center right of Dashboard recent Activity */}
-  
-  <div className=' lg:w-1/2  w-auto bg-white  mx-4 p-3 rounded-br-xl rounded-bl-xl shadow-sm shadow-dark-gray  '>
-  <h1 className='  m-2 text-2xl font-black '>Recent Activity</h1>
-    <div className=' lg:h-96 overflow-y-auto h-96 text-xs bg-white' >
-      <ul className="flex flex-wrap lg:m-0">
-        {RecentAct.map((act, index) => (
-          <li key={index} className="flex items-center gap-10 lg:gap-15 py-2 pl-3 lg:px-3">
-            <img src={act.img} alt="Profile" />
-            <div>
-              <div className=" text-sm font-black">{act.fname} {act.lname}</div>
-              
-              <div className="text-light-gray">{act.date}</div>
+    <>
+      <div className="w-full  h-full flex flex-col bg-gray pb-2">
+        <div className='w-11/12 h-fit m-auto py-2'>
+          <h1 className='uppercase font-bold py-1'>Dashboard</h1>
+        </div>
+        <div className="w-11/12 h-full m-auto grid grid-cols-3 gap-2 grid-rows-7">
+          <div className='hidden md:flex col-span-3 row-span-1 bg-blue'>
+          </div>
+          <div className='col-span-3 row-span-4 grid grid-cols-3 grid-rows-1 gap-2'>
+            <div className='col-span-3 md:col-span-2 row-span-1 w-full h-full bg-white'>
+              <div className='w-11/12 m-auto py-2'>
+                <p className='font-bold text-[#9e9e9e]'>Revenue Overview</p>
+              </div>
+              <figure className='flex justify-center h-full m-auto'>
+                <LineChart data={{"2021-01-01": 11, "2021-01-02": 6}} width="90%" height="250px" />
+              </figure>
             </div>
-              
-            <div className="text-light-gray">{act.status}</div>
-          </li>
-        ))}
-      </ul>
-
-    </div>
-   
-  </div>
-</div>
-{/* Bottom of Dashboard> */}
-
- <div className='lg:flex-row lg:gap-10 flex flex-col-reverse mx-4'>
-          {/* Bottom-left of Dashboard> */}
-    <div className='mb-4 lg:w-1/2'>
-          <Progressbar/>
-    </div>
-    {/* Bottom-right of Dashboard> */}
-    <div className='min-[1440px]:w-[47%] lg:w-1/2 lg:ml-24  lg:mx-auto lg:pl-7  md:w-full  bg-white p-3 my-3 rounded-lg shadow-sm shadow-gray-400'>
-      <h1 className='md:text-center text-xl'>Concern and Issue Resolved</h1>
-      <CircularProgressbar className='mx-auto lg:w-40 md:mx-auto md:w-40 w-32 mt-4' value={percentage} minValue={0} maxValue={maxValue} text={percentage +'/'+ maxValue} strokeWidth={15} styles={buildStyles({textColor: '#183044',pathColor: '#183044', trailColor: '#E7E8E9' })} />
-    </div>
- </div>
-
-</div>
-
+            <div className='bg-white pb-3 col-span-3 md:col-span-1'>
+              <div className='w-11/12 h-full m-auto flex flex-col group'>
+                <h1 className='text-[#9e9e9e] font-semibold py-2'>Recent Activity</h1>
+                <div className=' w-full h-full overflow-hidden md:group-hover:overflow-y-scroll'>
+                  <div className='w-full h-auto md:max-h-[200px]'>
+                    <div className='flex justify-between p-2'>
+                      <article className='flex items-center gap-2'>
+                        <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
+                          <img src={user} className='w-full h-full object-contain' alt="" />
+                        </figure>
+                        <div className=''>
+                          <p className='font-semibold'>Joselle E. Callora</p>
+                          <p className='text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, eligendi.</p>
+                        </div>
+                      </article>
+                      <div>
+                        <span className='text-xs'>01/02/24</span>
+                      </div>
+                    </div>
+                    <div className='flex justify-between p-2'>
+                      <article className='flex items-center gap-2'>
+                        <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
+                          <img src={user} className='w-full h-full object-contain' alt="" />
+                        </figure>
+                        <div className=''>
+                          <p className='font-semibold'>Joselle E. Callora</p>
+                          <p className='text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, eligendi.</p>
+                        </div>
+                      </article>
+                      <div>
+                        <span className='text-xs'>01/02/24</span>
+                      </div>
+                    </div>
+                    <div className='flex justify-between p-2'>
+                      <article className='flex items-center gap-2'>
+                        <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
+                          <img src={user} className='w-full h-full object-contain' alt="" />
+                        </figure>
+                        <div className=''>
+                          <p className='font-semibold'>Joselle E. Callora</p>
+                          <p className='text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, eligendi.</p>
+                        </div>
+                      </article>
+                      <div>
+                        <span className='text-xs'>01/02/24</span>
+                      </div>
+                    </div>
+                    <div className='flex justify-between p-2'>
+                      <article className='flex items-center gap-2'>
+                        <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
+                          <img src={user} className='w-full h-full object-contain' alt="" />
+                        </figure>
+                        <div className=''>
+                          <p className='font-semibold'>Joselle E. Callora</p>
+                          <p className='text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, eligendi.</p>
+                        </div>
+                      </article>
+                      <div>
+                        <span className='text-xs'>01/02/24</span>
+                      </div>
+                    </div>
+                    <div className='flex justify-between p-2'>
+                      <article className='flex items-center gap-2'>
+                        <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
+                          <img src={user} className='w-full h-full object-contain' alt="" />
+                        </figure>
+                        <div className=''>
+                          <p className='font-semibold'>Joselle E. Callora</p>
+                          <p className='text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, eligendi.</p>
+                        </div>
+                      </article>
+                      <div>
+                        <span className='text-xs'>01/02/24</span>
+                      </div>
+                    </div>
+                    <div className='flex justify-between p-2'>
+                      <article className='flex items-center gap-2'>
+                        <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
+                          <img src={user} className='w-full h-full object-contain' alt="" />
+                        </figure>
+                        <div className=''>
+                          <p className='font-semibold'>Joselle E. Callora</p>
+                          <p className='text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, eligendi.</p>
+                        </div>
+                      </article>
+                      <div>
+                        <span className='text-xs'>01/02/24</span>
+                      </div>
+                    </div>
+                    <div className='flex justify-between p-2'>
+                      <article className='flex items-center gap-2'>
+                        <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
+                          <img src={user} className='w-full h-full object-contain' alt="" />
+                        </figure>
+                        <div className=''>
+                          <p className='font-semibold'>Joselle E. Callora</p>
+                          <p className='text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, eligendi.</p>
+                        </div>
+                      </article>
+                      <div>
+                        <span className='text-xs'>01/02/24</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className='col-span-3 row-span-2 grid grid-cols-4 md:grid-cols-3 grid-flow-row md:grid-rows-2 gap-2'>
+            <div className='col-span-4 md:col-span-2 row-span-2 grid grid-cols-2 grid-rows-2 gap-2'>
+              <div className='col-span-1 row-span-1 bg-white flex'>
+                <div className='bg-primary w-full max-w-20 flex items-center justify-center'>
+                  <figure className='w-full h-full max-w-10 max-h-10'>
+                   <img src={peso} className='w-full h-full'  alt="" />
+                  </figure>
+                </div>
+                <div className='w-full h-full'>
+                  <div className='relative w-11/12 m-auto h-full'>
+                    <span className='absolute md:top-2 right-0 text-end text-[#9e9e9e] text-xs font-semibold'>Total Amount</span>
+                    <div className='w-full h-full flex items-center justify-center'>
+                      <span className='text-lg md:text-4xl font-bold'>9,000</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className='col-span-1 row-span-1 bg-white flex'>
+                <div className='bg-primary w-full max-w-20 flex items-center justify-center'>
+                  <figure className='w-full h-full max-w-10 max-h-10'>
+                   <img src={house} className='w-full h-full'  alt="" />
+                  </figure>
+                </div>
+                <div className='w-full h-full'>
+                  <div className='relative w-11/12 m-auto h-full'>
+                    <span className='absolute md:top-2 right-0 text-end text-[#9e9e9e] text-xs font-semibold'>Occupancy Rate</span>
+                    <div className='w-full h-full flex items-center justify-center'>
+                      <span className='text-lg md:text-4xl font-bold'>96%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className='col-span-1 row-span-1 bg-white flex'>
+                <div className='bg-primary w-full max-w-20 flex items-center justify-center'>
+                  <figure className='w-full h-full max-w-10 max-h-10'>
+                   <img src={delay} className='w-full h-full'  alt="" />
+                  </figure>
+                </div>
+                <div className='w-full h-full'>
+                  <div className='relative w-11/12 m-auto h-full'>
+                    <span className='absolute md:top-2 right-0 text-end text-[#9e9e9e] text-xs font-semibold'>Deliquency Rate</span>
+                    <div className='w-full h-full flex items-center justify-center'>
+                      <span className='text-lg md:text-4xl font-bold'>96%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className='col-span-1 row-span-1 bg-white flex'>
+                <div className='bg-primary w-full max-w-20 flex items-center justify-center'>
+                  <figure className='w-full h-full max-w-10 max-h-10'>
+                   <img src={renew} className='w-full h-full'  alt="" />
+                  </figure>
+                </div>
+                <div className='w-full h-full'>
+                  <div className='relative w-11/12 m-auto h-full'>
+                    <span className='absolute md:top-2 right-0 text-end text-[#9e9e9e] text-xs font-semibold'>Renewal Rate</span>
+                    <div className='w-full h-full flex items-center justify-center'>
+                      <span className='text-lg md:text-4xl font-bold'>96%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className='col-span-4 md:col-span-1 row-span-2 pb-3 bg-white'>
+              <div className='w-11/12 h-full m-auto flex flex-col'>
+                <h1 className='text-[#9e9e9e] font-semibold py-2'>Concern and Issue</h1>
+                <div className='w-full h-full bg-white'>
+                  <BarChart data={data} width="90%" height="80%"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
 

@@ -58,9 +58,9 @@ const AddTenantForm = ({setIsAddTenantFormOpen}) => {
        <div className='w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center '>
             <h1 className="lg:text-xl relative lg:ml-5 text-2xl font-bold ">Add Tenant Details</h1>
       </div>
-        <form className="lg:w-[30rem] w-[20rem] h-[25rem] px-3 overflow-y-auto">
+        <form className="lg:w-[30rem] w-[20rem] h-[25rem] p-3 overflow-y-auto">
         <button className='absolute top-4 right-6'><IoMdClose onClick={() => setIsAddTenantFormOpen((prevState) => !prevState)} size={25} color='white' /></button>
-            <h1 className="lg:mt-5 text-xl font-bold mb-4">Personal Details</h1>
+            {/* <h1 className="lg:mt-5 text-xl font-bold mb-4">Personal Details</h1> */}
             <div className="mb-4">
               <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 ">
                 Name
@@ -70,7 +70,7 @@ const AddTenantForm = ({setIsAddTenantFormOpen}) => {
                 id="name"
                 name="name"
                 placeholder="Enter your name"
-                className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
 
@@ -84,7 +84,7 @@ const AddTenantForm = ({setIsAddTenantFormOpen}) => {
                 name="birthday"
                 
                 placeholder="Enter your birthday"
-                className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
 
@@ -97,7 +97,7 @@ const AddTenantForm = ({setIsAddTenantFormOpen}) => {
                 id="contact"
                 name="contact"
                 placeholder="Enter your contact number"
-                className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
 
@@ -111,7 +111,7 @@ const AddTenantForm = ({setIsAddTenantFormOpen}) => {
                 name="email"
 
                 placeholder="Enter your email"
-                className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
 
@@ -125,15 +125,15 @@ const AddTenantForm = ({setIsAddTenantFormOpen}) => {
                 name="password"
                 
                 placeholder="Enter your password"
-                className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
-          <h1 className="text-xl font-bold mb-4">Apartment Details</h1>
+          {/* <h1 className="text-xl font-bold mb-4">Apartment Details</h1> */}
           <div className="mb-4">
               <label htmlFor="apartment_unit" className="block text-gray-700 text-sm font-bold mb-2 ">
               Apartment Unit
               </label>
-              <select name='ApartmentUnit' defaultValue="Room1" className='w-full py-2 px-3 border rounded'>
+              <select name='ApartmentUnit' defaultValue="Room1" className='w-full py-2 px-3 border-2 border-[#9e9e9e] rounded'>
                 <option className='rounded-none' value="someOption">Some option</option>
                 <option value="otherOption">Other option</option>
                 <option value="otherOption">Other option</option>
@@ -149,7 +149,7 @@ const AddTenantForm = ({setIsAddTenantFormOpen}) => {
                 id="deposit"
                 name="deposit"
                 placeholder="Enter your Deposit"
-                className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
             <div className="mb-4">
@@ -161,7 +161,7 @@ const AddTenantForm = ({setIsAddTenantFormOpen}) => {
                 id="dateofin"
                 name="dateofin"
                 placeholder="Enter your Date of Occupant In"
-                className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
        
             </div>

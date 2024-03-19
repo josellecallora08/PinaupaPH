@@ -34,7 +34,7 @@ const Least = () => {
           </button>
         </div>
 
-        <div className="xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid grid-cols-1 mt-3">
+        <div className="xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 grid grid-cols-1 mt-3">
           <LeaseCard />
           <LeaseCard />
           <LeaseCard />
