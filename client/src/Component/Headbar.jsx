@@ -71,7 +71,7 @@ const Headbar = () => {
       </figure>
     </button>
     <div>
-      <span className='text-gray font-semibold'>{completeDate}</span>
+      <span className='text-gray text-sm md:text-regular font-semibold'>{completeDate}</span>
     </div>
     </div>
       <div className='flex items-center'>
