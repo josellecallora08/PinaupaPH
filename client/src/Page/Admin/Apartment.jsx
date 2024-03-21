@@ -23,22 +23,26 @@ const Apartment = () => {
   console.log(unit)
 
   return (
-    <div className='lg:ml-3 lg:mr-5  '>
+    <div className='w-full h-full'>
     {/* Top of Apartment Tab */}
-    <h1 className='uppercase font-bold py-5 pl-5'>Apartments Listing </h1>
-    <div className='lg:justify-between md:justify-between lg:pl-5 flex gap-2 w-full mb-5'>
-      <SearchBar onSearch={handleSearch} className='lg:w-1/2 flex-1 '/>
-      <button onClick={toggleAddApartmentForm} className='lg:w-64 lg:mr-10 lg:text-base md:text-base md:w-56 md:mr-10 w-56 mr-4 px-2  ml-5 text-xs text-white rounded-lg bg-dark-blue flex items-center justify-center gap-2 ' >
+    <div className='w-11/12 m-auto h-full'>
+    <h1 className='uppercase font-bold py-5'>Apartments Listing </h1>
+    <div className='lg:justify-between md:justify-between flex-wrap justify-end flex items-center gap-2 w-full'>
+      <div className='w-full md:max-w-60'>
+        <SearchBar onSearch={handleSearch}/>
+      </div>
+      <button onClick={toggleAddApartmentForm} className='md:text-sm uppercase p-2 text-xs text-white rounded-lg bg-dark-blue flex items-center justify-center gap-2 ' >
         <FaPlus/>
         Add Apartment
       </button>
     </div>
     {/* Body of Tenant Tab */}
-    <div className='lg:grid-cols-2 grid grid-cols-1 gap-4 mr-5' >
+    <div className='lg:grid-cols-2 grid grid-cols-1 gap-4 py-5' >
         <ApartmentCard/>
         <ApartmentCard/>
         <ApartmentCard/>
         <ApartmentCard/>
+    </div>
     </div>
     {isAddApartmentFormOpen && (
       <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50'>

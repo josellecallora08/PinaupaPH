@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Chart } from 'react-chartjs-2';
 import {Chart as ChartJS,Title,Legend} from 'chart.js/auto';
 
 ChartJS.register(Title,Legend)
@@ -12,6 +12,7 @@ const options = {
 
   },
 }
+
 const data = {
   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
   datasets:[
@@ -29,9 +30,9 @@ const data = {
   ]
 }
 const BarChart = () => {
+  // For example:
   return (
     <div className=''>
-
       <div className='w-full'>
         <Bar data={data} options={options} />
       </div>
