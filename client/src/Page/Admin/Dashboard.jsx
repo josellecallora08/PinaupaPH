@@ -27,6 +27,7 @@ const Dashboard = () => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: 'bottom',
@@ -34,6 +35,8 @@ const Dashboard = () => {
   
     },
   }
+
+  const prc = "w-[56%]"
   
   const data = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -53,32 +56,34 @@ const Dashboard = () => {
   }
   return (
     <>
-      <div className="w-full h-full flex flex-col bg-gray pb-2">
+      <div className="w-full h-full xl:h-full xl:max-h-screen flex flex-col bg-gray pb-2">
         <div className='w-11/12 h-fit m-auto py-2'>
           <h1 className='uppercase font-bold py-1'>Dashboard</h1>
         </div>
-        <div className="w-11/12 h-full m-auto grid grid-cols-3 gap-2 grid-rows-7">
-          <div className='hidden md:flex col-span-3 row-span-1  rounded-md overflow-hidden shadow-md bg-primary/20'>
-            <figure className='w-full h-full max-w-12 md:max-w-60'>
+        <div className="w-11/12 xl:max-h-[800px] flex flex-col m-auto xl:grid grid-cols-3 gap-2 grid-rows-7">
+          <div className='min-h-20 md:flex col-span-3 row-span-1  rounded-md overflow-hidden shadow-md bg-primary/20'>
+            <figure className='w-full h-full max-w-max md:max-w-60'>
               <img src={City} className='w-full h-full object-contain' alt="" />
             </figure>
           </div>
-          <div className='order-last md:order-none col-span-3 row-span-4 grid grid-cols-3 grid-rows-1 gap-2 '>
-            <div className='col-span-3 md:col-span-2 row-span-1 w-full h-full bg-white flex items-center justify-center flex-col rounded-md overflow-hidden shadow-md'>
-              <div className='w-11/12 m-auto py-2'>
+          <div className='order-last md:order-none col-span-3 row-span-4 flex flex-col xl:grid grid-cols-3 grid-rows-1 gap-2 '>
+            <div className='col-span-3 md:col-span-2 row-span-auto xl:row-span-1 bg-white h-fit md:h-full flex items-center justify-center flex-col rounded-md overflow-hidden shadow-md'>
+              <div className='w-11/12 h-fit xl:h-full max-h-20 m-auto py-2'>
                 <p className='font-bold text-[#9e9e9e] lg:text-xl'>Revenue Overview</p>
               </div>
-              <figure className='flex justify-center items-center h-auto md:h-full w-full  max-h-max lg:max-h-max max-w-[90%] m-auto'>
-                {/* <LineChart data={{"2021-01-01": 11, "2021-01-02": 6}} width="100%" height="100%"/> */}
-                <Bar data={data} options={options}/>
-              </figure>
+              <div className='w-full h-fit xl:h-full flex'>
+                <figure className='flex justify-center items-center h-full w-11/12 xl:w-11/12 m-auto'>
+                  <Bar data={data} options={options}/>
+                </figure>
+              </div>
             </div>
             <div className='bg-white pb-3 col-span-3 md:col-span-1 rounded-md overflow-hidden shadow-md'>
               <div className='w-11/12 h-full m-auto flex flex-col group'>
                 <h1 className='text-[#9e9e9e] font-semibold py-2 lg:text-xl'>Recent Activity</h1>
                 <div className=' w-full h-full overflow-hidden md:group-hover:overflow-y-scroll'>
                   <div className='w-full h-auto md:max-h-[200px]'>
-                    <div className='flex justify-between p-2'>
+                   
+                    <div className='flex justify-between p-2 hover:bg-gray'>
                       <article className='flex items-center gap-2'>
                         <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
                           <img src={user} className='w-full h-full object-contain' alt="" />
@@ -92,132 +97,7 @@ const Dashboard = () => {
                         <span className='text-xs'>01/02/24</span>
                       </div>
                     </div>
-                    <div className='flex justify-between p-2'>
-                      <article className='flex items-center gap-2'>
-                        <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
-                          <img src={user} className='w-full h-full object-contain' alt="" />
-                        </figure>
-                        <div className=''>
-                          <p className='font-semibold'>Joselle E. Callora</p>
-                          <p className='text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, eligendi.</p>
-                        </div>
-                      </article>
-                      <div>
-                        <span className='text-xs'>01/02/24</span>
-                      </div>
-                    </div>
-                    <div className='flex justify-between p-2'>
-                      <article className='flex items-center gap-2'>
-                        <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
-                          <img src={user} className='w-full h-full object-contain' alt="" />
-                        </figure>
-                        <div className=''>
-                          <p className='font-semibold'>Joselle E. Callora</p>
-                          <p className='text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, eligendi.</p>
-                        </div>
-                      </article>
-                      <div>
-                        <span className='text-xs'>01/02/24</span>
-                      </div>
-                    </div>
-                    <div className='flex justify-between p-2'>
-                      <article className='flex items-center gap-2'>
-                        <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
-                          <img src={user} className='w-full h-full object-contain' alt="" />
-                        </figure>
-                        <div className=''>
-                          <p className='font-semibold'>Joselle E. Callora</p>
-                          <p className='text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, eligendi.</p>
-                        </div>
-                      </article>
-                      <div>
-                        <span className='text-xs'>01/02/24</span>
-                      </div>
-                    </div>
-                    <div className='flex justify-between p-2'>
-                      <article className='flex items-center gap-2'>
-                        <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
-                          <img src={user} className='w-full h-full object-contain' alt="" />
-                        </figure>
-                        <div className=''>
-                          <p className='font-semibold'>Joselle E. Callora</p>
-                          <p className='text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, eligendi.</p>
-                        </div>
-                      </article>
-                      <div>
-                        <span className='text-xs'>01/02/24</span>
-                      </div>
-                    </div>
-                    <div className='flex justify-between p-2'>
-                      <article className='flex items-center gap-2'>
-                        <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
-                          <img src={user} className='w-full h-full object-contain' alt="" />
-                        </figure>
-                        <div className=''>
-                          <p className='font-semibold'>Joselle E. Callora</p>
-                          <p className='text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, eligendi.</p>
-                        </div>
-                      </article>
-                      <div>
-                        <span className='text-xs'>01/02/24</span>
-                      </div>
-                    </div>
-                    <div className='flex justify-between p-2'>
-                      <article className='flex items-center gap-2'>
-                        <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
-                          <img src={user} className='w-full h-full object-contain' alt="" />
-                        </figure>
-                        <div className=''>
-                          <p className='font-semibold'>Joselle E. Callora</p>
-                          <p className='text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, eligendi.</p>
-                        </div>
-                      </article>
-                      <div>
-                        <span className='text-xs'>01/02/24</span>
-                      </div>
-                    </div>
-                    <div className='flex justify-between p-2'>
-                      <article className='flex items-center gap-2'>
-                        <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
-                          <img src={user} className='w-full h-full object-contain' alt="" />
-                        </figure>
-                        <div className=''>
-                          <p className='font-semibold'>Joselle E. Callora</p>
-                          <p className='text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, eligendi.</p>
-                        </div>
-                      </article>
-                      <div>
-                        <span className='text-xs'>01/02/24</span>
-                      </div>
-                    </div>
-                    <div className='flex justify-between p-2'>
-                      <article className='flex items-center gap-2'>
-                        <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
-                          <img src={user} className='w-full h-full object-contain' alt="" />
-                        </figure>
-                        <div className=''>
-                          <p className='font-semibold'>Joselle E. Callora</p>
-                          <p className='text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, eligendi.</p>
-                        </div>
-                      </article>
-                      <div>
-                        <span className='text-xs'>01/02/24</span>
-                      </div>
-                    </div>
-                    <div className='flex justify-between p-2'>
-                      <article className='flex items-center gap-2'>
-                        <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
-                          <img src={user} className='w-full h-full object-contain' alt="" />
-                        </figure>
-                        <div className=''>
-                          <p className='font-semibold'>Joselle E. Callora</p>
-                          <p className='text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat, eligendi.</p>
-                        </div>
-                      </article>
-                      <div>
-                        <span className='text-xs'>01/02/24</span>
-                      </div>
-                    </div>
+
                   </div>
                 </div>
               </div>
@@ -227,7 +107,7 @@ const Dashboard = () => {
             <div className='col-span-4 md:col-span-2 row-span-2 grid grid-cols-2 grid-rows-2 gap-2'>
               <div className='col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md'>
                 <div className='w-full bg-primary max-w-20 flex items-center justify-center'>
-                  <div className='rounded-full p-3 bg-gray'>
+                  <div className='rounded-full p-2 xl:p-3 bg-gray'>
                     <figure className='w-full h-full max-w-16 max-h-16'>
                       <img src={pay} className='w-full h-full'  alt="" />
                     </figure>
@@ -239,12 +119,12 @@ const Dashboard = () => {
                     <div className='w-full h-full flex items-center justify-center'>
                       <span className='text-lg md:text-4xl lg:text-5xl font-bold'>9,000</span>
                     </div> */}
-                    <div className=' w-full xl:flex flex-col gap-5'>
+                    <div className=' w-full xl:flex flex-col gap-5 py-2'>
                       <div className='xl:flex justify-between'>
                         <p className='text-[#9e9e9e] text-xs text-center xl:text-base font-semibold'>Total Paid</p>
                         <p className='font-bold text-center text-xl xl:text-4xl'>9,000.00</p>
                       </div>
-                      <p className={`relative w-full h-2 bg-primary/20 rounded-full overflow-hidden shadow-inner`}>
+                      <p className={`relative w-11/12 m-auto xl:w-full h-2 bg-primary/20 rounded-full overflow-hidden shadow-inner`}>
                         <span className={`absolute w-1/4 h-2 bg-primary`}></span>
                       </p>
                     </div>
@@ -253,8 +133,8 @@ const Dashboard = () => {
               </div>
               <div className='col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md'>
                 <div className='bg-primary w-full max-w-20 flex items-center justify-center'>
-                <div className='rounded-full p-3 bg-gray'>
-                    <figure className='w-full h-full max-w-16 max-h-16'>
+                <div className='rounded-full p-2 xl:p-3 bg-gray'>
+                    <figure className='w-full h-full md:max-w-16 md:max-h-16'>
                       <img src={rent} className='w-full h-full'  alt="" />
                     </figure>
                   </div>
@@ -265,12 +145,12 @@ const Dashboard = () => {
                     <div className='w-full h-full flex items-center justify-center'>
                       <span className='text-lg md:text-4xl lg:text-5xl font-bold'>96%</span>
                     </div> */}
-                    <div className=' w-full xl:flex flex-col gap-5'>
+                    <div className=' w-full xl:flex flex-col gap-5 py-2'>
                       <div className='xl:flex justify-between'>
                         <p className='text-[#9e9e9e] text-xs text-center xl:text-base font-semibold'>Deliquency Rate</p>
                         <p className='font-bold text-center text-xl xl:text-4xl'>96%</p>
                       </div>
-                      <p className={`relative w-full h-2 bg-primary/20 rounded-full overflow-hidden shadow-inner`}>
+                      <p className={`relative w-11/12 m-auto xl:w-full h-2 bg-primary/20 rounded-full overflow-hidden shadow-inner`}>
                         <span className={`absolute w-[96%] h-2 bg-primary`}></span>
                       </p>
                     </div>
@@ -279,7 +159,7 @@ const Dashboard = () => {
               </div>
               <div className='col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md'>
                 <div className='bg-primary w-full max-w-20 flex items-center justify-center'>
-                  <div className='rounded-full p-3 bg-gray'>
+                  <div className='rounded-full p-2 xl:p-3 bg-gray'>
                     <figure className='w-full h-full max-w-16 max-h-16'>
                       <img src={occupancy} className='w-full h-full'  alt="" />
                     </figure>
@@ -291,13 +171,13 @@ const Dashboard = () => {
                     <div className='w-full h-full flex items-center justify-center'>
                       <span className='text-lg md:text-4xl lg:text-5xl font-bold'>96%</span>
                     </div> */}
-                    <div className=' w-full xl:flex flex-col gap-5'>
+                    <div className=' w-full xl:flex flex-col gap-5 py-2'>
                       <div className='xl:flex justify-between'>
                         <p className='text-[#9e9e9e] text-xs text-center xl:text-base font-semibold'>Occupancy Rate</p>
                         <p className='font-bold text-center text-xl xl:text-4xl'>54%</p>
                       </div>
-                      <p className={`relative w-full h-2 bg-primary/20 rounded-full overflow-hidden shadow-inner`}>
-                        <span className={`absolute w-[${'54'}%] h-2 bg-primary`}></span>
+                      <p className={`relative w-11/12 m-auto xl:w-full h-2 bg-primary/20 rounded-full overflow-hidden shadow-inner`}>
+                        <span className={`absolute ${prc} h-2 bg-primary`}></span>
                       </p>
                     </div>
                   </div>
@@ -305,8 +185,8 @@ const Dashboard = () => {
               </div>
               <div className='col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md'>
                 <div className='bg-primary w-full max-w-20 flex items-center justify-center'>
-                  <div className='rounded-full p-3 bg-gray'>
-                    <figure className='w-full h-full max-w-6 max-h-6'>
+                  <div className='rounded-full p-2 xl:p-3 bg-gray'>
+                    <figure className='w-full h-full max-w-5 xl:max-w-6 xl:max-h-6'>
                       <img src={renew} className='w-full h-full'  alt="" />
                     </figure>
                   </div>
@@ -317,12 +197,12 @@ const Dashboard = () => {
                     <div className='w-full h-full flex items-center justify-center'>
                       <span className='text-lg md:text-4xl lg:text-5xl font-bold'>96%</span>
                     </div> */}
-                    <div className=' w-full xl:flex flex-col gap-5'>
+                    <div className=' w-full xl:flex flex-col gap-5 py-2'>
                       <div className='xl:flex justify-between'>
                         <p className='text-[#9e9e9e] text-xs text-center xl:text-base font-semibold'>Renewal Rate</p>
                         <p className='font-bold text-center text-xl xl:text-4xl'>66%</p>
                       </div>
-                      <p className={`relative w-full h-2 bg-primary/20 rounded-full overflow-hidden shadow-inner`}>
+                      <p className={`relative w-11/12 m-auto xl:w-full h-2 bg-primary/20 rounded-full overflow-hidden shadow-inner`}>
                         <span className={`absolute w-[${'66'}%] h-2 bg-primary`}></span>
                       </p>
                     </div>
