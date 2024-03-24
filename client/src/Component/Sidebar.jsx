@@ -94,7 +94,7 @@ const Sidebar = () => {
   
   
   return (
-    <div className={`fixed z-10 md:static w-3/5 min-h-screen h-auto left-0 top-20 bg-white ${menu ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 flex flex-col md:max-w-[200px] ${menu ? 'md:w-full' :  'md:w-16'} duration-100 ease-in-out shadow-xl md:shadow-md`}>
+    <div className={`fixed z-50 md:static w-3/5 min-h-screen h-auto left-0 top-20 bg-white ${menu ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 flex flex-col md:max-w-[200px] ${menu ? 'md:w-full' :  'md:w-16'} duration-100 ease-in-out shadow-xl md:shadow-md`}>
       <div className='sticky top-0'>
       <figure className="max-h-20 h-full w-full flex justify-center items-center">
         <Link >
