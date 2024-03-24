@@ -56,9 +56,9 @@ const Dashboard = () => {
   }
   return (
     <>
-      <div className="w-full h-full xl:h-full xl:max-h-auto flex flex-col bg-gray pb-2">
-        <div className='w-11/12 h-fit m-auto py-2'>
-          <h1 className='uppercase font-bold py-1'>Dashboard</h1>
+      <div className="w-full h-full md:h-auto xl:h-full xl:max-h-auto flex flex-col items-start bg-gray pb-5">
+        <div className='w-11/12 h-fit m-auto py-3 '>
+          <h1 className='uppercase font-bold '>Dashboard</h1>
         </div>
         <div className="w-11/12 xl:max-h-[800px] flex flex-col m-auto xl:grid grid-cols-3 gap-2 grid-rows-7">
           <div className='flex justify-between items-center col-span-3 row-span-1  rounded-md overflow-hidden shadow-md bg-primary/20'>
@@ -69,7 +69,7 @@ const Dashboard = () => {
               <span className='text-base xl:text-2xl font-semibold'>Hey, Joselle E. Callora</span>
             </div>
           </div>
-          <div className='order-last md:order-none col-span-3 row-span-4 flex flex-col xl:grid grid-cols-3 grid-rows-1 gap-2 '>
+          <div className='order-last md:order-none col-span-3 row-span-4 flex flex-col md:grid grid-cols-3 grid-rows-1 gap-2 '>
             <div className='col-span-3 md:col-span-2 row-span-auto xl:row-span-1 bg-white h-fit md:h-full flex items-center justify-center flex-col rounded-md overflow-hidden shadow-md'>
               <div className='w-11/12 h-fit  xl:max-h-fit m-auto md:py-2'>
                 <p className='font-bold text-[#9e9e9e] lg:text-xl'>Revenue Overview</p>

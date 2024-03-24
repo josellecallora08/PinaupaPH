@@ -57,9 +57,13 @@ const Headbar = () => {
   const Today = date.getDate()
   const Year = date.getFullYear()
   const Hour = date.getHours()
+  let timeHour;
+  if(Hour > 12){
+    timeHour = Hour - 12
+  }
   const Minute = date.getMinutes()
   const Second = date.getSeconds()
-  const completeDate = `${day[Day]}, ${month[Month]} ${Today < 10 ? `0${Today}` : Today}, ${Year} ${Hour >= 12 ? `${Hour < 10 ? `0${Hour}` : Hour}:${Minute}:${Second < 10 ? `0${Second}` : Second}PM`: `${Hour < 10 ? `0${Hour}` : Hour}:${Minute}:${Second < 10 ? `0${Second}` : Second}AM`} `
+  const completeDate = `${day[Day]}, ${month[Month]} ${Today < 10 ? `0${Today}` : Today}, ${Year} ${Hour >= 12 ? `${Hour > 10 ? `0${timeHour}` : timeHour}:${Minute < 10 ? `0${Minute}` : Minute}:${Second < 10 ? `0${Second}` : Second}PM`: `${Hour < 10 ? `0${Hour}` : Hour}:${Minute < 10 ? `0${Minute}` : Minute}:${Second < 10 ? `0${Second}` : Second}AM`} `
   return (
     
 <div className='w-full h-full max-h-20 sticky top-0 z-20 bg-primary'>
