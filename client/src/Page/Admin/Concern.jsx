@@ -23,7 +23,7 @@ const messageContainerRef = useRef(null);
             <div className='row-span-1 grid grid-cols-2 items-center'>
               <div className='col-span-1 h-full flex items-center gap-5'>
                 <figure className='w-full h-full min-h-20 min-w-20 max-w-20 max-h-20 rounded-full shadow-md overflow-hidden'>
-                  <img src='' className='w-full h-full bg-white' alt="" />
+                  <img src={pfp} className='w-full h-full bg-white' alt="" />
                 </figure>
                 <div className='w-full'>
                   <p className='text-sm xl:text-xl font-semibold'>Joselle E. Callora</p>
