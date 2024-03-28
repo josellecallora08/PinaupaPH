@@ -8,7 +8,7 @@ import peso from '/peso.svg'
 import delay from '/delay.svg'
 import house from '/house.svg'
 import { Progress } from 'flowbite-react'
-import renew from '/renew.svg'
+import renew from '/Renew.svg'
 import { Bar, Chart } from 'react-chartjs-2';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -61,7 +61,7 @@ const Dashboard = () => {
           <h1 className='uppercase font-bold '>Dashboard</h1>
         </div>
         <div className="w-11/12 xl:max-h-[800px] flex flex-col m-auto xl:grid grid-cols-3 gap-2 grid-rows-7">
-          <div className='flex justify-between items-center col-span-3 row-span-1  rounded-md overflow-hidden shadow-md bg-primary/20'>
+          <div className='lg:pt-4 flex justify-between items-center col-span-3 row-span-1  rounded-md overflow-hidden shadow-md bg-white '>
             <figure className='w-full h-full max-w-max md:max-w-fit'>
               <img src={City} className='w-full h-full object-contain' alt="" />
             </figure>

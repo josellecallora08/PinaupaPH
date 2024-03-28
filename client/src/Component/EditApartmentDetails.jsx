@@ -4,7 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { editApartment, fetchApartment } from '../features/apartment';
 
-const EditApartmentDetails = ({apartmentId}) => {
+const EditApartmentDetails = ({apartmentId,setIsEditApartmentDetails}) => {
 const dispatch = useDispatch()
 const apartment = useSelector(state => state.apartment.data)
 const [fields, setFields] = useState({
@@ -58,7 +58,7 @@ toggleForm(!isFormOpen);
             <h1 className="lg:text-xl  ml-5 text-lg font-bold ">Edit Apartment Details</h1>
       </div>
         <form action="" onSubmit={handleSubmit} className="lg:w-full w-[20rem] h-auto px-3 py-5 ">
-        <button type='button' className='absolute top-4 right-6'><IoMdClose  color='white' /></button>
+        <button  className='absolute top-4 right-6'><IoMdClose onClick={() => setIsEditApartmentDetails(prevState => !prevState)}  color='white' /></button>
                 <div className="mb-4">
                   <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 ">
                     Apartment Name
@@ -122,7 +122,7 @@ toggleForm(!isFormOpen);
                   <button className=' bg-dark-blue text-white font-bold py-2 px-4 rounded'>
                     Submit
                   </button>
-                  <button  className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded'>
+                  <button onClick={() => setIsEditApartmentDetails(prevState => !prevState)}  className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded'>
                     Close
                   </button>
                 </div>

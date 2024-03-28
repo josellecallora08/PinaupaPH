@@ -4,7 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { editApartment, fetchApartment } from '../features/apartment';
 
-const EditApartment = ({apartmentId, setIsEditApartmentForm}) => {
+const EditApartment = ({apartmentId,setIsEditApartmentForm}) => {
 const dispatch = useDispatch()
 const apartment = useSelector(state => state.apartment.data)
 const [fields, setFields] = useState({

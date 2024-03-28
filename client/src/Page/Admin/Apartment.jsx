@@ -31,7 +31,7 @@ const Apartment = () => {
       <div className='w-full md:max-w-60'>
         <SearchBar onSearch={handleSearch}/>
       </div>
-      <button onClick={toggleAddApartmentForm} className='md:text-sm uppercase p-2 text-xs text-white rounded-lg bg-dark-blue flex items-center justify-center gap-2 ' >
+      <button onClick={toggleAddApartmentForm} className='lg:text-xs md:text-sm lg:p-3 uppercase p-2 text-xs text-white rounded-lg bg-dark-blue flex items-center justify-center gap-2 ' >
         <FaPlus/>
         Add Apartment
       </button>
@@ -46,7 +46,7 @@ const Apartment = () => {
     </div>
     {isAddApartmentFormOpen && (
       <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50'>
-        <div className='bg-white  rounded-md'>
+        <div className='lg:w-auto h-[500px] mt-14 w-10/12  bg-white  rounded-md'>
           <AddApartment setIsAddApartmentFormOpen={setIsAddApartmentFormOpen} />
         </div>
       </div>

@@ -44,15 +44,15 @@ const Tenant = () => {
            <div className='flex items-center gap-5 py-5'>
            <button
               onClick={toggleAddTenantForm}
-              className="h-full lg:order-last p-2 uppercase text-sm text-white rounded-md bg-primary flex items-center justify-center gap-2 "
+              className="lg:text-xs h-full lg:order-last p-3 uppercase text-sm text-white rounded-md bg-primary flex items-center justify-center gap-2 "
             >
               <FaPlus />
               Add Tenant
             </button>
 
-            <div className="flex items-center justify-center">
+            <div className="lg:text-xs flex items-center justify-center">
               <select
-                className=" bg-white border  border-gray-400 hover:border-gray-500 rounded-md shadow leading-tight focus:outline-none focus:shadow-outline p-2 cursor-pointer appearance-none"
+                className=" lg:p-3 bg-white border  border-gray-400 hover:border-gray-500 rounded-md shadow leading-tight focus:outline-none focus:shadow-outline p-2 cursor-pointer appearance-none"
                 value={selectedOption}
                 onChange={handleOptionChange}
                 style={{ color: selectedOption ? 'black' : 'gray' }}
