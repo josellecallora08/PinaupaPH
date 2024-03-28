@@ -61,7 +61,7 @@ const TenantProfile = () => {
           <button
             onClick={() => handleTabClick('profile')}
             className={
-              activeTab === 'profile' ? ' lg:text-black border-b-2 ' : ''
+              activeTab === 'profile' ? ' text-white py-2 px-5 bg-primary rounded-full ' : ''
             }
           >
             Profile
@@ -69,7 +69,7 @@ const TenantProfile = () => {
           <button
             onClick={() => handleTabClick('documents')}
             className={
-              activeTab === 'documents' ? 'lg:text-black border-b-2' : ''
+              activeTab === 'documents' ? 'text-white py-2 px-5 bg-primary rounded-full' : ''
             }
           >
             Documents
@@ -77,7 +77,7 @@ const TenantProfile = () => {
           <button
             onClick={() => handleTabClick('transaction')}
             className={
-              activeTab === 'transaction' ? 'lg:text-black border-b-2' : ''
+              activeTab === 'transaction' ? 'text-white py-2 px-5 bg-primary rounded-full' : ''
             }
           >
             Transaction
@@ -94,7 +94,7 @@ const TenantProfile = () => {
                 {/* Upper section */}
                 {/* Left profile */}
                 <div className="lg:w-1/2  lg:rounded-lg lg:origin-left  ">
-                  <div className="flex gap-3 relative mb-7">
+                  <div className="lg:items-center flex gap-3 relative mb-7">
                     <img
                       src={profile.Account[0].pfp}
                       alt="Profile"
@@ -113,29 +113,29 @@ const TenantProfile = () => {
                   {/*Profile Content */}
                   {/*Account */}
                   <div>
-                    <div className="lg:p-4 lg:border-2 lg:border-dark-blue flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
+                    <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
                       <div>
-                        <h1 className="lg:text-2xl font-bold ">Account</h1>
+                        <h1 className="lg:text-xl font-bold ">Account</h1>
                       </div>
                       <div>
                         <FaEdit
                           
-                          className="lg:text-3xl text-lg cursor-pointer"
+                          className="lg:text-2xl text-lg cursor-pointer"
                           onClick={toggleEditTenantAccountForm}
                         />
                       </div>
                     </div>
 
-                    <div className="lg:text-md mb-4 text-sm mt-3 ml-2 flex flex-col items-start">
-                      <p className='lg:text-xl'>
+                    <div className="mb-4 text-sm mt-3 ml-2 flex flex-col items-start">
+                      <p className='lg:text-lg flex gap-[4.8rem] items-center'>
                         Username
-                        <span className="ml-24">
+                        <span className="lg:text-base lg:ml-7 ml-6">
                           {profile.Account[0].username}
                         </span>
                       </p>
-                      <p className='lg:text-xl'>
+                      <p className='lg:text-lg flex gap-20 items-center'>
                         Password
-                        <span className="ml-24">
+                        <span className="lg:text-base lg:ml-7 ml-6 ">
                           {profile.Account[0].password}
                         </span>
                       </p>
@@ -153,23 +153,23 @@ const TenantProfile = () => {
 
                   <div>
                     <div className="flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <h1 className="lg:p-4 lg:pl-2 lg:border-2 lg:border-dark-blue lg:text-2xl font-bold ">Personal Details</h1>
+                      <h1 className="lg:p-3 lg:pl-2 lg:border-2 lg:border-dark-blue lg:text-xl font-bold ">Personal Details</h1>
                       <FaEdit
                         
-                        className="lg:text-3xl lg:mr-3 text-lg cursor-pointer"
+                        className="lg:text-2xl lg:mr-3 text-lg cursor-pointer"
                         onClick={toggleEditTenantDetailForm}
                       />
                     </div>
 
                     <div className="mb-4 text-sm mt-3 ml-2 ">
-                      <div className="lg:text-xl flex gap-20">
-                        <div className=" ">
+                      <div className=" flex gap-20">
+                        <div className="lg:text-lg">
                           <p>Name</p>
                           <p>Date of Birth</p>
                           <p>Contact</p>
                           <p>Email</p>
                         </div>
-                        <div className="">
+                        <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
                           <p className="">{profile.PersonalDetails[0].name}</p>
                           <p className="">
                             {profile.PersonalDetails[0].birthday}
@@ -193,30 +193,30 @@ const TenantProfile = () => {
 
                   {/*Apartment Details */}
                   <div>
-                    <div className="lg:p-4 lg:border-2 lg:border-dark-blue flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <h1 className="lg:text-2xl font-bold ">Apartment Details</h1>
+                    <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
+                      <h1 className="lg:text-xl font-bold ">Apartment Details</h1>
                       <FaEdit
-                        className="lg:text-3xl text-lg cursor-pointer"
+                        className="lg:text-2xl text-lg cursor-pointer"
                         onClick={()=>setIsEditApartmentForm(!isEditApartmentForm)}
                       />
                     </div>
                     {isEditApartmentForm && (
                     <div className="fixed top-0 left-0 w-full z-50 h-full flex items-center justify-center bg-black bg-opacity-50">
-                      <div className="lg:w-1/2  lg:h-[30rem] h-auto bg-white  rounded-lg">
+                      <div className="lg:w-1/2   h-auto bg-white  rounded-lg">
                         <EditApartment
                         setIsEditApartmentForm={setIsEditApartmentForm} />
                       </div>
                     </div>
                   )}
 
-                    <div className="lg:text-xl mb-4 text-sm mt-3 ml-2 ">
+                    <div className=" mb-4 text-sm mt-3 ml-2 ">
                       <div className="flex gap-14">
-                        <div className=" ">
+                        <div className="lg:text-lg ">
                           <p>Apartment Unit</p>
                           <p>Deposit</p>
                           <p>Date of Move-in</p>
                         </div>
-                        <div className="">
+                        <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
                           <p className="">
                             {profile.ApartmentDetails[0].aparmentunit}
                           </p>
@@ -235,10 +235,10 @@ const TenantProfile = () => {
                 <div className="lg:w-1/2  lg:overflow-y-auto lg:origin-left lg:border-l-4 lg:border-dark-blue ">
                   {/*Family Members */}
                   <div className="relative lg:mb-24">
-                    <div className="lg:p-4 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <h1 className="lg:text-2xl font-bold">Household Details</h1>
+                    <div className="lg:p-3 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
+                      <h1 className="lg:text-xl font-bold">Household Details</h1>
                       <RxDotsVertical
-                        className="lg:text-3xl text-lg cursor-pointer"
+                        className="lg:text-2xl text-lg cursor-pointer"
                         onClick={() => setIsHouseDotOpen(!isHousedotOpen)}
                       />
                     </div>
@@ -272,10 +272,13 @@ const TenantProfile = () => {
                         <p className=" lg:text-2xl mb-2 text-xl">
                           {profile.FamilyMembers[0].relationship}
                         </p>
-                        <p>Name</p>
-                        <p>Mobile No.</p>
+                        <div className='lg:text-base'>
+                          <p>Name</p>
+                          <p>Mobile No.</p>
+                        </div>
+                       
                       </div>
-                      <div className="-ml-2 mt-4">
+                      <div className="lg:text-base -ml-2 mt-4">
                         <p>
                           <br />
                         </p>
@@ -302,10 +305,10 @@ const TenantProfile = () => {
 
                   {/*Pets */}
                   <div className="lg:overflow-y-auto ">
-                    <div className="lg:p-4 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <h1 className="lg:text-2xl font-bold">Pet Details</h1>
+                    <div className="lg:p-3 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
+                      <h1 className="lg:text-xl font-bold">Pet Details</h1>
                       <RxDotsVertical
-                        className="lg:text-3xl text-lg cursor-pointer"
+                        className="lg:text-2xl text-lg cursor-pointer"
                         onClick={() => setIsPetDotOpen(!isPetdotOpen)}
                       />
                     </div>
@@ -334,13 +337,13 @@ const TenantProfile = () => {
                       </div>
                     )}
 
-                    <div className="lg:p-3 lg:text-xl flex gap-28 ml-2">
-                      <div className=" ">
+                    <div className="lg:p-3 flex gap-28 ml-2">
+                      <div className="lg:text-base ">
                         <p>Name</p>
                         <p>Species</p>
                         <p>Birthday</p>
                       </div>
-                      <div className="">
+                      <div>
                         <p className="">{profile.Pets[0].name}</p>
                         <p className="">{profile.Pets[0].species}</p>
                         
@@ -369,7 +372,7 @@ const TenantProfile = () => {
         )}
 
         {activeTab === 'documents' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+          <div className="px-5 grid grid-cols-1 lg:grid-cols-2 gap-2">
             {/* Documents content goes here */}
             {/* ... display documents */}
             <DocumentCard />

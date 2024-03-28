@@ -39,11 +39,12 @@ const AddApartment = ({setIsAddApartmentFormOpen}) => {
   return (
     <>
     <div className='relative w-full flex py-4 rounded-t-md bg-dark-blue text-white items-center '>
-            <h1 className="lg:text-md  ml-5 text-lg font-bold uppercase ">Add Apartment</h1>
+            <h1 className="lg:text-md  ml-5 text-lg font-bold uppercase ">Add Apartment Building</h1>
       </div>
-      <form onSubmit={handleSubmit} className="lg:w-[30rem] py-4 w-[20rem] h-[25rem] px-3  ">
+      <form onSubmit={handleSubmit} className="lg:w-[30rem] py-4 w-full h-[25rem] px-3  ">
       <button type='button' className='absolute top-4 right-6'><IoMdClose onClick={() => setIsAddApartmentFormOpen(prevState => !prevState)} size={25} color='white' /></button>
           <div className="mb-4">
+            <h1 className="text-lg font-bold my-2">Apartment Details</h1>
             <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 ">
               Apartment Name
             </label>
