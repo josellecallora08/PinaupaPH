@@ -6,7 +6,7 @@ import TenantProfileInfo from '../../Data/TenantProfileInfo'
 import EditTenantDetails from '../../Component/EditTenantDetails'
 import EditTenantAccount from '../../Component/EditTenantAccount'
 import EditPet from '../../Component/EditPet'
-import EditFamilyMem from '../../Component/EditFamilyMem'
+import EditFamMemTable from '../../Component/EditFamMemTable'
 import { payment_url } from '../../utils/constants'
 import DocumentCard from '../../Component/DocumentCard'
 import AddHousehold from '../../Component/AddHousehold'
@@ -16,6 +16,7 @@ import TransactionTable from '../../Component/TransactionTable';
 import TransactionMobile from '../../Component/TransactionMobile';
 import { GrFormView,GrFormAdd } from "react-icons/gr";
 import AddPet from '../../Component/AddPet';
+import EditPetTable from '../../Component/EditPetTable';
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile')
   const [isEditTenantDetailForm, setIsEditTenantDetailForm] = useState(false)
@@ -289,14 +290,14 @@ const TenantProfile = () => {
                   </div>
                   {isEditFamilyMemForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
-                      <div className="lg:w-1/2 bg-white  rounded-lg relative">
-                        <EditFamilyMem setIsEditFamilyMemForm={setIsEditFamilyMemForm}  />
+                      <div className="lg:w-9/12 bg-white  rounded-lg relative">
+                        <EditFamMemTable setIsEditFamilyMemForm={setIsEditFamilyMemForm}  />
                       </div>
                     </div>
                   )}
                   {isAddHouseholdForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
-                      <div className="lg:w-1/2 bg-white rounded-md relative">
+                      <div className="lg:w-1/2 h-auto bg-white rounded-md relative">
                         <AddHousehold setIsAddHouseholdForm={setIsAddHouseholdForm} />
                       </div>
                     </div>
@@ -352,8 +353,8 @@ const TenantProfile = () => {
                   </div>
                   {isEditPetForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
-                      <div className="lg:w-1/2 bg-white rounded-lg relative">
-                        <EditPet setIsEditPetForm={setIsEditPetForm} />
+                      <div className="lg:w-9/12 bg-white rounded-lg relative">
+                        <EditPetTable setIsEditPetForm={setIsEditPetForm} />
                       </div>
                     </div>
                   )}
