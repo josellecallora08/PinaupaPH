@@ -9,7 +9,8 @@ const fs = require('fs').promises
 const pdf_template = require('../template/contract')
 
 module.exports.generate_contract = async (req, res) => {
-  const { deposit, advance, user_id, unit_id, from_date, to_date } = req.body
+  const { user_id, unit_id} = req.params
+  const { deposit, advance, from_date, to_date } = req.body
   try {
     const user_response = await USERMODEL.findById(user_id)
     const unit_response = await UNITMODEL.findById(unit_id)
@@ -81,38 +82,36 @@ module.exports.generate_contract = async (req, res) => {
 
 module.exports.generate_pdf = async (req, res) => {
   try {
-    const { user_id, unit_id } = req.params
-    const user_response = await USERMODEL.findById({ _id: user_id })
-    if (!user_response)
-      return res
-        .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'User Not found' })
+    const { user_id, unit_id } = req.params;
 
-    const unit_response = await UNITMODEL.findById({ _id: unit_id })
+    const user_response = await USERMODEL.findById(user_id);
+    if (!user_response)
+      return res.status(httpStatusCodes.NOT_FOUND).json({ error: 'User Not found' });
+
+    const unit_response = await UNITMODEL.findById(unit_id);
     if (!unit_response)
-      return res
-        .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'Unit Not found' })
+      return res.status(httpStatusCodes.NOT_FOUND).json({ error: 'Unit Not found' });
 
     const filePath = path.join(
       __dirname,
       '../documents/contracts',
-      `Lease_Agreement_${unit_response.unit_no}-${user_response.name}.pdf`,
-    )
+      `Lease_Agreement_${unit_response.unit_no}-${user_response.name}.pdf`
+    );
 
+    res.setHeader('Content-Disposition', `attachment; filename="Lease_Agreement_${unit_response.unit_no}-${user_response.name}.pdf"`);
+    res.setHeader('Content-Type', 'application/pdf');
+    
     res.sendFile(filePath, (err) => {
       if (err) {
-        console.error(err)
-        res.status(500).send('Error sending PDF')
+        console.error(err);
+        res.status(500).send('Error sending PDF');
       }
-    })
+    });
   } catch (err) {
-    console.error({ error: err.message })
-    return res
-      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error' })
+    console.error({ error: err.message });
+    return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Server Error' });
   }
-}
+};
 module.exports.fetch_contract = async (req, res) => {
   try {
   } catch (err) {}
@@ -187,3 +186,4 @@ module.exports.remove_contract = async (req, res) => {
       .json({ error: 'Server Error' })
   }
 }
+
