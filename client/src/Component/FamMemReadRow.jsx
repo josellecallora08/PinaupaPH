@@ -6,7 +6,7 @@ const ReadRow = ({ contact, handleEditClick,handleDeleteClick }) => {
     
       <tr className='text-center'>
         <td className="px-4 py-2">{contact.fullName}</td>
-        <td className="px-4 py-2">{contact.address}</td>
+        <td className="px-4 py-2">{contact.relationship}</td>
         <td className="px-4 py-2">{contact.phoneNumber}</td>
         <td className="px-4 py-2">
           <button
