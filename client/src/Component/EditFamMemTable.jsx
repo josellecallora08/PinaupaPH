@@ -9,7 +9,7 @@ const Table = ({setIsEditFamilyMemForm}) => {
   const [editContactId, setEditContactId] = useState(null)
   const [editFormData, setEditFormData] = useState({
     fullName: '',
-    address: '',
+    relationship: '',
     phoneNumber: '',
   })
   const handleEditFormChange = (event) => {
@@ -30,7 +30,7 @@ const Table = ({setIsEditFamilyMemForm}) => {
 
     const formValues = {
       fullName: contact.fullName,
-      address: contact.address,
+      relationship: contact.relationship,
       phoneNumber: contact.phoneNumber,
     }
 
@@ -43,7 +43,7 @@ const Table = ({setIsEditFamilyMemForm}) => {
     const editedContact = {
       id: editContactId,
       fullName: editFormData.fullName,
-      address: editFormData.address,
+      relationship: editFormData.relationship,
       phoneNumber: editFormData.phoneNumber,
       email: editFormData.email,
     }
@@ -92,7 +92,7 @@ const Table = ({setIsEditFamilyMemForm}) => {
           <thead className='  bg-dark-blue  text-white sticky top-0 '>
             <tr className='text-center text-sm font-semibold  ' >
               <th className="py-5 ">Name</th>
-              <th className="">Address</th>
+              <th className="">Relationship</th>
               <th className="">Phone Number</th>
               <th className="">Actions</th>
             </tr>

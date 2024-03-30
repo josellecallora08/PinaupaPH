@@ -22,9 +22,9 @@ const EditableRow = ({
           <input className='p-1 border-2 rounded-md border-primary' 
             type="text"
             required="required"
-            placeholder="Enter address"
-            name="address"
-            value={editFormData.address}
+            placeholder="Enter Relationship"
+            name="relationship"
+            value={editFormData.relationship}
             onChange={handleEditFormChange}
           />
         </td>
