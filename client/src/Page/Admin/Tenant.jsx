@@ -50,9 +50,9 @@ const Tenant = () => {
               Add Tenant
             </button>
 
-            <div className="lg:text-xs flex items-center justify-center">
+            <div className="lg:text-sm flex items-center justify-center">
               <select
-                className=" lg:p-3 bg-white border  border-gray-400 hover:border-gray-500 rounded-md shadow leading-tight focus:outline-none focus:shadow-outline p-2 cursor-pointer appearance-none"
+                className=" lg:p-3 bg-white border  border-gray-400 hover:border-gray-500 rounded-md shadow leading-tight focus:outline-none focus:shadow-outline p-2 cursor-pointer"
                 value={selectedOption}
                 onChange={handleOptionChange}
                 style={{ color: selectedOption ? 'black' : 'gray' }}
