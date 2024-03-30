@@ -85,7 +85,7 @@ const ApartmentProfile = () => {
           <SearchBar onSearch={handleSearch} className="lg:w-1/2  flex-1  " />
           <button
             onClick={toggleAddRoomForm}
-            className="lg:w-64 lg:mr-20 lg:text-base md:text-base md:w-56 md:mr-10 uppercase w-36 ml-14 px-2 mr-10   text-sm text-white rounded-lg bg-dark-blue flex items-center justify-center gap-2 "
+            className="lg:w-48 lg:mr-20 lg:text-sm md:text-sm md:w-36 md:mr-10 uppercase w-28 ml-14 px-1 mr-10 text-xs text-white rounded-lg bg-dark-blue flex items-center justify-center gap-2 "
           >
             <FaPlus />
             Add Room
@@ -94,7 +94,7 @@ const ApartmentProfile = () => {
 
         <div>
           <select
-          className='lg:ml-10 lg:w-48 lg:h-12  ml-7  bg-white text-black w-40 h-10 p-1 rounded-lg border-2'
+          className='lg:ml-10 lg:p-3 text-sm border-gray-400 hover:border-gray-500 rounded-md shadow leading-tight focus:outline-none focus:shadow-outline  cursor-pointer  ml-7  bg-white text-black  p-2 border-2'
             value={selectedOption}
             onChange={handleOptionChange}
             style={{ color: selectedOption ? 'black' : 'gray' }}
