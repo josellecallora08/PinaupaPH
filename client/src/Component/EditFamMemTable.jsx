@@ -78,8 +78,8 @@ const Table = ({setIsEditFamilyMemForm}) => {
           Edit Family Member Details
         </h1>
       </div>
-      <form action="" onSubmit={handleEditFormSubmit} className='flex flex-col hover:overflow-y-auto h-96 flex-shrink-0'>
-      <div className="lg:justify-between lg:flex lg:items-center lg:mb-5 mb-3">
+      <form action="" onSubmit={handleEditFormSubmit} className='flex flex-col overflow-y-auto h-96 '>
+      <div className="lg:justify-between lg:flex lg:items-center lg:-mb-1 mb-3">
             <button className="absolute top-4 right-6">
               <IoMdClose
                 onClick={() => setIsEditFamilyMemForm((prevState) => !prevState)}
@@ -118,7 +118,7 @@ const Table = ({setIsEditFamilyMemForm}) => {
           </tbody>
         </table>
         {contacts.length <= 4 && (
-  <div className="flex justify-end absolute bottom-0 right-0 mb-10 mr-10 gap-3">
+  <div className="flex justify-end absolute bottom-4 right-0 mb-5 mr-10 gap-3">
     <button
       type="submit"
       className="bg-primary text-white font-bold py-2 px-4 rounded"
@@ -128,10 +128,10 @@ const Table = ({setIsEditFamilyMemForm}) => {
   </div>
 )}
 {contacts.length > 4 && (
-  <div className="flex justify-end mb-10 mt-2 mr-10">
+  <div className="flex justify-end mb-8 mt-3 mr-10">
       <button
       type="submit"
-      className=" bg-primary text-white font-bold py-2 px-4  rounded"
+      className=" bg-primary text-white font-bold py-2 px-4 rounded"
     >
       Submit
     </button>

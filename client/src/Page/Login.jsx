@@ -1,5 +1,5 @@
 import logImg from '/login.svg'
-import logo from '/pinaupa-logo.svg'
+import logo from '/logo.svg'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { isLogin, isLoggedin } from '../features/authentication'
@@ -32,75 +32,56 @@ const Login = () => {
   }, [dispatch, navigate])
 
   return (
-    <div className=" overflow-hidden max-h-screen max-w-screen">
-      <div className="hidden lg:flex lg:items-center lg:justify-between w-screen px-20 pt-5">
-        <div>
-          <img src={logo} alt="logo" className=" w-40 h-auto" />
+    <>
+      <div className="w-full h-screen bg-white1">
+        <div className="  lg:items-start lg:ml-28 flex flex-col items-center justify-center ">
+          <img
+            src={logo}
+            alt="PinaupaPH logo"
+            className="lg:w-56 w-1/2 my-10"
+          />
         </div>
-      </div>
-
-      <div className=" flex flex-col w-screen h-screen items-center lg:flex-row justify-center">
-        <div className="my-30 lg:hidden">
-          <div>
-            <img src={logo} alt="logo" />
-          </div>
-        </div>
-        <form
-          className="flex flex-col gap-2 w-full px-20 lg:w-1/2"
-          onSubmit={handleSubmit}
-        >
-          <div className=" hidden lg:block lg:-mt-20 -mt-40">
-            <h1 className="text-dark-blue text-4xl font-medium">Log In</h1>
-            <p className="lg:py-2 text-dark-gray text-lg ">
-              Log in to your apartment rental management software.
-            </p>
-          </div>
-          <p className="text-dark-gray text-left mb-3 lg:hidden">
-            Login to your Account
-          </p>
-          <div>
-            <label className="relative cursor-pointer">
+        <div className="lg:flex lg:flex-row-reverse lg:justify-between mx-10 ">
+          <img src={logImg} alt="" className="lg:w-1/3 lg:mr-24 w-10/12 mb-7 ml-8" />
+          <p className="lg:hidden text-lg text-dark-gray">Log in to your account</p>
+          <form action="" className='lg:w-1/3 lg:ml-20 lg:rounded-md lg:p-14 lg:bg-white lg:shadow-md '>
+            <h1 className='lg:text-4xl lg:font-bold lg:block hidden '>Log in</h1>
+            <div className="flex flex-col text-lg text-primary font-bold mt-3">
+              <label htmlFor="email">Email</label>
               <input
-                type="text"
-                placeholder="Username"
-                name="username"
+                type="email"
+                name="email"
                 value={credentials.username}
-                className=" text-lg text-black font-normal bg-gray rounded-lg  outline-none placeholder-dark-gray placeholder-opacity-0 pt-7 pl-2 pb-2 w-full"
                 onChange={handleInputChange}
+                placeholder="e.g juan.delacruz@gmail.com"
+                className="border-2 border-dark-gray w-full p-3 rounded-md"
               />
-              <span className="text-medium text-light-gray text-opacity-80  absolute left-1 bottom-5 px-1 ">
-                Username
-              </span>
-            </label>
-          </div>
-          <div>
-            <label className="relative cursor-pointer">
+            </div>
+            <div className="flex flex-col text-lg text-primary font-bold mt-3">
+              <label htmlFor="password">Password</label>
               <input
                 type="password"
-                placeholder="Password"
                 name="password"
                 value={credentials.password}
-                className=" text-lg text-black font-normal bg-gray rounded-lg  outline-none placeholder-dark-gray placeholder-opacity-0 pt-7 pl-2 pb-2 w-full"
                 onChange={handleInputChange}
+                placeholder="********"
+                className="border-2 border-dark-gray w-full p-3 rounded-md"
               />
-              <span className="text-medium text-light-gray text-opacity-80  absolute left-1 bottom-5 px-1 ">
-                Password
-              </span>
-            </label>
-          </div>
-          <button
-            className="lg:mt-2 py-4 rounded-lg text-white bg-dark-blue text-xl hover:opacity-80"
-            type="submit"
-          >
-            Login
-          </button>
-        </form>
+            </div>
 
-        <div className="hidden lg:block mb-40 mt-20">
-          <img src={logImg} alt="login" className=" w-9/12" />
+            <p className="text-end text-dark-gray font-bold mt-3">
+              Forgot Password?
+            </p>
+            <button
+              onClick={handleSubmit}
+              className="bg-dark-blue text-lg w-full p-3 rounded-md mt-4 uppercase text-dark-gray"
+            >
+              Login
+            </button>
+          </form>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

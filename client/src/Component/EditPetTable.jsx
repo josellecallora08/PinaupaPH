@@ -77,8 +77,8 @@ const EditPetTable = ({setIsEditPetForm}) => {
           Edit Pet Details
         </h1>
       </div>
-      <form action="" onSubmit={handleEditFormSubmit} className='flex flex-col hover:overflow-y-auto h-96 flex-shrink-0'>
-      <div className="lg:justify-between lg:flex lg:items-center lg:mb-5 mb-3">
+      <form action="" onSubmit={handleEditFormSubmit} className='flex flex-col overflow-y-auto h-96 flex-shrink-0'>
+      <div className="lg:justify-between lg:flex lg:items-center lg:-mb-1 mb-3">
             <button className="absolute top-4 right-6">
               <IoMdClose
                 onClick={() => setIsEditPetForm((prevState) => !prevState)}
