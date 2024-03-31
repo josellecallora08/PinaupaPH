@@ -2,7 +2,7 @@ const TENANTMODEL = require('../models/tenant')
 const httpStatusCodes = require('../constants/constants')
 const cloudinary = require('cloudinary').v2
 
-// ? Tested API
+// ?* Tested API
 module.exports.fetch_all_household = async (req, res) => {
   try {
     const { user_id } = req.params
@@ -20,10 +20,11 @@ module.exports.fetch_all_household = async (req, res) => {
       .json({ error: err.message })
   }
 }
-// ? Tested API
+// ?* Tested API
 module.exports.fetch_household = async (req, res) => {
   try {
-    const { user_id, household_id } = req.params
+    const { user_id } = req.params
+    const { household_id } = req.query
     const tenant = await TENANTMODEL.findOne({ user_id: user_id })
     if (!tenant)
       return res
@@ -44,7 +45,7 @@ module.exports.fetch_household = async (req, res) => {
       .json({ error: 'Internal Server Error' })
   }
 }
-// ? Tested API
+// * Tested API
 module.exports.create_household = async (req, res) => {
   try {
     const { user_id } = req.params
@@ -83,9 +84,10 @@ module.exports.create_household = async (req, res) => {
       .json({ error: 'Internal Server Error' })
   }
 }
-// ? Tested API
+// * Tested API
 module.exports.update_household = async (req, res) => {
-  const { user_id, household_id } = req.params
+  const { user_id } = req.params
+  const { household_id } = req.query
   const { name, relationship, birthday, mobile } = req.body
   const details = {}
 
@@ -137,10 +139,11 @@ module.exports.update_household = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
-// ? Tested API
+// * Tested API
 module.exports.delete_household = async (req, res) => {
   try {
-    const { user_id, household_id } = req.params
+    const { user_id } = req.params
+    const { household_id } = req.query
     const response = await TENANTMODEL.findOne({ user_id: user_id })
     if (!response) {
       return res
@@ -148,7 +151,7 @@ module.exports.delete_household = async (req, res) => {
         .json({ error: 'User not found' })
     }
     const index = response.household.findIndex(
-      (item) => item._id.toString() === household_id
+      (item) => item._id.toString() === household_id,
     )
     if (index === -1) {
       return res
