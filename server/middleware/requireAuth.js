@@ -2,23 +2,23 @@ const jwt = require('jsonwebtoken')
 const httpStatusCodes = require('../constants/constants')
 
 const requireAuth = async (req, res, next) => {
-  const { authorization } = req.headers
-  if (!authorization) {
-    return res
-      .status(httpStatusCodes.UNAUTHORIZED)
-      .json({ error: 'Unauthorized action' })
-  }
   try {
-    const token = authorization.replace('Bearer ', '')
-    const decode_token = jwt.verify(token, process.env.SECRET)
+    const { authorization } = req.headers
+    if (!authorization)
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Token not found...' })
 
-    req.user = decode_token
+    const token = authorization.replace(`Bearer `, '')
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+
+    req.user = decodedToken
     next()
   } catch (err) {
-    console.error({ error: err.message })
+    console.log(`Unable to proceed from middleware`)
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: 'Internal Server Error' })
   }
 }
 
