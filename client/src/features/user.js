@@ -64,7 +64,7 @@ export const createTenant = (fields) => async (dispatch) => {
     const json = await userRegister.json()
     dispatch(fetchUserSuccess(json))
     // navigate('/dashboard')
-  } catch (error) {
+  } catch (err) {
     dispatch(actionUserFailed(err.message))
   }
 }
