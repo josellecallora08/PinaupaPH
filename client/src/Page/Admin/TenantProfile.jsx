@@ -5,13 +5,11 @@ import { RxDotsVertical } from "react-icons/rx";
 import TenantProfileInfo from '../../Data/TenantProfileInfo'
 import EditTenantDetails from '../../Component/EditTenantDetails'
 import EditTenantAccount from '../../Component/EditTenantAccount'
-import EditPet from '../../Component/EditPet'
 import EditFamMemTable from '../../Component/EditFamMemTable'
 import { payment_url } from '../../utils/constants'
 import DocumentCard from '../../Component/DocumentCard'
 import AddHousehold from '../../Component/AddHousehold'
 import EditApartment from '../../Component/EditApartment';
-import PfApartmentDetails from '../../Component/EditApartmentDetails';
 import TransactionTable from '../../Component/TransactionTable';
 import TransactionMobile from '../../Component/TransactionMobile';
 import { GrFormView,GrFormAdd } from "react-icons/gr";

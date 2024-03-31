@@ -1,11 +1,16 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import { MdOutlineModeEditOutline, MdOutlineClose} from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUnit } from '../features/unit';
 import apartment from '../features/apartment';
+import EditApartmentUnit from './EditApartmentUnit';
 
 
 const ApartmentStatusCard = ({apartmentId, unitId}) => {
+  const [isEditApartmentUnit, setIsEditApartmentUnit] = useState(false)
+  const toggleisEditApartmentUnit = () => {
+    setIsEditApartmentUnit(!isEditApartmentUnit)
+  }
   const dispatch = useDispatch()
   const unit = useSelector(state => state.unit.data)
   const loading = useSelector(state => state.unit.loading)
@@ -22,7 +27,7 @@ const ApartmentStatusCard = ({apartmentId, unitId}) => {
         <div className="relative pt-8 flex-grow bg-white ">
             <p><span className='text-2xl font-black ml-5'>PHP 10,000</span>/per month</p>
             <div className='lg:justify-end lg:mr-5 md:justify-end md:mr-5  lg:mt-14 flex gap-2 mt-16 ml-44 pb-2'>
-              <button className='lg:p-2  bg-blue p-1 rounded-md'><MdOutlineModeEditOutline size={15} color='white'/></button>
+              <button className='lg:p-2  bg-blue p-1 rounded-md' onClick={toggleisEditApartmentUnit}><MdOutlineModeEditOutline size={15} color='white'/></button>
               <button className='lg:p-2  bg-red p-1 rounded-md'><MdOutlineClose size={15} color='white'/></button>
             </div>
             
@@ -30,6 +35,14 @@ const ApartmentStatusCard = ({apartmentId, unitId}) => {
         <div className="absolute top-3 -right-9 w-28 h-8 bg-dark-blue text-white p-2 rotate-45">
           <p className="text-xs text-center text-white font-bold uppercase">Rented</p>
         </div>
+
+        {isEditApartmentUnit && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="pb-5 mt-14 bg-white rounded-lg">
+            <EditApartmentUnit />
+          </div>
+        </div>
+      )}
     </div>
     </>
 
