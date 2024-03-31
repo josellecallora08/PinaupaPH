@@ -7,6 +7,10 @@ import documentReducer from '../features/documents'
 import userReducer from '../features/user'
 import paymentReducer from '../features/payment'
 import menuReducer from '../features/menu'
+import commentReducer from '../features/comment'
+import reportReducer from '../features/report'
+import householdReducer from '../features/household'
+import petReducer from '../features/pet'
 
 export const store = configureStore({
   reducer: {
@@ -18,5 +22,9 @@ export const store = configureStore({
     user: userReducer,
     payment: paymentReducer,
     toggle: menuReducer,
+    comment: commentReducer,
+    report: reportReducer,
+    household: householdReducer,
+    pet: petReducer
   },
 })
