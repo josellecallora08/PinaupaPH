@@ -6,13 +6,21 @@ const httpStatusCodes = require('../constants/constants')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const cloudinary = require('cloudinary').v2
-const createToken = ({ id, username, role }) => {
+
+const createToken = (id, username, role) => {
   return jwt.sign({ id, username, role }, process.env.SECRET, {
     expiresIn: '3d',
   })
 }
-// ? Done Testing API
+// * Done Testing API
 module.exports.sign_up = async (req, res) => {
+  const role = req.user.role
+  if (role !== 'Admin') {
+    return res
+      .status(httpStatusCodes.BAD_REQUEST)
+      .json({ error: 'Unauthorized. Only admin can add tenants.' })
+  }
+
   const {
     name,
     username,
@@ -120,7 +128,7 @@ module.exports.sign_up = async (req, res) => {
       .json({ error: err.message })
   }
 }
-// ? Done Testing API
+// * Done Testing API
 module.exports.sign_in = async (req, res) => {
   const { username, password } = req.body
   try {
@@ -153,9 +161,10 @@ module.exports.sign_in = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
+// * Tested API
 module.exports.search_user = async (req, res) => {
   try {
-    const { filter } = req.params
+    const { filter } = req.query
     let search = await TENANTMODEL.aggregate([
       {
         $lookup: {
@@ -220,8 +229,14 @@ module.exports.search_user = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
-// ? Tested API
+// * Tested API
 module.exports.fetch_users = async (req, res) => {
+  // const role = req.user.role
+  // if (role !== 'Admin') {
+  //   return res
+  //     .status(httpStatusCodes.BAD_REQUEST)
+  //     .json({ error: 'Unauthorized. Only admin can add tenants.' })
+  // }
   let user = await TENANTMODEL.find()
     .populate({
       path: 'user_id',
@@ -243,7 +258,7 @@ module.exports.fetch_users = async (req, res) => {
     }
 
     user = user.map((item) => ({
-      _id: item._id,
+      _id: item.user_id._id,
       // image: item.user_id.profile_image,
       name: item.user_id.name,
       username: item.user_id.username,
@@ -257,7 +272,10 @@ module.exports.fetch_users = async (req, res) => {
       deposit: item.deposit,
       advance: item.advance,
       balance: item.balance,
-      monthly_due: new Date(item.monthly_due).toDateString(),
+      monthly_due:
+        item.monthly_due !== null
+          ? new Date(item.monthly_due).toDateString()
+          : null,
     }))
 
     return res.status(httpStatusCodes.OK).json(user)
@@ -268,14 +286,14 @@ module.exports.fetch_users = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
-// ? Tested API
+// * Tested API
 module.exports.fetch_user = async (req, res) => {
   const { user_id } = req.params
   let user = await TENANTMODEL.findOne({ user_id: user_id })
     .populate({
       path: 'user_id',
       model: USERMODEL,
-      select: 'name username',
+      select: 'name username email mobile_no role',
     })
     .populate({
       path: 'unit_id',
@@ -295,12 +313,18 @@ module.exports.fetch_user = async (req, res) => {
       // image: user.user_id.profile_image,
       name: user.user_id.name,
       username: user.user_id.username,
+      email: user.user_id.email,
+      phone: user.user_id.mobile_no,
+      role: user.user_id.role,
       unit_no: user.unit_id.unit_no,
       rent: user.unit_id.rent,
       deposit: user.deposit,
       advance: user.advance,
       balance: user.balance,
-      monthly_due: user.monthly_due,
+      monthly_due:
+        user.monthly_due !== null
+          ? new Date(user.monthly_due).toDateString()
+          : null,
     }
 
     return res.status(httpStatusCodes.OK).json(user)
@@ -311,7 +335,7 @@ module.exports.fetch_user = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
-// ? Done checking on POSTMAN API
+// * Done checking on POSTMAN API
 module.exports.update_profile = async (req, res) => {
   const { user_id } = req.params
   const {
@@ -366,10 +390,77 @@ module.exports.update_profile = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
-// Change Profile Picture
+// * Tested API
+module.exports.update_unit_info = async (req, res) => {
+  try {
+    const role = req.user.role
+    if (role !== 'Admin') {
+      return res.status(httpStatusCodes.UNAUTHORIZED).json({
+        error: 'Unauthorized. Only admin can update tenant information.',
+      })
+    }
+
+    const { user_id } = req.params
+    const { unit_id, deposit } = req.body
+
+    // Find the current tenant
+    const tenant = await TENANTMODEL.findOne({ user_id: user_id })
+    if (!tenant) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'User not found' })
+    }
+
+    // Retrieve the current unit assigned to the tenant
+    const currentUnit = await UNITMODEL.findById(tenant.unit_id)
+    if (!currentUnit) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Current unit not found' })
+    }
+
+    // Update the status of the current unit to false
+    currentUnit.occupied = false
+    await currentUnit.save()
+
+    // Update tenant information with the new unit
+    if (unit_id) {
+      tenant.unit_id = unit_id
+      console.log('15')
+    }
+    if (deposit) {
+      tenant.deposit = deposit
+    }
+    await tenant.save()
+
+    // Update the status of the new unit to true or occupied
+    if (unit_id) {
+      const newUnit = await UNITMODEL.findById(unit_id)
+      if (!newUnit) {
+        return res
+          .status(httpStatusCodes.NOT_FOUND)
+          .json({ error: 'New unit not found' })
+      }
+      newUnit.occupied = true // Assuming "true" means occupied
+      await newUnit.save()
+      console.log('1')
+    }
+
+    return res
+      .status(httpStatusCodes.OK)
+      .json({ message: 'Tenant information updated successfully' })
+  } catch (err) {
+    console.error({ error: err.message })
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Server Error' })
+  }
+}
+// * Tested API
 module.exports.update_profile_picture = async (req, res) => {
   try {
-    const { user_id, public_id } = req.params
+    const user_id = req.user.id
+    const { public_id } = req.query
     const profile_image = req.file
     // console.log(profile_image)
     const b64 = Buffer.from(profile_image.buffer).toString('base64')
@@ -416,24 +507,32 @@ module.exports.update_profile_picture = async (req, res) => {
       .json({ error: `Server Error: ${err.message}` })
   }
 }
-//  ? Tested API
+//  * Tested API
 module.exports.delete_tenant = async (req, res) => {
   try {
-    const { user_id } = req.params
+    const role = req.user.role
+    if (role !== 'Admin') {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unauthorized. Only admin can add tenants.' })
+    }
+
+    const { user_id } = req.query
     const response = await USERMODEL.findByIdAndDelete({ _id: user_id })
     if (!response) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'User not found...' })
     }
+
+    await cloudinary.uploader.destroy(response.profile_image.public_id)
+    console.log('deleted successfully!')
     if (response.role === 'Tenant') {
       const tenant = await TENANTMODEL.findOneAndDelete({ user_id: user_id })
       if (!tenant)
         return res
           .status(httpStatusCodes.BAD_REQUEST)
           .json({ error: 'Unable to Locate Tenant' })
-
-      const pet = await TENANTMODEL.findOneAndDelete({})
 
       const unit = await UNITMODEL.findByIdAndUpdate(
         { _id: tenant.unit_id },

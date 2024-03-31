@@ -63,7 +63,7 @@ const TENANTMODEL = new mongoose.Schema(
     unit_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'units',
-      required: true,
+      // required: true,
     },
     deposit: {
       type: Number,

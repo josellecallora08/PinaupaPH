@@ -1,42 +1,52 @@
 const TENANTMODEL = require('../models/tenant')
-const USERMODEL = require('../models/user')
-const UNITMODEL = require('../models/unit')
 const httpStatusCodes = require('../constants/constants')
-const cloudinary = require('cloudinary').v2
-// ? Tested API
+// * Tested API
 module.exports.fetch_all_pets = async (req, res) => {
-  try{
-    const {user_id} = req.params
-    const tenant = await TENANTMODEL.findOne({user_id:user_id})
-    if(!tenant)
-      return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Tenant not found"})
-    
+  try {
+    const user_id = req.user.id
+    const tenant = await TENANTMODEL.findOne({ user_id: user_id })
+    if (!tenant)
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Tenant not found' })
+
     return res.status(httpStatusCodes.OK).json(tenant.pet)
-  }catch(err){
+  } catch (err) {
     console.log(err.message)
-    return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({error: err.message})
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
   }
 }
-module.exports.fetch_pet = async (req,res) => {
-  try{
-    const {user_id, pet_id} = req.params
-    const tenant = await TENANTMODEL.findOne({user_id:user_id})
-    if(!tenant)
-      return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Tenant not found"})
+// * Tested API
+module.exports.fetch_pet = async (req, res) => {
+  try {
+    const user_id = req.user.id
+    const { pet_id } = req.query
+    const tenant = await TENANTMODEL.findOne({ user_id: user_id })
+    if (!tenant)
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Tenant not found' })
 
-    const pet = tenant.pet.filter(item => item._id.toString() === pet_id)
-    if(!pet) return res.status(httpStatusCodes.BAD_REQUEST).json({error: `Pet not found`})
+    const pet = tenant.pet.filter((item) => item._id.toString() === pet_id)
+    if (!pet)
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: `Pet not found` })
 
     return res.status(httpStatusCodes.OK).json(pet)
-  }catch(err){
+  } catch (err) {
     console.log(err.message)
-    return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({error: err.message})
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
   }
 }
-// ? Tested API
+// * Tested API
 module.exports.create_pet = async (req, res) => {
   try {
-    const { user_id } = req.params
+    const user_id = req.user.id
     const { name, birthday, species } = req.body
     const response = await TENANTMODEL.findOne({ user_id: user_id })
     if (!response) {
@@ -66,16 +76,17 @@ module.exports.create_pet = async (req, res) => {
       .status(httpStatusCodes.CREATED)
       .json({ msg: 'Created pet successfully!' })
   } catch (err) {
-    console.error({ error: err.message })
+    // console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: 'Internal Server Error' })
   }
 }
-// ? Tested API
+// * Tested API
 module.exports.update_pet = async (req, res) => {
   try {
-    const { user_id, pet_id } = req.params
+    const user_id = req.user.id
+    const { pet_id } = req.params
     const { name, birthday, species } = req.body
     const details = {}
 
@@ -116,10 +127,11 @@ module.exports.update_pet = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
-// ? Tested API
+// * Tested API
 module.exports.delete_pet = async (req, res) => {
   try {
-    const { user_id, pet_id } = req.params
+    const user_id = req.user.id
+    const { pet_id } = req.params
     const response = await TENANTMODEL.findOne({ user_id: user_id })
     if (!response) {
       return res
