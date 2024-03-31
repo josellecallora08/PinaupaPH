@@ -39,15 +39,15 @@ const router = Router()
 router.post('/search', requireAuth, search_user)
 router.get('/', requireAuth, fetch_users)
 router.get('/:user_id', requireAuth, fetch_user)
-router.get('/:user_id/household', fetch_all_household)
-router.get('/:user_id/household/:household_id', fetch_household)
-router.get('/fetch/pets', requireAuth, fetch_all_pets)
-router.get('/fetch/pet/v1', requireAuth, fetch_pet)
+router.get('/:user_id/household', requireAuth, fetch_all_household)
+router.get('/:user_id/household/v1', requireAuth, fetch_household)
+router.get('/:user_id/fetch/pets', requireAuth, fetch_all_pets)
+router.get('/:user_id/fetch/pet/v1', requireAuth, fetch_pet)
 
 router.post('/', requireAuth, sign_up)
 router.post('/login', sign_in)
-router.post('/:user_id/create_household', create_household)
-router.post('/create_pet', requireAuth, create_pet)
+router.post('/:user_id/create_household', requireAuth, create_household)
+router.post('/:user_id/create_pet', requireAuth, create_pet)
 
 router.patch(
   '/display_picture',
@@ -56,15 +56,15 @@ router.patch(
   update_profile_picture,
 )
 router.patch('/:user_id/update_profile', requireAuth, update_profile)
-router.patch('/:user_id/update_household/:household_id', update_household)
-router.patch('/update_pet/:pet_id', requireAuth, update_pet)
+router.patch('/:user_id/update_household', requireAuth, update_household)
+router.patch('/:user_id/update_pet', requireAuth, update_pet)
 router.patch(
   '/:user_id/update-apartment-details',
   requireAuth,
   update_unit_info,
 )
 router.delete('/delete_tenant', requireAuth, delete_tenant)
-router.delete('/:user_id/delete_household/:household_id', delete_household)
-router.delete('/delete_pet/:pet_id', requireAuth, delete_pet)
+router.delete('/:user_id/delete_household', requireAuth, delete_household)
+router.delete('/:user_id/delete_pet', requireAuth, delete_pet)
 
 module.exports = router

@@ -3,7 +3,7 @@ const httpStatusCodes = require('../constants/constants')
 // * Tested API
 module.exports.fetch_all_pets = async (req, res) => {
   try {
-    const user_id = req.user.id
+    const { user_id } = req.params
     const tenant = await TENANTMODEL.findOne({ user_id: user_id })
     if (!tenant)
       return res
@@ -21,7 +21,7 @@ module.exports.fetch_all_pets = async (req, res) => {
 // * Tested API
 module.exports.fetch_pet = async (req, res) => {
   try {
-    const user_id = req.user.id
+    const { user_id } = req.params
     const { pet_id } = req.query
     const tenant = await TENANTMODEL.findOne({ user_id: user_id })
     if (!tenant)
@@ -46,7 +46,7 @@ module.exports.fetch_pet = async (req, res) => {
 // * Tested API
 module.exports.create_pet = async (req, res) => {
   try {
-    const user_id = req.user.id
+    const { user_id } = req.params
     const { name, birthday, species } = req.body
     const response = await TENANTMODEL.findOne({ user_id: user_id })
     if (!response) {
@@ -85,8 +85,8 @@ module.exports.create_pet = async (req, res) => {
 // * Tested API
 module.exports.update_pet = async (req, res) => {
   try {
-    const user_id = req.user.id
-    const { pet_id } = req.params
+    const { user_id } = req.params
+    const { pet_id } = req.query
     const { name, birthday, species } = req.body
     const details = {}
 
@@ -130,8 +130,8 @@ module.exports.update_pet = async (req, res) => {
 // * Tested API
 module.exports.delete_pet = async (req, res) => {
   try {
-    const user_id = req.user.id
-    const { pet_id } = req.params
+    const { user_id } = req.params
+    const { pet_id } = req.query
     const response = await TENANTMODEL.findOne({ user_id: user_id })
     if (!response) {
       return res
