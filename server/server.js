@@ -13,7 +13,7 @@ const apartment_route = require('./routes/apartment')
 const document_route = require('./routes/document')
 const invoice_route = require('./routes/invoice')
 const payment_route = require('./routes/payment')
-const { scheduledInvoice } = require('./controllers/invoice_controller')
+const { scheduledInvoice, deleteOTP } = require('./controllers/invoice_controller')
 const app = express()
 app.use(express.json())
 const allowedOrigin = 'http://localhost:5173'
@@ -44,6 +44,7 @@ mongoose.connect(process.env.MONGODB_URI).then(() => {
   })
 })
 
+deleteOTP()
 scheduledInvoice() //Monthly Creation of Invoice
 app.use('/api/user', user_route)
 app.use('/api/cctv', cctv_route)

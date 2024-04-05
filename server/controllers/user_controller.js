@@ -5,6 +5,10 @@ const PAYMENTMODEL = require('../models/payment')
 const httpStatusCodes = require('../constants/constants')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const OTPMODEL = require('../models/otp')
+const nodemailer = require('nodemailer')
+const { emailContent } = require('../template/emailTemplate')
+
 const cloudinary = require('cloudinary').v2
 
 const createToken = (id, username, role) => {
@@ -12,6 +16,7 @@ const createToken = (id, username, role) => {
     expiresIn: '3d',
   })
 }
+
 // * Done Testing API
 module.exports.sign_up = async (req, res) => {
   const role = req.user.role
@@ -553,5 +558,108 @@ module.exports.delete_tenant = async (req, res) => {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: 'Server Error...' })
+  }
+}
+
+module.exports.forgot_password = async (req, res) => {
+  try {
+    const { email } = req.query
+    const response = await USERMODEL.findOne({ email: email })
+    if (!response)
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: `${email} does not exists.` })
+
+    const pin = Math.floor(100000 + Math.random() * 900000)
+    // Save pin, email, and expiration timestamp in a database
+    let expirationTime = new Date()
+    expirationTime = expirationTime.setMinutes(expirationTime.getMinutes() + 10) // Expires after 10 minutes
+    // Assuming you have a method in your user model to save the pin and expiration time
+    await OTPMODEL.create({ email, pin, expiry: expirationTime })
+
+    // Send the pin to the provided email
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'pinaupaph@gmail.com', // Your Gmail address
+        pass: 'vszrgpllqzonfuwr', // Your Gmail password
+      },
+    })
+
+    await transporter.sendMail({
+      from: 'pinaupaph@gmail.com',
+      to: email,
+      subject: 'Password Reset Pin',
+      html: emailContent(response.name, pin),
+    })
+
+    return res
+      .status(httpStatusCodes.OK)
+      .json({ msg: `OTP has been sent your email: ${email} ` })
+  } catch (err) {
+    console.error('Error in forgot password:', err)
+    res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Internal server error.' })
+  }
+}
+
+module.exports.check_otp = async (req, res) => {
+  try {
+    const { email, pin } = req.query
+
+    const response = await OTPMODEL.findOne({ email: email })
+    if (!response)
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: `${pin} not found` })
+
+    if (response.attempts <= 0) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'No attempts left, Please try again later.' })
+    }
+
+    if (response.pin !== pin) {
+      response.attempts = response.attempts - 1
+      await response.save()
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: `Invalid OTP, ${response.attempts} attempts left` })
+    }
+    const remove = await OTPMODEL.findByIdAndDelete(response._id)
+    if (!remove)
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unable to delete PIN' })
+
+    return res.status(httpStatusCodes.OK).json({ msg: 'Successfully' })
+  } catch (err) {
+    console.error('Error in forgot password:', err)
+    res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Internal server error.' })
+  }
+}
+
+module.exports.reset_password = async (req, res) => {
+  try {
+    const { email } = req.query
+    const { password } = req.body
+    const response = await USERMODEL.findOneAndUpdate(
+      { email: email },
+      { password: password },
+    )
+    if (!response)
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Failed to update password.' })
+
+    return res.status(httpStatusCodes.OK).json({ msg: 'Password updated..' })
+  } catch (err) {
+    console.error('Error in forgot password:', err)
+    res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Internal server error.' })
   }
 }
