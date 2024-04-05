@@ -27,6 +27,9 @@ const {
   search_user,
   update_profile_picture,
   update_unit_info,
+  forgot_password,
+  retrieve_password,
+  check_otp,
 } = require('../controllers/user_controller')
 const multer = require('multer')
 
@@ -35,6 +38,9 @@ const storage = multer.memoryStorage()
 const upload = multer({ storage })
 
 const router = Router()
+
+router.post('/forgot-password', forgot_password)
+router.post('/otp', check_otp)
 
 router.post('/search', requireAuth, search_user)
 router.get('/', requireAuth, fetch_users)
