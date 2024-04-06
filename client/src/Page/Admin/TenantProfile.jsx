@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { FaEdit } from 'react-icons/fa'
+import { MdDelete } from 'react-icons/md'
+
 import { RxDotsVertical } from 'react-icons/rx'
 import TenantProfileInfo from '../../Data/TenantProfileInfo'
 import EditTenantDetails from '../../Component/EditTenantDetails'
@@ -28,10 +30,21 @@ const TenantProfile = () => {
   const [isAddHouseholdForm, setIsAddHouseholdForm] = useState(false)
   const [isEditApartmentForm, setIsEditApartmentForm] = useState(false)
   const [isAddPetForm, setIsAddPetForm] = useState(false)
+  const [isRemovedot, setIsRemovedot] = useState(false)
   const dispatch = useDispatch()
   const { id } = useParams()
-  const tenant = useSelector(state => state.user.data)
+  const tenant = useSelector((state) => state.user.data)
 
+  const handleDeleteTenant = () => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this tenant?");
+    if (isConfirmed) {
+      // Perform the delete operation
+      console.log("Tenant deleted");
+    } else {
+      // Handle cancellation
+      console.log("Deletion cancelled");
+    }
+  };
   const toggleEditTenantDetailForm = () => {
     setIsEditTenantDetailForm(!isEditTenantDetailForm)
   }
@@ -43,6 +56,9 @@ const TenantProfile = () => {
   }
   const toggleEditPetForm = () => {
     setIsEditPetForm(!isEditPetForm)
+  }
+  const toggleRemoveDot = () => {
+    setIsRemovedot(!isRemovedot)
   }
   const handleTabClick = (tab) => {
     setActiveTab(tab)
@@ -108,7 +124,7 @@ const TenantProfile = () => {
                 {/* Upper section */}
                 {/* Left profile */}
                 <div className="lg:w-1/2  lg:rounded-lg lg:origin-left  ">
-                  <div className="lg:items-center flex gap-3 relative mb-7">
+                  <div className="lg:items-center flex gap-3 relative mb-7 ">
                     <img
                       src={profile.Account[0].pfp}
                       alt="Profile"
@@ -122,6 +138,21 @@ const TenantProfile = () => {
                         {profile.ApartmentDetails[0].aparmentunit}
                       </h2>
                     </div>
+                    <button onClick={handleDeleteTenant} className="hidden lg:flex lg:py-2 lg:px-3 absolute top-0 right-3  items-center gap-2 bg-red text-white py-1 px-2 rounded-md hover:opacity-80">
+                        <MdDelete />
+                        Delete
+                      </button>
+                    <div className="lg:hidden absolute top-1 right-2">
+                      <button className='relative text-xl rotate-90' onClick={toggleRemoveDot}><RxDotsVertical/></button>
+
+                      {isRemovedot && (
+                           <button onClick={handleDeleteTenant} className='flex items-center gap-2 absolute  rounded-md -right-1 bg-red text-white p-2 hover:opacity-80 '>
+                              <MdDelete /> Delete
+                           </button>
+                      )}
+                   
+
+                    </div>
                   </div>
 
                   {/*Profile Content */}
@@ -129,7 +160,9 @@ const TenantProfile = () => {
                   <div>
                     <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
                       <div>
-                        <h1 className="lg:text-xl font-bold ">Account {tenant?.name}</h1>
+                        <h1 className="lg:text-xl font-bold ">
+                          Account {tenant?.name}
+                        </h1>
                       </div>
                       <div>
                         <FaEdit
