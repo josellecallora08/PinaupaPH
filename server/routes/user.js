@@ -30,6 +30,7 @@ const {
   forgot_password,
   retrieve_password,
   check_otp,
+  fetch_data,
 } = require('../controllers/user_controller')
 const multer = require('multer')
 
@@ -43,8 +44,9 @@ router.post('/forgot-password', forgot_password)
 router.post('/otp', check_otp)
 
 router.post('/search', requireAuth, search_user)
-router.get('/', requireAuth, fetch_users)
-router.get('/:user_id', requireAuth, fetch_user)
+router.get('/tenants', requireAuth, fetch_users)
+router.get('/', requireAuth, fetch_data)
+router.get('/tenant', requireAuth, fetch_user)
 router.get('/:user_id/household', requireAuth, fetch_all_household)
 router.get('/:user_id/household/v1', requireAuth, fetch_household)
 router.get('/:user_id/fetch/pets', requireAuth, fetch_all_pets)

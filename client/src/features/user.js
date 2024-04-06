@@ -47,11 +47,12 @@ export const {
 
 export const createTenant = (fields) => async (dispatch) => {
   try {
-    dispatch(loginStart())
+    dispatch(fetchUserStart())
     const userRegister = await fetch(`${base_url}/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(fields),
       // credentials: 'include',
@@ -62,8 +63,10 @@ export const createTenant = (fields) => async (dispatch) => {
     }
 
     const json = await userRegister.json()
-    dispatch(fetchUserSuccess(json))
+    console.log(json.msg)
+    // dispatch(fetchUserSuccess(json))
     // navigate('/dashboard')
+    dispatch(fetchUsers())
   } catch (err) {
     dispatch(actionUserFailed(err.message))
   }
@@ -71,10 +74,11 @@ export const createTenant = (fields) => async (dispatch) => {
 
 export const fetchUser = (userId) => async (dispatch) => {
   try {
+    console.log(token)
     dispatch(fetchUserStart())
-    const user = await fetch(`${base_url}/${userId}`, {
+    const user = await fetch(`${base_url}/tenant?user_id=${userId}`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
       },
     })
 
@@ -91,7 +95,7 @@ export const fetchUser = (userId) => async (dispatch) => {
 export const fetchUsers = () => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
-    const user = await fetch(`${base_url}/`, {
+    const user = await fetch(`${base_url}/tenants`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -35,6 +35,7 @@ module.exports.sign_up = async (req, res) => {
     birthday,
     unit_id,
     deposit,
+    occupancy,
   } = req.body
   const details = {}
   if (name !== '') details.name = name
@@ -52,7 +53,7 @@ module.exports.sign_up = async (req, res) => {
   }
   if (mobile_no !== '') details.mobile_no = mobile_no
   if (birthday !== '') details.birthday = birthday
-
+  if(occupancy !== '') details.monthly_due = occupancy
   try {
     if (await USERMODEL.findOne({ username }))
       return res
@@ -67,7 +68,7 @@ module.exports.sign_up = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Mobile Number already exists.' })
 
-    const unit_status = await UNITMODEL.findById({ _id: unit_id })
+    const unit_status = await UNITMODEL.findById(unit_id)
     if (unit_status.occupied === true)
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -75,10 +76,12 @@ module.exports.sign_up = async (req, res) => {
 
     let response = await USERMODEL.create(details)
     console.log(response)
-    if (!response)
+    if (!response) {
+      console.log('dito wuahaha')
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unsuccessful registration. Please try again later.' })
+    }
 
     const imageUpload = await cloudinary.uploader.upload(
       `./template/profile-default.svg`,
@@ -246,7 +249,7 @@ module.exports.fetch_users = async (req, res) => {
     .populate({
       path: 'user_id',
       model: USERMODEL,
-      select: 'name username email birthday mobile_no role',
+      select: 'name username email profile_image birthday mobile_no role',
     })
     .populate({
       path: 'unit_id',
@@ -264,7 +267,8 @@ module.exports.fetch_users = async (req, res) => {
 
     user = user.map((item) => ({
       _id: item.user_id._id,
-      // image: item.user_id.profile_image,
+      image: item.user_id.profile_image.image_url,
+      image_id: item.user_id.profile_image.public_id,
       name: item.user_id.name,
       username: item.user_id.username,
       email: item.user_id.email,
@@ -291,14 +295,14 @@ module.exports.fetch_users = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
-// * Tested API
+
 module.exports.fetch_user = async (req, res) => {
-  const { user_id } = req.params
+  const {user_id }= req.query
   let user = await TENANTMODEL.findOne({ user_id: user_id })
     .populate({
       path: 'user_id',
       model: USERMODEL,
-      select: 'name username email mobile_no role',
+      select: 'name username email profile_image mobile_no role',
     })
     .populate({
       path: 'unit_id',
@@ -315,7 +319,82 @@ module.exports.fetch_user = async (req, res) => {
     }
 
     user = {
-      // image: user.user_id.profile_image,
+      id: user.user_id._id,
+      image: user.user_id.profile_image.image_url,
+      image_id: user.user_id.profile_image.public_id,
+      name: user.user_id.name,
+      username: user.user_id.username,
+      email: user.user_id.email,
+      phone: user.user_id.mobile_no,
+      role: user.user_id.role,
+      unit_no: user.unit_id.unit_no,
+      rent: user.unit_id.rent,
+      deposit: user.deposit,
+      advance: user.advance,
+      balance: user.balance,
+      monthly_due:
+        user.monthly_due !== null
+          ? new Date(user.monthly_due).toDateString()
+          : null,
+    }
+
+    return res.status(httpStatusCodes.OK).json(user)
+  } catch (err) {
+    console.error({ error: err.message })
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Server Error...' })
+  }
+}
+// * Tested API
+module.exports.fetch_data = async (req, res) => {
+  const user_id = req.user.id
+
+  try {
+    if (req.user.role === 'Admin') {
+      let response = await USERMODEL.findById(user_id)
+      if (!response)
+        return res
+          .status(httpStatusCodes.BAD_REQUEST)
+          .json({ error: 'User not found: Admin' })
+
+      response = {
+        id: response._id,
+        image: response.profile_image.image_url,
+        image_id: response.profile_image.public_id,
+        name: response.name,
+        username: response.username,
+        email: response.email,
+        phone: response.mobile_no,
+        role: response.role,
+      }
+
+      return res.status(httpStatusCodes.OK).json(response)
+    }
+
+    let user = await TENANTMODEL.findOne({ user_id: user_id })
+      .populate({
+        path: 'user_id',
+        model: USERMODEL,
+        select: 'name username email profile_image mobile_no role',
+      })
+      .populate({
+        path: 'unit_id',
+        model: UNITMODEL,
+        select: 'unit_no rent',
+      })
+      .select('-payment -household -pet -createdAt -updatedAt')
+
+    if (!user) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'User not found' })
+    }
+
+    user = {
+      id: user.user_id._id,
+      image: user.user_id.profile_image.image_url,
+      image_id: user.user_id.profile_image.public_id,
       name: user.user_id.name,
       username: user.user_id.username,
       email: user.user_id.email,
@@ -581,13 +660,13 @@ module.exports.forgot_password = async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'pinaupaph@gmail.com', // Your Gmail address
-        pass: 'vszrgpllqzonfuwr', // Your Gmail password
+        user: process.env.GOOGLE_EMAIL,
+        pass: process.env.GOOGLE_PASSWORD,
       },
     })
 
     await transporter.sendMail({
-      from: 'pinaupaph@gmail.com',
+      from: process.env.GOOGLE_EMAIL,
       to: email,
       subject: 'Password Reset Pin',
       html: emailContent(response.name, pin),

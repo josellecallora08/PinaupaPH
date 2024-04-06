@@ -1,36 +1,78 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import TenantCard from '../../Component/TenantCard'
 import SearchBar from '../../Component/SearchBar'
 import { FaPlus } from 'react-icons/fa6'
 import { useState } from 'react'
 import AddTenantForm from '../../Component/AddTenantForm'
-
+import {useDispatch, useSelector} from 'react-redux'
+import { createTenant, fetchUsers } from '../../features/user'
+import { fetchApartments } from '../../features/apartment'
+import { fetchUnits } from '../../features/unit'
 
 
 const Tenant = () => {
   const [searchItem, setSearchItem] = useState('')
   const [isAddTenantFormOpen, setIsAddTenantFormOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState('')
-  const [open, setOpen] = useState(false)
-
+  const [fields, setFields] = useState({
+    "name": '',
+    "username": '',
+    "birthday": '',
+    "mobile_no": '',
+    "email": '',
+    "password": '',
+    "unit_id": '',
+    "deposit": '',
+    "occupancy": ''
+  })
+  const dispatch = useDispatch()
+  const tenant = useSelector(state => state.user.data)
 
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value)
   }
-  const toggle = () => {
-    setOpen(!open)
-  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log('Form submitted')
-    setIsAddTenantFormOpen(!isAddTenantFormOpen)
+    dispatch(createTenant(fields))
+    setFields({
+      "name": '',
+      "username": '',
+      "birthday": '',
+      "mobile_no": '',
+      "email": '',
+      "password": '',
+      "unit_id": '',
+      "deposit": '',
+      "occupancy": ''
+    })
+    setIsAddTenantFormOpen(false)
   }
+  
   const toggleAddTenantForm = () => {
     setIsAddTenantFormOpen(!isAddTenantFormOpen)
   }
   const handleSearch = (e) => {
     setSearchItem(e.target.value)
   }
+
+  const handleInput = (e) => {
+    const { name, value } = e.target
+    setFields((fields) => ({
+      ...fields,
+      [name]: value
+    }))
+  }
+
+  useEffect(() => {
+    dispatch(fetchUsers())
+  },[dispatch])
+
+  useEffect(() => {
+    dispatch(fetchUnits())
+  }, [dispatch])
+
+
 
   return (
     <div className='w-full h-full'>
@@ -66,16 +108,24 @@ const Tenant = () => {
            </div>
       </div>
 
+
       {/* Body of Tenant Tab */}
       <div className="lg:grid-cols-2 md:grid-cols-2 grid grid-cols-1 ">
-        <TenantCard />
-        <TenantCard />
-        <TenantCard />
+        {tenant?.map((val,key) => (
+          <TenantCard
+          key={key}
+          data = {val} />
+        ))}
+        
       </div>
       {isAddTenantFormOpen && (
         <div className="fixed top-6 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white  rounded-md rounded-tl-lg rounded-tr-lg">
-            <AddTenantForm setIsAddTenantFormOpen={setIsAddTenantFormOpen} />
+            <AddTenantForm 
+            // setFields={setFields}
+            handleSubmit={handleSubmit}
+            handleInput={handleInput}
+            setIsAddTenantFormOpen={setIsAddTenantFormOpen} />
           </div>
         </div>
       )}
