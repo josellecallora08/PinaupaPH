@@ -1,0 +1,50 @@
+import React from 'react'
+import logo from '/logo.svg'
+import ForgotPass1 from '/ForgotPass1.svg'
+const ForgotPass = () => {
+
+  return (
+    <>
+      <div className=" w-full h-screen py-10 px-10">
+      <img src={logo} alt="PinaupaPH logo" className="lg:block lg:ml-10 hidden  " />
+        <div className="lg:flex-row lg:ml-20  flex flex-col items-center">
+          <div className="  lg:w-1/2 lg:mt-0 mt-5">
+            <img src={logo} alt="PinaupaPH logo" className="lg:hidden mx-auto" />
+            <img src={ForgotPass1} alt="Forgot Password Picture" className='lg:w-11/12' />
+          </div>
+
+          <div className='lg:shadow-md lg:rounded-md lg:shadow-dark-gray p-10'>
+            <div className="">
+              <h1 className="lg:text-3xl text-2xl font-bold text-primary">
+               Password Recovery 
+              </h1>
+              <p className="text-sm mt-3  text-dark-gray">
+                Enter your Email to reset your password.
+              </p>
+            </div>
+
+            <form action="" className="  w-full mt-3 ">
+              <label
+                htmlFor="email"
+                className="text-primary font-bold text-lg"
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                name='email'
+                placeholder="e.g juan.delacruz@gmail.com"
+                className="mr-10 rounded-md py-3 border-2 px-3 border-dark-gray w-full mt-2"
+              />
+              <button className="lg:mt-10 lg:mb-4 bg-primary text-white w-full mt-5 py-3 px-2 rounded-md hover:opacity-80">
+                Send
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default ForgotPass
