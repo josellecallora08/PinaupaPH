@@ -14,17 +14,32 @@ import TenantCard from './Component/TenantCard'
 import TenantProfile from './Page/Admin/TenantProfile'
 import ApartmentProfile from './Page/Admin/ApartmentProfile'
 import ViewConcern from './Page/Admin/ViewConcern'
-
+import { useSelector, useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { isLoggedin } from './features/authentication'
+import { useNavigate, Navigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
 function App() {
+  const token = Cookies.get('token')
+  const user = useSelector(state => state.auth.isAuthenticated)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    dispatch(isLoggedin(token))
+    console.log('1')
+  }, [])
+  
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Login />} />
       <Route
         path="/dashboard"
-        element={
+        element={user ?
           <Layout className="bg-white1">
             <Dashboard />
           </Layout>
+          : <Navigate to="/" />
         }
       />
       <Route

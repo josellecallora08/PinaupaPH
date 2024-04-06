@@ -45,13 +45,14 @@ export const {
   actionUserFailed,
 } = userSlice.actions
 
-export const createTenant = (fields) => async (dispatch) => {
+export const createTenant = ({fields}) => async (dispatch) => {
   try {
     dispatch(loginStart())
     const userRegister = await fetch(`${base_url}/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(fields),
       // credentials: 'include',
@@ -62,6 +63,7 @@ export const createTenant = (fields) => async (dispatch) => {
     }
 
     const json = await userRegister.json()
+    console.log(json)
     dispatch(fetchUserSuccess(json))
     // navigate('/dashboard')
   } catch (err) {
@@ -71,10 +73,11 @@ export const createTenant = (fields) => async (dispatch) => {
 
 export const fetchUser = (userId) => async (dispatch) => {
   try {
+    console.log(token)
     dispatch(fetchUserStart())
     const user = await fetch(`${base_url}/${userId}`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
       },
     })
 
@@ -91,7 +94,7 @@ export const fetchUser = (userId) => async (dispatch) => {
 export const fetchUsers = () => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
-    const user = await fetch(`${base_url}/`, {
+    const user = await fetch(`${base_url}/tenants`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

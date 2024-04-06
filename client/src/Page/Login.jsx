@@ -26,11 +26,6 @@ const Login = () => {
     console.log(credentials)
     dispatch(isLogin(credentials, navigate))
   }
-
-  useEffect(() => {
-    dispatch(isLoggedin(navigate))
-  }, [dispatch, navigate])
-
   return (
     <>
       <div className="w-full h-screen bg-white1">
@@ -49,9 +44,9 @@ const Login = () => {
             <div className="flex flex-col text-lg text-primary font-bold mt-3">
               <label htmlFor="email">Email</label>
               <input
-                type="email"
-                name="email"
-                value={credentials.username}
+                type="text"
+                name="username"
+                // value={credentials.username}
                 onChange={handleInputChange}
                 placeholder="e.g juan.delacruz@gmail.com"
                 className="border-2 border-dark-gray w-full p-3 rounded-md"
@@ -62,7 +57,7 @@ const Login = () => {
               <input
                 type="password"
                 name="password"
-                value={credentials.password}
+                // value={credentials.password}
                 onChange={handleInputChange}
                 placeholder="********"
                 className="border-2 border-dark-gray w-full p-3 rounded-md"

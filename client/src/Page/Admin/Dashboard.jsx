@@ -8,23 +8,41 @@ import peso from '/peso.svg'
 import delay from '/delay.svg'
 import house from '/house.svg'
 import { Progress } from 'flowbite-react'
-import renew from '/Renew.svg'
+import renew from '/renew.svg'
 import { Bar, Chart } from 'react-chartjs-2';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import {Chart as ChartJS,Title,Legend} from 'chart.js/auto';
+import { Chart as ChartJS, Title, Legend } from 'chart.js/auto';
 import rent from '/Rent.svg'
 import occupancy from '/occupancy.svg'
 import pay from '/PayDate.svg'
+import { useSelector, useDispatch } from 'react-redux'
+import { useEffect } from 'react';
+import { fetchUser } from '../../features/user';
+import Cookies from 'js-cookie'
+import { isLoggedin } from '../../features/authentication';
 
 const Dashboard = () => {
+  const user = useSelector(state => state.auth.user)
+  const token = Cookies.get('token')
+  const dispatch = useDispatch()
   // const data = [
   //   {name: "Completed", data: {"2021-01-01": 3}},
   //   {name: "Incomplete", data: {"2021-01-01": 5}}
   // ];
+
+  useEffect(() => {
+    dispatch(fetchUser(user?._id))
+  }, [])
+
+  useEffect(() => {
+    dispatch(isLoggedin(token))
+    console.log('1')
+  }, [])
+
   const percentage = 20;
   const maxValue = 40;
-
+  console.log(user)
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -32,25 +50,25 @@ const Dashboard = () => {
       legend: {
         position: 'bottom',
       },
-  
+
     },
   }
 
   const prc = "w-[56%]"
-  
+
   const data = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    datasets:[
+    datasets: [
       {
-        label:  'Sales for 2020',
-        data: [40000,50000,20000,10000,25000],
+        label: 'Sales for 2020',
+        data: [40000, 50000, 20000, 10000, 25000],
         backgroundColor: '#183044',
         borderWidth: 1,
       },
       {
-        label:  'Sales for 2021',
-        data: [60000,70000,30000,40000,55000],
-        backgroundColor:'gray',
+        label: 'Sales for 2021',
+        data: [60000, 70000, 30000, 40000, 55000],
+        backgroundColor: 'gray',
       },
     ]
   }
@@ -66,7 +84,7 @@ const Dashboard = () => {
               <img src={City} className='w-full h-full object-contain' alt="" />
             </figure>
             <div className='pr-5'>
-              <span className='text-base xl:text-2xl font-semibold'>Hey, Joselle E. Callora</span>
+              <span className='text-base xl:text-2xl font-semibold'>Hey, <span className='capitalize'>{user?.name}!</span></span>
             </div>
           </div>
           <div className='order-last md:order-none col-span-3 row-span-4 flex flex-col md:grid grid-cols-3 grid-rows-1 gap-2 '>
@@ -76,7 +94,7 @@ const Dashboard = () => {
               </div>
               <div className='w-full h-fit xl:h-full flex'>
                 <figure className='flex justify-center items-center h-full w-11/12 xl:w-11/12 m-auto'>
-                  <Bar data={data} options={options} className='py-2 md:py-5 h-60 md:h-auto'/>
+                  <Bar data={data} options={options} className='py-2 md:py-5 h-60 md:h-auto' />
                 </figure>
               </div>
             </div>
@@ -85,7 +103,7 @@ const Dashboard = () => {
                 <h1 className='text-[#9e9e9e] font-semibold py-2 lg:text-xl'>Recent Activity</h1>
                 <div className=' w-full h-full overflow-hidden md:group-hover:overflow-y-scroll'>
                   <div className='w-full h-auto md:max-h-[200px]'>
-                   
+
                     <div className='flex justify-between p-2 rounded-full md:rounded-md hover:bg-gray'>
                       <article className='flex items-center gap-2'>
                         <figure className='w-full h-full max-w-10 max-h-10 overflow-hidden'>
@@ -112,7 +130,7 @@ const Dashboard = () => {
                 <div className='w-full bg-primary max-w-20 flex items-center justify-center'>
                   <div className='rounded-full p-2 xl:p-3 bg-gray'>
                     <figure className='w-full h-full max-w-16 max-h-16'>
-                      <img src={pay} className='w-full h-full'  alt="" />
+                      <img src={pay} className='w-full h-full' alt="" />
                     </figure>
                   </div>
                 </div>
@@ -136,9 +154,9 @@ const Dashboard = () => {
               </div>
               <div className='col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md'>
                 <div className='bg-primary w-full max-w-20 flex items-center justify-center'>
-                <div className='rounded-full p-2 xl:p-3 bg-gray'>
+                  <div className='rounded-full p-2 xl:p-3 bg-gray'>
                     <figure className='w-full h-full md:max-w-16 md:max-h-16'>
-                      <img src={rent} className='w-full h-full'  alt="" />
+                      <img src={rent} className='w-full h-full' alt="" />
                     </figure>
                   </div>
                 </div>
@@ -164,7 +182,7 @@ const Dashboard = () => {
                 <div className='bg-primary w-full max-w-20 flex items-center justify-center'>
                   <div className='rounded-full p-2 xl:p-3 bg-gray'>
                     <figure className='w-full h-full max-w-16 max-h-16'>
-                      <img src={occupancy} className='w-full h-full'  alt="" />
+                      <img src={occupancy} className='w-full h-full' alt="" />
                     </figure>
                   </div>
                 </div>
@@ -190,7 +208,7 @@ const Dashboard = () => {
                 <div className='bg-primary w-full max-w-20 flex items-center justify-center'>
                   <div className='rounded-full p-2 xl:p-3 bg-gray'>
                     <figure className='w-full h-full max-w-5 xl:max-w-6 xl:max-h-6'>
-                      <img src={renew} className='w-full h-full'  alt="" />
+                      <img src={renew} className='w-full h-full' alt="" />
                     </figure>
                   </div>
                 </div>
@@ -218,7 +236,7 @@ const Dashboard = () => {
                 <h1 className='text-[#9e9e9e] font-semibold py-2 lg:text-lg'>Concern and Issue</h1>
                 <div className='w-full h-full flex items-center bg-white'>
                   {/* <BarChart data={data} width="90%" height="80%"/> */}
-                  <CircularProgressbar className='mx-auto lg:w-40 md:mx-auto md:w-40 w-32 mt-4 ' value={percentage} minValue={0} maxValue={maxValue} text={percentage +'/'+ maxValue} strokeWidth={15} styles={buildStyles({textColor: '#183044',pathColor: '#183044', trailColor: '#E7E8E9' })} />
+                  <CircularProgressbar className='mx-auto lg:w-40 md:mx-auto md:w-40 w-32 mt-4 ' value={percentage} minValue={0} maxValue={maxValue} text={percentage + '/' + maxValue} strokeWidth={15} styles={buildStyles({ textColor: '#183044', pathColor: '#183044', trailColor: '#E7E8E9' })} />
                 </div>
               </div>
             </div>

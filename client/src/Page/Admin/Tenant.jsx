@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import TenantCard from '../../Component/TenantCard'
 import SearchBar from '../../Component/SearchBar'
 import { FaPlus } from 'react-icons/fa6'
 import { useState } from 'react'
 import AddTenantForm from '../../Component/AddTenantForm'
-
+import {useDispatch, useSelector} from 'react-redux'
+import { fetchUsers } from '../../features/user'
+import { fetchApartments } from '../../features/apartment'
+import { fetchUnits } from '../../features/unit'
 
 
 const Tenant = () => {
@@ -12,8 +15,8 @@ const Tenant = () => {
   const [isAddTenantFormOpen, setIsAddTenantFormOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState('')
   const [open, setOpen] = useState(false)
-
-
+  const dispatch = useDispatch()
+  const tenant = useSelector(state => state.user.data)
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value)
   }
@@ -31,6 +34,12 @@ const Tenant = () => {
   const handleSearch = (e) => {
     setSearchItem(e.target.value)
   }
+
+  useEffect(() => {
+    dispatch(fetchUsers())
+  },[])
+
+
 
   return (
     <div className='w-full h-full'>
@@ -68,9 +77,12 @@ const Tenant = () => {
 
       {/* Body of Tenant Tab */}
       <div className="lg:grid-cols-2 md:grid-cols-2 grid grid-cols-1 ">
-        <TenantCard />
-        <TenantCard />
-        <TenantCard />
+        {tenant?.map((val,key) => (
+          <TenantCard
+          key={key}
+          data = {val} />
+        ))}
+        
       </div>
       {isAddTenantFormOpen && (
         <div className="fixed top-6 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">

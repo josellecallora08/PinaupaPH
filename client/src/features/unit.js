@@ -16,7 +16,7 @@ const unitSlice = createSlice({
     },
     fetchUnitSuccess: (state, action) => {
       state.loading = false
-      state.data = action.payload.units
+      state.data = action.payload
     },
     editUnitSuccess: (state, action) => {
       state.loading = false
@@ -68,10 +68,10 @@ export const createUnit = (fields, apartmentId) => async (dispatch) => {
   }
 }
 
-export const fetchUnits = (apartmentId) => async (dispatch) => {
+export const fetchUnits = () => async (dispatch) => {
   try {
     dispatch(startUnit())
-    const unit = await fetch(`${apartment_url}/${apartmentId}/units`, {
+    const unit = await fetch(`${apartment_url}/units`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -16,7 +16,7 @@ const payment_route = require('./routes/payment')
 const { scheduledInvoice, deleteOTP } = require('./controllers/invoice_controller')
 const app = express()
 app.use(express.json())
-const allowedOrigin = 'http://localhost:5173'
+const allowedOrigin = process.env.CLIENT_URL
 app.use(
   cors({
     origin: allowedOrigin,
