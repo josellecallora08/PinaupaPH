@@ -1,7 +1,8 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { FaEdit } from 'react-icons/fa'
-import { RxDotsVertical } from "react-icons/rx";
+import { RxDotsVertical } from 'react-icons/rx'
 import TenantProfileInfo from '../../Data/TenantProfileInfo'
 import EditTenantDetails from '../../Component/EditTenantDetails'
 import EditTenantAccount from '../../Component/EditTenantAccount'
@@ -9,12 +10,13 @@ import EditFamMemTable from '../../Component/EditFamMemTable'
 import { payment_url } from '../../utils/constants'
 import DocumentCard from '../../Component/DocumentCard'
 import AddHousehold from '../../Component/AddHousehold'
-import EditApartment from '../../Component/EditApartment';
-import TransactionTable from '../../Component/TransactionTable';
-import TransactionMobile from '../../Component/TransactionMobile';
-import { GrFormView,GrFormAdd } from "react-icons/gr";
-import AddPet from '../../Component/AddPet';
-import EditPetTable from '../../Component/EditPetTable';
+import EditApartment from '../../Component/EditApartment'
+import TransactionTable from '../../Component/TransactionTable'
+import TransactionMobile from '../../Component/TransactionMobile'
+import { GrFormView, GrFormAdd } from 'react-icons/gr'
+import AddPet from '../../Component/AddPet'
+import EditPetTable from '../../Component/EditPetTable'
+import { fetchUser } from '../../features/user'
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile')
   const [isEditTenantDetailForm, setIsEditTenantDetailForm] = useState(false)
@@ -26,7 +28,10 @@ const TenantProfile = () => {
   const [isAddHouseholdForm, setIsAddHouseholdForm] = useState(false)
   const [isEditApartmentForm, setIsEditApartmentForm] = useState(false)
   const [isAddPetForm, setIsAddPetForm] = useState(false)
-  
+  const dispatch = useDispatch()
+  const { id } = useParams()
+  const tenant = useSelector(state => state.user.data)
+
   const toggleEditTenantDetailForm = () => {
     setIsEditTenantDetailForm(!isEditTenantDetailForm)
   }
@@ -47,6 +52,10 @@ const TenantProfile = () => {
     console.log('Form submitted')
   }
 
+  useEffect(() => {
+    dispatch(fetchUser(id))
+  }, [])
+
   return (
     <div className="bg-white1 ">
       {/* Tenant Profile Header */}
@@ -60,7 +69,9 @@ const TenantProfile = () => {
           <button
             onClick={() => handleTabClick('profile')}
             className={
-              activeTab === 'profile' ? ' text-white py-2 px-5 bg-primary rounded-full ' : ''
+              activeTab === 'profile'
+                ? ' text-white py-2 px-5 bg-primary rounded-full '
+                : ''
             }
           >
             Profile
@@ -68,7 +79,9 @@ const TenantProfile = () => {
           <button
             onClick={() => handleTabClick('documents')}
             className={
-              activeTab === 'documents' ? 'text-white py-2 px-5 bg-primary rounded-full' : ''
+              activeTab === 'documents'
+                ? 'text-white py-2 px-5 bg-primary rounded-full'
+                : ''
             }
           >
             Documents
@@ -76,7 +89,9 @@ const TenantProfile = () => {
           <button
             onClick={() => handleTabClick('transaction')}
             className={
-              activeTab === 'transaction' ? 'text-white py-2 px-5 bg-primary rounded-full' : ''
+              activeTab === 'transaction'
+                ? 'text-white py-2 px-5 bg-primary rounded-full'
+                : ''
             }
           >
             Transaction
@@ -114,11 +129,10 @@ const TenantProfile = () => {
                   <div>
                     <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
                       <div>
-                        <h1 className="lg:text-xl font-bold ">Account</h1>
+                        <h1 className="lg:text-xl font-bold ">Account {tenant?.name}</h1>
                       </div>
                       <div>
                         <FaEdit
-                          
                           className="lg:text-2xl text-lg cursor-pointer"
                           onClick={toggleEditTenantAccountForm}
                         />
@@ -126,13 +140,13 @@ const TenantProfile = () => {
                     </div>
 
                     <div className="mb-4 text-sm mt-3 ml-2 flex flex-col items-start">
-                      <p className='lg:text-lg flex gap-[4.8rem] items-center'>
+                      <p className="lg:text-lg flex gap-[4.8rem] items-center">
                         Username
                         <span className="lg:text-base lg:ml-7 ml-6">
                           {profile.Account[0].username}
                         </span>
                       </p>
-                      <p className='lg:text-lg flex gap-20 items-center'>
+                      <p className="lg:text-lg flex gap-20 items-center">
                         Password
                         <span className="lg:text-base lg:ml-7 ml-6 ">
                           {profile.Account[0].password}
@@ -143,7 +157,11 @@ const TenantProfile = () => {
                   {isEditTenantAccountForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50">
                       <div className="lg:w-1/2 bg-white rounded-lg">
-                        <EditTenantAccount setIsEditTenantAccountForm={setIsEditTenantAccountForm} />
+                        <EditTenantAccount
+                          setIsEditTenantAccountForm={
+                            setIsEditTenantAccountForm
+                          }
+                        />
                       </div>
                     </div>
                   )}
@@ -152,9 +170,10 @@ const TenantProfile = () => {
 
                   <div>
                     <div className="flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <h1 className="lg:p-3 lg:pl-2 lg:border-2 lg:border-dark-blue lg:text-xl font-bold ">Personal Details</h1>
+                      <h1 className="lg:p-3 lg:pl-2 lg:border-2 lg:border-dark-blue lg:text-xl font-bold ">
+                        Personal Details
+                      </h1>
                       <FaEdit
-                        
                         className="lg:text-2xl lg:mr-3 text-lg cursor-pointer"
                         onClick={toggleEditTenantDetailForm}
                       />
@@ -184,8 +203,9 @@ const TenantProfile = () => {
                   {isEditTenantDetailForm && (
                     <div className="fixed top-0 left-0 w-full z-50 h-full flex items-center justify-center bg-black bg-opacity-50">
                       <div className="lg:w-1/2 lg:h-[30rem] h-auto bg-white  rounded-lg">
-                        <EditTenantDetails 
-                        setIsEditTenantDetailForm={setIsEditTenantDetailForm}/>
+                        <EditTenantDetails
+                          setIsEditTenantDetailForm={setIsEditTenantDetailForm}
+                        />
                       </div>
                     </div>
                   )}
@@ -193,20 +213,25 @@ const TenantProfile = () => {
                   {/*Apartment Details */}
                   <div>
                     <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <h1 className="lg:text-xl font-bold ">Apartment Details</h1>
+                      <h1 className="lg:text-xl font-bold ">
+                        Apartment Details
+                      </h1>
                       <FaEdit
                         className="lg:text-2xl text-lg cursor-pointer"
-                        onClick={()=>setIsEditApartmentForm(!isEditApartmentForm)}
+                        onClick={() =>
+                          setIsEditApartmentForm(!isEditApartmentForm)
+                        }
                       />
                     </div>
                     {isEditApartmentForm && (
-                    <div className="fixed top-0 left-0 w-full z-50 h-full flex items-center justify-center bg-black bg-opacity-50">
-                      <div className="lg:w-1/2   h-auto bg-white  rounded-lg">
-                        <EditApartment
-                        setIsEditApartmentForm={setIsEditApartmentForm} />
+                      <div className="fixed top-0 left-0 w-full z-50 h-full flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="lg:w-1/2   h-auto bg-white  rounded-lg">
+                          <EditApartment
+                            setIsEditApartmentForm={setIsEditApartmentForm}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
                     <div className=" mb-4 text-sm mt-3 ml-2 ">
                       <div className="flex gap-14">
@@ -235,7 +260,9 @@ const TenantProfile = () => {
                   {/*Family Members */}
                   <div className="relative lg:mb-24">
                     <div className="lg:p-3 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <h1 className="lg:text-xl font-bold">Household Details</h1>
+                      <h1 className="lg:text-xl font-bold">
+                        Household Details
+                      </h1>
                       <RxDotsVertical
                         className="lg:text-2xl text-lg cursor-pointer"
                         onClick={() => setIsHouseDotOpen(!isHousedotOpen)}
@@ -246,8 +273,8 @@ const TenantProfile = () => {
                         <div
                           className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
                           onClick={() => {
-                            setIsEditFamilyMemForm(!isEditFamilyMemForm);
-                            setIsHouseDotOpen(false); 
+                            setIsEditFamilyMemForm(!isEditFamilyMemForm)
+                            setIsHouseDotOpen(false)
                           }}
                         >
                           <GrFormView size={25} />
@@ -256,11 +283,11 @@ const TenantProfile = () => {
                         <div
                           className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
                           onClick={() => {
-                            setIsAddHouseholdForm(!isAddHouseholdForm); 
-                            setIsHouseDotOpen(false);  
+                            setIsAddHouseholdForm(!isAddHouseholdForm)
+                            setIsHouseDotOpen(false)
                           }}
                         >
-                          <GrFormAdd size={25}/>
+                          <GrFormAdd size={25} />
                           Add
                         </div>
                       </div>
@@ -271,11 +298,10 @@ const TenantProfile = () => {
                         <p className=" lg:text-2xl mb-2 text-xl">
                           {profile.FamilyMembers[0].relationship}
                         </p>
-                        <div className='lg:text-base'>
+                        <div className="lg:text-base">
                           <p>Name</p>
                           <p>Mobile No.</p>
                         </div>
-                       
                       </div>
                       <div className="lg:text-base -ml-2 mt-4">
                         <p>
@@ -289,18 +315,21 @@ const TenantProfile = () => {
                   {isEditFamilyMemForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-9/12 bg-white  rounded-lg relative">
-                        <EditFamMemTable setIsEditFamilyMemForm={setIsEditFamilyMemForm}  />
+                        <EditFamMemTable
+                          setIsEditFamilyMemForm={setIsEditFamilyMemForm}
+                        />
                       </div>
                     </div>
                   )}
                   {isAddHouseholdForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-1/2 h-auto bg-white rounded-md relative">
-                        <AddHousehold setIsAddHouseholdForm={setIsAddHouseholdForm} />
+                        <AddHousehold
+                          setIsAddHouseholdForm={setIsAddHouseholdForm}
+                        />
                       </div>
                     </div>
                   )}
-
 
                   {/*Pets */}
                   <div className="lg:overflow-y-auto ">
@@ -316,8 +345,8 @@ const TenantProfile = () => {
                         <div
                           className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
                           onClick={() => {
-                            setIsEditPetForm(!isEditPetForm);
-                            setIsPetDotOpen(false); 
+                            setIsEditPetForm(!isEditPetForm)
+                            setIsPetDotOpen(false)
                           }}
                         >
                           <GrFormView size={25} />
@@ -326,11 +355,11 @@ const TenantProfile = () => {
                         <div
                           className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
                           onClick={() => {
-                            setIsAddPetForm(!isAddPetForm); 
-                            setIsPetDotOpen(false); 
+                            setIsAddPetForm(!isAddPetForm)
+                            setIsPetDotOpen(false)
                           }}
                         >
-                          <GrFormAdd size={25}  />
+                          <GrFormAdd size={25} />
                           Add
                         </div>
                       </div>
@@ -345,7 +374,6 @@ const TenantProfile = () => {
                       <div>
                         <p className="">{profile.Pets[0].name}</p>
                         <p className="">{profile.Pets[0].species}</p>
-                        
                       </div>
                     </div>
                   </div>
@@ -356,14 +384,13 @@ const TenantProfile = () => {
                       </div>
                     </div>
                   )}
-                    {isAddPetForm && (
+                  {isAddPetForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-1/2 bg-white rounded-lg relative">
                         <AddPet setIsAddPetForm={setIsAddPetForm} />
                       </div>
                     </div>
                   )}
-
                 </div>
               </div>
             ))}
@@ -381,16 +408,14 @@ const TenantProfile = () => {
         )}
 
         {activeTab === 'transaction' && (
-          <div className='h-full w-full'>
-            <div className='lg:block hidden'>
+          <div className="h-full w-full">
+            <div className="lg:block hidden">
               <TransactionTable />
             </div>
-            <div className='lg:hidden'>
+            <div className="lg:hidden">
               <TransactionMobile />
               <TransactionMobile />
-            
             </div>
-            
           </div>
         )}
       </div>

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const TenantCard = ({data}) => {
 
   return (
-    <Link to={"/tenantprofile"}>
+    <Link to={`/tenantprofile/${data._id}`}>
       <div className='lg:text-base lg:mx-1 flex  md:mx-2 mx-5 my-2 ml-0 rounded-md relative text-xs shadow-sm shadow-light-gray'>
       <div>
        <img src={pfp1} className="w-24 h-full rounded-tl-md rounded-bl-md rounded-tr-none" alt="" />

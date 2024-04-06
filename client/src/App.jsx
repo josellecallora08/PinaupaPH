@@ -21,7 +21,7 @@ import { useNavigate, Navigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 function App() {
   const token = Cookies.get('token')
-  const user = useSelector(state => state.auth.isAuthenticated)
+  const user = useSelector((state) => state.auth.isAuthenticated)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -29,33 +29,47 @@ function App() {
     dispatch(isLoggedin(token))
     console.log('1')
   }, [])
-  
+
   return (
     <Routes>
-      <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Login />} />
+      <Route
+        path="/"
+        element={user ? <Navigate to="/dashboard" /> : <Login />}
+      />
       <Route
         path="/dashboard"
-        element={user ?
-          <Layout className="bg-white1">
-            <Dashboard />
-          </Layout>
-          : <Navigate to="/" />
+        element={
+          user ? (
+            <Layout className="bg-white1">
+              <Dashboard />
+            </Layout>
+          ) : (
+            <Login />
+          )
         }
       />
       <Route
         path="/tenant"
         element={
-          <Layout className="bg-white1">
-            <Tenant />
-          </Layout>
+          user ? (
+            <Layout className="bg-white1">
+              <Tenant />
+            </Layout>
+          ) : (
+            <Login />
+          )
         }
       />
       <Route
-        path="/tenantprofile"
+        path={`/tenantprofile/:id`}
         element={
-          <Layout className="bg-white1">
-            <TenantProfile />
-          </Layout>
+          user ? (
+            <Layout className="bg-white1">
+              <TenantProfile />
+            </Layout>
+          ) : (
+            <Login />
+          )
         }
       />
       <Route

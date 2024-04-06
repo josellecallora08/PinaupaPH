@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { base_url } from '../utils/constants'
 import Cookies from 'js-cookie'
+const token = Cookies.get('token')
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -25,6 +26,8 @@ const authSlice = createSlice({
       state.loading = false
       state.isAuthenticated = false
       state.error = action.payload
+      state.user = null
+      state.token = null
     },
     logout: (state) => {
       state.loading = false
@@ -38,22 +41,24 @@ const authSlice = createSlice({
 export const { loginStart, loginSuccess, loginFailed, logout } =
   authSlice.actions
 
-export const isLoggedin = (token) => async (dispatch) => {
+export const isLoggedin = () => async (dispatch) => {
   try {
-    console.log(token)
-    if (token) {
-      const response = await fetch(`${base_url}/`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      })
-      if(!response.ok) {
-        throw new Error("User not found222")
-      }
-      const data = await response.json()
-      console.log(data)
-      dispatch(loginSuccess(data))
+    const token = Cookies.get('token') // Fetch token dynamically
+    if (!token) {
+      throw new Error('Token not found')
     }
+
+    const response = await fetch(`${base_url}/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    if (!response.ok) {
+      throw new Error('User not found')
+    }
+
+    const data = await response.json()
+    dispatch(loginSuccess(data))
   } catch (err) {
     dispatch(loginFailed(err.message))
   }
@@ -77,6 +82,8 @@ export const isLogin = (credentials, navigate) => async (dispatch) => {
     const data = await response.json()
     dispatch(loginSuccess(data))
     navigate('/dashboard')
+
+    // Dispatch isLoggedin action after successful login to update user data
   } catch (err) {
     dispatch(loginFailed(err.message))
   }

@@ -23,7 +23,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(credentials)
     dispatch(isLogin(credentials, navigate))
   }
   return (
