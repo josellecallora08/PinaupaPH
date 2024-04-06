@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
@@ -18,7 +18,7 @@ import TransactionMobile from '../../Component/TransactionMobile'
 import { GrFormView, GrFormAdd } from 'react-icons/gr'
 import AddPet from '../../Component/AddPet'
 import EditPetTable from '../../Component/EditPetTable'
-import { fetchUser } from '../../features/user'
+import { deleteUser, fetchUser } from '../../features/user'
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile')
   const [isEditTenantDetailForm, setIsEditTenantDetailForm] = useState(false)
@@ -33,18 +33,20 @@ const TenantProfile = () => {
   const [isRemovedot, setIsRemovedot] = useState(false)
   const dispatch = useDispatch()
   const { id } = useParams()
-  const tenant = useSelector((state) => state.user.data)
-
+  const tenant = useSelector((state) => state.user.single)
+  const navigate = useNavigate()
   const handleDeleteTenant = () => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this tenant?");
+    const isConfirmed = window.confirm(
+      'Are you sure you want to delete this tenant?',
+    )
     if (isConfirmed) {
-      // Perform the delete operation
-      console.log("Tenant deleted");
+      dispatch(deleteUser(id))
+      navigate('/tenant')
+      console.log('Tenant deleted')
     } else {
-      // Handle cancellation
-      console.log("Deletion cancelled");
+      console.log('Deletion cancelled')
     }
-  };
+  }
   const toggleEditTenantDetailForm = () => {
     setIsEditTenantDetailForm(!isEditTenantDetailForm)
   }
@@ -70,8 +72,9 @@ const TenantProfile = () => {
 
   useEffect(() => {
     dispatch(fetchUser(id))
+    console.log(tenant)
   }, [])
-
+  const birthday = new Date(tenant?.birthday).toLocaleDateString()
   return (
     <div className="bg-white1 ">
       {/* Tenant Profile Header */}
@@ -115,7 +118,7 @@ const TenantProfile = () => {
         </div>
       </div>
 
-      <div className="   rounded-md">
+      <div className="rounded-md">
         {/* Content based on Active Tab */}
         {activeTab === 'profile' && (
           <div className=" lg:mt-5 mt-10   ">
@@ -138,20 +141,29 @@ const TenantProfile = () => {
                         {profile.ApartmentDetails[0].aparmentunit}
                       </h2>
                     </div>
-                    <button onClick={handleDeleteTenant} className="hidden lg:flex lg:py-2 lg:px-3 absolute top-0 right-3  items-center gap-2 bg-red text-white py-1 px-2 rounded-md hover:opacity-80">
-                        <MdDelete />
-                        Delete
-                      </button>
+                    <button
+                      onClick={handleDeleteTenant}
+                      className="hidden lg:flex lg:py-2 lg:px-3 absolute top-0 right-3  items-center gap-2 bg-red text-white py-1 px-2 rounded-md hover:opacity-80"
+                    >
+                      <MdDelete />
+                      Delete
+                    </button>
                     <div className="lg:hidden absolute top-1 right-2">
-                      <button className='relative text-xl rotate-90' onClick={toggleRemoveDot}><RxDotsVertical/></button>
+                      <button
+                        className="relative text-xl rotate-90"
+                        onClick={toggleRemoveDot}
+                      >
+                        <RxDotsVertical />
+                      </button>
 
                       {isRemovedot && (
-                           <button onClick={handleDeleteTenant} className='flex items-center gap-2 absolute  rounded-md -right-1 bg-red text-white p-2 hover:opacity-80 '>
-                              <MdDelete /> Delete
-                           </button>
+                        <button
+                          onClick={handleDeleteTenant}
+                          className="flex items-center gap-2 absolute  rounded-md -right-1 bg-red text-white p-2 hover:opacity-80 "
+                        >
+                          <MdDelete /> Delete
+                        </button>
                       )}
-                   
-
                     </div>
                   </div>
 
@@ -160,9 +172,7 @@ const TenantProfile = () => {
                   <div>
                     <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
                       <div>
-                        <h1 className="lg:text-xl font-bold ">
-                          Account {tenant?.name}
-                        </h1>
+                        <h1 className="lg:text-xl font-bold ">Account</h1>
                       </div>
                       <div>
                         <FaEdit
@@ -176,13 +186,13 @@ const TenantProfile = () => {
                       <p className="lg:text-lg flex gap-[4.8rem] items-center">
                         Username
                         <span className="lg:text-base lg:ml-7 ml-6">
-                          {profile.Account[0].username}
+                          {tenant?.username}
                         </span>
                       </p>
                       <p className="lg:text-lg flex gap-20 items-center">
                         Password
                         <span className="lg:text-base lg:ml-7 ml-6 ">
-                          {profile.Account[0].password}
+                          ******************
                         </span>
                       </p>
                     </div>
@@ -221,14 +231,10 @@ const TenantProfile = () => {
                           <p>Email</p>
                         </div>
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
-                          <p className="">{profile.PersonalDetails[0].name}</p>
-                          <p className="">
-                            {profile.PersonalDetails[0].birthday}
-                          </p>
-                          <p className="">
-                            {profile.PersonalDetails[0].contact}
-                          </p>
-                          <p className="">{profile.PersonalDetails[0].email}</p>
+                          <p className="">{tenant?.name}</p>
+                          <p className="">{birthday}</p>
+                          <p className="">{tenant?.phone}</p>
+                          <p className="">{tenant?.email}</p>
                         </div>
                       </div>
                     </div>
@@ -274,15 +280,11 @@ const TenantProfile = () => {
                           <p>Date of Move-in</p>
                         </div>
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
+                          <p className="">Unit - {tenant?.unit_no}</p>
                           <p className="">
-                            {profile.ApartmentDetails[0].aparmentunit}
+                            {tenant?.deposit}
                           </p>
-                          <p className="">
-                            {profile.ApartmentDetails[0].deposit}
-                          </p>
-                          <p className="">
-                            {profile.ApartmentDetails[0].dateofmovein}
-                          </p>
+                          <p className="">{tenant?.monthly_due}</p>
                         </div>
                       </div>
                     </div>

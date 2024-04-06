@@ -8,6 +8,7 @@ const userSlice = createSlice({
     loading: false,
     error: null,
     data: null,
+    single: null,
   },
   reducers: {
     fetchUserStart: (state) => {
@@ -17,6 +18,10 @@ const userSlice = createSlice({
     fetchUserSuccess: (state, action) => {
       state.loading = false
       state.data = action.payload
+    },
+    fetchSingleUser: (state, action) => {
+      state.loading = false
+      state.single = action.payload
     },
     deleteUserSuccess: (state, action) => {
       state.loading = false
@@ -40,6 +45,7 @@ const userSlice = createSlice({
 export const {
   fetchUserStart,
   fetchUserSuccess,
+  fetchSingleUser,
   deleteUserSuccess,
   editUserSuccess,
   actionUserFailed,
@@ -52,7 +58,7 @@ export const createTenant = (fields) => async (dispatch) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(fields),
       // credentials: 'include',
@@ -74,11 +80,10 @@ export const createTenant = (fields) => async (dispatch) => {
 
 export const fetchUser = (userId) => async (dispatch) => {
   try {
-    console.log(token)
     dispatch(fetchUserStart())
     const user = await fetch(`${base_url}/tenant?user_id=${userId}`, {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     })
 
@@ -86,7 +91,7 @@ export const fetchUser = (userId) => async (dispatch) => {
       throw new Error('Failed to fetch user')
     }
     const json = await user.json()
-    dispatch(fetchUserSuccess(json))
+    dispatch(fetchSingleUser(json))
   } catch (err) {
     dispatch(actionUserFailed())
   }
@@ -136,7 +141,7 @@ export const editUser = (userId, credentials) => async (dispatch) => {
 export const deleteUser = (userId) => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
-    const deleteUser = await fetch(`${base_url}/${userId}/delete_tenant`, {
+    const deleteUser = await fetch(`${base_url}/delete_tenant?user_id=${userId}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -148,7 +153,7 @@ export const deleteUser = (userId) => async (dispatch) => {
     }
     // const json = await deleteUser.json()
 
-    dispatch(deleteUserSuccess(userId))
+    dispatch(fetchUsers())
   } catch (err) {
     dispatch(actionUserFailed(err.message))
   }

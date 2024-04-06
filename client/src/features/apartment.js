@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { apartment_url } from '../utils/constants'
+import Cookies from 'js-cookie'
 const apartmentSlice = createSlice({
   name: 'apartment',
   initialState: {
     loading: false,
     error: null,
     data: null,
+    single: null
   },
   reducers: {
     apartmentStart: (state) => {
@@ -15,6 +17,10 @@ const apartmentSlice = createSlice({
     fetchApartmentSuccess: (state, action) => {
       state.loading = false
       state.data = action.payload
+    },
+    fetchSingleApartmentSuccess: (state, action) => {
+      state.loading = false
+      state.single = action.payload
     },
     editApartmentSuccess: (state, action) => {
       state.loading = false
@@ -36,6 +42,7 @@ const apartmentSlice = createSlice({
 export const {
   apartmentStart,
   fetchApartmentSuccess,
+  fetchSingleApartmentSuccess,
   editApartmentSuccess,
   deleteApartmentSuccess,
   actionApartmentFailed,
@@ -65,10 +72,11 @@ export const createApartment = (fields) => async (dispatch) => {
 
 export const fetchApartments = () => async (dispatch) => {
   try {
+    const token = Cookies.get('token')
     dispatch(apartmentStart())
     const apartment = await fetch(`${apartment_url}/building`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
       },
     })
 
@@ -95,7 +103,7 @@ export const fetchApartment = (apartmentId) => async (dispatch) => {
       throw new Error('Failed to create apartment')
     }
     const json = await apartment.json()
-    dispatch(fetchApartmentSuccess(json))
+    dispatch(fetchSingleApartmentSuccess(json))
   } catch (err) {
     dispatch(actionApartmentFailed(err.message))
   }
@@ -125,10 +133,10 @@ export const editApartment = (fields, apartmentId) => async (dispatch) => {
   }
 }
 
-export const deleteApartment = (apartmentId) => async (dispatch) => {
+export const deleteApartment = (apartment_id) => async (dispatch) => {
   try {
     dispatch(apartmentStart())
-    const apartment = await fetch(`${apartment_url}/${apartmentId}`, {
+    const apartment = await fetch(`${apartment_url}/${apartment_id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,

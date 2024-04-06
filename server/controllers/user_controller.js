@@ -302,7 +302,7 @@ module.exports.fetch_user = async (req, res) => {
     .populate({
       path: 'user_id',
       model: USERMODEL,
-      select: 'name username email profile_image mobile_no role',
+      select: 'name username email profile_image mobile_no role birthday',
     })
     .populate({
       path: 'unit_id',
@@ -322,6 +322,7 @@ module.exports.fetch_user = async (req, res) => {
       id: user.user_id._id,
       image: user.user_id.profile_image.image_url,
       image_id: user.user_id.profile_image.public_id,
+      birthday:user.user_id.birthday,
       name: user.user_id.name,
       username: user.user_id.username,
       email: user.user_id.email,

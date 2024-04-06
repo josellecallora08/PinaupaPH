@@ -3,7 +3,7 @@ import logo from '/logo.svg'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { isLogin, isLoggedin } from '../features/authentication'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -63,9 +63,9 @@ const Login = () => {
               />
             </div>
 
-            <p className="text-end text-dark-gray font-bold mt-3 cursor-pointer">
+            <Link to="forgot-password" className="text-end text-dark-gray font-bold mt-3 cursor-pointer">
               Forgot Password?
-            </p>
+            </Link>
             <button
               onClick={handleSubmit}
               className="bg-dark-blue  w-full p-3 rounded-md mt-4 uppercase text-white font-bold hover:opacity-80"  

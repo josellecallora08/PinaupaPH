@@ -1,18 +1,24 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SearchBar from '../../Component/SearchBar'
 import { FaPlus } from 'react-icons/fa6'
 import { IoIosArrowDown } from 'react-icons/io'
 import ApartmentStatusCard from '../../Component/ApartmentStatusCard'
 import AddRoom from '../../Component/AddRoom'
 import EditApartment from '../../Component/EditApartment'
+import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
 import EditApartmentDetails from '../../Component/EditApartmentDetails'
+import { fetchUnitsApartment } from '../../features/unit'
 const ApartmentProfile = () => {
   const [searchItem, setSearchItem] = useState('')
   const [isAddRoomFormOpen, setIsAddRoomFormOpen] = useState(false)
   const [dropdownOpen, setdropdownOpen] = useState(false)
   const [isEditApartmentFormOpen, setIsEditApartmentFormOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState('')
+  const { id } = useParams()
+  const dispatch = useDispatch()
+  const units = useSelector((state) => state.unit.data)
 
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value)
@@ -28,9 +34,10 @@ const ApartmentProfile = () => {
     setIsEditApartmentFormOpen(!isEditApartmentFormOpen)
   }
 
-  const toggledropdown = () => {
-    setdropdownOpen(!dropdownOpen)
-  }
+  useEffect(() => {
+    dispatch(fetchUnitsApartment(id))
+    console.log(units)
+  }, [])
 
   const dropdownItems = ['Available Units', 'Occupied Units']
 
@@ -93,7 +100,7 @@ const ApartmentProfile = () => {
 
         <div>
           <select
-          className='lg:ml-10 lg:w-48 lg:h-12  ml-7  bg-white text-black w-40 h-10 p-1 rounded-lg border-2'
+            className="lg:ml-10 lg:w-48 lg:h-12  ml-7  bg-white text-black w-40 h-10 p-1 rounded-lg border-2"
             value={selectedOption}
             onChange={handleOptionChange}
             style={{ color: selectedOption ? 'black' : 'gray' }}
@@ -113,9 +120,9 @@ const ApartmentProfile = () => {
           </select>
         </div>
         <div className="lg:grid-cols-3 mt-5 grid grid-cols-1 gap-2 mx-5">
-          <ApartmentStatusCard />
-          <ApartmentStatusCard />
-          <ApartmentStatusCard />
+            {units?.map((val, key) => (
+              <ApartmentStatusCard apartmentId = {id} val={val} key={key}/>
+            ))}
         </div>
       </div>
       {isAddRoomFormOpen && (
