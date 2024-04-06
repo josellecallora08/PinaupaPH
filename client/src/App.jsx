@@ -19,6 +19,9 @@ import { useEffect } from 'react'
 import { isLoggedin } from './features/authentication'
 import { useNavigate, Navigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
+import ForgotPass from './Page/ForgotPass'
+import OTPVerify from './Page/Admin/OTPVerify'
+import ResetPass from './Page/Admin/ResetPass'
 function App() {
   const token = Cookies.get('token')
   const user = useSelector((state) => state.auth.isAuthenticated)
@@ -35,6 +38,18 @@ function App() {
       <Route
         path="/"
         element={user ? <Navigate to="/dashboard" /> : <Login />}
+      />
+      <Route
+        path="/forgot-password"
+        element={ <ForgotPass />}
+      />
+      <Route
+        path="/OTPVerify"
+        element={ <OTPVerify />}
+      />
+         <Route
+        path="/ResetPassword"
+        element={ <ResetPass />}
       />
       <Route
         path="/dashboard"

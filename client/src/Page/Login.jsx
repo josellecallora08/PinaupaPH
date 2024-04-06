@@ -63,12 +63,12 @@ const Login = () => {
               />
             </div>
 
-            <p className="text-end text-dark-gray font-bold mt-3">
+            <p className="text-end text-dark-gray font-bold mt-3 cursor-pointer">
               Forgot Password?
             </p>
             <button
               onClick={handleSubmit}
-              className="bg-dark-blue text-lg w-full p-3 rounded-md mt-4 uppercase text-dark-gray"
+              className="bg-dark-blue  w-full p-3 rounded-md mt-4 uppercase text-white font-bold hover:opacity-80"  
             >
               Login
             </button>
