@@ -8,6 +8,7 @@ const unitSlice = createSlice({
     loading: false,
     error: null,
     data: null,
+    single: null,
   },
   reducers: {
     startUnit: (state) => {
@@ -17,6 +18,10 @@ const unitSlice = createSlice({
     fetchUnitSuccess: (state, action) => {
       state.loading = false
       state.data = action.payload
+    },
+    fetchSingleUnitSuccess: (state, action) => {
+      state.loading = false
+      state.single = action.payload
     },
     editUnitSuccess: (state, action) => {
       state.loading = false
@@ -62,7 +67,7 @@ export const createUnit = (fields, apartmentId) => async (dispatch) => {
       throw new Error('Failed to add unit...')
     }
     const json = await unit.json()
-    dispatch(fetchUnitSuccess(json))
+    dispatch(fetchUnits())
   } catch (err) {
     dispatch(actionUnitFailed(err.message))
   }
@@ -103,6 +108,26 @@ export const fetchUnit = (apartmentId, unitId) => async (dispatch) => {
     }
     const json = await unit.json()
     dispatch(fetchUnitSuccess(json))
+  } catch (err) {
+    dispatch(actionUnitFailed(err.message))
+  }
+}
+
+export const fetchUnitsApartment = (apartment_id) => async (dispatch) => {
+  try {
+    const token = Cookies.get('token')
+
+    dispatch(startUnit())
+    const unit = await fetch(`${apartment_url}/${apartment_id}/units/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    if (!unit.ok) {
+      throw new Error('Failed to add unit...')
+    }
+    const json = await unit.json()
+    dispatch(fetchUnitSuccess(json.units))
   } catch (err) {
     dispatch(actionUnitFailed(err.message))
   }

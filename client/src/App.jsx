@@ -44,11 +44,11 @@ function App() {
         element={ <ForgotPass />}
       />
       <Route
-        path="/OTPVerify"
+        path="/otp-verify"
         element={ <OTPVerify />}
       />
          <Route
-        path="/ResetPassword"
+        path="/reset-password"
         element={ <ResetPass />}
       />
       <Route
@@ -96,7 +96,7 @@ function App() {
         }
       />
       <Route
-        path="/apartmentprofile"
+        path={`/apartment/:id`}
         element={
           <Layout className="bg-white1">
             <ApartmentProfile />

@@ -21,17 +21,17 @@ module.exports.fetch_apartments = async (req, res) => {
   }
 }
 // ? Tested API
-module.exports.fetch_apartment = async(req, res) => {
-  try{
-    const {apartment_id} = req.params
-    const response = await APARTMENTMODEL.findById({_id:apartment_id})
+module.exports.fetch_apartment = async (req, res) => {
+  try {
+    const { apartment_id } = req.params
+    const response = await APARTMENTMODEL.findById({ _id: apartment_id })
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to fetch apartment' })
     }
     return res.status(httpStatusCodes.OK).json(response)
-  }catch(err){
+  } catch (err) {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
@@ -60,14 +60,19 @@ module.exports.create_apartment = async (req, res) => {
         .json({ error: 'Unable to create apartment building...' })
     }
 
-    const imageUpload = await cloudinary.uploader.upload(`./template/apartment-default.svg`,{
-      quality: 'auto:low',
-      folder:'PinaupaPH/Apartment',
-      resource_type: 'auto',
-    })
-     
-    if(!imageUpload || !imageUpload.secure_url){
-      return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Failed to upload profile."})
+    const imageUpload = await cloudinary.uploader.upload(
+      `./template/apartment-default.svg`,
+      {
+        quality: 'auto:low',
+        folder: 'PinaupaPH/Apartment',
+        resource_type: 'auto',
+      },
+    )
+
+    if (!imageUpload || !imageUpload.secure_url) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Failed to upload profile.' })
     }
 
     response.image.apartment_image_url = imageUpload.secure_url
@@ -86,33 +91,38 @@ module.exports.create_apartment = async (req, res) => {
 }
 
 module.exports.change_apartment_image = async (req, res) => {
-  try{
-    const {apartment_id, apartment_public_id} = req.params
+  try {
+    const { apartment_id, apartment_public_id } = req.params
     const apartment_image = req.file
     const b64 = Buffer.from(profile_image.buffer).toString('base64')
     let dataURI = `data:${apartment_image.mimetype};base64,${b64}`
 
     console.log(`dataURI: ${dataURI}`)
-      uploadedImage = await cloudinary.uploader.upload(dataURI, {
-        public_id: apartment_public_id,
-        overwrite: true,
-        quality: 'auto:low',
-        resource_type: 'auto',
-        folder: 'PinaupaPH/Apartment',
-      });
-  
+    uploadedImage = await cloudinary.uploader.upload(dataURI, {
+      public_id: apartment_public_id,
+      overwrite: true,
+      quality: 'auto:low',
+      resource_type: 'auto',
+      folder: 'PinaupaPH/Apartment',
+    })
+
     console.log(uploadedImage)
-    
-    if(!uploadedImage || !uploadedImage.secure_url){
-      return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Failed to upload profile."})
+
+    if (!uploadedImage || !uploadedImage.secure_url) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Failed to upload profile.' })
     }
     const url = uploadedImage.secure_url
-    const response = await APARTMENTMODEL.findByIdAndUpdate({_id: apartment_id}, {
-      profile_image: {
-        apartment_image_url: url,
-        apartment_public_id: apartment_public_id,
+    const response = await APARTMENTMODEL.findByIdAndUpdate(
+      { _id: apartment_id },
+      {
+        profile_image: {
+          apartment_image_url: url,
+          apartment_public_id: apartment_public_id,
+        },
       },
-    });
+    )
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -120,9 +130,9 @@ module.exports.change_apartment_image = async (req, res) => {
     }
 
     return res
-    .status(httpStatusCodes.OK)
-    .json({ msg: 'Apartment Image has been changed' })
-  }catch(err){
+      .status(httpStatusCodes.OK)
+      .json({ msg: 'Apartment Image has been changed' })
+  } catch (err) {
     console.error({ err })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
@@ -183,17 +193,17 @@ module.exports.delete_apartment = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: `Unable to remove apartment building` })
     }
-    const cctv = response.cctvs.map(async(item) => {
-      await CCTVMODEL.findByIdAndDelete({_id: item})
+    const cctv = response.cctvs.map(async (item) => {
+      await CCTVMODEL.findByIdAndDelete({ _id: item })
     })
-    const units = response.units.map(async(item) => {
-      await UNITMODEL.findByIdAndDelete({_id: item})
+    const units = response.units.map(async (item) => {
+      await UNITMODEL.findByIdAndDelete({ _id: item })
     })
 
-    await Promise.all([...cctv, ...units]);
+    await Promise.all([...cctv, ...units])
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: `Apartment building Deleted`, cctv, units})
+      .json({ msg: `Apartment building Deleted`, cctv, units })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -202,25 +212,27 @@ module.exports.delete_apartment = async (req, res) => {
   }
 }
 // ? Tested API
-module.exports.fetch_unit = async(req, res) => {
-  try{
-    const {apartment_id, unit_id} = req.params
+module.exports.fetch_unit = async (req, res) => {
+  try {
+    const { apartment_id, unit_id } = req.params
     let response = await APARTMENTMODEL.findById({ _id: apartment_id })
-    .populate({
-      path: 'units',
-      model: UNITMODEL,
-      select: 'rent unit_no',
-      options: { sort: { unit_no: 1 } },
-    })
-    .select('units')
-  if (!response) {
-    return res
-      .status(httpStatusCodes.BAD_REQUEST)
-      .json({ error: 'Unable to fetch units' })
-  }
-  const unit = response.units.filter(item => item._id.toString() === unit_id)
-  return res.status(httpStatusCodes.OK).json(unit)
-  }catch(err){
+      .populate({
+        path: 'units',
+        model: UNITMODEL,
+        select: 'rent unit_no',
+        options: { sort: { unit_no: 1 } },
+      })
+      .select('units')
+    if (!response) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unable to fetch units' })
+    }
+    const unit = response.units.filter(
+      (item) => item._id.toString() === unit_id,
+    )
+    return res.status(httpStatusCodes.OK).json(unit)
+  } catch (err) {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
@@ -229,29 +241,36 @@ module.exports.fetch_unit = async(req, res) => {
 }
 
 // ? Tested API
-module.exports.fetch_unit_apartment = async(req, res)=> {
-  const { apartment_id } = req.params
-  let response = await APARTMENTMODEL.findById({ _id: apartment_id })
-    .populate({
-      path: 'units',
-      model: UNITMODEL,
-      select: 'rent unit_no',
-      options: { sort: { unit_no: 1 } },
-    })
-    .select('name units')
-  if (!response) {
+module.exports.fetch_unit_apartment = async (req, res) => {
+  try {
+    const { apartment_id } = req.params
+    let response = await APARTMENTMODEL.findById({ _id: apartment_id })
+      .populate({
+        path: 'units',
+        model: UNITMODEL,
+        select: 'rent unit_no occupied',
+        options: { sort: { unit_no: 1 } },
+      })
+      .select('name units')
+    if (!response) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unable to fetch units' })
+    }
+    return res.status(httpStatusCodes.OK).json(response)
+  } catch (err) {
+    console.error({ error: err.message })
     return res
-      .status(httpStatusCodes.BAD_REQUEST)
-      .json({ error: 'Unable to fetch units' })
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Server Error...' })
   }
-  return res.status(httpStatusCodes.OK).json(response)
 }
 
 // ? Tested API
 module.exports.fetch_units = async (req, res) => {
   try {
     let response = await UNITMODEL.find()
-  
+
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
