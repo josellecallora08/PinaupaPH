@@ -13,7 +13,7 @@ import down from '/down.svg'
 import {toggleDocs} from '../features/menu'
 
 
-const Sidebar = () => {
+const TenantSideBar = () => {
   const menu = useSelector(state => state.toggle.sidebar)
   const docs = useSelector(state => state.toggle.doc_dropdown)
   const dispatch = useDispatch()
@@ -34,31 +34,16 @@ const Sidebar = () => {
       <nav className='w-full h-full'>
         <ul className='w-full m-auto flex flex-col items-center gap-5 mt-5 md:mt-10 text-sm'>
           <li className='w-full h-full '>
-            <Link to={'/dashboard'} className={`flex items-center center w-4/5 m-auto h-full hover:bg-primary/5 rounded-md ${menu ? 'p-5' : 'p-3'} `}>
+            <Link to={'/tenant/home'} className={`flex items-center center w-4/5 m-auto h-full hover:bg-primary/5 rounded-md ${menu ? 'p-5' : 'p-3'} `}>
               <figure className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}>
                 <img src={dashboard} alt="" className='max-w-5 max-h-5 object-contain' />
               </figure>
-              {menu ? <span className='font-semibold text-primary'>Dashboard</span> : ''}
+              {menu ? <span className='font-semibold text-primary'>Home</span> : ''}
             </Link>
           </li>
-          <li className='w-full h-full '>
-            <Link to={'/tenant'} className={`flex items-center center w-4/5  m-auto h-full hover:bg-primary/5 rounded-md ${menu ? 'p-5' : 'p-3'}`}>
-              <figure className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}>
-                <img src={tenant} alt="" className='max-w-5 max-h-5 object-contain' />
-              </figure>
-              {menu ? <span className="font-semibold text-primary">Tenant</span> : ''}
-            </Link>
-          </li>
+         
           <li className='w-full h-full'>
-            <Link to={'/apartment'} className={`flex items-center center w-4/5  m-auto h-full hover:bg-primary/5 rounded-md ${menu ? 'p-5' : 'p-3'}`}>
-              <figure className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}>
-                <img src={apartment} alt="" className='max-w-5 max-h-5 object-contain' />
-              </figure>
-              {menu ? <span className='font-semibold text-primary'>Apartment</span> : ''}
-            </Link>
-          </li>
-          <li className='w-full h-full'>
-            <Link to={`/security`} className={`flex items-center center w-4/5  m-auto h-full hover:bg-primary/5 rounded-md ${menu ? 'p-5' : 'p-3'}`}>
+            <Link to={`/tenant/security`} className={`flex items-center center w-4/5  m-auto h-full hover:bg-primary/5 rounded-md ${menu ? 'p-5' : 'p-3'}`}>
               <figure className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}>
                 <img src={security} alt="" className='max-w-5 max-h-5 object-contain'/>
               </figure>
@@ -82,12 +67,12 @@ const Sidebar = () => {
             <div className={`${docs ? '' : 'hidden'} w-full m-auto`}>
                 <ul className='flex flex-col'>
                   <li className={`flex items-center center w-4/5  m-auto h-full hover:bg-primary/5 rounded-md `}>
-                    <Link className={`${menu ? 'p-3' : 'p-3'} w-full h-full`} to={'/document/lease-agreement'}>
+                    <Link className={`${menu ? 'p-3' : 'p-3'} w-full h-full`} to={'/tenant/document/lease'}>
                     <span>Lease Agreement</span>
                     </Link>
                   </li>
                   <li className={`flex items-center center w-4/5  m-auto h-full hover:bg-primary/5 rounded-md`}>
-                    <Link className={` ${menu ? 'p-3' : 'p-3'} w-full h-full`} to={'/document/invoice'}>
+                    <Link className={` ${menu ? 'p-3' : 'p-3'} w-full h-full`} to={'/tenant/document/invoice'}>
                       <span>Invoices</span>
                     </Link>
                   </li>
@@ -95,7 +80,7 @@ const Sidebar = () => {
               </div>
           </li>
           <li className='w-full h-full'>
-            <Link to={`/concern&issue`} className={`flex items-center center w-4/5  m-auto h-full hover:bg-primary/5 rounded-md ${menu ? 'p-5' : 'p-3'}`}>
+            <Link to={`/tenant/concern`} className={`flex items-center center w-4/5  m-auto h-full hover:bg-primary/5 rounded-md ${menu ? 'p-5' : 'p-3'}`}>
               <figure className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}>
                 <img src={report} alt="" className='max-w-5 max-h-5 object-contain' />
               </figure>
@@ -108,4 +93,4 @@ const Sidebar = () => {
     </div>
   )
 }
-export default Sidebar;
+export default TenantSideBar;

@@ -1,7 +1,7 @@
 import React from 'react'
 
-const TransactionMobile = () => {
-  const paid=false
+const TenantTransactionMobile = () => {
+  const paid=true
   return (
     <div>
       <div className="flex h-20 mt-5 items-center rounded-lg mx-4 shadow-md shadow-gray-600">
@@ -19,4 +19,4 @@ const TransactionMobile = () => {
   )
 }
 
-export default TransactionMobile
+export default TenantTransactionMobile
