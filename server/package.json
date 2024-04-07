@@ -30,7 +30,8 @@
         "nodemailer": "^6.9.13",
         "nodemon": "^3.0.1",
         "path": "^0.12.7",
-        "punycode": "^2.3.1"
+        "punycode": "^2.3.1",
+        "vercel": "^33.7.0"
     },
     "devDependencies": {
         "jest": "^29.7.0",
