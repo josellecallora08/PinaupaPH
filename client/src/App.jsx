@@ -29,6 +29,7 @@ import TenantConcern from './Page/Tenant/TenantConcern'
 import TenantLease from './Page/Tenant/TenantLease'
 import TenantSecurity from './Page/Tenant/TenantSecurity'
 import TenantHome from './Page/Tenant/TenantHome'
+
 function App() {
   const token = Cookies.get('token')
   const user = useSelector((state) => state.auth.isAuthenticated)
@@ -169,11 +170,35 @@ function App() {
           </TenantLayout>
         }
       />
+        <Route
+        path="/tenant/security"
+        element={
+          <TenantLayout className="bg-white1">
+            <TenantSecurity />
+          </TenantLayout>
+        }
+      />
+            <Route
+        path="/tenant/document/lease"
+        element={
+          <TenantLayout className="bg-white1">
+            <TenantLease />
+          </TenantLayout>
+        }
+      />
       <Route
         path="/tenant/document/invoice"
         element={
           <TenantLayout className="bg-white1">
             <TenantInvoice />
+          </TenantLayout>
+        }
+      />
+            <Route
+        path="/tenant/payment"
+        element={
+          <TenantLayout className="bg-white1">
+            <TenantPayment />
           </TenantLayout>
         }
       />
@@ -185,30 +210,10 @@ function App() {
           </TenantLayout>
         }
       />
-      <Route
-        path="/tenant/document/lease"
-        element={
-          <TenantLayout className="bg-white1">
-            <TenantLease />
-          </TenantLayout>
-        }
-      />
-      <Route
-        path="/tenant/security"
-        element={
-          <TenantLayout className="bg-white1">
-            <TenantSecurity />
-          </TenantLayout>
-        }
-      />
-      <Route
-        path="/tenant/payment"
-        element={
-          <TenantLayout className="bg-white1">
-            <TenantPayment />
-          </TenantLayout>
-        }
-      />
+          
+
+    
+
     </Routes>
   )
 }
