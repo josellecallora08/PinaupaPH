@@ -53,3 +53,6 @@ app.use('/api/apartment', apartment_route)
 app.use('/api/documents', document_route)
 app.use('/api/invoice', invoice_route)
 app.use('/api/payment', payment_route)
+
+
+module.exports = app
