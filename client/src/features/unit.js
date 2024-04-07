@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { apartment_url } from '../utils/constants'
+import { apartment_url, base_url } from '../utils/constants'
 import Cookies from 'js-cookie'
 const token = Cookies.get('token')
 const unitSlice = createSlice({
@@ -52,7 +52,7 @@ export const createUnit = (fields, apartmentId) => async (dispatch) => {
   try {
     dispatch(startUnit())
     const unit = await fetch(
-      `${apartment_url}/${apartmentId}/create_apartment_unit`,
+      `${base_url}/api/apartment/${apartmentId}/create_apartment_unit`,
       {
         method: 'POST',
         headers: {
@@ -76,7 +76,7 @@ export const createUnit = (fields, apartmentId) => async (dispatch) => {
 export const fetchUnits = () => async (dispatch) => {
   try {
     dispatch(startUnit())
-    const unit = await fetch(`${apartment_url}/units`, {
+    const unit = await fetch(`${base_url}/api/apartment/units`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -96,7 +96,7 @@ export const fetchUnit = (apartmentId, unitId) => async (dispatch) => {
   try {
     dispatch(startUnit())
     const unit = await fetch(
-      `${apartment_url}/${apartmentId}/units/${unitId}`,
+      `${base_url}/api/apartment/${apartmentId}/units/${unitId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -118,11 +118,14 @@ export const fetchUnitsApartment = (apartment_id) => async (dispatch) => {
     const token = Cookies.get('token')
 
     dispatch(startUnit())
-    const unit = await fetch(`${apartment_url}/${apartment_id}/units/`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const unit = await fetch(
+      `${base_url}/api/apartment/${apartment_id}/units/`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    })
+    )
     if (!unit.ok) {
       throw new Error('Failed to add unit...')
     }
@@ -137,7 +140,7 @@ export const editUnit = (apartmentId, unitId) => async (dispatch) => {
   try {
     dispatch(startUnit())
     const unit = await fetch(
-      `${apartment_url}/${apartmentId}/edit_apartment_unit/${unitId}`,
+      `${base_url}/api/apartment/${apartmentId}/edit_apartment_unit/${unitId}`,
       {
         method: 'PATCH',
         headers: {
@@ -160,7 +163,7 @@ export const deleteUnit = (apartmentId, unitId) => async (dispatch) => {
   try {
     dispatch(startUnit())
     const unit = await fetch(
-      `${apartment_url}/${apartmentId}/delete_apartment_unit/${unitId}`,
+      `${base_url}/api/apartment/${apartmentId}/delete_apartment_unit/${unitId}`,
       {
         method: 'DELETE',
         headers: {

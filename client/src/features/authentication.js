@@ -48,7 +48,7 @@ export const isLoggedin = () => async (dispatch) => {
       throw new Error('Token not found')
     }
 
-    const response = await fetch(`${base_url}/`, {
+    const response = await fetch(`${base_url}/api/user/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -67,7 +67,7 @@ export const isLoggedin = () => async (dispatch) => {
 export const isLogin = (credentials, navigate) => async (dispatch) => {
   try {
     dispatch(loginStart())
-    const response = await fetch(`${base_url}/login`, {
+    const response = await fetch(`${base_url}/api/user/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

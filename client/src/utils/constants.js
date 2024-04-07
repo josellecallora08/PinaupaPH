@@ -1,4 +1,4 @@
-export const base_url = 'http://localhost:5000/api/user'
+export const base_url = 'https://pinaupaph-api.vercel.app/'
 export const document_url = 'http://localhost:5000/api/documents'
 export const payment_url = 'http://localhost:5000/api/payment'
 export const apartment_url = 'http://localhost:5000/api/apartment'

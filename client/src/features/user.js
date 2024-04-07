@@ -54,7 +54,7 @@ export const {
 export const createTenant = (fields) => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
-    const userRegister = await fetch(`${base_url}/`, {
+    const userRegister = await fetch(`${base_url}/api/user`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ export const createTenant = (fields) => async (dispatch) => {
 export const fetchUser = (userId) => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
-    const user = await fetch(`${base_url}/tenant?user_id=${userId}`, {
+    const user = await fetch(`${base_url}/api/user/tenant?user_id=${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -100,7 +100,7 @@ export const fetchUser = (userId) => async (dispatch) => {
 export const fetchUsers = () => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
-    const user = await fetch(`${base_url}/tenants`, {
+    const user = await fetch(`${base_url}api/user/tenants`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -118,7 +118,7 @@ export const fetchUsers = () => async (dispatch) => {
 export const editUser = (userId, credentials) => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
-    const user = await fetch(`${base_url}/${userId}/update_profile`, {
+    const user = await fetch(`${base_url}/api/user/${userId}/update_profile`, {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -141,7 +141,7 @@ export const editUser = (userId, credentials) => async (dispatch) => {
 export const deleteUser = (userId) => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
-    const deleteUser = await fetch(`${base_url}/delete_tenant?user_id=${userId}`, {
+    const deleteUser = await fetch(`${base_url}/api/user/delete_tenant?user_id=${userId}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
