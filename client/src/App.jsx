@@ -22,6 +22,13 @@ import Cookies from 'js-cookie'
 import ForgotPass from './Page/ForgotPass'
 import OTPVerify from './Page/Admin/OTPVerify'
 import ResetPass from './Page/Admin/ResetPass'
+import TenantLayout from './Component/Tenant Component/TenantLayout'
+import TenantPayment from './Page/Tenant/TenantPayment'
+import TenantInvoice from './Page/Tenant/TenantInvoice'
+import TenantConcern from './Page/Tenant/TenantConcern'
+import TenantLease from './Page/Tenant/TenantLease'
+import TenantSecurity from './Page/Tenant/TenantSecurity'
+import TenantHome from './Page/Tenant/TenantHome'
 function App() {
   const token = Cookies.get('token')
   const user = useSelector((state) => state.auth.isAuthenticated)
@@ -39,18 +46,9 @@ function App() {
         path="/"
         element={user ? <Navigate to="/dashboard" /> : <Login />}
       />
-      <Route
-        path="/forgot-password"
-        element={ <ForgotPass />}
-      />
-      <Route
-        path="/otp-verify"
-        element={ <OTPVerify />}
-      />
-         <Route
-        path="/reset-password"
-        element={ <ResetPass />}
-      />
+      <Route path="/forgot-password" element={<ForgotPass />} />
+      <Route path="/otp-verify" element={<OTPVerify />} />
+      <Route path="/reset-password" element={<ResetPass />} />
       <Route
         path="/dashboard"
         element={
@@ -159,6 +157,56 @@ function App() {
           <Layout className="bg-white1">
             <Invoice />
           </Layout>
+        }
+      />
+
+      {/* Tenant Side */}
+      <Route
+        path="/tenant/home"
+        element={
+          <TenantLayout className="bg-white1">
+            <TenantHome />
+          </TenantLayout>
+        }
+      />
+      <Route
+        path="/tenant/document/invoice"
+        element={
+          <TenantLayout className="bg-white1">
+            <TenantInvoice />
+          </TenantLayout>
+        }
+      />
+      <Route
+        path="/tenant/concern"
+        element={
+          <TenantLayout className="bg-white1">
+            <TenantConcern />
+          </TenantLayout>
+        }
+      />
+      <Route
+        path="/tenant/document/lease"
+        element={
+          <TenantLayout className="bg-white1">
+            <TenantLease />
+          </TenantLayout>
+        }
+      />
+      <Route
+        path="/tenant/security"
+        element={
+          <TenantLayout className="bg-white1">
+            <TenantSecurity />
+          </TenantLayout>
+        }
+      />
+      <Route
+        path="/tenant/payment"
+        element={
+          <TenantLayout className="bg-white1">
+            <TenantPayment />
+          </TenantLayout>
         }
       />
     </Routes>
