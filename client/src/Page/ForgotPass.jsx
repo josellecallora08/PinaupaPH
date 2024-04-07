@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import logo from '/logo.svg'
 import ForgotPass1 from '/ForgotPass1.svg'
 import { useNavigate } from 'react-router-dom'
+import { base_url } from '../utils/constants'
 const ForgotPass = () => {
   const [email, setEmail] = useState('')
   const [error, setError] = useState(null)
@@ -11,7 +12,7 @@ const ForgotPass = () => {
     try {
       setError(null)
       const response = await fetch(
-        `http://localhost:5000/api/user/forgot-password?email=${email}`,
+        `${base_url}/forgot-password?email=${email}`,
         {
           method: 'POST',
         },
