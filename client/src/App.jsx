@@ -20,8 +20,8 @@ import { isLoggedin } from './features/authentication'
 import { useNavigate, Navigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import ForgotPass from './Page/ForgotPass'
-import OTPVerify from './Page/Admin/OTPVerify'
-import ResetPass from './Page/Admin/ResetPass'
+import OTPVerify from './Page/OTPVerify'
+import ResetPass from './Page/ResetPass'
 import TenantLayout from './Component/Tenant Component/TenantLayout'
 import TenantPayment from './Page/Tenant/TenantPayment'
 import TenantInvoice from './Page/Tenant/TenantInvoice'
@@ -46,9 +46,18 @@ function App() {
         path="/"
         element={user ? <Navigate to="/dashboard" /> : <Login />}
       />
-      <Route path="/forgot-password" element={<ForgotPass />} />
-      <Route path="/otp-verify" element={<OTPVerify />} />
-      <Route path="/reset-password" element={<ResetPass />} />
+      <Route
+        path="/forgot-password"
+        element={ <ForgotPass />}
+      />
+      <Route
+        path="/otp-verify/:id"
+        element={ <OTPVerify />}
+      />
+         <Route
+        path="/reset-password/:id"
+        element={ <ResetPass />}
+      />
       <Route
         path="/dashboard"
         element={

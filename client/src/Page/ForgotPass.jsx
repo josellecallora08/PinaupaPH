@@ -1,38 +1,72 @@
-import React from 'react'
+import React, { useState } from 'react'
 import logo from '/logo.svg'
 import ForgotPass1 from '/ForgotPass1.svg'
+import { useNavigate } from 'react-router-dom'
 const ForgotPass = () => {
-
+  const [email, setEmail] = useState('')
+  const [error, setError] = useState(null)
+  const navigate = useNavigate('')
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      setError(null)
+      const response = await fetch(
+        `http://localhost:5000/api/user/forgot-password?email=${email}`,
+        {
+          method: 'POST',
+        },
+      )
+      if (!response.ok) {
+        setError('Email does not exists.')
+        return
+      }
+      const json = await response.json()
+      console.log(json)
+      navigate(`/otp-verify/${json.otp}`)
+    } catch (err) {
+      setError('Email does not exists.')
+    }
+  }
   return (
     <>
       <div className=" w-full h-screen py-10 px-10">
-      <img src={logo} alt="PinaupaPH logo" className="lg:block lg:ml-10 hidden  " />
+        <img
+          src={logo}
+          alt="PinaupaPH logo"
+          className="lg:block lg:ml-10 hidden  "
+        />
         <div className="lg:flex-row lg:ml-20  flex flex-col items-center">
           <div className="  lg:w-1/2 lg:mt-0 mt-5">
-            <img src={logo} alt="PinaupaPH logo" className="lg:hidden mx-auto" />
-            <img src={ForgotPass1} alt="Forgot Password Picture" className='lg:w-11/12' />
+            <img
+              src={logo}
+              alt="PinaupaPH logo"
+              className="lg:hidden mx-auto"
+            />
+            <img
+              src={ForgotPass1}
+              alt="Forgot Password Picture"
+              className="lg:w-11/12"
+            />
           </div>
 
-          <div className='lg:shadow-md lg:rounded-md lg:shadow-dark-gray p-10'>
+          <div className="lg:shadow-md lg:rounded-md lg:shadow-dark-gray p-10">
             <div className="">
               <h1 className="lg:text-3xl text-2xl font-bold text-primary">
-               Password Recovery 
+                Password Recovery
               </h1>
               <p className="text-sm mt-3  text-dark-gray">
                 Enter your Email to reset your password.
               </p>
             </div>
 
-            <form action="" className="  w-full mt-3 ">
-              <label
-                htmlFor="email"
-                className="text-primary font-bold text-lg"
-              >
+            <form onSubmit={handleSubmit} className="  w-full mt-3 ">
+              <label htmlFor="email" className="text-primary font-bold text-lg">
                 Email
               </label>
               <input
                 type="email"
-                name='email'
+                name="email"
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g juan.delacruz@gmail.com"
                 className="mr-10 rounded-md py-3 border-2 px-3 border-dark-gray w-full mt-2"
               />

@@ -53,7 +53,7 @@ module.exports.sign_up = async (req, res) => {
   }
   if (mobile_no !== '') details.mobile_no = mobile_no
   if (birthday !== '') details.birthday = birthday
-  if(occupancy !== '') details.monthly_due = occupancy
+  if (occupancy !== '') details.monthly_due = occupancy
   try {
     if (await USERMODEL.findOne({ username }))
       return res
@@ -297,7 +297,7 @@ module.exports.fetch_users = async (req, res) => {
 }
 
 module.exports.fetch_user = async (req, res) => {
-  const {user_id }= req.query
+  const { user_id } = req.query
   let user = await TENANTMODEL.findOne({ user_id: user_id })
     .populate({
       path: 'user_id',
@@ -322,7 +322,7 @@ module.exports.fetch_user = async (req, res) => {
       id: user.user_id._id,
       image: user.user_id.profile_image.image_url,
       image_id: user.user_id.profile_image.public_id,
-      birthday:user.user_id.birthday,
+      birthday: user.user_id.birthday,
       name: user.user_id.name,
       username: user.user_id.username,
       email: user.user_id.email,
@@ -655,7 +655,7 @@ module.exports.forgot_password = async (req, res) => {
     let expirationTime = new Date()
     expirationTime = expirationTime.setMinutes(expirationTime.getMinutes() + 10) // Expires after 10 minutes
     // Assuming you have a method in your user model to save the pin and expiration time
-    await OTPMODEL.create({ email, pin, expiry: expirationTime })
+    const otp = await OTPMODEL.create({ email, pin, expiry: expirationTime })
 
     // Send the pin to the provided email
     const transporter = nodemailer.createTransport({
@@ -675,7 +675,7 @@ module.exports.forgot_password = async (req, res) => {
 
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: `OTP has been sent your email: ${email} ` })
+      .json({ msg: `OTP has been sent your email: ${email} `, otp: otp._id })
   } catch (err) {
     console.error('Error in forgot password:', err)
     res
@@ -686,34 +686,34 @@ module.exports.forgot_password = async (req, res) => {
 
 module.exports.check_otp = async (req, res) => {
   try {
-    const { email, pin } = req.query
+    const { id, pin } = req.query
 
-    const response = await OTPMODEL.findOne({ email: email })
-    if (!response)
+    const response = await OTPMODEL.findById(id)
+    if (!response) {
+      console.log('aos2idjaosidj')
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: `${pin} not found` })
-
+    }
     if (response.attempts <= 0) {
+      console.log('aosidjaosidj')
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'No attempts left, Please try again later.' })
     }
 
     if (response.pin !== pin) {
+      console.log(response.pin)
+      console.log(pin)
+
       response.attempts = response.attempts - 1
       await response.save()
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: `Invalid OTP, ${response.attempts} attempts left` })
     }
-    const remove = await OTPMODEL.findByIdAndDelete(response._id)
-    if (!remove)
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Unable to delete PIN' })
 
-    return res.status(httpStatusCodes.OK).json({ msg: 'Successfully' })
+    return res.status(httpStatusCodes.OK).json(response.id)
   } catch (err) {
     console.error('Error in forgot password:', err)
     res
@@ -724,18 +724,63 @@ module.exports.check_otp = async (req, res) => {
 
 module.exports.reset_password = async (req, res) => {
   try {
-    const { email } = req.query
-    const { password } = req.body
+    const { id } = req.query
+    const { password, confirmpassword } = req.body
+    if (password.toString() != confirmpassword.toString()) {
+      console.log('aosidjaoisdjs')
+      console.log(password)
+      console.log(confirmpassword)
+
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Password does not match' })
+    }
+    const salt = await bcrypt.genSalt(10)
+    const hash = await bcrypt.hash(password, salt)
+
+    const exist = await OTPMODEL.findById(id)
+    if (!exist) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Invalid Queries.' })
+    }
+
     const response = await USERMODEL.findOneAndUpdate(
-      { email: email },
-      { password: password },
+      { email: exist.email },
+      { password: hash },
     )
     if (!response)
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to update password.' })
 
+    const remove = await OTPMODEL.findByIdAndDelete(id)
+    if (!remove)
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unable to delete PIN' })
+
     return res.status(httpStatusCodes.OK).json({ msg: 'Password updated..' })
+  } catch (err) {
+    console.error('Error in forgot password:', err)
+    res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Internal server error.' })
+  }
+}
+
+module.exports.fetch_otp = async (req, res) => {
+  try {
+    const { id } = req.query
+
+    const response = await OTPMODEL.findById(id)
+    if (!response) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'OTP Expired' })
+    }
+
+    return res.status(httpStatusCodes.OK).json({ msg: 'OTP is still alive.' })
   } catch (err) {
     console.error('Error in forgot password:', err)
     res
