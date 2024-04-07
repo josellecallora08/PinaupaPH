@@ -13,13 +13,17 @@ const apartment_route = require('./routes/apartment')
 const document_route = require('./routes/document')
 const invoice_route = require('./routes/invoice')
 const payment_route = require('./routes/payment')
-const { scheduledInvoice, deleteOTP } = require('./controllers/invoice_controller')
+const {
+  scheduledInvoice,
+  deleteOTP,
+} = require('./controllers/invoice_controller')
 const app = express()
+
 app.use(express.json())
-const allowedOrigin = process.env.CLIENT_URL
+
 app.use(
   cors({
-    origin: [allowedOrigin, "http://localhost:5173"],
+    origin: [process.env.CLIENT_URL],
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204,
@@ -34,8 +38,6 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 })
-
-
 
 // Connect to DB
 mongoose.connect(process.env.MONGODB_URI).then(() => {
@@ -54,8 +56,8 @@ app.use('/api/documents', document_route)
 app.use('/api/invoice', invoice_route)
 app.use('/api/payment', payment_route)
 
-app.get('/', (req,res)=> {
-  res.json("PinaupaPH Backend")
+app.get('/', (req, res) => {
+  res.json('PinaupaPH Backend')
 })
 
 module.exports = app
