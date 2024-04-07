@@ -2,10 +2,10 @@
     "name": "server",
     "version": "1.0.0",
     "description": "",
-    "main": "server.js",
+    "main": "index.js",
     "scripts": {
         "test": "jest",
-        "start": "nodemon server.js",
+        "start": "nodemon index.js",
         "format": "prettier --write \"**/*.js\"",
         "check-format": "prettier --check \"**/*.js\""
     },
@@ -30,7 +30,8 @@
         "nodemailer": "^6.9.13",
         "nodemon": "^3.0.1",
         "path": "^0.12.7",
-        "punycode": "^2.3.1"
+        "punycode": "^2.3.1",
+        "vercel": "^33.7.0"
     },
     "devDependencies": {
         "jest": "^29.7.0",

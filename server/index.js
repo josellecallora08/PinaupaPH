@@ -19,7 +19,7 @@ app.use(express.json())
 const allowedOrigin = process.env.CLIENT_URL
 app.use(
   cors({
-    origin: allowedOrigin,
+    origin: [allowedOrigin, "http://localhost:5173"],
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204,
@@ -53,3 +53,9 @@ app.use('/api/apartment', apartment_route)
 app.use('/api/documents', document_route)
 app.use('/api/invoice', invoice_route)
 app.use('/api/payment', payment_route)
+
+app.get('/', (req,res)=> {
+  res.json("PinaupaPH Backend")
+})
+
+module.exports = app
