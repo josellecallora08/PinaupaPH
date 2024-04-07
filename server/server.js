@@ -54,5 +54,7 @@ app.use('/api/documents', document_route)
 app.use('/api/invoice', invoice_route)
 app.use('/api/payment', payment_route)
 
-
+app.get('/', (req,res)=> {
+  res.json("PinaupaPH Backend")
+})
 module.exports = app
