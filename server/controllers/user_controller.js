@@ -157,8 +157,7 @@ module.exports.sign_in = async (req, res) => {
 
     const token = createToken(response._id, response.username, response.role)
 
-    // res.cookie('token', token, { maxAge: 900000 })
-    res.setHeader('Set-Cookie', `token=${token}; Path=/; HttpOnly; Max-Age=900000`);
+    res.cookie('token', token, { maxAge: 900000 })
 
     return res
       .status(httpStatusCodes.OK)
