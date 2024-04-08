@@ -79,7 +79,7 @@ export const isLogin = (credentials, navigate) => async (dispatch) => {
     }
 
     const data = await response.json()
-    Cookies.set('token',data.token)
+    // Cookies.set('token',data.token)
     dispatch(isLoggedin())
     navigate('/dashboard')
   } catch (err) {
