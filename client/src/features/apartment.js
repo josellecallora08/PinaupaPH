@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { apartment_url } from '../utils/constants'
+import { apartment_url, base_url } from '../utils/constants'
 import Cookies from 'js-cookie'
 const apartmentSlice = createSlice({
   name: 'apartment',
@@ -50,8 +50,9 @@ export const {
 
 export const createApartment = (fields) => async (dispatch) => {
   try {
+    const token = Cookies.get('token')
     dispatch(apartmentStart())
-    const apartment = await fetch(`${apartment_url}/create_apartment`, {
+    const apartment = await fetch(`${base_url}/api/apartment/create_apartment`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -64,7 +65,7 @@ export const createApartment = (fields) => async (dispatch) => {
       throw new Error('Failed to create apartment')
     }
     const json = await apartment.json()
-    dispatch(fetchApartmentSuccess(json))
+    dispatch(fetchApartments())
   } catch (err) {
     dispatch(actionApartmentFailed(err.message))
   }
@@ -74,7 +75,7 @@ export const fetchApartments = () => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(apartmentStart())
-    const apartment = await fetch(`${apartment_url}/building`, {
+    const apartment = await fetch(`${base_url}/api/apartment/building`, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
@@ -92,8 +93,9 @@ export const fetchApartments = () => async (dispatch) => {
 
 export const fetchApartment = (apartmentId) => async (dispatch) => {
   try {
+    const token = Cookies.get('token')
     dispatch(apartmentStart())
-    const apartment = await fetch(`${apartment_url}/building/${apartmentId}`, {
+    const apartment = await fetch(`${base_url}/api/apartment/building/${apartmentId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -112,8 +114,9 @@ export const fetchApartment = (apartmentId) => async (dispatch) => {
 export const editApartment = (fields, apartmentId) => async (dispatch) => {
   try {
     dispatch(apartmentStart())
+    const token = Cookies.get('tokens')
     const apartment = await fetch(
-      `${apartment_url}/${apartmentId}/edit_apartment`,
+      `${base_url}/api/apartment/${apartmentId}/edit_apartment`,
       {
         method: 'PATCH',
         headers: {
@@ -127,7 +130,7 @@ export const editApartment = (fields, apartmentId) => async (dispatch) => {
       throw new Error('Failed to create apartment')
     }
     const json = await apartment.json()
-    dispatch(editApartmentSuccess(json))
+    dispatch(fetchApartments())
   } catch (err) {
     dispatch(actionApartmentFailed(err.message))
   }
@@ -136,7 +139,8 @@ export const editApartment = (fields, apartmentId) => async (dispatch) => {
 export const deleteApartment = (apartment_id) => async (dispatch) => {
   try {
     dispatch(apartmentStart())
-    const apartment = await fetch(`${apartment_url}/${apartment_id}`, {
+    const token = Cookies.get('token')
+    const apartment = await fetch(`${base_url}/api/apartment/${apartment_id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -145,7 +149,7 @@ export const deleteApartment = (apartment_id) => async (dispatch) => {
     if (!apartment.ok) {
       throw new Error('Failed to create apartment')
     }
-    dispatch(deleteApartmentSuccess(apartmentId))
+    dispatch(fetchApartments())
   } catch (err) {
     dispatch(actionApartmentFailed(err.message))
   }

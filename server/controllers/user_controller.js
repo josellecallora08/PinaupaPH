@@ -330,6 +330,7 @@ module.exports.fetch_user = async (req, res) => {
       email: user.user_id.email,
       phone: user.user_id.mobile_no,
       role: user.user_id.role,
+      unit_id: user.unit_id._id,
       unit_no: user.unit_id.unit_no,
       rent: user.unit_id.rent,
       deposit: user.deposit,
@@ -370,6 +371,7 @@ module.exports.fetch_data = async (req, res) => {
         email: response.email,
         phone: response.mobile_no,
         role: response.role,
+        birthday: response.birthday
       }
 
       return res.status(httpStatusCodes.OK).json(response)
@@ -429,12 +431,11 @@ module.exports.update_profile = async (req, res) => {
     name,
     username,
     email,
-    new_password,
+    newpassword,
+    confirmpassword,
     password,
     mobile_no,
-    birthday,
-    unit_id,
-    deposit,
+    birthday
   } = req.body
   const salt = await bcrypt.genSalt(10)
   const details = {}
@@ -445,7 +446,7 @@ module.exports.update_profile = async (req, res) => {
   if (birthday !== '') details.birthday = birthday
   try {
     let response = await USERMODEL.findByIdAndUpdate(
-      { _id: user_id },
+      {_id: user_id},
       details,
     ).select('name username password email phone birthday role')
     if (!response)
@@ -453,9 +454,14 @@ module.exports.update_profile = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to update information(2)' })
 
-    if (password && new_password) {
+    if (password && newpassword && confirmpassword) {
+      if (newpassword !== confirmpassword)
+        return res.status(httpStatusCodes.BAD_REQUEST).json({ msg: "New password does not match" })
+    }
+
+    if (password && newpassword) {
       if (bcrypt.compareSync(password, response.password)) {
-        const hashed = await bcrypt.hash(new_password, salt)
+        const hashed = await bcrypt.hash(newpassword, salt)
         if (!hashed)
           return res
             .status(httpStatusCodes.BAD_REQUEST)
@@ -488,7 +494,7 @@ module.exports.update_unit_info = async (req, res) => {
     }
 
     const { user_id } = req.params
-    const { unit_id, deposit } = req.body
+    const { unit_id, deposit, occupancy } = req.body
 
     // Find the current tenant
     const tenant = await TENANTMODEL.findOne({ user_id: user_id })
@@ -517,6 +523,10 @@ module.exports.update_unit_info = async (req, res) => {
     }
     if (deposit) {
       tenant.deposit = deposit
+    }
+
+    if(occupancy){
+      tenant.monthly_due = occupancy
     }
     await tenant.save()
 

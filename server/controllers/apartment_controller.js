@@ -24,7 +24,7 @@ module.exports.fetch_apartments = async (req, res) => {
 module.exports.fetch_apartment = async (req, res) => {
   try {
     const { apartment_id } = req.params
-    const response = await APARTMENTMODEL.findById({ _id: apartment_id })
+    const response = await APARTMENTMODEL.findById( apartment_id )
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)

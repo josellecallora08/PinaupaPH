@@ -66,6 +66,7 @@ const Tenant = () => {
 
   useEffect(() => {
     dispatch(fetchUsers())
+    console.log(tenant)
   },[dispatch])
 
   useEffect(() => {
