@@ -138,6 +138,7 @@ export const fetchUnitsApartment = (apartment_id) => async (dispatch) => {
 
 export const editUnit = (apartmentId, unitId) => async (dispatch) => {
   try {
+    const token = Cookies.get('token')
     dispatch(startUnit())
     const unit = await fetch(
       `${base_url}/api/apartment/${apartmentId}/edit_apartment_unit/${unitId}`,

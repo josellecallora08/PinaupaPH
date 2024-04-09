@@ -32,8 +32,7 @@ const AddApartment = ({setIsAddApartmentFormOpen}) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(createApartment(fields))
-    console.log('Form submitted')
-    setIsFormOpen(!isFormOpen)
+    setIsAddApartmentFormOpen(prevState => !prevState)
   }
 
   return (
@@ -65,7 +64,7 @@ const AddApartment = ({setIsAddApartmentFormOpen}) => {
             </label>
             <input
               type="text"
-              id="Address"
+              id="address"
               name="address"
               value={fields.address}
               onChange={handleInput}

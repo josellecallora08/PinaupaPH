@@ -74,6 +74,9 @@ const TenantProfile = () => {
     dispatch(fetchUser(id))
     console.log(tenant)
   }, [])
+
+  useEffect(() => {
+  })
   const birthday = new Date(tenant?.birthday).toLocaleDateString()
   return (
     <div className="bg-white1 ">
@@ -128,17 +131,19 @@ const TenantProfile = () => {
                 {/* Left profile */}
                 <div className="lg:w-1/2  lg:rounded-lg lg:origin-left  ">
                   <div className="lg:items-center flex gap-3 relative mb-7 ">
-                    <img
-                      src={profile.Account[0].pfp}
-                      alt="Profile"
-                      className="lg:w-24 lg:h-24 w-14 h-14"
-                    />
+                    <figure>
+                      <img
+                        src={tenant?.image}
+                        alt="Profile"
+                        className="lg:w-24 rounded-full object-fill lg:h-24 w-14 h-14"
+                      />
+                    </figure>
                     <div>
                       <h2 className="lg:text-2xl text-xl font-bold mb-2">
-                        {profile.PersonalDetails[0].name}
+                        {tenant?.name}
                       </h2>
                       <h2 className="lg:text-2xl">
-                        {profile.ApartmentDetails[0].aparmentunit}
+                        Unit - {tenant?.unit_no}
                       </h2>
                     </div>
                     <button
@@ -204,6 +209,8 @@ const TenantProfile = () => {
                           setIsEditTenantAccountForm={
                             setIsEditTenantAccountForm
                           }
+                          tenant={tenant}
+
                         />
                       </div>
                     </div>
@@ -244,6 +251,7 @@ const TenantProfile = () => {
                       <div className="lg:w-1/2 lg:h-[30rem] h-auto bg-white  rounded-lg">
                         <EditTenantDetails
                           setIsEditTenantDetailForm={setIsEditTenantDetailForm}
+                          tenant = {tenant}
                         />
                       </div>
                     </div>
@@ -267,6 +275,7 @@ const TenantProfile = () => {
                         <div className="lg:w-1/2   h-auto bg-white  rounded-lg">
                           <EditApartment
                             setIsEditApartmentForm={setIsEditApartmentForm}
+                            tenant={tenant}
                           />
                         </div>
                       </div>

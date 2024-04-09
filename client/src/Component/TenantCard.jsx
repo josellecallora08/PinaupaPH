@@ -8,7 +8,7 @@ const TenantCard = ({data}) => {
     <Link to={`/tenantprofile/${data._id}`}>
       <div className='lg:text-base lg:mx-1 flex  md:mx-2 mx-5 my-2 ml-0 rounded-md relative text-xs shadow-sm shadow-light-gray'>
       <div>
-       <img src={pfp1} className="w-24 h-full rounded-tl-md rounded-bl-md rounded-tr-none" alt="" />
+       <img src={data?.image} className="w-24 h-full rounded-tl-md border-r-2 border-primary rounded-bl-md rounded-tr-none" alt="" />
       </div>
       <div className='lg:ml-10 ml-3 mt-8 flex flex-col gap-1 '>
         <p className='lg:text-lg font-black text-base'>Name: <span>{data.name}</span></p>

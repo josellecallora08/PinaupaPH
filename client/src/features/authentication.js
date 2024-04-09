@@ -80,6 +80,7 @@ export const isLogin = (credentials, navigate) => async (dispatch) => {
     }
 
     const data = await response.json()
+    Cookies.set('token', data.token)
     dispatch(loginSuccess(data))
     navigate('/dashboard')
 

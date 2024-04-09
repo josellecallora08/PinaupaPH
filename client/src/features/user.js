@@ -99,8 +99,9 @@ export const fetchUser = (userId) => async (dispatch) => {
 
 export const fetchUsers = () => async (dispatch) => {
   try {
+    const token = Cookies.get('token')
     dispatch(fetchUserStart())
-    const user = await fetch(`${base_url}api/user/tenants`, {
+    const user = await fetch(`${base_url}/api/user/tenants`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -117,6 +118,7 @@ export const fetchUsers = () => async (dispatch) => {
 
 export const editUser = (userId, credentials) => async (dispatch) => {
   try {
+    const token = Cookies.get('token')
     dispatch(fetchUserStart())
     const user = await fetch(`${base_url}/api/user/${userId}/update_profile`, {
       method: 'PATCH',
@@ -132,11 +134,38 @@ export const editUser = (userId, credentials) => async (dispatch) => {
     }
 
     // const json = await user.json()
-    dispatch(editUserSuccess(userId))
+    // dispatch(editUserSuccess(userId))
+    dispatch(fetchUser(userId))
   } catch (err) {
     dispatch(actionUserFailed(err.message))
   }
 }
+
+export const editUserApartment = (userId, credentials) => async (dispatch) => {
+  try {
+    const token = Cookies.get('token')
+    dispatch(fetchUserStart())
+    const user = await fetch(`${base_url}/api/user/${userId}/update-apartment-details`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(credentials),
+    })
+
+    if (!user.ok) {
+      throw new Error('Failed to update information...')
+    }
+
+    // const json = await user.json()
+    // dispatch(editUserSuccess(userId))
+    dispatch(fetchUser(userId))
+  } catch (err) {
+    dispatch(actionUserFailed(err.message))
+  }
+}
+
 
 export const deleteUser = (userId) => async (dispatch) => {
   try {

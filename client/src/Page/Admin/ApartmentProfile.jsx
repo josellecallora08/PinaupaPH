@@ -5,11 +5,12 @@ import { IoIosArrowDown } from 'react-icons/io'
 import ApartmentStatusCard from '../../Component/ApartmentStatusCard'
 import AddRoom from '../../Component/AddRoom'
 import EditApartment from '../../Component/EditApartment'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import EditApartmentDetails from '../../Component/EditApartmentDetails'
 import { fetchUnitsApartment } from '../../features/unit'
+import { deleteApartment, fetchApartment } from '../../features/apartment'
 const ApartmentProfile = () => {
   const [searchItem, setSearchItem] = useState('')
   const [isAddRoomFormOpen, setIsAddRoomFormOpen] = useState(false)
@@ -18,7 +19,9 @@ const ApartmentProfile = () => {
   const [selectedOption, setSelectedOption] = useState('')
   const { id } = useParams()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const units = useSelector((state) => state.unit.data)
+  const apartment = useSelector((state) => state.apartment.single)
 
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value)
@@ -39,6 +42,16 @@ const ApartmentProfile = () => {
     console.log(units)
   }, [])
 
+  useEffect(() => {
+    dispatch(fetchApartment(id))
+    console.log(apartment)
+  }, [])
+
+  const handleDelete = async () => {
+      dispatch(deleteApartment(id))
+      navigate('/apartment')
+  }
+
   const dropdownItems = ['Available Units', 'Occupied Units']
 
   return (
@@ -49,9 +62,9 @@ const ApartmentProfile = () => {
         <div className=" flex bg-white gap-10 mx-5 px-5 py-4 rounded-md shadow-md shadow-gray ">
           <div className="lg:w-1/2">
             <h1 className="lg:text-3xl md:text-3xl text-black text-2xl mb-3">
-              Facebook Apartment
+              {apartment?.name}
             </h1>
-            <p className="lg:text-base md:text-base text-sm">Total Unit : 2</p>
+            <p className="lg:text-base md:text-base text-sm">Total Unit : {apartment?.units?.length}</p>
             <div className="flex gap-5 mt-16 ">
               <button
                 onClick={toggleEditApartmentForm}
@@ -59,7 +72,7 @@ const ApartmentProfile = () => {
               >
                 Edit
               </button>
-              <button className="lg:text-base lg:px-5 lg:py-2 uppercase bg-red text-white  py-2 px-4 rounded-md">
+              <button onClick={handleDelete} className="lg:text-base lg:px-5 lg:py-2 uppercase bg-red text-white  py-2 px-4 rounded-md">
                 Delete
               </button>
             </div>
@@ -69,21 +82,21 @@ const ApartmentProfile = () => {
               <h1 className="lg:text-xl md:text-xl text-lg font-black">
                 Address
               </h1>
-              <p className="lg:text-lg md:text-lg lg:mt-2 text-sm">Cavite</p>
+              <p className="lg:text-lg md:text-lg lg:mt-2 text-sm">{apartment?.address}</p>
             </div>
             <div className="lg:justify-between lg:mt-0 lg:flex md:justify-between md:flex mt-4">
               <h1 className="lg:text-xl md:text-xl text-lg font-black">
                 Province/City
               </h1>
               <p className="lg:text-lg md:text-lg lg:mt-1 text-sm">
-                Sampaloc St.
+                {apartment?.province}
               </p>
             </div>
             <div className="lg:justify-between lg:mt-0 lg:flex md:justify-between md:flex mt-4 ">
               <h1 className="lg:text-xl md:text-xl text-lg font-black">
-                Baranggay
+                Barangay
               </h1>
-              <p className="lg:text-lg md:text-lg lg:mt-2 text-sm">Cavite</p>
+              <p className="lg:text-lg md:text-lg lg:mt-2 text-sm">{apartment?.barangay}</p>
             </div>
           </div>
         </div>
@@ -96,28 +109,6 @@ const ApartmentProfile = () => {
             <FaPlus />
             Add Unit
           </button>
-        </div>
-
-        <div>
-          <select
-            className="lg:ml-10 lg:w-48 lg:h-12  ml-7  bg-white text-black w-40 h-10 p-1 rounded-lg border-2"
-            value={selectedOption}
-            onChange={handleOptionChange}
-            style={{ color: selectedOption ? 'black' : 'gray' }}
-          >
-            <option style={{ color: 'gray' }} value="">
-              Select Building
-            </option>
-            <option value="option1" className=" rounded-none">
-              Option 1
-            </option>
-            <option value="option2" className="">
-              Option 2
-            </option>
-            <option value="option3" className="">
-              Option 3
-            </option>
-          </select>
         </div>
         <div className="lg:grid-cols-3 mt-5 grid grid-cols-1 gap-2 mx-5">
             {units?.map((val, key) => (
