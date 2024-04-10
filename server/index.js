@@ -47,7 +47,7 @@ mongoose.connect(process.env.MONGODB_URI).then(() => {
 })
 
 deleteOTP()
-scheduledInvoice() //Monthly Creation of Invoice
+// scheduledInvoice() //Monthly Creation of Invoice
 app.use('/api/user', user_route)
 app.use('/api/cctv', cctv_route)
 app.use('/api/report', report_route)
