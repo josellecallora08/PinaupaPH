@@ -1,5 +1,4 @@
-import React from 'react'
-import { useState } from 'react'
+import React,  { useState } from 'react'
 import { IoMdClose } from "react-icons/io";
 import { useSelector, useDispatch } from 'react-redux';
 import { editUser } from '../features/user';
@@ -57,6 +56,7 @@ toggleForm();
                     id="username"
                     onChange={handleInput}
                     name="username"
+                    required
                     value={fields.username}
                     required
                     placeholder="Enter your Old Password"
