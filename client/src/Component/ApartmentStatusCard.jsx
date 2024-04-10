@@ -36,8 +36,8 @@ const ApartmentStatusCard = ({apartmentId, val}) => {
 
         {isEditApartmentUnit && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="pb-5 mt-14 bg-white rounded-lg">
-            <EditApartmentUnit />
+          <div className="lg:w-auto lg:h-auto  mt-12 bg-white rounded-lg">
+            <EditApartmentUnit setIsEditApartmentUnit={setIsEditApartmentUnit} />
           </div>
         </div>
       )}

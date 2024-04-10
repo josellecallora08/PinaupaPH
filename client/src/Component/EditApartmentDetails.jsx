@@ -6,6 +6,7 @@ import { editApartment, fetchApartment } from '../features/apartment';
 
 const EditApartmentDetails = ({apartmentId,setIsEditApartmentFormOpen}) => {
 const dispatch = useDispatch()
+const [error, setError] = useState(null)
 const apartment = useSelector(state => state.apartment.data)
 const [fields, setFields] = useState({
   name: apartment?.name || '',
@@ -41,8 +42,12 @@ const handleInput = (e) => {
 
 const handleSubmit = (e) => {
 e.preventDefault()
+setError(
+  'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
+    )
+
 dispatch(editApartment(fields))
-console.log('Form submitted');
+console.log('Form asdasd');
 toggleForm(!isFormOpen);
 // setFields({
 //   name: '',
@@ -57,8 +62,15 @@ toggleForm(!isFormOpen);
      <div className='relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center '>
             <h1 className="lg:text-xl  ml-5 text-lg font-bold ">Edit Apartment Details</h1>
       </div>
-        <form action="" onSubmit={handleSubmit} className="lg:w-full w-[20rem] h-auto px-3 py-5 ">
+        <form action="" onSubmit={handleSubmit} className="lg:w-[40rem] w-[20rem] h-[27rem] px-3 py-5 overflow-y-auto ">
         <button  className='absolute top-4 right-6'><IoMdClose onClick={() => setIsEditApartmentFormOpen(prevState => !prevState)}  color='white' /></button>
+        {error && (
+            <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+              {error}
+            </div>
+          )}
+
+
                 <div className="mb-4">
                   <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 ">
                     Apartment Name
@@ -123,7 +135,7 @@ toggleForm(!isFormOpen);
                   />
                 </div>
                 <div className='flex justify-end mt-5 gap-3'>
-                  <button className=' bg-dark-blue text-white font-bold py-2 px-4 rounded'>
+                  <button onClick={handleSubmit} type='button' className=' bg-dark-blue text-white font-bold py-2 px-4 rounded'>
                     Submit
                   </button>
                   <button onClick={() => setIsEditApartmentFormOpen(prevState => !prevState)}  className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded'>

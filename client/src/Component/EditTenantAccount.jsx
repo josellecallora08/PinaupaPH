@@ -1,5 +1,5 @@
-
-
+import React from 'react'
+import { useState } from 'react'
 import { IoMdClose } from "react-icons/io";
 import { useSelector, useDispatch } from 'react-redux';
 import { editUser } from '../features/user';
@@ -13,7 +13,7 @@ const EditTenantAccount = ({setIsEditTenantAccountForm, tenant}) => {
     confirmpassword: ''
   })
 const [isFormOpen, setIsFormOpen] = useState(false)
-
+const [error, setError] = useState(null)
 const toggleForm = () => {
 
   setIsFormOpen(!isFormOpen);
@@ -28,6 +28,9 @@ const handleInput = (e) => {
 }
 const handleSubmit = (e) => {
 e.preventDefault()
+setError(
+  'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
+    )
 dispatch(editUser(tenant?.id, fields))
 console.log('Form submitted');
 toggleForm();
@@ -40,6 +43,11 @@ toggleForm();
       </div>
         <form action="" onSubmit={handleSubmit} className="lg:w-full w-[20rem] h-auto px-3 py-4 ">
         <button className='absolute top-4 right-6'><IoMdClose onClick={() => setIsEditTenantAccountForm(prevState => !prevState)} size={25} color='white' /></button>
+        {error && (
+            <div className=" hidden w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+              {error}
+            </div>
+          )}
         <div className="mb-4">
                   <label htmlFor="oldpassword" className="block text-gray-700 text-sm font-bold mb-2 ">
                     Username
@@ -49,8 +57,8 @@ toggleForm();
                     id="username"
                     onChange={handleInput}
                     name="username"
-                    required
                     value={fields.username}
+                    required
                     placeholder="Enter your Old Password"
                     className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
