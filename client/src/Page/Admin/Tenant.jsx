@@ -13,6 +13,7 @@ const Tenant = () => {
   const [searchItem, setSearchItem] = useState('')
   const [isAddTenantFormOpen, setIsAddTenantFormOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState('')
+
   const [fields, setFields] = useState({
     name: '',
     username: '',
@@ -26,13 +27,15 @@ const Tenant = () => {
   })
   const dispatch = useDispatch()
   const tenant = useSelector((state) => state.user.data)
-
+  const [error, setError] = useState(null)
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value)
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
+
+ 
     dispatch(createTenant(fields))
     setFields({
       name: '',
@@ -127,8 +130,10 @@ const Tenant = () => {
           <div className="fixed top-6 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white  rounded-md rounded-tl-lg rounded-tr-lg">
               <AddTenantForm
+              
                 // setFields={setFields}
                 handleSubmit={handleSubmit}
+                error={error}
                 handleInput={handleInput}
                 setIsAddTenantFormOpen={setIsAddTenantFormOpen}
               />

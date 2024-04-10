@@ -9,7 +9,7 @@ const EditableRow = ({
   
       <tr className=''>
         <td>
-          <input className='ml-6 p-1 rounded-md border-2 border-primary'
+          <input className='lg:w-auto ml-2 p-1 w-24 rounded-md border-2 border-primary'
             type="text"
             required="required"
             placeholder="Enter Name"
@@ -19,7 +19,7 @@ const EditableRow = ({
           />
         </td>
         <td>
-          <input className='p-1 border-2 rounded-md border-primary' 
+          <input className='lg:w-auto p-1 border-2 w-24 rounded-md border-primary' 
             type="text"
             required="required"
             placeholder="Enter Relationship"
@@ -29,7 +29,7 @@ const EditableRow = ({
           />
         </td>
         <td>
-          <input className='p-1 border-2 rounded-md border-primary'
+          <input className='lg:w-auto p-1 border-2 w-24 rounded-md border-primary'
             type="text"
             required="required"
             placeholder="Enter Phone"
@@ -38,16 +38,16 @@ const EditableRow = ({
             onChange={handleEditFormChange}
           />
         </td>
-        <td className='text-center text-sm'>
+        <td className='flex text-center text-sm'>
           <button
             type="submit"
-            className="bg-primary hover:opacity-80 text-white font-bold p-2 rounded mr-2"
+            className="lg:mr-2 lg:ml-20 ml-2 bg-primary hover:opacity-80 text-white font-bold p-2 rounded "
           >
             Save
           </button>
           <button
             onClick={handleCancelClick}
-            className="bg-red hover:opacity-80 text-white font-bold p-2 rounded"
+            className="bg-red hover:opacity-80 text-white font-bold p-1 rounded"
           >
             Cancel
           </button>

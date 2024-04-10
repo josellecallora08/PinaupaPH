@@ -6,6 +6,7 @@ import { IoMdClose } from 'react-icons/io'
 
 const Table = ({setIsEditFamilyMemForm}) => {
   const [contacts, setContacts] = useState(data)
+  const [error, setError] = useState(null)
   const [editContactId, setEditContactId] = useState(null)
   const [editFormData, setEditFormData] = useState({
     fullName: '',
@@ -53,7 +54,9 @@ const Table = ({setIsEditFamilyMemForm}) => {
     const index = contacts.findIndex((contact) => contact.id === editContactId)
 
     newContacts[index] = editedContact
-
+    setError(
+      'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
+        )
     setContacts(newContacts)
     setEditContactId(null)
   }
@@ -88,6 +91,9 @@ const Table = ({setIsEditFamilyMemForm}) => {
               />
             </button>
           </div>
+          
+    
+
         <table className=" table-fixed min-w-full border-collapse w-full  ">
           <thead className='  bg-dark-blue  text-white sticky top-0 '>
             <tr className='text-center text-sm font-semibold  ' >
@@ -117,6 +123,11 @@ const Table = ({setIsEditFamilyMemForm}) => {
             ))}
           </tbody>
         </table>
+        {error && (
+            <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+              {error}
+            </div>
+          )}
         {contacts.length <= 4 && (
   <div className="flex justify-end absolute bottom-4 right-0 mb-5 mr-10 gap-3">
     <button

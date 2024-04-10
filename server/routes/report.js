@@ -14,8 +14,8 @@ const {
 const router = Router()
 
 router.post('/:user_id', createReport)
-router.patch('/', editReport)
-router.delete('/', deleteReport)
+router.patch('/v1', editReport)
+router.delete('/v1', deleteReport)
 router.get('/', fetchReports)
 router.get('/v1', fetchReport)
 router.post('/:user_id/comment/:report_id', createComment)

@@ -87,7 +87,7 @@ const TenantProfile = () => {
     <div className="bg-white1 ">
       {/* Tenant Profile Header */}
       <div className="lg:flex lg:items-center lg:justify-between">
-        <div className="lg:mt-4 uppercase font-bold  p-5 mx-4">
+        <div className="lg:mt-2 lg:ml-10 uppercase font-bold  p-5 mx-4">
           <h1 className="">Tenant/Profile</h1>
         </div>
 
@@ -126,12 +126,12 @@ const TenantProfile = () => {
         </div>
       </div>
 
-      <div className="rounded-md">
+      <div className="w-11/12 m-auto h-full rounded-md">
         {/* Content based on Active Tab */}
         {activeTab === 'profile' && (
           <div className=" lg:mt-5 mt-10   ">
             {TenantProfileInfo.map((profile, index) => (
-              <div className="lg:flex lg:gap-5 p-5" key={index}>
+              <div className="lg:flex lg:gap-5 p-5 lg:pb-2" key={index}>
                 {/* Upper section */}
                 {/* Left profile */}
                 <div className="lg:w-1/2  lg:rounded-lg lg:origin-left  ">

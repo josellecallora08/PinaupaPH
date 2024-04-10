@@ -31,14 +31,13 @@ import TenantSecurity from './Page/Tenant/TenantSecurity'
 import TenantHome from './Page/Tenant/TenantHome'
 
 function App() {
-  const token = Cookies.get('token')
   const user = useSelector((state) => state.auth.isAuthenticated)
   const role = useSelector((state) => state.auth.user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(isLoggedin(token))
+    dispatch(isLoggedin())
     console.log('1')
   }, [])
 

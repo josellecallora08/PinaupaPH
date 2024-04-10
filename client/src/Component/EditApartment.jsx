@@ -9,6 +9,7 @@ import { editUser, editUserApartment } from '../features/user';
 const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
   const dispatch = useDispatch()
   const unit = useSelector(state => state.unit.data)
+  const [error, setError] = useState(null)
   const [fields, setFields] = useState({
     unit_no: tenant?.unit_no || '',
     deposit: tenant?.deposit !== null && tenant?.deposit !== undefined ? String(tenant?.deposit) : '',
@@ -28,6 +29,9 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    setError(
+      'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
+        )
     console.log(fields)
     dispatch(editUserApartment(tenant.id, fields))
     console.log('Form submitted');
@@ -41,6 +45,11 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
         </div>
         <form onSubmit={handleSubmit} className="lg:w-full w-[20rem] h-auto px-3 py-5 ">
           <button type='button' className='absolute top-4 right-6'><IoMdClose onClick={() => setIsEditApartmentForm(prevState => !prevState)} size={25} color='white' /></button>
+          {error && (
+            <div className=" hidden w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+              {error}
+            </div>
+          )}
           <div className="mb-4">
             <label
               htmlFor="apartment_unit"
@@ -78,6 +87,7 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
               id="deposit"
               onChange={handleInput}
               name="deposit"
+              required
               value={fields.deposit}
               placeholder="Enter your Deposit"
               className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -95,6 +105,7 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
               id="occupancy"
               onChange={handleInput}
               name="occupancy"
+              required
               value={fields.occupancy}
               placeholder="Enter your Date of Move In"
               className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
