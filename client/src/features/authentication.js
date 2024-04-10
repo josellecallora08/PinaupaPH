@@ -46,7 +46,7 @@ export const { loginStart, loginSuccess, loginFailed, logout } =
 
 export const isLoggedin = () => async (dispatch) => {
   try {
-    const token = Cookies.get('token') // Fetch token dynamically
+    const token = Cookies.get('token') 
     if (!token) {
       throw new Error('Token not found')
     }
@@ -84,7 +84,8 @@ export const isLogin = (credentials, navigate) => async (dispatch) => {
 
     const data = await response.json()
     Cookies.set('token', data.token )
-    dispatch(loginSuccess(data))
+
+    dispatch(isLoggedin())
     navigate('/dashboard')
 
     // Dispatch isLoggedin action after successful login to update user data

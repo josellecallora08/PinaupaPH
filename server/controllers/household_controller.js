@@ -52,9 +52,7 @@ module.exports.create_household = async (req, res) => {
     const { name, relationship, birthday, mobile } = req.body
     const response = await TENANTMODEL.findOne({ user_id: user_id })
     if (!response) {
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid to create household...' })
+      throw new Error({ error: 'Invalid to create household...' })
     }
     const details = { name, relationship, birthday, mobile }
     const household_index = response.household.findIndex(
@@ -75,7 +73,7 @@ module.exports.create_household = async (req, res) => {
         .json({ error: 'Failed to save household information' })
     }
     return res
-      .status(httpStatusCodes.CREATED)
+      .status(httpStatusCodes.OK)
       .json({ msg: 'Created household successfully!' })
   } catch (err) {
     console.error({ error: err.message })
