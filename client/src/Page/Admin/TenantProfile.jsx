@@ -81,6 +81,7 @@ const TenantProfile = () => {
   useEffect(() => {
     dispatch(fetchHouseholds(id))
   }, [])
+  
   const birthday = new Date(tenant?.birthday).toLocaleDateString()
   return (
     <div className="bg-white1 ">
