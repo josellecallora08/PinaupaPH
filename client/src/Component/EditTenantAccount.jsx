@@ -1,5 +1,4 @@
-import React from 'react'
-import { useState } from 'react'
+
 
 import { IoMdClose } from "react-icons/io";
 import { useSelector, useDispatch } from 'react-redux';
@@ -50,6 +49,7 @@ toggleForm();
                     id="username"
                     onChange={handleInput}
                     name="username"
+                    required
                     value={fields.username}
                     placeholder="Enter your Old Password"
                     className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -65,6 +65,7 @@ toggleForm();
                     id="password"
                     onChange={handleInput}
                     name="password"
+                    required
                     value={fields.password}
                     placeholder="Enter your Old Password"
                     className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -79,6 +80,7 @@ toggleForm();
                     type="password"
                     id="newpassword"
                     name="newpassword"
+                    required
                     onChange={handleInput}
                     value={fields.newpassword}
                     placeholder="Enter your New Password"
@@ -94,6 +96,7 @@ toggleForm();
                     type="password"
                     id="confirmpassword"
                     onChange={handleInput}
+                    required
                     name="consfirmpassword"
                     placeholder="Enter your Confirm Password"
                     className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

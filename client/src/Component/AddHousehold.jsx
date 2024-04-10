@@ -45,6 +45,7 @@ const AddHousehold = ({ setIsAddHouseholdForm }) => {
             type="text"
             id="name"
             name="name"
+            required
             placeholder="Enter your name"
             className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
@@ -61,6 +62,7 @@ const AddHousehold = ({ setIsAddHouseholdForm }) => {
             type="tel"
             id="contact"
             name="contact"
+            required
             placeholder="Enter your contact number"
             className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
@@ -77,6 +79,7 @@ const AddHousehold = ({ setIsAddHouseholdForm }) => {
             type="text"
             id="relationship"
             name="relationship"
+            required
             placeholder="Enter Tenant's relationship"
             className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />

@@ -38,7 +38,8 @@ const AddPet = ({setIsAddPetForm}) => {
           type="text"
           id="name"
           name="name"
-          placeholder="Enter your name"
+          required
+          placeholder="Enter your Pet name"
           className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
       </div>
@@ -54,6 +55,7 @@ const AddPet = ({setIsAddPetForm}) => {
           type="text"
           id="Specie"
           name="Specie"
+          required
           placeholder="Enter Specie of pet"
           className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
@@ -70,6 +72,7 @@ const AddPet = ({setIsAddPetForm}) => {
           type="text"
           id="birthday"
           name="birthday"
+          required
           placeholder="Enter birthday of pet"
           className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />

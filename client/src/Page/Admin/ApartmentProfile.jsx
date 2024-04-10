@@ -48,15 +48,23 @@ const ApartmentProfile = () => {
   }, [])
 
   const handleDelete = async () => {
+    const isConfirmed = window.confirm(
+      'Are you sure you want to delete this apartment?',
+    )
+    if (isConfirmed) {
       dispatch(deleteApartment(id))
       navigate('/apartment')
+    } else {
+      console.log('Deletion cancelled')
+    }
+
   }
 
   const dropdownItems = ['Available Units', 'Occupied Units']
 
   return (
     <div>
-      <div className="mb-10">
+      <div className="w-11/12 m-auto h-full mb-10">
         {/* Upper part of Apartment Profile */}
         <h1 className="uppercase font-bold px-10 p-5">View Apartment</h1>
         <div className=" flex bg-white gap-10 mx-5 px-5 py-4 rounded-md shadow-md shadow-gray ">

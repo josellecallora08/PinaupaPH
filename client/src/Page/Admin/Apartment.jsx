@@ -60,8 +60,8 @@ const Apartment = () => {
         </div>
       </div>
       {isAddApartmentFormOpen && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-          <div className="lg:w-auto h-[500px] mt-14 w-10/12  bg-white  rounded-md">
+        <div className="lg:top-9 fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+          <div className="lg:w-auto h-auto  lg:mt-2 mt-14 w-10/12 bg-white  rounded-md">
             <AddApartment
               setIsAddApartmentFormOpen={setIsAddApartmentFormOpen}
             />

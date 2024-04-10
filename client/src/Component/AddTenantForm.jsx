@@ -11,6 +11,7 @@ const AddTenantForm = ({
   handleSubmit,
   handleInput,
   setIsAddTenantFormOpen,
+  error
 }) => {
   const unit = useSelector((state) => state.unit.data)
 
@@ -26,6 +27,11 @@ const AddTenantForm = ({
         method="POST"
         className="lg:w-[30rem] w-[20rem] h-[25rem] p-3 overflow-y-auto"
       >
+            {error && (
+            <div className="  w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+              {error}
+            </div>
+          )}
         <button className="absolute top-4 right-6">
           <IoMdClose
             onClick={() => setIsAddTenantFormOpen((prevState) => !prevState)}
