@@ -32,6 +32,7 @@ import TenantHome from './Page/Tenant/TenantHome'
 
 function App() {
   const user = useSelector((state) => state.auth.isAuthenticated)
+  const role = useSelector((state) => state.auth.user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -46,27 +47,20 @@ function App() {
         path="/"
         element={user ? <Navigate to="/dashboard" /> : <Login />}
       />
-      <Route
-        path="/forgot-password"
-        element={ <ForgotPass />}
-      />
-      <Route
-        path="/otp-verify/:id"
-        element={ <OTPVerify />}
-      />
-         <Route
-        path="/reset-password/:id"
-        element={ <ResetPass />}
-      />
+      <Route path="/forgot-password" element={<ForgotPass />} />
+      <Route path="/otp-verify/:id" element={<OTPVerify />} />
+      <Route path="/reset-password/:id" element={<ResetPass />} />
       <Route
         path="/dashboard"
         element={
-          user ? (
+          role?.role === 'Admin' ? (
             <Layout className="bg-white1">
               <Dashboard />
             </Layout>
+          ) : role?.role === 'Tenant' ? (
+            <TenantHome />
           ) : (
-            <Login />
+            <Navigate to="/" />
           )
         }
       />

@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { base_url } from '../utils/constants'
 import Cookies from 'js-cookie'
-const token = Cookies.get('token')
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
@@ -89,8 +88,6 @@ export const isLogin = (credentials, navigate) => async (dispatch) => {
     Cookies.set('token', data.token )
     dispatch(isLoggedin())
     navigate('/dashboard')
-
-    // Dispatch isLoggedin action after successful login to update user data
   } catch (err) {
     dispatch(loginFailed(err.message))
   }
