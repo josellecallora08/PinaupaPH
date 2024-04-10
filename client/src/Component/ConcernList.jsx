@@ -16,7 +16,7 @@ const ConcernList = () => {
   }
   return (
     <>
-      <div className=' px-5 py-3'>
+      <div className=' px-5 lg:pl-14 py-3'>
         <h1 className="lg:text-base uppercase text-sm font-bold my-5 ">
           Concern And Issues
         </h1>

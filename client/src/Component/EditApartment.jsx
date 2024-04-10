@@ -78,6 +78,7 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
               id="deposit"
               onChange={handleInput}
               name="deposit"
+              required
               value={fields.deposit}
               placeholder="Enter your Deposit"
               className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -95,6 +96,7 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
               id="occupancy"
               onChange={handleInput}
               name="occupancy"
+              required
               value={fields.occupancy}
               placeholder="Enter your Date of Move In"
               className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

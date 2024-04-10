@@ -19,14 +19,14 @@ const Least = () => {
           setModal={setModal}
         />
       )}
-      <div className="lg:ml-3 mr-3 flex flex-col ">
-        <h1 className="lg:text-base m-4 my-7 ml-8 text-xl font-bold">
+      <div className="w-11/12 m-auto h-full mr-3 flex flex-col ">
+        <h1 className="lg:text-base lg:ml-0  my-7 ml-8 text-xl font-bold">
           DOCUMENTS / LEASE AGREEMENTS
         </h1>
         <div className="flex flex-row justify-between items-center">
           <SearchBar />
           <button
-            className="bg-[#183044] flex flex-row items-center py-3 px-6 rounded-md"
+            className="lg:mr-12 bg-primary flex flex-row items-center py-3 px-6 rounded-md"
             onClick={toggleModal}
           >
             <FaPlus color="white" size={20} />
@@ -34,7 +34,7 @@ const Least = () => {
           </button>
         </div>
 
-        <div className="xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 grid grid-cols-1 mt-3">
+        <div className="xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 lg:pr-10 grid grid-cols-1 mt-3">
           <LeaseCard />
           <LeaseCard />
           <LeaseCard />

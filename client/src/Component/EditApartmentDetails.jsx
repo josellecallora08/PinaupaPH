@@ -68,7 +68,8 @@ toggleForm(!isFormOpen);
                     id="name"
                     onChange={handleInput}
                     name="name"
-                    value={fields.name}                    
+                    value={fields.name}
+                    required                    
                     placeholder="Enter your Apartment Name"
                     className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
@@ -84,6 +85,7 @@ toggleForm(!isFormOpen);
                     name="address"
                     onChange={handleInput}
                     value={fields.address}
+                    required
                     placeholder="Enter your Address"
                     className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
@@ -98,6 +100,7 @@ toggleForm(!isFormOpen);
                     id="location"
                     onChange={handleInput}
                     value={fields.location}
+                    required
                     name="location"
                     placeholder="Enter your Province/City"
                     className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -113,6 +116,7 @@ toggleForm(!isFormOpen);
                     id="barangay"
                     onChange={handleInput}
                     value={fields.barangay}
+                    required
                     name="barangay"
                     placeholder="Enter your Baranggay"
                     className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

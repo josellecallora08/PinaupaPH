@@ -42,6 +42,7 @@ const AddRoom = ({apartment_id,setIsAddRoomFormOpen}) => {
               <select
                 className="   bg-white text-black w-full h-10 mb-3 p-1 rounded-lg border-2 z-50"
                 value={selectedAddApartmentOption}
+                required
                 onChange={handleAddApartmentOptionChange}
                 style={{ color: selectedAddApartmentOption ? 'black' : 'gray', borderColor:'black' }}
               >
@@ -69,6 +70,7 @@ const AddRoom = ({apartment_id,setIsAddRoomFormOpen}) => {
               type="text"
               id="unit_no"
               name="unit_no"
+              required
               
               placeholder="Enter Apartment Unit"
               className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -83,6 +85,7 @@ const AddRoom = ({apartment_id,setIsAddRoomFormOpen}) => {
               type="number"
               id="rent"
               name="rent"
+              required
               placeholder="Enter Amount Rent"
               className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />

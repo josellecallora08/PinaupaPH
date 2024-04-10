@@ -52,6 +52,7 @@ const EditTenantDetails = ({setIsEditTenantDetailForm, tenant}) => {
                 name="name"
                 onChange={handleInput}
                 value = {fields.name}
+                required
                 placeholder="Enter your name"
                 className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
@@ -65,6 +66,7 @@ const EditTenantDetails = ({setIsEditTenantDetailForm, tenant}) => {
                 type="date"
                 id="birthday"
                 name="birthday"
+                required
                 onChange={handleInput}
                 value={new Date(fields.birthday).toISOString().split('T')[0]}
                 placeholder="Enter your birthday"
@@ -80,6 +82,7 @@ const EditTenantDetails = ({setIsEditTenantDetailForm, tenant}) => {
                 type="tel"
                 id="mobile_no"
                 name="mobile_no"
+                required
                 onChange={handleInput}
                 value={fields.mobile_no}
                 placeholder="Enter your contact number"
@@ -94,6 +97,7 @@ const EditTenantDetails = ({setIsEditTenantDetailForm, tenant}) => {
               <input
                 type="email"
                 id="email"
+                required
                 name="email"
                 onChange={handleInput}
                 value={fields.email}
