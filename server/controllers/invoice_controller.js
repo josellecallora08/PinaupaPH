@@ -5,47 +5,75 @@ const OTPMODEL = require('../models/otp')
 const INVOICEMODEL = require('../models/invoice')
 const cron = require('node-cron')
 const httpStatusCodes = require('../constants/constants')
-let hasRun = false
+
+const DAY_IN_MS = 24 * 60 * 60 * 1000 // Number of milliseconds in a day
 
 module.exports.scheduledInvoice = () => {
-  cron.schedule(`* * * * * *`, async () => {
+  let hasRun = false // Initialize hasRun flag
+
+  cron.schedule('* * * * *', async () => {
+    // Run every minute, adjust as needed
     if (!hasRun) {
       hasRun = true
-      let reference
+
       const current_date = new Date()
       const day = current_date.getDate()
       const month = current_date.getMonth()
-      const year = current_date.getYear()
+      const year = current_date.getFullYear() // Use getFullYear() instead of getYear()
+
       try {
-        let response = await TENANTMODEL.find()
-        response.forEach(async (item) => {
+        const response = await TENANTMODEL.find()
+
+        for (const item of response) {
+          if (!item.unit_id) {
+            console.log('Unit not found for tenant:', item._id)
+            continue // Skip processing if unit_id not found
+          }
+
           const due = new Date(item.monthly_due)
-          const date = due.getDate()
-          let ref_user = item.user_id.toString().slice(-3)
-          if (date === day) {
-            let unit_response = await UNITMODEL.findById({ _id: item.unit_id })
-            let ref_unit = unit_response._id.toString()
-            reference = `INV-${day}${month}${year}${ref_unit}${ref_user}` //add another more id that could differentiate one inv to another
-            // Include condition to check whether the same invoice is existing or not
-            // make sure it runs once when the day is the same even if the user reloads
-            const exist = await INVOICEMODEL.findOne({ reference: reference })
-            if (exist) {
-              // res.status(httpStatusCodes.BAD_REQUEST).json({error: "Invoice already created"})
-              return console.log('Existing already')
+          const dueDay = due.getDate()
+
+          // Calculate the difference in days between current date and due date
+          const daysDifference = Math.floor((due - current_date) / DAY_IN_MS)
+
+          if (daysDifference === 0) {
+            // Check if the due date is today
+            const unit_response = await UNITMODEL.findById(item.unit_id)
+            if (!unit_response) {
+              console.log('Unit not found for tenant:', item._id)
+              continue // Skip processing if unit not found
             }
 
-            item.balance += unit_response.rent
+            const ref_user = item.user_id.toString().slice(-3)
+            const ref_unit = unit_response._id.toString()
+
+            const reference = `INV-${day}${month}${year}${ref_unit}${ref_user}`
+
+            const exist = await INVOICEMODEL.findOne({ reference: reference })
+            if (exist) {
+              console.log('Existing invoice already:', reference)
+              continue // Skip creating invoice if already exists
+            }
+
+            // Adjust amount based on unit rent or any other relevant logic
+            const amount = unit_response.rent || 6000
+
+            item.balance += amount
             await item.save()
-            response = await INVOICEMODEL.create({
+
+            await INVOICEMODEL.create({
               user_id: item.user_id,
               reference,
-              amount: 6000,
+              amount,
             })
-            console.log(`Invoice created...`)
+
+            console.log(`Invoice created: ${reference}`)
           }
-        })
+        }
       } catch (error) {
         console.error('Error in scheduledInvoice:', error)
+      } finally {
+        hasRun = false // Reset hasRun flag
       }
     }
   })

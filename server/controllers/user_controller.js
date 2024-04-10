@@ -184,7 +184,6 @@ module.exports.sign_in = async (req, res) => {
 
     // // Set token in cookie (optional)
     res.cookie('token', token, { maxAge: 300000 })
-   
 
     return res
       .status(httpStatusCodes.OK)
@@ -248,28 +247,37 @@ module.exports.search_user = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ msg: 'No matching records..' })
     }
-    console.log(search)
-    search = search.map((item) => ({
-      _id: item.user_id._id,
-      name: item.user.name,
-      unit_no: item.unit.unit_no,
-      image: item.user.profile_image.image_url,
-      image_id: item.user .profile_image.public_id,
-      username: item.user_id.username,
-      email: item.user_id.email,
-      birthday: item.user_id.birthday,
-      phone: item.user_id.mobile_no,
-      role: item.user_id.role,
-      unit_id: item.unit_id._id,
-      rent: item.unit_id.rent,
-      deposit: item.deposit,
-      advance: item.advance,
-      balance: item.balance,
-      monthly_due:
-        item.monthly_due !== null
-          ? new Date(item.monthly_due).toDateString()
-          : null,
-    }))
+
+    search = search.map((item) => {
+      let userData = {
+        _id: item.user_id._id,
+        name: item.user.name,
+        image: item.user.profile_image.image_url,
+        image_id: item.user.profile_image.public_id,
+        username: item.user.username,
+        email: item.user.email,
+        birthday: item.user.birthday,
+        phone: item.user.mobile_no,
+        role: item.user.role,
+        unit_id: '',
+        rent: '',
+        deposit: item.deposit,
+        advance: item.advance,
+        balance: item.balance,
+        monthly_due:
+          item.monthly_due !== null
+            ? new Date(item.monthly_due).toDateString()
+            : null,
+      }
+
+      if (item.unit_id) {
+        userData.unit_id = item.unit_id._id
+        userData.unit_no = item.unit.unit_no
+        userData.rent = item.unit.rent
+      }
+
+      return userData
+    })
 
     return res.status(httpStatusCodes.OK).json(search)
   } catch (err) {
@@ -279,6 +287,7 @@ module.exports.search_user = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
+
 // * Tested API
 module.exports.fetch_users = async (req, res) => {
   // const generatedToken = req.newToken
@@ -308,29 +317,37 @@ module.exports.fetch_users = async (req, res) => {
         .json({ error: 'User not found' })
     }
 
-    user = user.map((item) => ({
-      _id: item.user_id._id,
-      image: item.user_id.profile_image.image_url,
-      image_id: item.user_id.profile_image.public_id,
-      name: item.user_id.name,
-      username: item.user_id.username,
-      email: item.user_id.email,
-      birthday: item.user_id.birthday,
-      phone: item.user_id.mobile_no,
-      role: item.user_id.role,
-      unit_id: item.unit_id._id,
-      unit_no: item.unit_id.unit_no,
-      rent: item.unit_id.rent,
-      deposit: item.deposit,
-      advance: item.advance,
-      balance: item.balance,
-      monthly_due:
+    user = user.map((item) => {
+      let userData = {
+        _id: item.user_id._id,
+        image: item.user_id.profile_image.image_url,
+        image_id: item.user_id.profile_image.public_id,
+        name: item.user_id.name,
+        username: item.user_id.username,
+        email: item.user_id.email,
+        birthday: item.user_id.birthday,
+        phone: item.user_id.mobile_no,
+        role: item.user_id.role,
+      }
+
+      if (item.unit_id) {
+        userData.unit_id = item.unit_id._id
+        userData.unit_no = item.unit_id.unit_no
+        userData.rent = item.unit_id.rent
+      }
+
+      userData.deposit = item.deposit
+      userData.advance = item.advance
+      userData.balance = item.balance
+      userData.monthly_due =
         item.monthly_due !== null
           ? new Date(item.monthly_due).toDateString()
-          : null,
-    }))
+          : null
 
-    return res.status(httpStatusCodes.OK).json( user )
+      return userData
+    })
+
+    return res.status(httpStatusCodes.OK).json(user)
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -361,20 +378,19 @@ module.exports.fetch_user = async (req, res) => {
         .json({ error: 'User not found' })
     }
 
-    user = {
+    let userData = {
       id: user.user_id._id,
       name: user.user_id.name,
       image: user.user_id.profile_image.image_url,
       image_id: user.user_id.profile_image.public_id,
       birthday: user.user_id.birthday,
-      name: user.user_id.name,
       username: user.user_id.username,
       email: user.user_id.email,
       phone: user.user_id.mobile_no,
       role: user.user_id.role,
-      unit_id: user.unit_id._id,
-      unit_no: user.unit_id.unit_no,
-      rent: user.unit_id.rent,
+      unit_id: '',
+      unit_no: '',
+      rent: '',
       deposit: user.deposit,
       advance: user.advance,
       balance: user.balance,
@@ -384,7 +400,13 @@ module.exports.fetch_user = async (req, res) => {
           : null,
     }
 
-    return res.status(httpStatusCodes.OK).json(user)
+    if (user.unit_id) {
+      userData.unit_id = user.unit_id._id
+      userData.unit_no = user.unit_id.unit_no
+      userData.rent = user.unit_id.rent
+    }
+
+    return res.status(httpStatusCodes.OK).json(userData)
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -392,6 +414,7 @@ module.exports.fetch_user = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
+
 // * Tested API
 module.exports.fetch_data = async (req, res) => {
   const user_id = req.user.id
@@ -438,7 +461,7 @@ module.exports.fetch_data = async (req, res) => {
         .json({ error: 'User not found' })
     }
 
-    user = {
+    let userData = {
       id: user.user_id._id,
       image: user.user_id.profile_image.image_url,
       image_id: user.user_id.profile_image.public_id,
@@ -447,8 +470,6 @@ module.exports.fetch_data = async (req, res) => {
       email: user.user_id.email,
       phone: user.user_id.mobile_no,
       role: user.user_id.role,
-      unit_no: user.unit_id.unit_no,
-      rent: user.unit_id.rent,
       deposit: user.deposit,
       advance: user.advance,
       balance: user.balance,
@@ -458,7 +479,13 @@ module.exports.fetch_data = async (req, res) => {
           : null,
     }
 
-    return res.status(httpStatusCodes.OK).json(user)
+    if (user.unit_id) {
+      userData.unit_id = user.unit_id._id
+      userData.unit_no = user.unit_id.unit_no
+      userData.rent = user.unit_id.rent
+    }
+
+    return res.status(httpStatusCodes.OK).json(userData)
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -466,6 +493,7 @@ module.exports.fetch_data = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
+
 // * Done checking on POSTMAN API
 module.exports.update_profile = async (req, res) => {
   const { user_id } = req.params
