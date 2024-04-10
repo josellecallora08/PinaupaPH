@@ -48,7 +48,7 @@ export const isLoggedin = () => async (dispatch) => {
   try {
     const token = Cookies.get('token') 
     if (!token) {
-      throw new Error('Token not found')
+      return
     }
 
     const response = await fetch(`${base_url}/api/user/`, {
@@ -70,6 +70,9 @@ export const isLoggedin = () => async (dispatch) => {
 export const isLogin = (credentials, navigate) => async (dispatch) => {
   try {
     dispatch(loginStart())
+    if(credentials.username === '' || credentials.password === ''){
+      throw new Error("Inputs cannot be empty")
+    }
     const response = await fetch(`${base_url}/api/user/login`, {
       method: 'POST',
       headers: {
@@ -79,12 +82,11 @@ export const isLogin = (credentials, navigate) => async (dispatch) => {
       credentials: 'include',
     })
     if (!response.ok) {
-      throw new Error('Login Failed.')
+      throw new Error('Invalid Credentials.')
     }
 
     const data = await response.json()
     Cookies.set('token', data.token )
-
     dispatch(isLoggedin())
     navigate('/dashboard')
 

@@ -8,12 +8,13 @@ import { useNavigate, Link } from 'react-router-dom';
 const Login = () => {
   const navigate = useNavigate();
   const loading = useSelector(state => state.auth.loading)
+  const error = useSelector(state => state.auth.error)
+  
   const dispatch = useDispatch();
   const [credentials, setCredentials] = useState({
     username: '',
     password: '',
   });
-  const [error, setError] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -26,7 +27,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-      dispatch(isLogin(credentials));
+
+      dispatch(isLogin(credentials, navigate));
   };
 
   return (
