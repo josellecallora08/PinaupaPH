@@ -6,6 +6,7 @@ import { IoMdClose } from 'react-icons/io'
 
 const EditPetTable = ({setIsEditPetForm}) => {
   const [contacts, setContacts] = useState(petdata)
+  const [error, setError] = useState(null)
   const [editContactId, setEditContactId] = useState(null)
   const [editFormData, setEditFormData] = useState({
     fullName: '',
@@ -39,7 +40,10 @@ const EditPetTable = ({setIsEditPetForm}) => {
 
   const handleEditFormSubmit = (event) => {
     event.preventDefault()
-
+    setError(
+      'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
+        )
+    
     const editedContact = {
       id: editContactId,
       petfullName: editFormData.petfullName,
@@ -116,6 +120,13 @@ const EditPetTable = ({setIsEditPetForm}) => {
             ))}
           </tbody>
         </table>
+        {error && (
+            <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+              {error}
+            </div>
+          )}
+
+
         {contacts.length <= 4 && (
   <div className="flex justify-end absolute bottom-0 right-0 mb-10 mr-10 gap-3">
     <button
@@ -126,6 +137,7 @@ const EditPetTable = ({setIsEditPetForm}) => {
     </button>
   </div>
 )}
+
 {contacts.length > 4 && (
   <div className="flex justify-end mb-10 mt-2 mr-10">
       <button

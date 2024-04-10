@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { editUser } from '../features/user';
 const EditTenantDetails = ({setIsEditTenantDetailForm, tenant}) => {
   const user = useSelector((state) => state.user.data)
+  const [error, setError] = useState(null)
   const dispatch = useDispatch()
   const [fields, setFields] = useState({
     name: tenant?.name || '',
@@ -15,6 +16,7 @@ const EditTenantDetails = ({setIsEditTenantDetailForm, tenant}) => {
   })
 
   const [isFormOpen, setIsFormOpen] = useState(false)
+
   const toggleForm = (e) => {
 
     setIsFormOpen(!isFormOpen);
@@ -29,6 +31,11 @@ const EditTenantDetails = ({setIsEditTenantDetailForm, tenant}) => {
   }
   const handleSubmit = (e) => {
   e.preventDefault()
+  setError(
+    'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
+      )
+  
+  
   dispatch(editUser(tenant.id,fields))
   console.log('Form submitted');
   setIsEditTenantDetailForm(prevState => !prevState)
@@ -40,7 +47,13 @@ const EditTenantDetails = ({setIsEditTenantDetailForm, tenant}) => {
             <h1 className="lg:text-xl  ml-5 text-lg font-bold ">Edit Tenant Detail</h1>
       </div>
         <form onSubmit={handleSubmit} className="lg:w-full h-full w-[20rem]  p-3 overflow-y-auto">
+  
         <button className='absolute top-4 right-6'><IoMdClose onClick={() => setIsEditTenantDetailForm(prevState => !prevState)} size={25} color='white' /></button>
+        {error && (
+            <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+              {error}
+            </div>
+          )}
         <h1 className="text-xl font-bold mb-2">Personal Details</h1>
             <div className="mb-4">
               <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 ">

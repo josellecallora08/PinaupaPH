@@ -5,6 +5,7 @@ import { createUnit } from "../features/unit";
 import { IoMdClose } from "react-icons/io";
 const AddRoom = ({apartment_id,setIsAddRoomFormOpen}) => {
   const [selectedAddApartmentOption, setSelectedAddApartmentOption] = useState('')
+  const [error, setError] = useState(null)
   const handleAddApartmentOptionChange = (e) => {
     setSelectedAddApartmentOption(e.target.value)
   }
@@ -21,6 +22,10 @@ const AddRoom = ({apartment_id,setIsAddRoomFormOpen}) => {
   }
 
   const handleSubmit = (e) => {
+    e.preventDefault()
+    setError(
+      'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
+        )
     
     dispatch(createUnit(fields, apartment_id))
     console.log('Form submitted')
@@ -32,9 +37,14 @@ const AddRoom = ({apartment_id,setIsAddRoomFormOpen}) => {
         <div className='relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center '>
             <h1 className="lg:text-xl  ml-5 text-lg font-bold ">Add Apartment Unit Details</h1>
       </div>
-      <form className="lg:w-[30rem] w-[22rem] h-[20rem] px-4 ">
+      <form className="lg:w-[30rem] lg:h-[21rem] w-[22rem] h-[20rem] px-4 overflow-y-auto ">
           <button className='absolute top-4 right-6'><IoMdClose onClick={() => setIsAddRoomFormOpen(prevState => !prevState)} size={25} color='white' /></button>
-  
+          {error && (
+            <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+              {error}
+            </div>
+          )}
+
           <div className="">
             <div>
               <h1 className='my-2 font-bold'>Apartment Unit Details</h1>

@@ -5,6 +5,7 @@ import { IoMdClose } from 'react-icons/io'
 const EditApartmentUnit = ({ apartment_id, setIsEditApartmentUnit }) => {
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [selectedApartmentOption, setSelectedApartmentOption] = useState('')
+  const [error, setError] = useState(null)
   const handleApartmentOptionChange = (e) => {
     setSelectedApartmentOption(e.target.value)
   }
@@ -20,6 +21,10 @@ const EditApartmentUnit = ({ apartment_id, setIsEditApartmentUnit }) => {
 
   const handleSubmit = (e) => {
     dispatch(createUnit(fields, apartment_id))
+    setError(
+      'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
+        )
+    
     console.log('Form submitted')
     toggleForm()
   }
@@ -31,7 +36,7 @@ const EditApartmentUnit = ({ apartment_id, setIsEditApartmentUnit }) => {
             Edit Apartment Unit
           </h1>
         </div>
-        <form className="lg:w-[30rem] w-[22rem] h-[20rem] px-4 ">
+        <form className="lg:w-[30rem] w-[22rem] h-[22rem] px-4 overflow-y-auto ">
           <button className="absolute top-4 right-6">
             <IoMdClose
               onClick={() => setIsEditApartmentUnit((prevState) => !prevState)}
@@ -40,6 +45,12 @@ const EditApartmentUnit = ({ apartment_id, setIsEditApartmentUnit }) => {
             />
           </button>
 
+
+          {error && (
+            <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+              {error}
+            </div>
+          )}
 
           <div className="">
             <div>
@@ -103,7 +114,7 @@ const EditApartmentUnit = ({ apartment_id, setIsEditApartmentUnit }) => {
               className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
-          <div className="flex justify-end mt-5 gap-3">
+          <div className=" lg:mb-3 flex justify-end mt-5 gap-3">
             <button
               onClick={handleSubmit}
               className=" bg-dark-blue text-white font-bold py-2 px-4 rounded"

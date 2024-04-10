@@ -5,12 +5,15 @@ import { IoMdClose } from 'react-icons/io'
 
 const AddHousehold = ({ setIsAddHouseholdForm }) => {
   const [isFormOpen, setIsFormOpen] = useState(false)
-
+  const [error, setError] = useState(null)
   const toggleForm = () => {
     setIsFormOpen(!isFormOpen)
   }
 
   const handleSubmit = () => {
+    setError(
+      'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
+        )
     console.log('Form submitted')
     toggleForm()
   }
@@ -33,6 +36,12 @@ const AddHousehold = ({ setIsAddHouseholdForm }) => {
                 color="white"
               />
             </button>
+
+            {error && (
+            <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+              {error}
+            </div>
+          )}
 
         <div className="mb-4">
           <label
@@ -84,7 +93,7 @@ const AddHousehold = ({ setIsAddHouseholdForm }) => {
             className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        <div className="flex justify-end mt-5 gap-3">
+        <div className="flex justify-end mt-5 mb-3 gap-3">
           <button
             onClick={handleSubmit}
             className=" bg-dark-blue text-white font-bold py-2 px-4 rounded"
