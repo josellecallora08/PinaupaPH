@@ -10,7 +10,7 @@ const ResetPass = () => {
     confirmpassword: '',
   })
 
-  const { id} = useParams()
+  const { id } = useParams()
 
   const handleInput = (e) => {
     const { name, value } = e.target
@@ -23,13 +23,16 @@ const ResetPass = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const response = await fetch(`${base_url}/reset-password/user?id=${id}`,{
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${base_url}/api/user/reset-password/user?id=${id}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(pass),
         },
-        body: JSON.stringify(pass)
-      })
+      )
 
       if (!response.ok) {
         console.log('Password does not match - client')
@@ -42,7 +45,6 @@ const ResetPass = () => {
       console.log(err.message)
     }
   }
-
 
   return (
     <>

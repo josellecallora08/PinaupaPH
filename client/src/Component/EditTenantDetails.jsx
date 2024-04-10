@@ -1,14 +1,16 @@
 import React from 'react'
 import { useState } from 'react'
 import { IoMdClose } from "react-icons/io";
-import { useSelector } from 'react-redux';
-const EditTenantDetails = ({setIsEditTenantDetailForm}) => {
+import { useSelector, useDispatch } from 'react-redux';
+import { editUser } from '../features/user';
+const EditTenantDetails = ({setIsEditTenantDetailForm, tenant}) => {
   const user = useSelector((state) => state.user.data)
+  const dispatch = useDispatch()
   const [fields, setFields] = useState({
-    name: user?.name || '',
-    birthday: user?.birthday || '',
-    mobile_no: user?.mobile_no || '',
-    email: user?.email || '',
+    name: tenant?.name || '',
+    birthday: tenant?.birthday || '',
+    mobile_no: tenant?.phone || '',
+    email: tenant?.email || '',
     
   })
 
@@ -18,11 +20,18 @@ const EditTenantDetails = ({setIsEditTenantDetailForm}) => {
     setIsFormOpen(!isFormOpen);
   }
   const handleInput = (e) => {
+    const {name, value} = e.target
+    setFields({
+      ...fields,
+      [name]:value
+    })
 
   }
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+  e.preventDefault()
+  dispatch(editUser(tenant.id,fields))
   console.log('Form submitted');
-  toggleForm();
+  setIsEditTenantDetailForm(prevState => !prevState)
   }
   
   return (
@@ -53,11 +62,11 @@ const EditTenantDetails = ({setIsEditTenantDetailForm}) => {
                 Birthday
               </label>
               <input
-                type="text"
+                type="date"
                 id="birthday"
                 name="birthday"
                 onChange={handleInput}
-                value={fields.birthday}
+                value={new Date(fields.birthday).toISOString().split('T')[0]}
                 placeholder="Enter your birthday"
                 className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
@@ -69,7 +78,7 @@ const EditTenantDetails = ({setIsEditTenantDetailForm}) => {
               </label>
               <input
                 type="tel"
-                id="contact"
+                id="mobile_no"
                 name="mobile_no"
                 onChange={handleInput}
                 value={fields.mobile_no}

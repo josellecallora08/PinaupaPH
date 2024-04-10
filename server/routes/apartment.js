@@ -13,6 +13,7 @@ const {
   fetch_unit_apartment,
   fetch_apartment,
   change_apartment_image,
+  search_apartment,
 } = require('../controllers/apartment_controller')
 
 const storage = multer.memoryStorage()
@@ -20,6 +21,7 @@ const upload = multer({ storage })
 
 const router = Router()
 
+router.post('/search', search_apartment)
 router.get('/building', fetch_apartments)
 router.get('/building/:apartment_id', fetch_apartment)
 router.post('/building/:apartment_id/:apartment_public_id', upload.single('apartment_image'), change_apartment_image)

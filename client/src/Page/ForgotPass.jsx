@@ -13,7 +13,7 @@ const ForgotPass = () => {
     try {
       setError(null)
       const response = await fetch(
-        `${base_url}/forgot-password?email=${email}`,
+        `${base_url}/api/user/forgot-password?email=${email}`,
         {
           method: 'POST',
         },

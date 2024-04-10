@@ -1,19 +1,25 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
+import {useSelector, useDispatch} from 'react-redux'
 import profile from '/pfp.svg'
 import { BiEdit } from "react-icons/bi";
 import EditOwnerDetails from '../../Component/EditOwnerDetails'
 import ChangePd from '../../Component/ChangePd'
+import { isLoggedin } from '../../features/authentication';
 
 
 const Profile = () => {
   const [modal, setIsModalOpen] = useState(false)
   const [changeModal, setchangeModal] = useState(false)
-
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.auth.user)
   const toggleModal = () => {
-
-
     setIsModalOpen(!modal)
   }
+
+  useEffect(() => {
+    dispatch(isLoggedin())
+    console.log(user?.birthday)
+  }, [])
   return (
     <>{modal ? <EditOwnerDetails setIsModalOpen = {setIsModalOpen}/> :''}
       {changeModal ? <ChangePd setchangeModal= {setchangeModal} /> :''}
@@ -26,11 +32,11 @@ const Profile = () => {
             <div className='flex flex-col w-full h-full'>
                 <div className="flex justify-center items-center w-full h-full">
                   <figure className='flex justify-center items-center w-full h-full md:max-w-60 md:max-h-60  max-w-40 max-h-40 '>
-                    <img src={profile} className='w-full h-full pt-2' onClick={() => setchangeModal(prevState => !prevState)}/>
+                    <img src={user?.image} className='w-full h-full pt-2' onClick={() => setchangeModal(prevState => !prevState)}/>
                   </figure>
                 </div>
               <div className="w-full h-full max-h-10 flex justify-center items-center py-6">
-                <p className='md:text-2xl text-base uppercase font-bold'>Ian Adams</p>
+                <p className='md:text-2xl text-base uppercase font-bold'>{user?.name}</p>
               </div>
             </div>
 
@@ -46,17 +52,17 @@ const Profile = () => {
                 <div className='w-full h-full flex flex-col px-4 py-2'>
                   <div className='w-full flex m-auto'>
                     <p className='w-[170px] pb-2'>Phone No.</p>
-                    <p>+63 5671236461</p>
+                    <p>{user?.phone}</p>
                   </div>
 
                   <div className='w-full flex m-auto'>
                     <p className='w-[170px] pb-2'>Email Address</p>
-                    <p>Ian_Stevens@gmail.com</p>
+                    <p>{user?.email}</p>
                   </div>
 
                   <div className='w-full flex m-auto'>
                     <p className='w-[170px]'>Date of Birth</p>
-                    <p>19/12/1984</p>
+                    <p>{new Date(user?.birthday).toLocaleDateString()}</p>
                   </div>
                 </div>
               </div>
@@ -72,12 +78,12 @@ const Profile = () => {
                 <div className='w-full flex flex-col px-4 py-3 '>
                   <div className='w-full flex m-auto pb-2'>
                     <p className='w-[170px]'>Username</p>
-                    <p>Ianpogi123</p>
+                    <p>{user?.username}</p>
                   </div>
 
                   <div className='w-full flex m-auto'>
                     <p className='w-[170px]'>Password</p>
-                    <p>1*********</p>
+                    <p>***********</p>
                   </div>
                 </div>  
               </div>

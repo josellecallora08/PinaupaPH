@@ -39,7 +39,7 @@ const OTPVerify = () => {
     console.log(pin)
     try {
       const response = await fetch(
-        `${base_url}/otp?id=${id}&pin=${pin}`,
+        `${base_url}/api/user/otp?id=${id}&pin=${pin}`,
         {
           method: 'POST',
         },

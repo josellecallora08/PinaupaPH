@@ -19,6 +19,7 @@ import { GrFormView, GrFormAdd } from 'react-icons/gr'
 import AddPet from '../../Component/AddPet'
 import EditPetTable from '../../Component/EditPetTable'
 import { deleteUser, fetchUser } from '../../features/user'
+import { fetchHousehold, fetchHouseholds } from '../../features/household'
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile')
   const [isEditTenantDetailForm, setIsEditTenantDetailForm] = useState(false)
@@ -34,6 +35,8 @@ const TenantProfile = () => {
   const dispatch = useDispatch()
   const { id } = useParams()
   const tenant = useSelector((state) => state.user.single)
+  const households = useSelector((state) => state.household.data)
+  console.log(households)
   const navigate = useNavigate()
   const handleDeleteTenant = () => {
     const isConfirmed = window.confirm(
@@ -73,6 +76,10 @@ const TenantProfile = () => {
   useEffect(() => {
     dispatch(fetchUser(id))
     console.log(tenant)
+  }, [])
+
+  useEffect(() => {
+    dispatch(fetchHouseholds(id))
   }, [])
   const birthday = new Date(tenant?.birthday).toLocaleDateString()
   return (
@@ -128,18 +135,18 @@ const TenantProfile = () => {
                 {/* Left profile */}
                 <div className="lg:w-1/2  lg:rounded-lg lg:origin-left  ">
                   <div className="lg:items-center flex gap-3 relative mb-7 ">
-                    <img
-                      src={profile.Account[0].pfp}
-                      alt="Profile"
-                      className="lg:w-24 lg:h-24 w-14 h-14"
-                    />
+                    <figure>
+                      <img
+                        src={tenant?.image}
+                        alt="Profile"
+                        className="lg:w-24 rounded-full object-fill lg:h-24 w-14 h-14"
+                      />
+                    </figure>
                     <div>
                       <h2 className="lg:text-2xl text-xl font-bold mb-2">
-                        {profile.PersonalDetails[0].name}
+                        {tenant?.name}
                       </h2>
-                      <h2 className="lg:text-2xl">
-                        {profile.ApartmentDetails[0].aparmentunit}
-                      </h2>
+                      <h2 className="lg:text-2xl">Unit - {tenant?.unit_no}</h2>
                     </div>
                     <button
                       onClick={handleDeleteTenant}
@@ -204,6 +211,7 @@ const TenantProfile = () => {
                           setIsEditTenantAccountForm={
                             setIsEditTenantAccountForm
                           }
+                          tenant={tenant}
                         />
                       </div>
                     </div>
@@ -244,6 +252,7 @@ const TenantProfile = () => {
                       <div className="lg:w-1/2 lg:h-[30rem] h-auto bg-white  rounded-lg">
                         <EditTenantDetails
                           setIsEditTenantDetailForm={setIsEditTenantDetailForm}
+                          tenant={tenant}
                         />
                       </div>
                     </div>
@@ -267,6 +276,7 @@ const TenantProfile = () => {
                         <div className="lg:w-1/2   h-auto bg-white  rounded-lg">
                           <EditApartment
                             setIsEditApartmentForm={setIsEditApartmentForm}
+                            tenant={tenant}
                           />
                         </div>
                       </div>
@@ -281,9 +291,7 @@ const TenantProfile = () => {
                         </div>
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
                           <p className="">Unit - {tenant?.unit_no}</p>
-                          <p className="">
-                            {tenant?.deposit}
-                          </p>
+                          <p className="">{tenant?.deposit}</p>
                           <p className="">{tenant?.monthly_due}</p>
                         </div>
                       </div>
@@ -328,23 +336,23 @@ const TenantProfile = () => {
                       </div>
                     )}
 
-                    <div className="lg:text-xl lg:p-3 mb-4 flex gap-24 ml-2 ">
-                      <div>
-                        <p className=" lg:text-2xl mb-2 text-xl">
-                          {profile.FamilyMembers[0].relationship}
-                        </p>
-                        <div className="lg:text-base">
-                          <p>Name</p>
-                          <p>Mobile No.</p>
+                    <div className="text-sm md:text-base p-3 flex flex-col gap-5 ">
+                      {households?.map((val, key) => (
+                        <div className="w-full flex flex-col md:gap-2">
+                          <div className="flex gap-5">
+                            <p className="w-1/4">Name:</p>
+                            <span className="w-3/4">{val.name}</span>
+                          </div>
+                          <div className="flex gap-5">
+                            <p className="w-1/4">Birthday:</p>
+                            <span className="w-3/4">Joselle</span>
+                          </div>
+                          <div className="flex gap-5">
+                            <p className="w-1/4">Relationship:</p>
+                            <span className="w-3/4">Joselle</span>
+                          </div>
                         </div>
-                      </div>
-                      <div className="lg:text-base -ml-2 mt-4">
-                        <p>
-                          <br />
-                        </p>
-                        <p className="">{profile.FamilyMembers[0].name}</p>
-                        <p className="">{profile.FamilyMembers[0].phone}</p>
-                      </div>
+                      ))}
                     </div>
                   </div>
                   {isEditFamilyMemForm && (

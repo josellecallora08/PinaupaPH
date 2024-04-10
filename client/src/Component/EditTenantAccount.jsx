@@ -2,13 +2,16 @@ import React from 'react'
 import { useState } from 'react'
 
 import { IoMdClose } from "react-icons/io";
-import { useSelector } from 'react-redux';
-const EditTenantAccount = ({setIsEditTenantAccountForm}) => {
-  const user = useSelector((state) => state.user.data)
+import { useSelector, useDispatch } from 'react-redux';
+import { editUser } from '../features/user';
+const EditTenantAccount = ({setIsEditTenantAccountForm, tenant}) => {
+  const user = useSelector((state) => state.user.single)
+  const dispatch = useDispatch()
   const [fields, setFields] = useState({
-    username: user?.username || '',
+    username: tenant?.username || '',
     password: '',
-    confirmPassword: ''
+    newpassword: '',
+    confirmpassword: ''
   })
 const [isFormOpen, setIsFormOpen] = useState(false)
 
@@ -17,9 +20,16 @@ const toggleForm = () => {
   setIsFormOpen(!isFormOpen);
 }
 const handleInput = (e) => {
+  const {name, value} = e.target
+  setFields({
+    ...fields,
+    [name]: value
+  })
 
 }
-const handleSubmit = () => {
+const handleSubmit = (e) => {
+e.preventDefault()
+dispatch(editUser(tenant?.id, fields))
 console.log('Form submitted');
 toggleForm();
  
@@ -31,6 +41,21 @@ toggleForm();
       </div>
         <form action="" onSubmit={handleSubmit} className="lg:w-full w-[20rem] h-auto px-3 py-4 ">
         <button className='absolute top-4 right-6'><IoMdClose onClick={() => setIsEditTenantAccountForm(prevState => !prevState)} size={25} color='white' /></button>
+        <div className="mb-4">
+                  <label htmlFor="oldpassword" className="block text-gray-700 text-sm font-bold mb-2 ">
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    id="username"
+                    onChange={handleInput}
+                    name="username"
+                    value={fields.username}
+                    placeholder="Enter your Old Password"
+                    className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
+
                 <div className="mb-4">
                   <label htmlFor="oldpassword" className="block text-gray-700 text-sm font-bold mb-2 ">
                     Old Password
@@ -53,9 +78,9 @@ toggleForm();
                   <input
                     type="password"
                     id="newpassword"
-                    name="confirmPassword"
+                    name="newpassword"
                     onChange={handleInput}
-                    value={fields.confirmPassword}
+                    value={fields.newpassword}
                     placeholder="Enter your New Password"
                     className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
@@ -67,10 +92,9 @@ toggleForm();
                   </label>
                   <input
                     type="password"
-                    id="confirmPassword"
+                    id="confirmpassword"
                     onChange={handleInput}
-                    name="consfirmPassword"
-                    value={fields.confirmPassword}
+                    name="consfirmpassword"
                     placeholder="Enter your Confirm Password"
                     className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />

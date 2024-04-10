@@ -51,10 +51,36 @@ export const {
   actionUserFailed,
 } = userSlice.actions
 
+export const handleSearchUser = (filter) => async (dispatch) => {
+  try {
+    const token = Cookies.get('token')
+    dispatch(fetchUserStart())
+    const response = await fetch(
+      `${base_url}/api/user/search?filter=${filter}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+
+    if (!response.ok) {
+      throw new Error('No Data')
+    }
+
+    const json = await response.json()
+    console.log(json)
+    dispatch(fetchUserSuccess(json))
+  } catch (err) {
+    dispatch(actionUserFailed(err.message))
+  }
+}
+
 export const createTenant = (fields) => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
-    const userRegister = await fetch(`${base_url}/`, {
+    const userRegister = await fetch(`${base_url}/api/user`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -81,7 +107,8 @@ export const createTenant = (fields) => async (dispatch) => {
 export const fetchUser = (userId) => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
-    const user = await fetch(`${base_url}/tenant?user_id=${userId}`, {
+    const token = Cookies.get('token')
+    const user = await fetch(`${base_url}/api/user/tenant?user_id=${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -99,8 +126,9 @@ export const fetchUser = (userId) => async (dispatch) => {
 
 export const fetchUsers = () => async (dispatch) => {
   try {
+    const token = Cookies.get('token')
     dispatch(fetchUserStart())
-    const user = await fetch(`${base_url}/tenants`, {
+    const user = await fetch(`${base_url}/api/user/tenants`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -109,6 +137,7 @@ export const fetchUsers = () => async (dispatch) => {
       throw new Error('Failed to fetch all user...')
     }
     const json = await user.json()
+    console.log(json)
     dispatch(fetchUserSuccess(json))
   } catch (err) {
     dispatch(actionUserFailed(err.message))
@@ -117,8 +146,9 @@ export const fetchUsers = () => async (dispatch) => {
 
 export const editUser = (userId, credentials) => async (dispatch) => {
   try {
+    const token = Cookies.get('token')
     dispatch(fetchUserStart())
-    const user = await fetch(`${base_url}/${userId}/update_profile`, {
+    const user = await fetch(`${base_url}/api/user/${userId}/update_profile`, {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -132,7 +162,36 @@ export const editUser = (userId, credentials) => async (dispatch) => {
     }
 
     // const json = await user.json()
-    dispatch(editUserSuccess(userId))
+    // dispatch(editUserSuccess(userId))
+    dispatch(fetchUser(userId))
+  } catch (err) {
+    dispatch(actionUserFailed(err.message))
+  }
+}
+
+export const editUserApartment = (userId, credentials) => async (dispatch) => {
+  try {
+    const token = Cookies.get('token')
+    dispatch(fetchUserStart())
+    const user = await fetch(
+      `${base_url}/api/user/${userId}/update-apartment-details`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      },
+    )
+
+    if (!user.ok) {
+      throw new Error('Failed to update information...')
+    }
+
+    // const json = await user.json()
+    // dispatch(editUserSuccess(userId))
+    dispatch(fetchUser(userId))
   } catch (err) {
     dispatch(actionUserFailed(err.message))
   }
@@ -141,12 +200,15 @@ export const editUser = (userId, credentials) => async (dispatch) => {
 export const deleteUser = (userId) => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
-    const deleteUser = await fetch(`${base_url}/delete_tenant?user_id=${userId}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const deleteUser = await fetch(
+      `${base_url}/api/user/delete_tenant?user_id=${userId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    })
+    )
 
     if (!deleteUser.ok) {
       throw new Error('Failed to delete tenant...')
