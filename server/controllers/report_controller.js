@@ -1,6 +1,7 @@
 const REPORTMODEL = require('../models/report')
 const httpStatusCodes = require('../constants/constants')
-
+const USERMODEL = require('../models/user')
+const UNITMODEL = require('../models/unit')
 module.exports.createReport = async (req, res) => {
   try {
     const { user_id } = req.params
@@ -75,16 +76,42 @@ module.exports.deleteReport = async (req, res) => {
       .json({ error: 'Unable to delete report due to server error' })
   }
 }
-
 module.exports.fetchReports = async (req, res) => {
   try {
-    const report = await REPORTMODEL.find().sort({ createdAt: -1 })
-    if (!report)
+    const reports = await REPORTMODEL.aggregate([
+      {
+        $lookup: {
+          from: 'users', // collection name for USERMODEL
+          localField: 'user_id',
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+      {
+        $unwind: '$user',
+      },
+      {
+        $lookup: {
+          from: 'units', // collection name for UNITMODEL
+          localField: 'unit_id',
+          foreignField: '_id',
+          as: 'unit',
+        },
+      },
+      {
+        $unwind: '$unit',
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+    ])
+
+    if (!reports.length)
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Report not found' })
 
-    return res.status(httpStatusCodes.OK).json(report)
+    return res.status(httpStatusCodes.OK).json({ reports })
   } catch (err) {
     console.log(err.message)
     return res
@@ -102,7 +129,7 @@ module.exports.fetchReport = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Report not found' })
 
-    return res.status(httpStatusCodes.OK).json(report)
+    return res.status(httpStatusCodes.OK).json({ report })
   } catch (err) {
     console.log(err.message)
     return res

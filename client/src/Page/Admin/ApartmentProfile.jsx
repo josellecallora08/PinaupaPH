@@ -48,15 +48,23 @@ const ApartmentProfile = () => {
   }, [])
 
   const handleDelete = async () => {
+    const isConfirmed = window.confirm(
+      'Are you sure you want to delete this apartment?',
+    )
+    if (isConfirmed) {
       dispatch(deleteApartment(id))
       navigate('/apartment')
+    } else {
+      console.log('Deletion cancelled')
+    }
+
   }
 
   const dropdownItems = ['Available Units', 'Occupied Units']
 
   return (
     <div>
-      <div className="mb-10">
+      <div className="w-11/12 m-auto h-full mb-10">
         {/* Upper part of Apartment Profile */}
         <h1 className="uppercase font-bold px-10 p-5">View Apartment</h1>
         <div className=" flex bg-white gap-10 mx-5 px-5 py-4 rounded-md shadow-md shadow-gray ">
@@ -118,14 +126,14 @@ const ApartmentProfile = () => {
       </div>
       {isAddRoomFormOpen && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-          <div className="pb-5 bg-white  rounded-md">
+          <div className="lg:w-auto lg:h-auto lg:mt-16 pb-5 bg-white  rounded-md">
             <AddRoom setIsAddRoomFormOpen={setIsAddRoomFormOpen} />
           </div>
         </div>
       )}
       {isEditApartmentFormOpen && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-          <div className="lg:w-1/2 mt-14 bg-white rounded-lg">
+          <div className="lg:w-auto lg:h-auto mt-14 bg-white rounded-lg">
             <EditApartmentDetails
               setIsEditApartmentFormOpen={setIsEditApartmentFormOpen}
             />

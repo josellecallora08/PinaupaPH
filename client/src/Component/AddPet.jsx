@@ -6,8 +6,12 @@ import { useState } from 'react'
 const AddPet = ({setIsAddPetForm}) => {
   const handleSubmit = () => {
     console.log('Form submitted')
+    setError(
+      'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
+        )
     toggleForm()
   }
+  const [error, setError] = useState(null)
   return (
     <div className="relative">
     <div className="relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center ">
@@ -27,6 +31,12 @@ const AddPet = ({setIsAddPetForm}) => {
             />
           </button>
 
+          {error && (
+            <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+              {error}
+            </div>
+          )}
+  <h1 className='text-base font-bold mb-2'>Add Pet Details</h1>
       <div className="mb-4">
         <label
           htmlFor="name"
@@ -38,7 +48,8 @@ const AddPet = ({setIsAddPetForm}) => {
           type="text"
           id="name"
           name="name"
-          placeholder="Enter your name"
+          required
+          placeholder="Enter your Pet name"
           className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
       </div>
@@ -54,6 +65,7 @@ const AddPet = ({setIsAddPetForm}) => {
           type="text"
           id="Specie"
           name="Specie"
+          required
           placeholder="Enter Specie of pet"
           className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
@@ -70,14 +82,15 @@ const AddPet = ({setIsAddPetForm}) => {
           type="text"
           id="birthday"
           name="birthday"
+          required
           placeholder="Enter birthday of pet"
           className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
       </div>
-      <div className="flex justify-end mt-5 gap-3">
+      <div className="flex justify-end mt-5 mb-3 gap-3">
         <button
           onClick={handleSubmit}
-          className=" bg-dark-blue text-white font-bold py-2 px-4 rounded"
+          className=" bg-dark-blue text-white font-bold  py-2 px-4 rounded"
         >
           Submit
         </button>
