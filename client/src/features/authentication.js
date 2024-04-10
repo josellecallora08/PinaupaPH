@@ -16,6 +16,9 @@ const authSlice = createSlice({
       state.loading = true
       state.error = null
     },
+    generateToken: (state, action) => {
+      state.token = action.payload
+    },
     loginSuccess: (state, action) => {
       state.loading = false
       state.isAuthenticated = true
@@ -80,7 +83,7 @@ export const isLogin = (credentials, navigate) => async (dispatch) => {
     }
 
     const data = await response.json()
-    Cookies.set('token', data.token)
+    Cookies.set('token', data.token )
     dispatch(loginSuccess(data))
     navigate('/dashboard')
 

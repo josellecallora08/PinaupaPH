@@ -51,6 +51,32 @@ export const {
   actionUserFailed,
 } = userSlice.actions
 
+export const handleSearchUser = (filter) => async (dispatch) => {
+  try {
+    const token = Cookies.get('token')
+    dispatch(fetchUserStart())
+    const response = await fetch(
+      `${base_url}/api/user/search?filter=${filter}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+
+    if (!response.ok) {
+      throw new Error('No Data')
+    }
+
+    const json = await response.json()
+    console.log(json)
+    dispatch(fetchUserSuccess(json))
+  } catch (err) {
+    dispatch(actionUserFailed(err.message))
+  }
+}
+
 export const createTenant = (fields) => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
@@ -81,6 +107,7 @@ export const createTenant = (fields) => async (dispatch) => {
 export const fetchUser = (userId) => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
+    const token = Cookies.get('token')
     const user = await fetch(`${base_url}/api/user/tenant?user_id=${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -110,6 +137,7 @@ export const fetchUsers = () => async (dispatch) => {
       throw new Error('Failed to fetch all user...')
     }
     const json = await user.json()
+    console.log(json)
     dispatch(fetchUserSuccess(json))
   } catch (err) {
     dispatch(actionUserFailed(err.message))
@@ -145,14 +173,17 @@ export const editUserApartment = (userId, credentials) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchUserStart())
-    const user = await fetch(`${base_url}/api/user/${userId}/update-apartment-details`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-type': 'application/json',
+    const user = await fetch(
+      `${base_url}/api/user/${userId}/update-apartment-details`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
       },
-      body: JSON.stringify(credentials),
-    })
+    )
 
     if (!user.ok) {
       throw new Error('Failed to update information...')
@@ -166,16 +197,18 @@ export const editUserApartment = (userId, credentials) => async (dispatch) => {
   }
 }
 
-
 export const deleteUser = (userId) => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
-    const deleteUser = await fetch(`${base_url}/api/user/delete_tenant?user_id=${userId}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const deleteUser = await fetch(
+      `${base_url}/api/user/delete_tenant?user_id=${userId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    })
+    )
 
     if (!deleteUser.ok) {
       throw new Error('Failed to delete tenant...')

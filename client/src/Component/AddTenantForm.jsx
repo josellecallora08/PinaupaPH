@@ -157,7 +157,7 @@ const AddTenantForm = ({
             <option className="rounded-none" value="someOption">
               Some option
             </option>
-            {unit?.map((val, key) => (
+            {unit?.filter(item => item.occupied === false).map((val, key) => (
               <option key={key} className="rounded-none" value={`${val._id}`}>
                 {val.unit_no}
               </option>
