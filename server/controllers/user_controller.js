@@ -579,9 +579,14 @@ module.exports.update_unit_info = async (req, res) => {
     // Retrieve the current unit assigned to the tenant
     const currentUnit = await UNITMODEL.findById(tenant.unit_id)
     if (!currentUnit) {
-      return res
-        .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'Current unit not found' })
+      const newUnit = await UNITMODEL.findById(unit_id)
+      if (!newUnit) {
+        return res
+          .status(httpStatusCodes.NOT_FOUND)
+          .json({ error: 'New unit not found' })
+      }
+      newUnit.occupied = true // Assuming "true" means occupied
+      await newUnit.save()
     }
 
     // Update the status of the current unit to false
@@ -591,7 +596,15 @@ module.exports.update_unit_info = async (req, res) => {
     // Update tenant information with the new unit
     if (unit_id) {
       tenant.unit_id = unit_id
-      console.log('15')
+
+      const newUnit = await UNITMODEL.findById(unit_id)
+      if (!newUnit) {
+        return res
+          .status(httpStatusCodes.NOT_FOUND)
+          .json({ error: 'New unit not found' })
+      }
+      newUnit.occupied = true // Assuming "true" means occupied
+      await newUnit.save()
     }
     if (deposit) {
       tenant.deposit = deposit
@@ -602,22 +615,12 @@ module.exports.update_unit_info = async (req, res) => {
     }
     await tenant.save()
 
-    // Update the status of the new unit to true or occupied
-    if (unit_id) {
-      const newUnit = await UNITMODEL.findById(unit_id)
-      if (!newUnit) {
-        return res
-          .status(httpStatusCodes.NOT_FOUND)
-          .json({ error: 'New unit not found' })
-      }
-      newUnit.occupied = true // Assuming "true" means occupied
-      await newUnit.save()
-      console.log('1')
-    }
-
     return res
       .status(httpStatusCodes.OK)
-      .json({ message: 'Tenant information updated successfully' })
+      .json({
+        message: 'Tenant information updated successfully',
+        response: tenant,
+      })
   } catch (err) {
     console.error({ error: err.message })
     return res

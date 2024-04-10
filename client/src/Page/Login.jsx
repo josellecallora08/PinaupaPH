@@ -1,12 +1,13 @@
 import logImg from '/login.svg';
 import logo from '/logo.svg';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { isLogin } from '../features/authentication';
 import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const navigate = useNavigate();
+  const loading = useSelector(state => state.auth.loading)
   const dispatch = useDispatch();
   const [credentials, setCredentials] = useState({
     username: '',
@@ -25,27 +26,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const action = await dispatch(isLogin(credentials));
-      if (action && action.payload && action.payload.success) {
-        navigate('/');
-      } else {
-        setError('Invalid email or password. Please try again.');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      setError('An error occurred. Please try again later.');
-    }
-
+      dispatch(isLogin(credentials));
   };
-  
-  useEffect(() => {
-    console.log('Error state:', error);
-    if (error) {
-      // Clear username and password fields after setting the error
-      setCredentials({ username: '', password: '' });
-    }
-  }, [error]);
 
   return (
     <>

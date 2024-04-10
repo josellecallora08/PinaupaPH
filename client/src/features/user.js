@@ -30,7 +30,7 @@ const userSlice = createSlice({
     editUserSuccess: (state, action) => {
       state.loading = false
       state.data = state.data.map((user) =>
-        user._id === action.payload
+        user._id === action.payload.response._id
           ? { ...user, ...action.payload.response }
           : user,
       )
@@ -161,9 +161,9 @@ export const editUser = (userId, credentials) => async (dispatch) => {
       throw new Error('Failed to update information...')
     }
 
-    // const json = await user.json()
-    // dispatch(editUserSuccess(userId))
-    dispatch(fetchUser(userId))
+    const json = await user.json()
+    dispatch(editUserSuccess(json))
+    // dispatch(fetchUser(userId))
   } catch (err) {
     dispatch(actionUserFailed(err.message))
   }
@@ -186,7 +186,8 @@ export const editUserApartment = (userId, credentials) => async (dispatch) => {
     )
 
     if (!user.ok) {
-      throw new Error('Failed to update information...')
+      const json = await user.json()
+      throw new Error(json.error)
     }
 
     // const json = await user.json()

@@ -18,13 +18,14 @@ const REPORTMODEL = new mongoose.Schema(
   {
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'USERMODEL',
-      required: true
+      ref: 'user',
+      required: true,
     },
+    // Add unit reference
     unit_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'UNITMODEL',
-      required: true
+      ref: 'units',
+      required: true,
     },
     title: {
       type: String,
