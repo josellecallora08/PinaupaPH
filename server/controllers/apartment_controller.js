@@ -3,6 +3,33 @@ const UNITMODEL = require('../models/unit')
 const CCTVMODEL = require('../models/cctv')
 const httpStatusCodes = require('../constants/constants')
 const cloudinary = require('cloudinary').v2
+
+module.exports.search_apartment = async (req, res) => {
+  try {
+    const { filter } = req.query
+    let search = await APARTMENTMODEL.find({
+      name: {
+        $regex: filter,
+        $options: 'i',
+      },
+    })
+
+    if (!search || search.length <= 0) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ msg: 'No matching records..' })
+    }
+
+    return res.status(httpStatusCodes.OK).json(search)
+  } catch (err) {
+    console.error({ error: err.message })
+
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
+  }
+}
+
 // ? Tested API
 module.exports.fetch_apartments = async (req, res) => {
   try {
@@ -24,7 +51,7 @@ module.exports.fetch_apartments = async (req, res) => {
 module.exports.fetch_apartment = async (req, res) => {
   try {
     const { apartment_id } = req.params
-    const response = await APARTMENTMODEL.findById( apartment_id )
+    const response = await APARTMENTMODEL.findById(apartment_id)
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)

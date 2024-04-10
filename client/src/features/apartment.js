@@ -7,7 +7,7 @@ const apartmentSlice = createSlice({
     loading: false,
     error: null,
     data: null,
-    single: null
+    single: null,
   },
   reducers: {
     apartmentStart: (state) => {
@@ -48,18 +48,46 @@ export const {
   actionApartmentFailed,
 } = apartmentSlice.actions
 
+export const handleSearchApartment = (filter) => async (dispatch) => {
+  try {
+    const token = Cookies.get('token')
+    dispatch(apartmentStart())
+    const response = await fetch(
+      `${base_url}/api/apartment/search?filter=${filter}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+
+    if (!response.ok) {
+      throw new Error('No Data')
+    }
+    const json = await response.json()
+    console.log(json)
+    dispatch(fetchApartmentSuccess(json))
+  } catch (err) {
+    dispatch(actionApartmentFailed(err.message))
+  }
+}
+
 export const createApartment = (fields) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(apartmentStart())
-    const apartment = await fetch(`${base_url}/api/apartment/create_apartment`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-type': 'application/json',
+    const apartment = await fetch(
+      `${base_url}/api/apartment/create_apartment`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(fields),
       },
-      body: JSON.stringify(fields),
-    })
+    )
 
     if (!apartment.ok) {
       throw new Error('Failed to create apartment')
@@ -77,7 +105,7 @@ export const fetchApartments = () => async (dispatch) => {
     dispatch(apartmentStart())
     const apartment = await fetch(`${base_url}/api/apartment/building`, {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     })
 
@@ -95,11 +123,14 @@ export const fetchApartment = (apartmentId) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(apartmentStart())
-    const apartment = await fetch(`${base_url}/api/apartment/building/${apartmentId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const apartment = await fetch(
+      `${base_url}/api/apartment/building/${apartmentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    })
+    )
 
     if (!apartment.ok) {
       throw new Error('Failed to create apartment')

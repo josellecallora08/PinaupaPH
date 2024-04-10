@@ -1,15 +1,19 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SearchBar from '../../Component/SearchBar'
 import TenantConcernCard from '../../Component/Tenant Component/TenantConcernCard'
 import { FaPlus } from 'react-icons/fa6'
 import CreateTicket from '../../Component/Tenant Component/CreateTicket'
-
+import { base_url } from '../../utils/constants'
+import {useDispatch} from 'react-redux'
+import { handleSearchUser } from '../../features/user'
 const TenantConcern = () => {
   const [searchItem, setSearchItem] = useState('')
   const [isCreateTicket, setisCreateTicket] = useState(false)
-  const handleSearch = (e) => {
+  const dispatch = useDispatch()
+  const handleInput = (e) => {
     setSearchItem(e.target.value)
   }
+
 
   return (
     <>
@@ -20,7 +24,7 @@ const TenantConcern = () => {
 
         <div className="lg:flex-row flex flex-col gap-4 justify-between ">
           <div className="w-7/12 md:max-w-60 max-w-full">
-            <SearchBar onSearch={handleSearch} />
+            <SearchBar onSearch={handleInput} />
           </div>
           <div className='flex justify-end'>
             <button onClick={() => setisCreateTicket(true)} className="bg-primary flex gap-3 items-center py-3 px-10 rounded-md text-white">

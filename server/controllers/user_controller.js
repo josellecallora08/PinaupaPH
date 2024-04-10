@@ -2,6 +2,7 @@ const TENANTMODEL = require('../models/tenant')
 const USERMODEL = require('../models/user')
 const UNITMODEL = require('../models/unit')
 const PAYMENTMODEL = require('../models/payment')
+const TOKENMODEL = require('../models/token')
 const httpStatusCodes = require('../constants/constants')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
@@ -153,13 +154,37 @@ module.exports.sign_in = async (req, res) => {
     if (!match)
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid Credentials (tewmp - Password)' })
+        .json({ error: 'Invalid Credentials (temp - Password)' })
 
+    // Create token
     const token = createToken(response._id, response.username, response.role)
 
-    res.cookie('token', token, { maxAge: 900000 })
+    // // Store token in the database with TTL
+    // if (!(await TOKENMODEL.findOne({user_id:response._id}))) {
+    //   const generateToken = await TOKENMODEL.create({
+    //     user_id: response._id,
+    //     token: token,
+    //     expiresAt: new Date(Date.now() + 60000), // Set expiry time for 5 minutes (300,000 milliseconds)
+    //   })
 
-    // res.setHeader('Set-Cookie', `token=${token}; Path=/; HttpOnly; Max-Age=900000`);
+    //   if (!generateToken)
+    //     return res
+    //       .status(httpStatusCodes.UNAUTHORIZED)
+    //       .json({ error: 'Unable to store token in DB' })
+    // }
+
+    // const generateToken = await TOKENMODEL.findOneAndUpdate({user_id:response._id},{
+    //   token: token
+    // })
+
+    // if (!generateToken)
+    //     return res
+    //       .status(httpStatusCodes.UNAUTHORIZED)
+    //       .json({ error: 'Unable to store token in DB' })
+
+    // // Set token in cookie (optional)
+    res.cookie('token', token, { maxAge: 300000 })
+   
 
     return res
       .status(httpStatusCodes.OK)
@@ -171,6 +196,7 @@ module.exports.sign_in = async (req, res) => {
       .json({ error: 'Server Error...' })
   }
 }
+
 // * Tested API
 module.exports.search_user = async (req, res) => {
   try {
@@ -222,16 +248,30 @@ module.exports.search_user = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ msg: 'No matching records..' })
     }
-
+    console.log(search)
     search = search.map((item) => ({
-      _id: item._id,
-      // image: item.user[0].profile_image,
+      _id: item.user_id._id,
       name: item.user.name,
-      monthly_due: new Date(item.monthly_due).toDateString(),
       unit_no: item.unit.unit_no,
+      image: item.user.profile_image.image_url,
+      image_id: item.user .profile_image.public_id,
+      username: item.user_id.username,
+      email: item.user_id.email,
+      birthday: item.user_id.birthday,
+      phone: item.user_id.mobile_no,
+      role: item.user_id.role,
+      unit_id: item.unit_id._id,
+      rent: item.unit_id.rent,
+      deposit: item.deposit,
+      advance: item.advance,
+      balance: item.balance,
+      monthly_due:
+        item.monthly_due !== null
+          ? new Date(item.monthly_due).toDateString()
+          : null,
     }))
 
-    return res.status(httpStatusCodes.FOUND).json(search)
+    return res.status(httpStatusCodes.OK).json(search)
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -241,6 +281,7 @@ module.exports.search_user = async (req, res) => {
 }
 // * Tested API
 module.exports.fetch_users = async (req, res) => {
+  // const generatedToken = req.newToken
   // const role = req.user.role
   // if (role !== 'Admin') {
   //   return res
@@ -289,7 +330,7 @@ module.exports.fetch_users = async (req, res) => {
           : null,
     }))
 
-    return res.status(httpStatusCodes.OK).json(user)
+    return res.status(httpStatusCodes.OK).json( user )
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -322,6 +363,7 @@ module.exports.fetch_user = async (req, res) => {
 
     user = {
       id: user.user_id._id,
+      name: user.user_id.name,
       image: user.user_id.profile_image.image_url,
       image_id: user.user_id.profile_image.public_id,
       birthday: user.user_id.birthday,
@@ -371,7 +413,7 @@ module.exports.fetch_data = async (req, res) => {
         email: response.email,
         phone: response.mobile_no,
         role: response.role,
-        birthday: response.birthday
+        birthday: response.birthday,
       }
 
       return res.status(httpStatusCodes.OK).json(response)
@@ -435,7 +477,7 @@ module.exports.update_profile = async (req, res) => {
     confirmpassword,
     password,
     mobile_no,
-    birthday
+    birthday,
   } = req.body
   const salt = await bcrypt.genSalt(10)
   const details = {}
@@ -446,7 +488,7 @@ module.exports.update_profile = async (req, res) => {
   if (birthday !== '') details.birthday = birthday
   try {
     let response = await USERMODEL.findByIdAndUpdate(
-      {_id: user_id},
+      { _id: user_id },
       details,
     ).select('name username password email phone birthday role')
     if (!response)
@@ -456,7 +498,9 @@ module.exports.update_profile = async (req, res) => {
 
     if (password && newpassword && confirmpassword) {
       if (newpassword !== confirmpassword)
-        return res.status(httpStatusCodes.BAD_REQUEST).json({ msg: "New password does not match" })
+        return res
+          .status(httpStatusCodes.BAD_REQUEST)
+          .json({ msg: 'New password does not match' })
     }
 
     if (password && newpassword) {
@@ -525,7 +569,7 @@ module.exports.update_unit_info = async (req, res) => {
       tenant.deposit = deposit
     }
 
-    if(occupancy){
+    if (occupancy) {
       tenant.monthly_due = occupancy
     }
     await tenant.save()

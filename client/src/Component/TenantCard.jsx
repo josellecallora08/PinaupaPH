@@ -11,7 +11,7 @@ const TenantCard = ({data}) => {
        <img src={data?.image} className="w-24 h-full rounded-tl-md border-r-2 border-primary rounded-bl-md rounded-tr-none" alt="" />
       </div>
       <div className='lg:ml-10 ml-3 mt-8 flex flex-col gap-1 '>
-        <p className='lg:text-lg font-black text-base'>Name: <span>{data.name}</span></p>
+        <p className='lg:text-2xl font-black text-base'> <span>{data.name}</span></p>
         <p className='text-sm'>{data.phone}</p>
         <p className='bg-dark-blue text-white text-sm rounded-md p-2 w-36 mt-2 hover:opacity-70'>Balance: <span>{data.balance ? data.balance : 0}</span></p>
 

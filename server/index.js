@@ -23,7 +23,7 @@ app.use(
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 204,
-    allowedHeaders: 'Content-Type, Authorization',
+    allowedHeaders: 'Content-Type, Authorization, x-auth-token',
   }),
 )
 app.use(body_parser.urlencoded({ extended: true }))
