@@ -93,12 +93,8 @@ export const createApartment = (fields) => async (dispatch) => {
       throw new Error('Failed to create apartment')
     }
     const json = await apartment.json()
-<<<<<<< Updated upstream
     dispatch(fetchApartments())
-=======
-    console.log(json)
-    await dispatch(fetchApartments())
->>>>>>> Stashed changes
+
   } catch (err) {
     dispatch(actionApartmentFailed(err.message))
   }
