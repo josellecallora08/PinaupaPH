@@ -6,10 +6,13 @@
             "use": "@vercel/node"
         }
     ],
-    "rewrites": [
+    "routes": [
         {
-            "source": "/(.*)",
-            "destination": "/index.html"
+            "src": "/(.*)",
+            "dest": "/"
+        },
+        {
+            "handle": "filesystem"
         }
     ]
 }
