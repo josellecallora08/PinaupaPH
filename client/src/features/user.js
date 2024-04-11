@@ -79,6 +79,7 @@ export const handleSearchUser = (filter) => async (dispatch) => {
 
 export const createTenant = (fields) => async (dispatch) => {
   try {
+    const token = Cookies.get('token')
     dispatch(fetchUserStart())
     const userRegister = await fetch(`${base_url}/api/user`, {
       method: 'POST',
