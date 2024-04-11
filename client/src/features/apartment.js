@@ -75,8 +75,8 @@ export const handleSearchApartment = (filter) => async (dispatch) => {
 
 export const createApartment = (fields) => async (dispatch) => {
   try {
-    const token = Cookies.get('token')
     dispatch(apartmentStart())
+    const token = Cookies.get('token')
     const apartment = await fetch(
       `${base_url}/api/apartment/create_apartment`,
       {
@@ -93,7 +93,12 @@ export const createApartment = (fields) => async (dispatch) => {
       throw new Error('Failed to create apartment')
     }
     const json = await apartment.json()
+<<<<<<< Updated upstream
     dispatch(fetchApartments())
+=======
+    console.log(json)
+    await dispatch(fetchApartments())
+>>>>>>> Stashed changes
   } catch (err) {
     dispatch(actionApartmentFailed(err.message))
   }
@@ -101,8 +106,8 @@ export const createApartment = (fields) => async (dispatch) => {
 
 export const fetchApartments = () => async (dispatch) => {
   try {
-    const token = Cookies.get('token')
     dispatch(apartmentStart())
+    const token = Cookies.get('token')
     const apartment = await fetch(`${base_url}/api/apartment/building`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -110,7 +115,7 @@ export const fetchApartments = () => async (dispatch) => {
     })
 
     if (!apartment.ok) {
-      throw new Error('Failed to create apartment')
+      throw new Error('Failed to fetch apartment')
     }
     const json = await apartment.json()
     dispatch(fetchApartmentSuccess(json))
