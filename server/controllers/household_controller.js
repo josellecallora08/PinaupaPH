@@ -12,7 +12,7 @@ module.exports.fetch_all_household = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Household head not found' })
 
-    return res.status(httpStatusCodes.OK).json(tenant.household)
+    return res.status(httpStatusCodes.OK).json({households:tenant.household})
   } catch (err) {
     console.log({ error: err.message })
     return res
