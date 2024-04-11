@@ -92,7 +92,8 @@ export const createTenant = (fields) => async (dispatch) => {
     })
 
     if (!userRegister.ok) {
-      throw new Error('Failed to register...')
+      const data = await userRegister.json()
+      throw new Error(data)
     }
 
     const json = await userRegister.json()

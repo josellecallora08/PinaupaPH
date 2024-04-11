@@ -1,17 +1,17 @@
 import { IoMdClose } from 'react-icons/io'
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createApartment } from '../features/apartment'
 
 const AddApartment = ({ setIsAddApartmentFormOpen }) => {
   const dispatch = useDispatch()
+  const error = useSelector(state => state.apartment.error)
   const [fields, setFields] = useState({
     name: '',
     address: '',
     province: '',
     barangay: '',
   })
-  const [error, setError] = useState(null)
 
   const handleInput = (e) => {
     const { name, value } = e.target
@@ -22,11 +22,6 @@ const AddApartment = ({ setIsAddApartmentFormOpen }) => {
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-   setError(
-  'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
-   )
-     e.preventDefault()
     dispatch(createApartment(fields))
     setIsAddApartmentFormOpen(prevState => !prevState)
   }
