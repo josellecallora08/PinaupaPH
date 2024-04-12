@@ -56,7 +56,8 @@ export const isLoggedin = () => async (dispatch) => {
       },
     })
     if (!response.ok) {
-      throw new Error('User not found')
+      const json = await response.json()
+      throw new Error(json.error)
     }
 
     const data = await response.json()
@@ -81,7 +82,8 @@ export const isLogin = (credentials, navigate) => async (dispatch) => {
       credentials: 'include',
     })
     if (!response.ok) {
-      throw new Error('Invalid Credentials.')
+      const json = await response.json()
+      throw new Error(json.error)
     }
 
     const data = await response.json()

@@ -28,7 +28,6 @@ const {
   update_profile_picture,
   update_unit_info,
   forgot_password,
-  retrieve_password,
   check_otp,
   fetch_data,
   reset_password,

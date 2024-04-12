@@ -27,15 +27,13 @@ const Tenant = () => {
   })
   const dispatch = useDispatch()
   const tenant = useSelector((state) => state.user.data)
-  const [error, setError] = useState(null)
+  const error = useSelector((state) => state.user.error)
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value)
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
- 
     dispatch(createTenant(fields))
     setFields({
       name: '',
@@ -48,7 +46,7 @@ const Tenant = () => {
       deposit: '',
       occupancy: '',
     })
-    setIsAddTenantFormOpen(false)
+    // setIsAddTenantFormOpen(prevState => !prevState)
   }
 
   const toggleAddTenantForm = () => {

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { payment_url } from '../utils/constants'
+import { base_url } from '../utils/constants'
 
 const paymentSlice = createSlice({
   name: 'payment',
@@ -39,18 +39,23 @@ export const createPaymentIntent = (userId, fields) => async (dispatch) => {
     }
     */
   try {
+    const token = Cookies.get('token')
     dispatch(startLoading())
-    const method = await fetch(`${payment_url}/create_intent/${userId}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `${base_url}/api/payment/create_intent/${userId}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(fields),
       },
-      body: JSON.stringify(fields),
-    })
-    if (!method.ok) {
-      throw new Error('Failed to create intent...')
+    )
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
     }
-    const json = await method.json()
+    const json = await response.json()
     dispatch(fetchKeySuccess(json))
   } catch (err) {
     dispatch(actionFailed(err.message))
@@ -60,7 +65,7 @@ export const createPaymentIntent = (userId, fields) => async (dispatch) => {
 export const createPayment =
   (fields, intentId, clientId) => async (dispatch) => {
     try {
-      const payment = await fetch(
+      const response = await fetch(
         `https://api.paymongo.com/v1/payment_methods`,
         {
           method: 'POST',
@@ -83,10 +88,12 @@ export const createPayment =
           }),
         },
       )
-      if (!payment.ok) {
-        throw new Error('Failed to create payment')
+      if (!response.ok) {
+        const json = await response.json()
+        console.log(`payment error: ${json.error} ${json}`)
+        throw new Error(json)
       }
-      const json = await payment.json()
+      const json = await response.json()
 
       const post_payment = await fetch(
         `https://api.paymongo.com/v1/payment_intents/${intentId}/attach`,
@@ -109,11 +116,12 @@ export const createPayment =
         },
       )
       if (!post_payment.ok) {
-        throw new Error('Failed to complete payment...')
+        const json = await post_payment.json()
+        throw new Error(json.error)
       }
       const data = await post_payment.json()
       console.log(data)
-      window.open(json1.data.attributes.next_action.redirect.url)
+      window.open(data.data.attributes.next_action.redirect.url)
     } catch (err) {
       dispatch(actionFailed())
     }

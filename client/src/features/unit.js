@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { apartment_url, base_url } from '../utils/constants'
+import {  base_url } from '../utils/constants'
 import Cookies from 'js-cookie'
 const token = Cookies.get('token')
 const unitSlice = createSlice({
@@ -51,7 +51,7 @@ export const {
 export const createUnit = (fields, apartmentId) => async (dispatch) => {
   try {
     dispatch(startUnit())
-    const unit = await fetch(
+    const response = await fetch(
       `${base_url}/api/apartment/${apartmentId}/create_apartment_unit`,
       {
         method: 'POST',
@@ -63,10 +63,11 @@ export const createUnit = (fields, apartmentId) => async (dispatch) => {
       },
     )
 
-    if (!unit.ok) {
-      throw new Error('Failed to add unit...')
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.error)
     }
-    const json = await unit.json()
+    const json = await response.json()
     dispatch(fetchUnits())
   } catch (err) {
     dispatch(actionUnitFailed(err.message))
@@ -76,15 +77,16 @@ export const createUnit = (fields, apartmentId) => async (dispatch) => {
 export const fetchUnits = () => async (dispatch) => {
   try {
     dispatch(startUnit())
-    const unit = await fetch(`${base_url}/api/apartment/units`, {
+    const response = await fetch(`${base_url}/api/apartment/units`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-    if (!unit.ok) {
-      throw new Error('Failed to add unit...')
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.error)
     }
-    const json = await unit.json()
+    const json = await response.json()
     dispatch(fetchUnitSuccess(json))
   } catch (err) {
     dispatch(actionUnitFailed(err.message))
@@ -95,7 +97,7 @@ export const fetchUnit = (apartmentId, unitId) => async (dispatch) => {
   //Fix this later on
   try {
     dispatch(startUnit())
-    const unit = await fetch(
+    const response = await fetch(
       `${base_url}/api/apartment/${apartmentId}/units/${unitId}`,
       {
         headers: {
@@ -103,10 +105,11 @@ export const fetchUnit = (apartmentId, unitId) => async (dispatch) => {
         },
       },
     )
-    if (!unit.ok) {
-      throw new Error('Failed to add unit...')
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.error)
     }
-    const json = await unit.json()
+    const json = await response.json()
     dispatch(fetchUnitSuccess(json))
   } catch (err) {
     dispatch(actionUnitFailed(err.message))
@@ -116,9 +119,8 @@ export const fetchUnit = (apartmentId, unitId) => async (dispatch) => {
 export const fetchUnitsApartment = (apartment_id) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
-
     dispatch(startUnit())
-    const unit = await fetch(
+    const response = await fetch(
       `${base_url}/api/apartment/${apartment_id}/units/`,
       {
         headers: {
@@ -126,10 +128,11 @@ export const fetchUnitsApartment = (apartment_id) => async (dispatch) => {
         },
       },
     )
-    if (!unit.ok) {
-      throw new Error('Failed to add unit...')
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.error)
     }
-    const json = await unit.json()
+    const json = await response.json()
     dispatch(fetchUnitSuccess(json.units))
   } catch (err) {
     dispatch(actionUnitFailed(err.message))
@@ -140,7 +143,7 @@ export const editUnit = (apartmentId, unitId) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startUnit())
-    const unit = await fetch(
+    const response = await fetch(
       `${base_url}/api/apartment/${apartmentId}/edit_apartment_unit/${unitId}`,
       {
         method: 'PATCH',
@@ -151,10 +154,12 @@ export const editUnit = (apartmentId, unitId) => async (dispatch) => {
         body: JSON.stringify(fields),
       },
     )
-    if (!unit.ok) {
-      throw new Error('Failed to add unit...')
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.error)
     }
-    dispatch(fetchUnitSuccess(unitId))
+    // const json = await response.json()
+    dispatch(fetchUnits())
   } catch (err) {
     dispatch(actionUnitFailed(err.message))
   }
@@ -163,7 +168,7 @@ export const editUnit = (apartmentId, unitId) => async (dispatch) => {
 export const deleteUnit = (apartmentId, unitId) => async (dispatch) => {
   try {
     dispatch(startUnit())
-    const unit = await fetch(
+    const response = await fetch(
       `${base_url}/api/apartment/${apartmentId}/delete_apartment_unit/${unitId}`,
       {
         method: 'DELETE',
@@ -172,10 +177,11 @@ export const deleteUnit = (apartmentId, unitId) => async (dispatch) => {
         },
       },
     )
-    if (!unit.ok) {
-      throw new Error('Failed to add unit...')
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.error)
     }
-    dispatch(deleteUnitSuccess(unitId))
+    dispatch(fetchUnits())
   } catch (err) {
     dispatch(actionUnitFailed(err.message))
   }

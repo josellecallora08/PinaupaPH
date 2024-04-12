@@ -52,8 +52,8 @@ export const createHousehold = (user_id, fields) => async (dispatch) => {
     )
 
     if (!response.ok) {
-      const error = await response.json()
-      dispatch(fetchFailed(error))
+      const json = await response.json()
+      throw new Error(json.error)
     }
 
     const json = await response.json()
@@ -78,8 +78,8 @@ export const fetchHousehold = (user_id, household_id) => async (dispatch) => {
     )
 
     if (!response.ok) {
-      const error = await response.json()
-      dispatch(fetchFailed(error))
+      const json = await response.json()
+      throw new Error(json.error)
     }
 
     const json = await response.json()
@@ -101,8 +101,8 @@ export const fetchHouseholds = (user_id) => async (dispatch) => {
     })
 
     if (!response.ok) {
-      const error = await response.json()
-      dispatch(fetchFailed(error))
+      const json = await response.json()
+      throw new Error(json.error)
     }
 
     const json = await response.json()
@@ -126,8 +126,8 @@ export const editHousehold = (user_id, household_id, fields) => async (dispatch)
     })
 
     if (!response.ok) {
-      const error = await response.json()
-      dispatch(fetchFailed(error))
+      const json = await response.json()
+      throw new Error(json.error)
     }
 
     const json = await response.json()
@@ -149,8 +149,8 @@ export const deleteHousehold = (user_id, household_id) => async (dispatch) => {
     })
 
     if (!response.ok) {
-      const error = await response.json()
-      dispatch(fetchFailed(error))
+      const json = await response.json()
+      throw new Error(json.error)
     }
 
     const json = await response.json()

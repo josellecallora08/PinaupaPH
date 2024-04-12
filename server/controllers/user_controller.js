@@ -20,123 +20,125 @@ const createToken = (id, username, role) => {
 
 // * Done Testing API
 module.exports.sign_up = async (req, res) => {
-  const role = req.user.role
-  if (role !== 'Admin') {
-    return res
-      .status(httpStatusCodes.BAD_REQUEST)
-      .json({ error: 'Unauthorized. Only admin can add tenants.' })
-  }
-
-  const {
-    name,
-    username,
-    email,
-    password,
-    mobile_no,
-    birthday,
-    unit_id,
-    deposit,
-    occupancy,
-  } = req.body
-  const details = {}
-  if (name !== '') details.name = name
-  if (username !== '') details.username = username
-  if (email !== '') details.email = email
-  if (password !== '') {
-    const salt = await bcrypt.genSalt(10)
-    const hashed = await bcrypt.hash(password, salt)
-    if (!hashed)
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Error hashing the password.' })
-
-    details.password = hashed
-  }
-  if (mobile_no !== '') details.mobile_no = mobile_no
-  if (birthday !== '') details.birthday = birthday
-  if (occupancy !== '') details.monthly_due = occupancy
   try {
-    if (await USERMODEL.findOne({ username }))
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Username already exists' })
-    if (await USERMODEL.findOne({ email }))
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Email already exists' })
-    if (await USERMODEL.findOne({ mobile_no }))
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Mobile Number already exists.' })
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //   return res.status(httpStatusCodes.BAD_REQUEST).json({ errors: errors.array() });
+    // }
 
-    const unit_status = await UNITMODEL.findById(unit_id)
-    if (unit_status.occupied === true)
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Unit is Occupied.' })
-
-    let response = await USERMODEL.create(details)
-    console.log(response)
-    if (!response) {
-      console.log('dito wuahaha')
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Unsuccessful registration. Please try again later.' })
+    const role = req.user.role;
+    if (role !== 'Admin') {
+      return res.status(httpStatusCodes.UNAUTHORIZED).json({ error: 'Unauthorized. Only admin can add tenants.' });
     }
 
-    const imageUpload = await cloudinary.uploader.upload(
-      `./template/profile-default.svg`,
-      {
-        quality: 'auto:low',
-        folder: 'PinaupaPH/Profile',
-        resource_type: 'auto',
-      },
-    )
+    const {
+      name,
+      username,
+      email,
+      password,
+      mobile_no,
+      birthday,
+      unit_id,
+      deposit,
+      occupancy,
+    } = req.body;
+    
+    // Validation for email and mobile number
+    const emailRegex = /^\S+@\S+\.\S+$/;
+    const mobileRegex = /^[0-9]{10}$/;
+
+    if (!email) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Invalid email format.' });
+    }
+
+    if (!mobile_no) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Invalid mobile number format.' });
+    }
+
+    // Check if password is provided
+    if (!password) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Password is required.' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashed = await bcrypt.hash(password, salt);
+    if (!hashed) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Error hashing the password.' });
+    }
+
+    const details = {
+      name,
+      username,
+      email,
+      password: hashed,
+      mobile_no,
+      birthday,
+      monthly_due: occupancy
+    };
+
+    // Check if user already exists
+    const existingUser = await USERMODEL.findOne({ $or: [{ username }, { email }, { mobile_no }] });
+    if (existingUser) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'User with this username, email, or mobile number already exists.' });
+    }
+
+    const unit_status = await UNITMODEL.findById(unit_id);
+    if (unit_status.occupied === true) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: `Unit ${unit_id} is already occupied.` });
+    }
+
+    let response = await USERMODEL.create(details);
+
+    // File Upload
+    const imageUpload = await cloudinary.uploader.upload(`./template/profile-default.svg`, {
+      quality: 'auto:low',
+      folder: 'PinaupaPH/Profile',
+      resource_type: 'auto',
+    });
 
     if (!imageUpload || !imageUpload.secure_url) {
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Failed to upload profile.' })
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Failed to upload profile image.' });
     }
 
-    response.profile_image.image_url = imageUpload.secure_url
-    response.profile_image.public_id = imageUpload.public_id
+    response.profile_image.image_url = imageUpload.secure_url;
+    response.profile_image.public_id = imageUpload.public_id;
 
     if (response.role === 'Tenant') {
       const tenant = await TENANTMODEL.create({
         user_id: response._id,
-        unit_id: unit_id,
-        deposit,
-      })
-      if (!tenant)
-        return res.status(httpStatusCodes.BAD_REQUEST).json({
-          error: 'Failed to create Tenant Data. Please try again later.',
-        })
+        unit_id,
+        deposit
+      });
+      if (!tenant) {
+        return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Failed to create Tenant Data.' });
+      }
     }
 
-    await response.save()
-    const unit = await UNITMODEL.findByIdAndUpdate(
-      { _id: unit_id },
-      { occupied: true },
-    )
-    if (!unit)
-      return res.status(httpStatusCodes.BAD_REQUEST).json({
-        error: 'Failed to update occupancy status at Unit Collection.',
-      })
+    await response.save();
 
-    // const token = createToken(response._id, response.username, response.role)
-    // res.cookie('token', token, { maxAge: 900000 })
+    const unit = await UNITMODEL.findByIdAndUpdate( unit_id, { occupied: true });
+    if (!unit) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Failed to update occupancy status at Unit Collection.' });
+    }
 
-    return res
-      .status(httpStatusCodes.OK)
-      .json({ msg: 'Created Account successfully!', response })
+    // Token Creation
+    // const token = createToken(response._id, response.username, response.role);
+    // res.cookie('token', token, { maxAge: 900000 });
+
+    // Sanitize response
+    // const sanitizedResponse = {
+    //   name: response.name,
+    //   username: response.username,
+    //   email: response.email,
+    //   role: response.role
+    // };
+
+    return res.status(httpStatusCodes.OK).json({ msg: 'Created Account successfully!', response});
   } catch (err) {
-    console.error({ error: err })
-    return res
-      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: err.message })
+    console.error('Error during sign up:', err);
+    return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal server error.' });
   }
-}
+};
 // * Done Testing API
 module.exports.sign_in = async (req, res) => {
   const { username, password } = req.body
@@ -347,7 +349,7 @@ module.exports.fetch_users = async (req, res) => {
       return userData
     })
 
-    return res.status(httpStatusCodes.OK).json(user)
+    return res.status(httpStatusCodes.OK).json({user})
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -546,7 +548,7 @@ module.exports.update_profile = async (req, res) => {
     await response.save()
 
     return res
-      .status(httpStatusCodes.CREATED)
+      .status(httpStatusCodes.OK)
       .json({ msg: 'Information Updated Successfully!', response })
   } catch (err) {
     console.error({ error: err.message })
@@ -777,13 +779,11 @@ module.exports.check_otp = async (req, res) => {
 
     const response = await OTPMODEL.findById(id)
     if (!response) {
-      console.log('aos2idjaosidj')
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: `${pin} not found` })
     }
     if (response.attempts <= 0) {
-      console.log('aosidjaosidj')
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'No attempts left, Please try again later.' })
@@ -814,10 +814,6 @@ module.exports.reset_password = async (req, res) => {
     const { id } = req.query
     const { password, confirmpassword } = req.body
     if (password.toString() != confirmpassword.toString()) {
-      console.log('aosidjaoisdjs')
-      console.log(password)
-      console.log(confirmpassword)
-
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Password does not match' })

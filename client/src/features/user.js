@@ -66,7 +66,8 @@ export const handleSearchUser = (filter) => async (dispatch) => {
     )
 
     if (!response.ok) {
-      throw new Error('No Data')
+      const json = await response.json()
+      throw new Error(json.error)
     }
 
     const json = await response.json()
@@ -81,24 +82,22 @@ export const createTenant = (fields) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchUserStart())
-    const userRegister = await fetch(`${base_url}/api/user`, {
+    const response = await fetch(`${base_url}/api/user`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(fields),
-      // credentials: 'include',
     })
 
-    if (!userRegister.ok) {
-      throw new Error('Failed to register...')
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
     }
 
-    const json = await userRegister.json()
+    const json = await response.json()
     console.log(json.msg)
-    // dispatch(fetchUserSuccess(json))
-    // navigate('/dashboard')
     dispatch(fetchUsers())
   } catch (err) {
     dispatch(actionUserFailed(err.message))
@@ -115,8 +114,9 @@ export const fetchUser = (userId) => async (dispatch) => {
       },
     })
 
-    if (!user.ok) {
-      throw new Error('Failed to fetch user')
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
     }
     const json = await user.json()
     dispatch(fetchSingleUser(json))
@@ -129,15 +129,16 @@ export const fetchUsers = () => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchUserStart())
-    const user = await fetch(`${base_url}/api/user/tenants`, {
+    const response = await fetch(`${base_url}/api/user/tenants`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-    if (!user.ok) {
-      throw new Error('Failed to fetch all user...')
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
     }
-    const json = await user.json()
+    const json = await response.json()
     console.log(json)
     dispatch(fetchUserSuccess(json))
   } catch (err) {
@@ -149,7 +150,7 @@ export const editUser = (userId, credentials) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchUserStart())
-    const user = await fetch(`${base_url}/api/user/${userId}/update_profile`, {
+    const response = await fetch(`${base_url}/api/user/${userId}/update_profile`, {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -158,13 +159,13 @@ export const editUser = (userId, credentials) => async (dispatch) => {
       body: JSON.stringify(credentials),
     })
 
-    if (!user.ok) {
-      throw new Error('Failed to update information...')
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
     }
 
-    const json = await user.json()
-    dispatch(editUserSuccess(json))
-    // dispatch(fetchUser(userId))
+    const json = await response.json()
+    dispatch(fetchUser(userId))
   } catch (err) {
     dispatch(actionUserFailed(err.message))
   }
@@ -174,7 +175,7 @@ export const editUserApartment = (userId, credentials) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchUserStart())
-    const user = await fetch(
+    const response = await fetch(
       `${base_url}/api/user/${userId}/update-apartment-details`,
       {
         method: 'PATCH',
@@ -186,8 +187,8 @@ export const editUserApartment = (userId, credentials) => async (dispatch) => {
       },
     )
 
-    if (!user.ok) {
-      const json = await user.json()
+    if (!response.ok) {
+      const json = await response.json()
       throw new Error(json.error)
     }
 
@@ -202,7 +203,7 @@ export const editUserApartment = (userId, credentials) => async (dispatch) => {
 export const deleteUser = (userId) => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
-    const deleteUser = await fetch(
+    const response = await fetch(
       `${base_url}/api/user/delete_tenant?user_id=${userId}`,
       {
         method: 'DELETE',
@@ -212,8 +213,9 @@ export const deleteUser = (userId) => async (dispatch) => {
       },
     )
 
-    if (!deleteUser.ok) {
-      throw new Error('Failed to delete tenant...')
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
     }
     // const json = await deleteUser.json()
 
