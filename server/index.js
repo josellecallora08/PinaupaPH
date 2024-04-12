@@ -5,6 +5,7 @@ const cloudinary = require('cloudinary').v2
 const body_parser = require('body-parser')
 const cron = require('node-cron')
 require('dotenv').config()
+
 // import routes
 const user_route = require('./routes/user')
 const cctv_route = require('./routes/cctv')
@@ -13,14 +14,18 @@ const apartment_route = require('./routes/apartment')
 const document_route = require('./routes/document')
 const invoice_route = require('./routes/invoice')
 const payment_route = require('./routes/payment')
+
 const {
   scheduledInvoice,
   deleteOTP,
 } = require('./controllers/invoice_controller')
+
 const app = express()
 
+// Middleware to parse JSON bodies
 app.use(express.json())
 
+// Cross-Origin Resource Sharing (CORS) middleware
 app.use(
   cors({
     origin: [process.env.CLIENT_URL, "http://localhost:5173"],
@@ -30,8 +35,11 @@ app.use(
     allowedHeaders: 'Content-Type, Authorization, x-auth-token',
   }),
 )
+
+// Middleware to parse URL-encoded bodies
 app.use(body_parser.urlencoded({ extended: true }))
 app.use(body_parser.json())
+
 // Cloudinary Configuration
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -39,15 +47,21 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
-// Connect to DB
+// Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI).then(() => {
+  // Start server after successful MongoDB connection
   app.listen(process.env.PORT, () => {
     console.log(`Connected to DB and Listening to PORT: ${process.env.PORT}`)
   })
 })
 
+// Delete One-Time Passwords (OTPs)
 deleteOTP()
-scheduledInvoice() //Monthly Creation of Invoice
+
+// Schedule Monthly Invoice Creation
+scheduledInvoice()
+
+// Routes
 app.use('/api/user', user_route)
 app.use('/api/cctv', cctv_route)
 app.use('/api/report', report_route)
@@ -56,6 +70,7 @@ app.use('/api/documents', document_route)
 app.use('/api/invoice', invoice_route)
 app.use('/api/payment', payment_route)
 
+// Default route
 app.get('/', (req, res) => {
   res.json('PinaupaPH Backend')
 })

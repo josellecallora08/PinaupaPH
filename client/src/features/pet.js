@@ -62,9 +62,8 @@ export const fetchPets = (user_id) => async (dispatch) => {
       },
     })
     if (!response.ok) {
-      const error = await response.json()
-      console.log(`error is: ${error}`)
-      throw new Error(error)
+      const json = await response.json()
+      throw new Error(json.error)
     }
 
     const json = await response.json()
@@ -88,7 +87,10 @@ export const fetchPet = (user_id, pet_id) => async (dispatch) => {
         },
       },
     )
-    if (!response.ok) throw new Error('Unable to fetch Pet')
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
+    }
 
     const json = await response.json()
     dispatch(fetchPetSuccess(json))
@@ -111,7 +113,10 @@ export const createPet = (user_id, fields) => async (dispatch) => {
       },
       body: JSON.stringify(fields),
     })
-    if (!response.ok) throw new Error('Unable to create Pet')
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
+    }
 
     const json = await response.json()
     dispatch(fetchPetsSuccess(json))
@@ -137,7 +142,10 @@ export const editPet = (user_id, pet_id, fields) => async (dispatch) => {
         body: JSON.stringify(fields),
       },
     )
-    if (!response.ok) throw new Error('Unable to create Pet')
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
+    }
 
     const json = await response.json()
     dispatch(editPetSuccess(json))
@@ -159,7 +167,10 @@ export const deletePet = (pet_id) => async (dispatch) => {
         'Content-Type': 'application/json',
       },
     })
-    if (!response.ok) throw new Error('Unable to delete Pet')
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
+    }
 
     const json = await response.json()
     dispatch(deletePetSuccess(json))

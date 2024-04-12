@@ -10,7 +10,7 @@ module.exports.fetch_all_pets = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Tenant not found' })
 
-    return res.status(httpStatusCodes.OK).json(tenant.pet)
+    return res.status(httpStatusCodes.OK).json({pets:tenant.pet})
   } catch (err) {
     console.log(err.message)
     return res

@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { document_url } from '../utils/constants'
+import { base_url } from '../utils/constants'
 import Cookies from 'js-cookie'
 import { saveAs } from 'file-saver';
-const token = Cookies.get('token')
+
 const documentSlice = createSlice({
   name: 'docs',
   initialState: {
@@ -48,7 +48,8 @@ export const {
 export const generateDocument =
   (userId, unitId, fields,unitNo, userName) => async (dispatch) => {
     try {
-      const pdf = await fetch(`${document_url}/${unitId}/${userId}/fetch_contract`, {
+      const token = Cookies.get('token')
+      const pdf = await fetch(`${base_url}/api/documents/${unitId}/${userId}/fetch_contract`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -69,11 +70,12 @@ export const generateDocument =
 // ? Tested 
 export const createDocument = (userId, unitId, fields) => async (dispatch) => {
   try {
+    const token = Cookies.get('token')
     dispatch(startLoading())
-    const docs = await fetch(`${document_url}/${unitId}/${userId}/generate_contract`, {
+    const docs = await fetch(`${base_url}api/documents/${unitId}/${userId}/generate_contract`, {
       method: 'POST',
       headers: {
-        // Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(fields),
@@ -83,7 +85,7 @@ export const createDocument = (userId, unitId, fields) => async (dispatch) => {
     }
     const json = await docs.json()
 
-    await generateDocument(fields.unit_id, json.unit_no, json.name)
+    dispatch(generateDocument(fields.unit_id, json.unit_no, json.name))
     dispatch(fetchDocumentSuccess(json))
   } catch (err) {
     dispatch(actionDocumentFailed(err.message))

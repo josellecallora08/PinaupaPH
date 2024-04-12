@@ -349,7 +349,7 @@ module.exports.fetch_users = async (req, res) => {
       return userData
     })
 
-    return res.status(httpStatusCodes.OK).json(user)
+    return res.status(httpStatusCodes.OK).json({user})
   } catch (err) {
     console.error({ error: err.message })
     return res
