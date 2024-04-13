@@ -7,9 +7,12 @@
       }
     ],
     "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "index.js"
-      }
+        {
+            "src": "/(.*)",
+            "dest": "/"
+        },
+        {
+            "handle": "filesystem"
+        }
     ]
-  }
+}
