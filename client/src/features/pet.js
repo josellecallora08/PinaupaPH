@@ -67,7 +67,7 @@ export const fetchPets = (user_id) => async (dispatch) => {
     }
 
     const json = await response.json()
-    dispatch(fetchPetsSuccess(json))
+    dispatch(fetchPetsSuccess(json.response))
   } catch (err) {
     console.log('Unable to fetch all pets')
     dispatch(actionPetFailed(err.message))

@@ -107,7 +107,7 @@ export const fetchHouseholds = (user_id) => async (dispatch) => {
 
     const json = await response.json()
     console.log(json)
-    dispatch(fetchHouseholdsSuccess(json))
+    dispatch(fetchHouseholdsSuccess(json.response))
   } catch (err) {
     dispatch(fetchFailed(err.message))
   }
