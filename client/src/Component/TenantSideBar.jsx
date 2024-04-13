@@ -41,6 +41,14 @@ const TenantSideBar = () => {
               {menu ? <span className='font-semibold text-primary'>Home</span> : ''}
             </Link>
           </li>
+          <li className='w-full h-full'>
+            <Link to={`/tenant/profile`} className={`flex items-center center w-4/5  m-auto h-full hover:bg-primary/5 rounded-md ${menu ? 'p-5' : 'p-3'}`}>
+              <figure className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}>
+                <img src={tenant} alt="" className='max-w-5 max-h-5 object-contain' />
+              </figure>
+              {menu ? <span className="font-semibold text-primary">Tenant Profile</span> : ''}
+            </Link>
+          </li>
          
           <li className='w-full h-full'>
             <Link to={`/tenant/security`} className={`flex items-center center w-4/5  m-auto h-full hover:bg-primary/5 rounded-md ${menu ? 'p-5' : 'p-3'}`}>
@@ -87,6 +95,7 @@ const TenantSideBar = () => {
               {menu ? <span className="font-semibold text-primary">Reports and Concern</span> : ''}
             </Link>
           </li>
+
         </ul>
       </nav>
       </div>

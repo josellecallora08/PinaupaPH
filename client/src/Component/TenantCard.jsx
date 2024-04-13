@@ -6,7 +6,7 @@ const TenantCard = ({data}) => {
 
   return (
     <Link to={`/tenantprofile/${data._id}`}>
-      <div className='lg:text-base lg:mx-1 flex  md:mx-2 mx-5 my-2 ml-0 rounded-md relative text-xs shadow-sm shadow-light-gray'>
+      <div className='lg:text-base lg:mx-1 flex bg-white md:mx-2  h-36 mx-5 my-2 ml-0 rounded-md relative text-xs shadow-sm shadow-light-gray  hover:scale-105 hover:transition hover:z-10 hover:ease-in hover:duration-100 '>
       <div>
        <img src={data?.image} className="w-24 h-full rounded-tl-md border-r-2 border-primary rounded-bl-md rounded-tr-none" alt="" />
       </div>
