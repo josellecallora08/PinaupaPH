@@ -1,6 +1,5 @@
 import React,{useEffect, useState} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
-import profile from '/pfp.svg'
 import { BiEdit } from "react-icons/bi";
 import EditOwnerDetails from '../../Component/EditOwnerDetails'
 import ChangePd from '../../Component/ChangePd'
