@@ -281,7 +281,7 @@ module.exports.search_user = async (req, res) => {
       return userData
     })
 
-    return res.status(httpStatusCodes.OK).json(search)
+    return res.status(httpStatusCodes.OK).json({response: search})
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -349,7 +349,7 @@ module.exports.fetch_users = async (req, res) => {
       return userData
     })
 
-    return res.status(httpStatusCodes.OK).json({user})
+    return res.status(httpStatusCodes.OK).json({response:user})
   } catch (err) {
     console.error({ error: err.message })
     return res

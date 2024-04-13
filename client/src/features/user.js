@@ -140,7 +140,7 @@ export const fetchUsers = () => async (dispatch) => {
     }
     const json = await response.json()
     console.log(json)
-    dispatch(fetchUserSuccess(json))
+    dispatch(fetchUserSuccess(json.response))
   } catch (err) {
     dispatch(actionUserFailed(err.message))
   }
