@@ -47,7 +47,7 @@ const Apartment = () => {
             <SearchBar onSearch={handleSearch} />
             
           </div>
-          <button onClick={toggleAddApartmentForm} className="btn btn-wide bg-primary-color text-white hover:text-primary-color">
+          <button onClick={toggleAddApartmentForm} className="btn md:btn-wide w-full bg-primary-color text-white hover:text-primary-color">
             <FaPlus />
             Add Apartment
           </button>

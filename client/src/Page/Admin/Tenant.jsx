@@ -96,12 +96,10 @@ const Tenant = () => {
             <div className="lg:text-sm flex items-center justify-center">
               <select className="select select-bordered w-full max-w-xs">
                 {apartment?.map((val, key) => (
-                  <option value={val._id} selected>
+                  <option key={key} value={val._id} >
                     {val.name}
                   </option>
                 ))}
-
-               
               </select>
             </div>
             <button

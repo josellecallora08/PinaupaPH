@@ -95,12 +95,14 @@ export const fetchReport = (report_id) => async (dispatch) => {
         throw new Error(json.error)
       }
       const json = await response.json()
-      dispatch(fetchReportSuccess(json))
+      console.log(json.report)
+      dispatch(fetchReportSuccess(json.report))
   } catch (err) {
     console.log(err.message)
     dispatch(fetchReportFailed(err.message))
   }
 }
+
 export const editReport = (report_id, fields) => async (dispatch) => {
   try {
     const token = Cookies.get('token')

@@ -95,7 +95,7 @@ const TenantProfile = () => {
             onClick={() => handleTabClick('profile')}
             className={
               activeTab === 'profile'
-                ? ' text-white py-2 px-5 bg-primary rounded-full '
+                ? ' text-white py-2 px-5 bg-primary-color rounded-full '
                 : ''
             }
           >
@@ -105,7 +105,7 @@ const TenantProfile = () => {
             onClick={() => handleTabClick('documents')}
             className={
               activeTab === 'documents'
-                ? 'text-white py-2 px-5 bg-primary rounded-full'
+                ? 'text-white py-2 px-5 bg-primary-color rounded-full'
                 : ''
             }
           >
@@ -115,7 +115,7 @@ const TenantProfile = () => {
             onClick={() => handleTabClick('transaction')}
             className={
               activeTab === 'transaction'
-                ? 'text-white py-2 px-5 bg-primary rounded-full'
+                ? 'text-white py-2 px-5 bg-primary-color rounded-full'
                 : ''
             }
           >
@@ -355,6 +355,7 @@ const TenantProfile = () => {
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-9/12 bg-white  rounded-lg relative">
                         <EditFamMemTable
+                          id={tenant.id}
                           setIsEditFamilyMemForm={setIsEditFamilyMemForm}
                         />
                       </div>
@@ -438,8 +439,6 @@ const TenantProfile = () => {
 
         {activeTab === 'documents' && (
           <div className="px-5 grid grid-cols-1 lg:grid-cols-2 gap-2">
-            {/* Documents content goes here */}
-            {/* ... display documents */}
             <DocumentCard />
             <DocumentCard />
             <DocumentCard />

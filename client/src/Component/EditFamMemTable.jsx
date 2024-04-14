@@ -1,17 +1,20 @@
-import React, { Fragment, useState } from 'react'
-import data from './mock-data.json'
+import React, { Fragment, useEffect, useState } from 'react'
 import FamMemEditableRow from './FamMemEditableRow'
 import FamMemReadRow from './FamMemReadRow'
 import { IoMdClose } from 'react-icons/io'
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteHousehold, fetchHouseholds } from '../features/household'
 
-const Table = ({setIsEditFamilyMemForm}) => {
-  const [contacts, setContacts] = useState(data)
+const Table = ({ id, setIsEditFamilyMemForm }) => {
+  const dispatch = useDispatch()
+  const household = useSelector((state) => state.household.data)
+  const [contacts, setContacts] = useState()
   const [error, setError] = useState(null)
   const [editContactId, setEditContactId] = useState(null)
   const [editFormData, setEditFormData] = useState({
-    fullName: '',
+    name: '',
     relationship: '',
-    phoneNumber: '',
+    birthday: '',
   })
   const handleEditFormChange = (event) => {
     event.preventDefault()
@@ -30,9 +33,9 @@ const Table = ({setIsEditFamilyMemForm}) => {
     setEditContactId(contact.id)
 
     const formValues = {
-      fullName: contact.fullName,
+      name: contact.name,
       relationship: contact.relationship,
-      phoneNumber: contact.phoneNumber,
+      birthday: contact.birthday,
     }
 
     setEditFormData(formValues)
@@ -43,10 +46,9 @@ const Table = ({setIsEditFamilyMemForm}) => {
 
     const editedContact = {
       id: editContactId,
-      fullName: editFormData.fullName,
+      name: editFormData.name,
       relationship: editFormData.relationship,
-      phoneNumber: editFormData.phoneNumber,
-      email: editFormData.email,
+      birthday: editFormData.birthday,
     }
 
     const newContacts = [...contacts]
@@ -56,7 +58,7 @@ const Table = ({setIsEditFamilyMemForm}) => {
     newContacts[index] = editedContact
     setError(
       'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
-        )
+    )
     setContacts(newContacts)
     setEditContactId(null)
   }
@@ -65,15 +67,22 @@ const Table = ({setIsEditFamilyMemForm}) => {
     setEditContactId(null)
   }
 
-  const handleDeleteClick = (contactId) => {
-    const newContacts = [...contacts]
-
-    const index = contacts.findIndex((contact) => contact.id === contactId)
-
-    newContacts.splice(index, 1)
-
-    setContacts(newContacts)
+  const handleDeleteClick = async (id, contactId) => {
+    const isConfirmed = window.confirm(
+      'Are you sure you want to delete this tenant?',
+    )
+    if (isConfirmed) {
+      dispatch(deleteHousehold(id, contactId))
+      console.log('Tenant deleted')
+    } else {
+      console.log('Deletion cancelled')
+    }
   }
+
+  useEffect(() => {
+    dispatch(fetchHouseholds(id))
+  }, [])
+
   return (
     <div>
       <div className="relative w-full flex  rounded-tl-lg rounded-tr-lg  text-black items-center ">
@@ -81,32 +90,34 @@ const Table = ({setIsEditFamilyMemForm}) => {
           Edit Family Member Details
         </h1>
       </div>
-      <form action="" onSubmit={handleEditFormSubmit} className='flex flex-col overflow-y-auto h-96 '>
-      <div className="lg:justify-between lg:flex lg:items-center lg:-mb-1 mb-3">
-            <button className="absolute top-4 right-6">
-              <IoMdClose
-                onClick={() => setIsEditFamilyMemForm((prevState) => !prevState)}
-                size={25}
-                color="dark-blue"
-              />
-            </button>
-          </div>
-          
-    
+      <form
+        action=""
+        onSubmit={handleEditFormSubmit}
+        className="flex flex-col overflow-y-auto h-96 "
+      >
+        <div className="lg:justify-between lg:flex lg:items-center lg:-mb-1 mb-3">
+          <button className="absolute top-4 right-6">
+            <IoMdClose
+              onClick={() => setIsEditFamilyMemForm((prevState) => !prevState)}
+              size={25}
+              color="dark-blue"
+            />
+          </button>
+        </div>
 
         <table className=" table-fixed min-w-full border-collapse w-full  ">
-          <thead className='  bg-dark-blue  text-white sticky top-0 '>
-            <tr className='text-center text-sm font-semibold  ' >
+          <thead className="  bg-dark-blue  text-white sticky top-0 ">
+            <tr className="text-center text-sm font-semibold  ">
               <th className="py-5 ">Name</th>
               <th className="">Relationship</th>
-              <th className="">Phone Number</th>
+              <th className="">Birthday</th>
               <th className="">Actions</th>
             </tr>
           </thead>
           <tbody className="pt-10">
-            {contacts.map((contact) => (
-              <Fragment>
-                {editContactId === contact.id ? (
+            {household.map((contact, key) => (
+              <Fragment key={key}>
+                {editContactId === contact._id ? (
                   <FamMemEditableRow
                     editFormData={editFormData}
                     handleEditFormChange={handleEditFormChange}
@@ -114,6 +125,7 @@ const Table = ({setIsEditFamilyMemForm}) => {
                   />
                 ) : (
                   <FamMemReadRow
+                    id={id}
                     contact={contact}
                     handleEditClick={handleEditClick}
                     handleDeleteClick={handleDeleteClick}
@@ -124,32 +136,30 @@ const Table = ({setIsEditFamilyMemForm}) => {
           </tbody>
         </table>
         {error && (
-            <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
-              {error}
-            </div>
-          )}
-        {contacts.length <= 4 && (
-  <div className="flex justify-end absolute bottom-4 right-0 mb-5 mr-10 gap-3">
-    <button
-      type="submit"
-      className="bg-primary text-white font-bold py-2 px-4 rounded"
-    >
-      Submit
-    </button>
-  </div>
-)}
-{contacts.length > 4 && (
-  <div className="flex justify-end mb-8 mt-3 mr-10">
-      <button
-      type="submit"
-      className=" bg-primary text-white font-bold py-2 px-4 rounded"
-    >
-      Submit
-    </button>
-  </div>
-)}
-
-        
+          <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+            {error}
+          </div>
+        )}
+        {household.length <= 4 && (
+          <div className="flex justify-end absolute bottom-4 right-0 mb-5 mr-10 gap-3">
+            <button
+              type="submit"
+              className="bg-primary-color text-white font-bold py-2 px-4 rounded"
+            >
+              Submit
+            </button>
+          </div>
+        )}
+        {household.length > 4 && (
+          <div className="flex justify-end mb-8 mt-3 mr-10">
+            <button
+              type="submit"
+              className=" bg-primary-color text-white font-bold py-2 px-4 rounded"
+            >
+              Submit
+            </button>
+          </div>
+        )}
       </form>
     </div>
   )
