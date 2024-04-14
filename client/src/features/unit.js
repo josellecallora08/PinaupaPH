@@ -52,7 +52,7 @@ export const createUnit = (fields, apartmentId) => async (dispatch) => {
   try {
     dispatch(startUnit())
     const response = await fetch(
-      `${base_url}/api/apartment/${apartmentId}/create_apartment_unit`,
+      `${import.meta.env.VITE_URL}/api/apartment/${apartmentId}/create_apartment_unit`,
       {
         method: 'POST',
         headers: {
@@ -77,7 +77,7 @@ export const createUnit = (fields, apartmentId) => async (dispatch) => {
 export const fetchUnits = () => async (dispatch) => {
   try {
     dispatch(startUnit())
-    const response = await fetch(`${base_url}/api/apartment/units`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/apartment/units`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -98,7 +98,7 @@ export const fetchUnit = (apartmentId, unitId) => async (dispatch) => {
   try {
     dispatch(startUnit())
     const response = await fetch(
-      `${base_url}/api/apartment/${apartmentId}/units/${unitId}`,
+      `${import.meta.env.VITE_URL}/api/apartment/${apartmentId}/units/${unitId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -121,7 +121,7 @@ export const fetchUnitsApartment = (apartment_id) => async (dispatch) => {
     const token = Cookies.get('token')
     dispatch(startUnit())
     const response = await fetch(
-      `${base_url}/api/apartment/${apartment_id}/units/`,
+      `${import.meta.env.VITE_URL}/api/apartment/${apartment_id}/units/`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -144,7 +144,7 @@ export const editUnit = (apartmentId, unitId) => async (dispatch) => {
     const token = Cookies.get('token')
     dispatch(startUnit())
     const response = await fetch(
-      `${base_url}/api/apartment/${apartmentId}/edit_apartment_unit/${unitId}`,
+      `${import.meta.env.VITE_URL}/api/apartment/${apartmentId}/edit_apartment_unit/${unitId}`,
       {
         method: 'PATCH',
         headers: {
@@ -169,7 +169,7 @@ export const deleteUnit = (apartmentId, unitId) => async (dispatch) => {
   try {
     dispatch(startUnit())
     const response = await fetch(
-      `${base_url}/api/apartment/${apartmentId}/delete_apartment_unit/${unitId}`,
+      `${import.meta.env.VITE_URL}/api/apartment/${apartmentId}/delete_apartment_unit/${unitId}`,
       {
         method: 'DELETE',
         headers: {

@@ -1,16 +1,26 @@
 import React from 'react'
-import { CiSearch } from "react-icons/ci";
-const SearchBar = ({onSearch}) => {
+const SearchBar = ({ onSearch }) => {
   return (
-    <div className=" relative">
+    <label className="input input-bordered flex items-center gap-2">
       <input
-        type="search"
-        placeholder="Search..."
-        className=" w-full border-2 border-[#9e9e9e] rounded-full p-2 focus:outline-none focus:border-blue-500 pl-8 "
+        type="text"
+        className="grow"
+        placeholder="Search"
         onChange={onSearch}
       />
-      <CiSearch className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" size={20}/>
-    </div>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 16 16"
+        fill="currentColor"
+        className="w-4 h-4 opacity-70"
+      >
+        <path
+          fillRule="evenodd"
+          d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+          clipRule="evenodd"
+        />
+      </svg>
+    </label>
   )
 }
 

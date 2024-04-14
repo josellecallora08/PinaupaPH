@@ -28,7 +28,7 @@ const AddTenantForm = ({
         className="lg:w-[30rem] w-[20rem] h-[25rem] p-3 overflow-y-auto"
       >
             {error && (
-            <div className="  w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+            <div className="  w-auto bg-light-red text-dark-blue p-4 my-4 rounded ">
               {error}
             </div>
           )}

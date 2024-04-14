@@ -3,6 +3,7 @@ import SearchBar from '../../Component/SearchBar'
 import LeaseCard from '../../Component/LeaseCard'
 import { FaPlus } from 'react-icons/fa6'
 import AddLease from '../../Component/AddLease'
+import { Link } from 'react-router-dom'
 
 import 'react-datepicker/dist/react-datepicker.css'
 const Least = () => {
@@ -20,9 +21,9 @@ const Least = () => {
         />
       )}
       <div className="w-11/12 m-auto h-full mr-3 flex flex-col ">
-        <h1 className="lg:text-base lg:ml-0  my-7 ml-8 text-xl font-bold">
-          DOCUMENTS / LEASE AGREEMENTS
-        </h1>
+        <div className="lg:text-base lg:ml-0  my-7 ml-8 text-xl font-bold">
+          <Link to={'/dashboard'} className='hover:underline'>DOCUMENTS</Link> / <Link to={`/document/lease-agreement`} className='hover:underline'>LEASE AGREEMENTS  </Link>
+        </div>
         <div className="flex flex-row justify-between items-center">
           <SearchBar />
           <button

@@ -3,13 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
-
 import { RxDotsVertical } from 'react-icons/rx'
 import TenantProfileInfo from '../../Data/TenantProfileInfo'
 import EditTenantDetails from '../../Component/EditTenantDetails'
 import EditTenantAccount from '../../Component/EditTenantAccount'
 import EditFamMemTable from '../../Component/EditFamMemTable'
-//import { payment_url } from '../../utils/constants'
 import DocumentCard from '../../Component/DocumentCard'
 import AddHousehold from '../../Component/AddHousehold'
 import EditApartment from '../../Component/EditApartment'
@@ -127,13 +125,10 @@ const TenantProfile = () => {
       </div>
 
       <div className="w-11/12 m-auto h-full rounded-md">
-        {/* Content based on Active Tab */}
         {activeTab === 'profile' && (
           <div className=" lg:mt-5 mt-10   ">
             {TenantProfileInfo.map((profile, index) => (
               <div className="lg:flex lg:gap-5 p-5 lg:pb-2" key={index}>
-                {/* Upper section */}
-                {/* Left profile */}
                 <div className="lg:w-1/2  lg:rounded-lg lg:origin-left  ">
                   <div className="lg:items-center flex gap-3 relative mb-7 ">
                     <figure>
@@ -339,7 +334,7 @@ const TenantProfile = () => {
 
                     <div className="text-sm md:text-base p-3 flex flex-col gap-5 ">
                       {households?.map((val, key) => (
-                        <div className="w-full flex flex-col md:gap-2">
+                        <div key={key} className="w-full flex flex-col md:gap-2">
                           <div className="flex gap-5">
                             <p className="w-1/4">Name:</p>
                             <span className="w-3/4">{val.name}</span>

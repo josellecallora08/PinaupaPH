@@ -131,7 +131,7 @@ function App() {
         }
       />
       <Route
-        path="/viewconcern"
+        path={`/view-concern/:id`}
         element={
           <Layout>
             <ViewConcern />

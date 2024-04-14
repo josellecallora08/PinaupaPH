@@ -1,12 +1,16 @@
 import React, { useEffect, useRef } from 'react'
+import { useParams } from 'react-router-dom'
 import angle from '/angle.svg'
 import send from '/send.svg'
 import comments from '/comments.svg'
 import pfp from '/pfp.svg'
 import sample from '/background.jpg'
+import { useDispatch, useSelector } from 'react-redux'
 const ViewConcern = () => {
-
-  
+const {id} = useParams()
+const dispatch = useDispatch()
+const report = useSelector((state) => state.report.single)  
+const comment = useSelector((state) => state.comment.data)
 const messageContainerRef = useRef(null);
 
 
