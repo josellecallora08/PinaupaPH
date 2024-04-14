@@ -62,7 +62,7 @@ const AddTenantForm = ({
             htmlFor="name"
             className="block text-gray-700 text-sm font-bold mb-2 "
           >
-            username
+            Username
           </label>
           <input
             type="text"
@@ -160,8 +160,8 @@ const AddTenantForm = ({
             onChange={handleInput}
             className="w-full py-2 px-3 border-2 border-[#9e9e9e] rounded"
           >
-            <option className="rounded-none" value="someOption">
-              Some option
+            <option className="rounded-none" value="someOption" hidden>
+              Apartment Unit
             </option>
             {unit?.filter(item => item.occupied === false).map((val, key) => (
               <option key={key} className="rounded-none" value={`${val._id}`}>
@@ -170,6 +170,28 @@ const AddTenantForm = ({
             ))}
           </select>
         </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="apartment_building"
+            className="block text-gray-700 text-sm font-bold mb-2 "
+          >
+            Apartment Building
+          </label>
+          <select
+            name="building_id"
+            id="building_id"
+            onChange={handleInput}
+            className="w-full py-2 px-3 border-2 border-[#9e9e9e] rounded"
+          >
+            <option className="rounded-none" value="someOption" >
+              Apartment Building
+            </option>
+            
+          </select>
+        </div>
+
+
         <div className="mb-4">
           <label
             htmlFor="deposit"

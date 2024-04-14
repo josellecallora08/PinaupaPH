@@ -24,7 +24,7 @@ const ConcernList = () => {
   }, [])
   return (
     <>
-      <div className=" px-5 lg:pl-14 py-3">
+      <div className="h-2 px-5 lg:pl-14 py-3">
         <h1 className="lg:text-base uppercase text-sm font-bold my-5 ">
           Concern And Issues
         </h1>
@@ -54,6 +54,7 @@ const ConcernList = () => {
 
         <div className="lg:grid lg:grid-cols-3 lg:gap-y-2 lg:gap-x-3">
           {reports?.map((val, key) => (
+            
             <ConcernCard key={key} val={val} num={key} />
           ))}
         </div>

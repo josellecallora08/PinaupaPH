@@ -95,7 +95,7 @@ const Sidebar = () => {
               </div>
           </li>
           <li className='w-full h-full'>
-            <Link to={`/concern&issue`} className={`flex items-center center w-4/5  m-auto h-full hover:bg-primary-color/5 rounded-md ${menu ? 'p-5' : 'p-3'}`}>
+            <Link to={`/concern&issue`} className={`flex items-center center w-4/5  mx-auto h-full hover:bg-primary-color/5 rounded-md ${menu ? 'px-5 py-2' : 'p-3'}`}>
               <figure className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}>
                 <img src={report} alt="" className='max-w-5 max-h-5 object-contain' />
               </figure>

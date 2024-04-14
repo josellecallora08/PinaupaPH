@@ -16,7 +16,7 @@ const Least = () => {
   return (
     <>
       {modal && <AddLease setModal={setModal} />}
-      <div className="w-11/12 m-auto h-full flex flex-col  ">
+      <div className="w-full m-auto h-full px-5 flex flex-col bg-white1  ">
         <div className="lg:text-base  my-7 font-bold">
           <Link to={'/dashboard'} className="hover:underline">
             DOCUMENTS
