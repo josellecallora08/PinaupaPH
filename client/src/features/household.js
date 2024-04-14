@@ -41,23 +41,23 @@ export const createHousehold = (user_id, fields) => async (dispatch) => {
     dispatch(fetchHouseholdStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${base_url}/api/user/${user_id}/create_household`,
+      `${import.meta.env.VITE_URL}/api/user/${user_id}/create_household`,
       {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(fields),
       },
     )
-
     if (!response.ok) {
       const json = await response.json()
       throw new Error(json.error)
     }
 
     const json = await response.json()
-    dispatch(fetchHouseholds())
+    dispatch(fetchHouseholds(user_id))
   } catch (err) {
     dispatch(fetchFailed(err.message))
   }
@@ -68,7 +68,7 @@ export const fetchHousehold = (user_id, household_id) => async (dispatch) => {
     dispatch(fetchHouseholdStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${base_url}/api/user/${user_id}/household/v1?household_id=${household_id}`,
+      `${import.meta.env.VITE_URL}/api/user/${user_id}/household/v1?household_id=${household_id}`,
       {
         method: 'GET',
         headers: {

@@ -12,7 +12,7 @@ module.exports.fetch_all_household = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Household head not found' })
 
-    return res.status(httpStatusCodes.OK).json({response:tenant.household})
+    return res.status(httpStatusCodes.OK).json({ response: tenant.household })
   } catch (err) {
     console.log({ error: err.message })
     return res
@@ -50,11 +50,16 @@ module.exports.create_household = async (req, res) => {
   try {
     const { user_id } = req.params
     const { name, relationship, birthday, mobile } = req.body
+    const details = {}
+    if (name !== '') details.name = name
+    if (relationship !== '') details.relationship = relationship
+    if (mobile !== '') details.mobile = mobile
+    if (birthday !== '') details.birthday = birthday
+
     const response = await TENANTMODEL.findOne({ user_id: user_id })
     if (!response) {
       throw new Error({ error: 'Invalid to create household...' })
     }
-    const details = { name, relationship, birthday, mobile }
     const household_index = response.household.findIndex(
       (item) => item.name.toString() === name,
     )

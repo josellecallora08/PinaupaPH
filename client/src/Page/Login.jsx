@@ -39,7 +39,7 @@ const Login = () => {
         <div className="lg:flex lg:flex-row-reverse lg:justify-between mx-10 ">
           <img src={logImg} alt="" className="lg:w-1/3 lg:mr-24 w-10/12 mb-7 ml-8" />
           <p className="lg:hidden text-lg text-dark-gray">Log in to your account</p>
-          <form action="" className="lg:w-1/3 lg:ml-20 lg:rounded-md lg:p-10 lg:bg-white lg:shadow-md ">
+          <form className="lg:w-1/3 lg:ml-20 lg:rounded-md lg:p-10 lg:bg-white lg:shadow-md ">
             <h1 className="lg:text-4xl lg:font-bold lg:block hidden ">Log in</h1>
             <div className="flex flex-col text-lg text-primary-color font-bold mt-3">
               <label htmlFor="email">Email</label>
