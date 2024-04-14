@@ -1,11 +1,7 @@
 import React from 'react'
 const SearchBar = ({ onSearch }) => {
   return (
-<<<<<<< Updated upstream
-    <label className="w-full md:w-auto input input-bordered flex items-center gap-2">
-=======
     <label className="input input-bordered flex items-center gap-2 bg-white">
->>>>>>> Stashed changes
       <input
         type="text"
         className="grow"
