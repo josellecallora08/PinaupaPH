@@ -83,7 +83,7 @@ const ProfileTenant = () => {
   
   const birthday = new Date(tenant?.birthday).toLocaleDateString()
   return (
-    <div className="bg-white1 ">
+    <div className="bg-white1 h-full w-full  ">
       {/* Tenant Profile Header */}
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="lg:mt-2 lg:ml-10 uppercase font-bold  p-5 mx-4">
@@ -125,7 +125,7 @@ const ProfileTenant = () => {
         </div>
       </div>
 
-      <div className="w-11/12 m-auto h-full rounded-md">
+      <div className=" rounded-md">
         {/* Content based on Active Tab */}
         {activeTab === 'profile' && (
           <div className=" lg:mt-5 mt-10   ">

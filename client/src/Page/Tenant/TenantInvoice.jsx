@@ -5,7 +5,7 @@ import TenantTransactionMobile from '../../Component/Tenant Component/TenantTran
 const TenantInvoice = () => {
   return (
     <>
-   <div className="h-full w-full">
+   <div className="h-screen w-full bg-white1">
     <h1 className="lg:mx-10 lg:my-5 font-bold m-4">VIEW RECEIPT/DOCUMENTS</h1>
             <div className="lg:block hidden">
               <TenantTransactionTable />
