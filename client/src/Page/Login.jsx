@@ -48,7 +48,7 @@ const Login = () => {
                 name="username"
                 onChange={handleInputChange}
                 placeholder="e.g juan.delacruz@gmail.com"
-                className="border-2 border-dark-gray w-full p-3 rounded-md"
+                className="border-2 bg-white1 border-dark-gray w-full p-3 rounded-md"
                 value={credentials.username}
               />
             </div>
@@ -59,7 +59,7 @@ const Login = () => {
                 name="password"
                 onChange={handleInputChange}
                 placeholder="********"
-                className="border-2 border-dark-gray w-full p-3 rounded-md"
+                className="border-2 bg-white1 border-dark-gray w-full p-3 rounded-md"
                 
                 value={credentials.password}
               />

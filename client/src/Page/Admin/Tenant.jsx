@@ -84,7 +84,7 @@ const Tenant = () => {
   }, [])
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full bg-white1">
       <div className="w-11/12 flex flex-col m-auto">
         {/* Top of Tenant Tab */}
         <h1 className="uppercase font-bold py-5 ">List of Tenant </h1>
@@ -113,7 +113,7 @@ const Tenant = () => {
         </div>
 
         {/* Body of Tenant Tab */}
-        <div className="lg:grid-cols-3 md:grid-cols-2 grid grid-cols-1 ">
+        <div className="lg:grid-cols-2 md:grid-cols-2 grid grid-cols-1 ">
           {tenant?.map((val, key) => (
             <TenantCard key={key} data={val} />
           ))}

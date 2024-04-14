@@ -83,7 +83,7 @@ const ProfileTenant = () => {
   
   const birthday = new Date(tenant?.birthday).toLocaleDateString()
   return (
-    <div className="bg-white1 h-full w-full  ">
+    <div className="bg-white1 h-full w-full text-primary-color  ">
       {/* Tenant Profile Header */}
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="lg:mt-2 lg:ml-10 uppercase font-bold  p-5 mx-4">
@@ -96,7 +96,7 @@ const ProfileTenant = () => {
             onClick={() => handleTabClick('profile')}
             className={
               activeTab === 'profile'
-                ? ' text-white py-2 px-5 bg-primary rounded-full '
+                ? ' text-white py-2 px-5 bg-primary-color rounded-full '
                 : ''
             }
           >
@@ -106,7 +106,7 @@ const ProfileTenant = () => {
             onClick={() => handleTabClick('documents')}
             className={
               activeTab === 'documents'
-                ? 'text-white py-2 px-5 bg-primary rounded-full'
+                ? 'text-white py-2 px-5 bg-primary-color rounded-full'
                 : ''
             }
           >
@@ -116,7 +116,7 @@ const ProfileTenant = () => {
             onClick={() => handleTabClick('transaction')}
             className={
               activeTab === 'transaction'
-                ? 'text-white py-2 px-5 bg-primary rounded-full'
+                ? 'text-white py-2 px-5 bg-primary-color rounded-full'
                 : ''
             }
           >

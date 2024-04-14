@@ -4,7 +4,7 @@ import ConcernList from '../../Component/ConcernList'
 
 const Concern = () => {
   return (
-    <div>
+    <div className='w-full h-screen bg-white1'>
       <ConcernList />
     </div>
   )

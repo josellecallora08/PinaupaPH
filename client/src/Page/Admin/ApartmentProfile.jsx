@@ -64,7 +64,7 @@ const ApartmentProfile = () => {
 
   return (
     <div>
-      <div className="w-11/12 m-auto h-full mb-10">
+      <div className="w-full  h-full pb-10  bg-white1">
         {/* Upper part of Apartment Profile */}
         <h1 className="uppercase font-bold px-10 p-5">View Apartment</h1>
         <div className=" flex bg-white gap-10 mx-5 px-5 py-4 rounded-md shadow-md shadow-gray ">
@@ -108,7 +108,7 @@ const ApartmentProfile = () => {
             </div>
           </div>
         </div>
-        <div className="lg:justify-between lg:ml-9 md:justify-between flex gap-2 w-full mb-5 mt-5 ml-6">
+        <div className="lg:justify-between pl-5  md:justify-between flex gap-2 w-full mb-5 mt-5">
           <SearchBar onSearch={handleSearch} className="lg:w-1/2  flex-1  " />
           <button
             onClick={toggleAddRoomForm}
