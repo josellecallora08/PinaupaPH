@@ -5,7 +5,7 @@ const TenantConcernCard = () => {
   return (
     <>
 
-    <Link to={"/viewconcern"}>
+    <Link to={"/tenant/viewconcern"}>
       <div className=' flex h-28 w-full mt-5 items-center rounded-tl-lg rounded-bl-lg  shadow-md shadow-dark-gray'>
         <div className='h-28 w-4 rounded-tl-lg rounded-bl-lg bg-lime'></div>
         <div className='flex justify-evenly w-full'>

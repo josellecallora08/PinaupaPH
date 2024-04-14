@@ -30,6 +30,7 @@ import TenantLease from './Page/Tenant/TenantLease'
 import TenantSecurity from './Page/Tenant/TenantSecurity'
 import TenantHome from './Page/Tenant/TenantHome'
 import ProfileTenant from './Page/Tenant/ProfileTenant'
+import TenantViewConcern from './Page/Tenant/TenantViewConcern'
 
 function App() {
   const user = useSelector((state) => state.auth.isAuthenticated)
@@ -221,7 +222,14 @@ function App() {
           </TenantLayout>
         }
       />
-          
+            <Route
+        path="/tenant/viewconcern"
+        element={
+          <TenantLayout className="bg-white1">
+            <TenantViewConcern />
+          </TenantLayout>
+        }
+      />
 
     
 
