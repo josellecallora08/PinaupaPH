@@ -55,11 +55,12 @@ const CreateTicket = ({setisCreateTicket}) => {
             id="name"
             name="name"
             placeholder="Enter your name"
-            className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="text-sm bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
 
         <div className="mb-4">
+          
           <label
             htmlFor="maintenanceType"
             className="block text-sm font-medium text-dark-gray"
@@ -75,7 +76,7 @@ const CreateTicket = ({setisCreateTicket}) => {
               color: selectedType ? 'black' : 'gray',
               borderColor: 'black',
             }}
-            className="mt-1 block w-full p-2 border text-sm rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+            className="mt-1 block w-full p-2 bg-white border text-sm rounded-md focus:outline-none focus:ring focus:ring-blue-200"
           >
             <option value="" disabled selected hidden>
               Maintenance Request
@@ -99,7 +100,7 @@ const CreateTicket = ({setisCreateTicket}) => {
             name="description"
             value={description}
             onChange={handleDescriptionChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring focus:ring-blue-200"
+            className="mt-1 block bg-white w-full p-2 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring focus:ring-blue-200"
             rows={5}
           ></textarea>
         </div>

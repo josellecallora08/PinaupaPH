@@ -6,6 +6,7 @@ import CreateTicket from '../../Component/Tenant Component/CreateTicket'
 import { base_url } from '../../utils/constants'
 import {useDispatch} from 'react-redux'
 import { handleSearchUser } from '../../features/user'
+
 const TenantConcern = () => {
   const [searchItem, setSearchItem] = useState('')
   const [isCreateTicket, setisCreateTicket] = useState(false)
@@ -17,7 +18,7 @@ const TenantConcern = () => {
 
   return (
     <>
-      <div className=" px-5 py-3">
+      <div className=" w-full h-screen px-5 py-3 bg-white1">
         <h1 className="lg:text-base uppercase text-sm font-bold my-5 ">
           Concern And Issues
         </h1>
@@ -26,8 +27,9 @@ const TenantConcern = () => {
           <div className="w-7/12 md:max-w-60 max-w-full">
             <SearchBar onSearch={handleInput} />
           </div>
+          
           <div className='flex justify-end'>
-            <button onClick={() => setisCreateTicket(true)} className="bg-primary flex gap-3 items-center py-3 px-10 rounded-md text-white">
+            <button onClick={() => setisCreateTicket(true)} className="bg-primary-color flex gap-3 items-center py-3 px-10 rounded-md text-white">
               <FaPlus />
               Create Ticket
             </button>
