@@ -1,20 +1,29 @@
 import React, { useState } from 'react'
-import Cookies from 'js-cookie'
-import { base_url } from '../utils/constants'
 import { IoMdClose } from 'react-icons/io'
-
-const AddHousehold = ({ setIsAddHouseholdForm }) => {
+import { useDispatch, useSelector } from 'react-redux'
+import { createHousehold } from '../features/household'
+const AddHousehold = ({ id, setIsAddHouseholdForm }) => {
   const [isFormOpen, setIsFormOpen] = useState(false)
-  const [error, setError] = useState(null)
+  const error = useSelector((state) => state.household.error)
+  const dispatch = useDispatch()
+  const [fields, setFields] = useState({
+    name: '',
+    mobile: '',
+    relationship: '',
+  })
   const toggleForm = () => {
     setIsFormOpen(!isFormOpen)
   }
-
-  const handleSubmit = () => {
-    setError(
-      'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
-        )
-    console.log('Form submitted')
+  const handleInput = (e) => {
+    const { name, value } = e.target
+    setFields((states) => ({
+      ...states,
+      [name]: value,
+    }))
+  }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    dispatch(createHousehold(id, fields))
     toggleForm()
   }
 
@@ -29,19 +38,19 @@ const AddHousehold = ({ setIsAddHouseholdForm }) => {
         onSubmit={handleSubmit}
         className="lg:w-full lg:pt-4 w-[20rem] h-[20rem] px-4 overflow-y-auto"
       >
-            <button className="absolute top-4 right-6">
-              <IoMdClose
-                onClick={() => setIsAddHouseholdForm((prevState) => !prevState)}
-                size={25}
-                color="white"
-              />
-            </button>
+        <button className="absolute top-4 right-6">
+          <IoMdClose
+            onClick={() => setIsAddHouseholdForm((prevState) => !prevState)}
+            size={25}
+            color="white"
+          />
+        </button>
 
-            {error && (
-            <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
-              {error}
-            </div>
-          )}
+        {error && (
+          <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+            {error}
+          </div>
+        )}
 
         <div className="mb-4">
           <label
@@ -52,9 +61,9 @@ const AddHousehold = ({ setIsAddHouseholdForm }) => {
           </label>
           <input
             type="text"
-            id="name"
             name="name"
-            required
+            onChange={handleInput}
+            value={fields.name}
             placeholder="Enter your name"
             className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
@@ -68,10 +77,10 @@ const AddHousehold = ({ setIsAddHouseholdForm }) => {
             Contact
           </label>
           <input
-            type="tel"
-            id="contact"
-            name="contact"
-            required
+            type="text"
+            name="mobile"
+            value={fields.mobile}
+            onChange={handleInput}
             placeholder="Enter your contact number"
             className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
@@ -86,18 +95,15 @@ const AddHousehold = ({ setIsAddHouseholdForm }) => {
           </label>
           <input
             type="text"
-            id="relationship"
             name="relationship"
-            required
+            onChange={handleInput}
+            value={fields.relationship}
             placeholder="Enter Tenant's relationship"
             className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
         <div className="flex justify-end mt-5 mb-3 gap-3">
-          <button
-            onClick={handleSubmit}
-            className=" bg-dark-blue text-white font-bold py-2 px-4 rounded"
-          >
+          <button className=" bg-dark-blue text-white font-bold py-2 px-4 rounded">
             Submit
           </button>
 
