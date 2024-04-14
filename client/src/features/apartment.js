@@ -53,7 +53,7 @@ export const handleSearchApartment = (filter) => async (dispatch) => {
     const token = Cookies.get('token')
     dispatch(apartmentStart())
     const response = await fetch(
-      `${base_url}/api/apartment/search?filter=${filter}`,
+      `${import.meta.env.VITE_URL}/api/apartment/search?filter=${filter}`,
       {
         method: 'POST',
         headers: {
@@ -78,7 +78,7 @@ export const createApartment = (fields) => async (dispatch) => {
   try {
     dispatch(apartmentStart())
     const token = Cookies.get('token')
-    const response = await fetch(`${base_url}/api/apartment/create_apartment`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/apartment/create_apartment`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -102,7 +102,7 @@ export const fetchApartments = () => async (dispatch) => {
   try {
     dispatch(apartmentStart())
     const token = Cookies.get('token')
-    const response = await fetch(`${base_url}/api/apartment/building`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/apartment/building`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -124,7 +124,7 @@ export const fetchApartment = (apartmentId) => async (dispatch) => {
     const token = Cookies.get('token')
     dispatch(apartmentStart())
     const response = await fetch(
-      `${base_url}/api/apartment/building/${apartmentId}`,
+      `${import.meta.env.VITE_URL}/api/apartment/building/${apartmentId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -148,7 +148,7 @@ export const editApartment = (fields, apartmentId) => async (dispatch) => {
     dispatch(apartmentStart())
     const token = Cookies.get('tokens')
     const response = await fetch(
-      `${base_url}/api/apartment/${apartmentId}/edit_apartment`,
+      `${import.meta.env.VITE_URL}/api/apartment/${apartmentId}/edit_apartment`,
       {
         method: 'PATCH',
         headers: {
@@ -173,7 +173,7 @@ export const deleteApartment = (apartment_id) => async (dispatch) => {
   try {
     dispatch(apartmentStart())
     const token = Cookies.get('token')
-    const response = await fetch(`${base_url}/api/apartment/${apartment_id}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/apartment/${apartment_id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,

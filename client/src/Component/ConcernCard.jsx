@@ -5,7 +5,7 @@ const ConcernCard = ({val, num}) => {
   return (
     <>
 
-    <Link to={"/ViewConcern"}>
+    <Link to={`/view-concern/${val._id}`}>
       <div className=' flex h-28 w-full mt-5 items-center rounded-tl-lg rounded-bl-lg  shadow-md shadow-gray'>
         <div className={`h-28 w-4 rounded-tl-lg rounded-bl-lg ${val?.status ? 'bg-lime' : 'bg-red'}`}></div>
         <div className='flex justify-evenly w-full'>

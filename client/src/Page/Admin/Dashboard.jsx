@@ -1,15 +1,16 @@
+import React, { useEffect } from 'react'
 import City from '/city.svg'
 import 'chartkick/chart.js'
 import 'react-circular-progressbar/dist/styles.css'
 import renew from '/renew.svg'
-import { Bar} from 'react-chartjs-2'
+import { Bar } from 'react-chartjs-2'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import rent from '/Rent.svg'
 import occupancy from '/occupancy.svg'
 import pay from '/PayDate.svg'
 import { useSelector, useDispatch } from 'react-redux'
-import {useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { isLoggedin } from '../../features/authentication'
 
 const Dashboard = () => {
@@ -67,11 +68,16 @@ const Dashboard = () => {
   return (
     <>
       {loading ? (
-        <div> Loading</div>
+        <span className="loading loading-bars loading-md"></span>
       ) : (
         <div className="w-full h-full md:h-auto xl:h-full xl:max-h-auto flex flex-col items-start bg-gray pb-5">
           <div className="w-11/12 h-fit m-auto py-3 ">
-            <h1 className="uppercase font-bold ">Dashboard</h1>
+            <Link
+              to="/dashboard"
+              className="uppercase font-bold hover:underline"
+            >
+              Dashboard
+            </Link>
           </div>
           <div className="w-11/12 xl:max-h-[800px] flex flex-col m-auto xl:grid grid-cols-3 gap-2 grid-rows-7">
             <div className="lg:pt-4 flex justify-between items-center col-span-3 row-span-1  rounded-md overflow-hidden shadow-md bg-white ">
@@ -141,7 +147,7 @@ const Dashboard = () => {
             <div className="col-span-3 row-span-2 grid grid-cols-4 md:grid-cols-3 grid-flow-row md:grid-rows-2 gap-2">
               <div className="col-span-4 md:col-span-2 row-span-2 grid grid-cols-2 grid-rows-2 gap-2">
                 <div className="col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md">
-                  <div className="w-full bg-primary max-w-20 flex items-center justify-center">
+                  <div className="w-full bg-primary-color max-w-20 flex items-center justify-center">
                     <div className="rounded-full p-2 xl:p-3 bg-gray">
                       <figure className="w-full h-full max-w-16 max-h-16">
                         <img src={pay} className="w-full h-full" alt="" />
@@ -164,10 +170,10 @@ const Dashboard = () => {
                           </p>
                         </div>
                         <p
-                          className={`relative w-11/12 m-auto xl:w-full h-2 bg-primary/20 rounded-full overflow-hidden shadow-inner`}
+                          className={`relative w-11/12 m-auto xl:w-full h-2 bg-primary-color/20 rounded-full overflow-hidden shadow-inner`}
                         >
                           <span
-                            className={`absolute w-1/4 h-2 bg-primary animate-in slide-in-from-left-20 duration-1000`}
+                            className={`absolute w-1/4 h-2 bg-primary-color animate-in slide-in-from-left-20 duration-1000`}
                           ></span>
                         </p>
                       </div>
@@ -175,7 +181,7 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md">
-                  <div className="bg-primary w-full max-w-20 flex items-center justify-center">
+                  <div className="bg-primary-color w-full max-w-20 flex items-center justify-center">
                     <div className="rounded-full p-2 xl:p-3 bg-gray">
                       <figure className="w-full h-full md:max-w-16 md:max-h-16">
                         <img src={rent} className="w-full h-full" alt="" />
@@ -198,10 +204,10 @@ const Dashboard = () => {
                           </p>
                         </div>
                         <p
-                          className={`relative w-11/12 m-auto xl:w-full h-2 bg-primary/20 rounded-full overflow-hidden shadow-inner`}
+                          className={`relative w-11/12 m-auto xl:w-full h-2 bg-primary-color/20 rounded-full overflow-hidden shadow-inner`}
                         >
                           <span
-                            className={`absolute w-[96%] h-2 bg-primary animate-in slide-in-from-left-20 duration-1000`}
+                            className={`absolute w-[96%] h-2 bg-primary-color animate-in slide-in-from-left-20 duration-1000`}
                           ></span>
                         </p>
                       </div>
@@ -209,7 +215,7 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md">
-                  <div className="bg-primary w-full max-w-20 flex items-center justify-center">
+                  <div className="bg-primary-color w-full max-w-20 flex items-center justify-center">
                     <div className="rounded-full p-2 xl:p-3 bg-gray">
                       <figure className="w-full h-full max-w-16 max-h-16">
                         <img src={occupancy} className="w-full h-full" alt="" />
@@ -232,10 +238,10 @@ const Dashboard = () => {
                           </p>
                         </div>
                         <p
-                          className={`relative w-11/12 m-auto xl:w-full h-2 bg-primary/20 rounded-full overflow-hidden shadow-inner`}
+                          className={`relative w-11/12 m-auto xl:w-full h-2 bg-primary-color/20 rounded-full overflow-hidden shadow-inner`}
                         >
                           <span
-                            className={`absolute ${prc} h-2 bg-primary animate-in slide-in-from-left-20 duration-1000`}
+                            className={`absolute ${prc} h-2 bg-primary-color animate-in slide-in-from-left-20 duration-1000`}
                           ></span>
                         </p>
                       </div>
@@ -243,7 +249,7 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <div className="col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md">
-                  <div className="bg-primary w-full max-w-20 flex items-center justify-center">
+                  <div className="bg-primary-color w-full max-w-20 flex items-center justify-center">
                     <div className="rounded-full p-2 xl:p-3 bg-gray">
                       <figure className="w-full h-full max-w-5 xl:max-w-6 xl:max-h-6">
                         <img src={renew} className="w-full h-full" alt="" />
@@ -266,10 +272,10 @@ const Dashboard = () => {
                           </p>
                         </div>
                         <p
-                          className={`relative w-11/12 m-auto xl:w-full h-2 bg-primary/20 rounded-full overflow-hidden shadow-inner`}
+                          className={`relative w-11/12 m-auto xl:w-full h-2 bg-primary-color/20 rounded-full overflow-hidden shadow-inner`}
                         >
                           <span
-                            className={`absolute w-[${'66'}%] h-2 bg-primary animate-in slide-in-from-left-20 duration-1000`}
+                            className={`absolute w-[${'66'}%] h-2 bg-primary-color animate-in slide-in-from-left-20 duration-1000`}
                           ></span>
                         </p>
                       </div>

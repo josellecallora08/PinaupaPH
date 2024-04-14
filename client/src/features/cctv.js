@@ -48,7 +48,7 @@ export const createCCTV = (field, apartmentId) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${base_url}/api/cctv/${apartmentId}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/cctv/${apartmentId}`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -71,7 +71,7 @@ export const fetchCCTVs = () => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${base_url}/api/cctv/`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/cctv/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -91,7 +91,7 @@ export const fetchCCTV = (cctvId) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${base_url}/api/cctv/${cctvId}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/cctv/${cctvId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -111,7 +111,7 @@ export const editCCTV = (fields, cctvId) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${base_url}/api/cctv/${cctvId}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/cctv/${cctvId}`, {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -135,7 +135,7 @@ export const deleteCCTV = (apartmentId, cctvId) => async (dispatch) => {
     const token = Cookies.get('token')
     dispatch(startLoading())
     const cctv = await fetch(
-      `${base_url}/api/cctv/${apartmentId}/api/cctv/delete_cctv/${cctvId}`,
+      `${import.meta.env.VITE_URL}/api/cctv/${apartmentId}/api/cctv/delete_cctv/${cctvId}`,
       {
         method: 'DELETE',
         headers: {

@@ -2,6 +2,7 @@ import React from 'react'
 import { Dropdown } from 'rsuite'
 import { CiEdit } from 'react-icons/ci'
 import { BsDownload } from 'react-icons/bs'
+import { Link } from 'react-router-dom'
 import { IoPrintOutline } from 'react-icons/io5'
 //optional
 import 'rsuite/Dropdown/styles/index.css'
@@ -9,9 +10,15 @@ import 'rsuite/Dropdown/styles/index.css'
 const LeaseView = () => {
   return (
     <div className="flex flex-col">
-      <p className="pl-5 pt-5 font-bold text-base">
-        DOCUMENTS / LEASE AGREEMENTS
-      </p>
+      <div className="pl-5 pt-5 font-bold text-base">
+        <Link to={'/dashboard'} className="hover:underline">
+          DOCUMENTS
+        </Link>
+        /
+        <Link to={`/document/lease-agreement`} className="hover:underline">
+          LEASE AGREEMENTS
+        </Link>
+      </div>
       <Dropdown
         title={'Select Action'}
         className="ml-auto mr-6 border border-light-gray rounded-lg"
@@ -158,14 +165,20 @@ const LeaseView = () => {
           <p className="xl:mt-60 lg:mt-40 xl:text-2xl lg:text-xl font-bold font-serif">
             Petsa ng simula ng kontrata:
           </p>
-          <p className="xl:mt-10 lg:mt-5 xl:text-2xl lg:text-xl font-bold font-serif">Araw ng bayad:</p>
+          <p className="xl:mt-10 lg:mt-5 xl:text-2xl lg:text-xl font-bold font-serif">
+            Araw ng bayad:
+          </p>
           <div className="h-60"></div>
 
           <p className=" xl:text-2xl lg:text-xlfont-serif font-bold underline">
             Mga saksi sa kasunduan
           </p>
-          <p className="xl:mt-10 lg:mt-5 xl:text-2xl lg:text-xlfont-serif font-bold underline">1.)</p>
-          <p className=" xl:text-2xl lg:text-xlfont-serif font-bold underline">2.)</p>
+          <p className="xl:mt-10 lg:mt-5 xl:text-2xl lg:text-xlfont-serif font-bold underline">
+            1.)
+          </p>
+          <p className=" xl:text-2xl lg:text-xlfont-serif font-bold underline">
+            2.)
+          </p>
         </div>
       </div>
     </div>

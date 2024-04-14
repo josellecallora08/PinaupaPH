@@ -94,7 +94,7 @@ const Headbar = () => {
   
   
   return (
-    <div className="w-full h-full max-h-20 sticky top-0 z-20 bg-primary">
+    <div className="w-full h-full max-h-20 sticky top-0 z-20 bg-primary-color">
       <div className=" flex justify-between items-center p-5 w-full relative m-auto  ">
         <div className="flex items-center gap-5">
           <button onClick={handleSidebar} className="flex items-center">

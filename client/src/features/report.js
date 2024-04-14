@@ -40,7 +40,7 @@ export const createReport = (user_id, fields) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchReportStart())
-    const response = await fetch(`${base_url}/api/report/${user_id}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/report/${user_id}`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -63,7 +63,7 @@ export const createReport = (user_id, fields) => async (dispatch) => {
 export const fetchReports = () => async (dispatch) => {
   try {
     const token = Cookies.get('token')
-    const response = await fetch(`${base_url}/api/report/`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/report/`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -84,7 +84,7 @@ export const fetchReports = () => async (dispatch) => {
 export const fetchReport = (report_id) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
-    const response = await fetch(`${base_url}/api/report/v1?report_id=${report_id}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/report/v1?report_id=${report_id}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -95,16 +95,18 @@ export const fetchReport = (report_id) => async (dispatch) => {
         throw new Error(json.error)
       }
       const json = await response.json()
-      dispatch(fetchReportSuccess(json))
+      console.log(json.report)
+      dispatch(fetchReportSuccess(json.report))
   } catch (err) {
     console.log(err.message)
     dispatch(fetchReportFailed(err.message))
   }
 }
+
 export const editReport = (report_id, fields) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
-    const response = await fetch(`${base_url}/api/report/v1?report_id=${report_id}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/report/v1?report_id=${report_id}`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -124,7 +126,7 @@ export const editReport = (report_id, fields) => async (dispatch) => {
 export const deleteReport = () => async (dispatch) => {
   try {
     const token = Cookies.get('token')
-    const response = await fetch(`${base_url}/api/report/v1?report_id=${report_id}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/report/v1?report_id=${report_id}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,

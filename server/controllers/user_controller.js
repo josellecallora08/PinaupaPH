@@ -26,9 +26,11 @@ module.exports.sign_up = async (req, res) => {
     //   return res.status(httpStatusCodes.BAD_REQUEST).json({ errors: errors.array() });
     // }
 
-    const role = req.user.role;
+    const role = req.user.role
     if (role !== 'Admin') {
-      return res.status(httpStatusCodes.UNAUTHORIZED).json({ error: 'Unauthorized. Only admin can add tenants.' });
+      return res
+        .status(httpStatusCodes.UNAUTHORIZED)
+        .json({ error: 'Unauthorized. Only admin can add tenants.' })
     }
 
     const {
@@ -41,29 +43,37 @@ module.exports.sign_up = async (req, res) => {
       unit_id,
       deposit,
       occupancy,
-    } = req.body;
-    
+    } = req.body
+
     // Validation for email and mobile number
-    const emailRegex = /^\S+@\S+\.\S+$/;
-    const mobileRegex = /^[0-9]{10}$/;
+    const emailRegex = /^\S+@\S+\.\S+$/
+    const mobileRegex = /^[0-9]{10}$/
 
     if (!email) {
-      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Invalid email format.' });
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Invalid email format.' })
     }
 
     if (!mobile_no) {
-      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Invalid mobile number format.' });
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Invalid mobile number format.' })
     }
 
     // Check if password is provided
     if (!password) {
-      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Password is required.' });
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Password is required.' })
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashed = await bcrypt.hash(password, salt);
+    const salt = await bcrypt.genSalt(10)
+    const hashed = await bcrypt.hash(password, salt)
     if (!hashed) {
-      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Error hashing the password.' });
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Error hashing the password.' })
     }
 
     const details = {
@@ -73,52 +83,68 @@ module.exports.sign_up = async (req, res) => {
       password: hashed,
       mobile_no,
       birthday,
-      monthly_due: occupancy
-    };
+      monthly_due: occupancy,
+    }
 
     // Check if user already exists
-    const existingUser = await USERMODEL.findOne({ $or: [{ username }, { email }, { mobile_no }] });
+    const existingUser = await USERMODEL.findOne({
+      $or: [{ username }, { email }, { mobile_no }],
+    })
     if (existingUser) {
-      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'User with this username, email, or mobile number already exists.' });
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+        error:
+          'User with this username, email, or mobile number already exists.',
+      })
     }
 
-    const unit_status = await UNITMODEL.findById(unit_id);
+    const unit_status = await UNITMODEL.findById(unit_id)
     if (unit_status.occupied === true) {
-      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: `Unit ${unit_id} is already occupied.` });
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: `Unit ${unit_id} is already occupied.` })
     }
 
-    let response = await USERMODEL.create(details);
+    let response = await USERMODEL.create(details)
 
     // File Upload
-    const imageUpload = await cloudinary.uploader.upload(`./template/profile-default.svg`, {
-      quality: 'auto:low',
-      folder: 'PinaupaPH/Profile',
-      resource_type: 'auto',
-    });
+    const imageUpload = await cloudinary.uploader.upload(
+      `./template/profile-default.svg`,
+      {
+        quality: 'auto:low',
+        folder: 'PinaupaPH/Profile',
+        resource_type: 'auto',
+      },
+    )
 
     if (!imageUpload || !imageUpload.secure_url) {
-      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Failed to upload profile image.' });
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Failed to upload profile image.' })
     }
 
-    response.profile_image.image_url = imageUpload.secure_url;
-    response.profile_image.public_id = imageUpload.public_id;
+    response.profile_image.image_url = imageUpload.secure_url
+    response.profile_image.public_id = imageUpload.public_id
 
     if (response.role === 'Tenant') {
       const tenant = await TENANTMODEL.create({
         user_id: response._id,
         unit_id,
-        deposit
-      });
+        deposit,
+      })
       if (!tenant) {
-        return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Failed to create Tenant Data.' });
+        return res
+          .status(httpStatusCodes.BAD_REQUEST)
+          .json({ error: 'Failed to create Tenant Data.' })
       }
     }
 
-    await response.save();
+    await response.save()
 
-    const unit = await UNITMODEL.findByIdAndUpdate( unit_id, { occupied: true });
+    const unit = await UNITMODEL.findByIdAndUpdate(unit_id, { occupied: true })
     if (!unit) {
-      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Failed to update occupancy status at Unit Collection.' });
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+        error: 'Failed to update occupancy status at Unit Collection.',
+      })
     }
 
     // Token Creation
@@ -133,12 +159,16 @@ module.exports.sign_up = async (req, res) => {
     //   role: response.role
     // };
 
-    return res.status(httpStatusCodes.OK).json({ msg: 'Created Account successfully!', response});
+    return res
+      .status(httpStatusCodes.OK)
+      .json({ msg: 'Created Account successfully!', response })
   } catch (err) {
-    console.error('Error during sign up:', err);
-    return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal server error.' });
+    console.error('Error during sign up:', err)
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Internal server error.' })
   }
-};
+}
 // * Done Testing API
 module.exports.sign_in = async (req, res) => {
   const { username, password } = req.body
@@ -281,7 +311,7 @@ module.exports.search_user = async (req, res) => {
       return userData
     })
 
-    return res.status(httpStatusCodes.OK).json({response: search})
+    return res.status(httpStatusCodes.OK).json({ response: search })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -349,7 +379,7 @@ module.exports.fetch_users = async (req, res) => {
       return userData
     })
 
-    return res.status(httpStatusCodes.OK).json({response:user})
+    return res.status(httpStatusCodes.OK).json({ response: user })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -408,7 +438,7 @@ module.exports.fetch_user = async (req, res) => {
       userData.rent = user.unit_id.rent
     }
 
-    return res.status(httpStatusCodes.OK).json(userData)
+    return res.status(httpStatusCodes.OK).json({ response: userData })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -617,12 +647,10 @@ module.exports.update_unit_info = async (req, res) => {
     }
     await tenant.save()
 
-    return res
-      .status(httpStatusCodes.OK)
-      .json({
-        message: 'Tenant information updated successfully',
-        response: tenant,
-      })
+    return res.status(httpStatusCodes.OK).json({
+      message: 'Tenant information updated successfully',
+      response: tenant,
+    })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -708,15 +736,17 @@ module.exports.delete_tenant = async (req, res) => {
           .status(httpStatusCodes.BAD_REQUEST)
           .json({ error: 'Unable to Locate Tenant' })
 
-      const unit = await UNITMODEL.findByIdAndUpdate(
-        { _id: tenant.unit_id },
-        { occupied: false },
-      )
+      if (tenant.unit_id) {
+        const unit = await UNITMODEL.findByIdAndUpdate(
+          { _id: tenant.unit_id },
+          { occupied: false },
+        )
 
-      if (!unit)
-        return res
-          .status(httpStatusCodes.BAD_REQUEST)
-          .json({ error: 'Unable to locate Unit' })
+        if (!unit)
+          return res
+            .status(httpStatusCodes.BAD_REQUEST)
+            .json({ error: 'Unable to locate Unit' })
+      }
     }
 
     return res

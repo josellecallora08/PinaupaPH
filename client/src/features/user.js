@@ -56,7 +56,7 @@ export const handleSearchUser = (filter) => async (dispatch) => {
     const token = Cookies.get('token')
     dispatch(fetchUserStart())
     const response = await fetch(
-      `${base_url}/api/user/search?filter=${filter}`,
+      `${import.meta.env.VITE_URL}/api/user/search?filter=${filter}`,
       {
         method: 'POST',
         headers: {
@@ -72,7 +72,7 @@ export const handleSearchUser = (filter) => async (dispatch) => {
 
     const json = await response.json()
     console.log(json)
-    dispatch(fetchUserSuccess(json))
+    dispatch(fetchUserSuccess(json.response))
   } catch (err) {
     dispatch(actionUserFailed(err.message))
   }
@@ -82,7 +82,7 @@ export const createTenant = (fields) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchUserStart())
-    const response = await fetch(`${base_url}/api/user`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/user`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -97,7 +97,6 @@ export const createTenant = (fields) => async (dispatch) => {
     }
 
     const json = await response.json()
-    console.log(json.msg)
     dispatch(fetchUsers())
   } catch (err) {
     dispatch(actionUserFailed(err.message))
@@ -108,7 +107,7 @@ export const fetchUser = (userId) => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
     const token = Cookies.get('token')
-    const user = await fetch(`${base_url}/api/user/tenant?user_id=${userId}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/user/tenant?user_id=${userId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -118,8 +117,9 @@ export const fetchUser = (userId) => async (dispatch) => {
       const json = await response.json()
       throw new Error(json.error)
     }
-    const json = await user.json()
-    dispatch(fetchSingleUser(json))
+    const json = await response.json()
+    console.log(json)
+    dispatch(fetchSingleUser(json.response))
   } catch (err) {
     dispatch(actionUserFailed())
   }
@@ -129,7 +129,7 @@ export const fetchUsers = () => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchUserStart())
-    const response = await fetch(`${base_url}/api/user/tenants`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/user/tenants`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -150,7 +150,7 @@ export const editUser = (userId, credentials) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchUserStart())
-    const response = await fetch(`${base_url}/api/user/${userId}/update_profile`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/user/${userId}/update_profile`, {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -176,7 +176,7 @@ export const editUserApartment = (userId, credentials) => async (dispatch) => {
     const token = Cookies.get('token')
     dispatch(fetchUserStart())
     const response = await fetch(
-      `${base_url}/api/user/${userId}/update-apartment-details`,
+      `${import.meta.env.VITE_URL}/api/user/${userId}/update-apartment-details`,
       {
         method: 'PATCH',
         headers: {
@@ -204,7 +204,7 @@ export const deleteUser = (userId) => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
     const response = await fetch(
-      `${base_url}/api/user/delete_tenant?user_id=${userId}`,
+      `${import.meta.env.VITE_URL}/api/user/delete_tenant?user_id=${userId}`,
       {
         method: 'DELETE',
         headers: {
