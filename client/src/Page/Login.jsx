@@ -41,7 +41,7 @@ const Login = () => {
           <p className="lg:hidden text-lg text-dark-gray">Log in to your account</p>
           <form action="" className="lg:w-1/3 lg:ml-20 lg:rounded-md lg:p-10 lg:bg-white lg:shadow-md ">
             <h1 className="lg:text-4xl lg:font-bold lg:block hidden ">Log in</h1>
-            <div className="flex flex-col text-lg text-primary font-bold mt-3">
+            <div className="flex flex-col text-lg text-primary-color font-bold mt-3">
               <label htmlFor="email">Email</label>
               <input
                 type="text"
@@ -52,7 +52,7 @@ const Login = () => {
                 value={credentials.username}
               />
             </div>
-            <div className="flex flex-col text-lg text-primary font-bold mt-3">
+            <div className="flex flex-col text-lg text-primary-color font-bold mt-3">
               <label htmlFor="password">Password</label>
               <input
                 type="password"

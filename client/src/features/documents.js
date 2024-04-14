@@ -49,7 +49,7 @@ export const generateDocument =
   (userId, unitId, fields,unitNo, userName) => async (dispatch) => {
     try {
       const token = Cookies.get('token')
-      const pdf = await fetch(`${base_url}/api/documents/${unitId}/${userId}/fetch_contract`, {
+      const pdf = await fetch(`${import.meta.env.VITE_URL}/api/documents/${unitId}/${userId}/fetch_contract`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -72,7 +72,7 @@ export const createDocument = (userId, unitId, fields) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const docs = await fetch(`${base_url}api/documents/${unitId}/${userId}/generate_contract`, {
+    const docs = await fetch(`${import.meta.env.VITE_URL}api/documents/${unitId}/${userId}/generate_contract`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,

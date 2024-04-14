@@ -29,6 +29,7 @@ import TenantConcern from './Page/Tenant/TenantConcern'
 import TenantLease from './Page/Tenant/TenantLease'
 import TenantSecurity from './Page/Tenant/TenantSecurity'
 import TenantHome from './Page/Tenant/TenantHome'
+import ProfileTenant from './Page/Tenant/ProfileTenant'
 
 function App() {
   const user = useSelector((state) => state.auth.isAuthenticated)
@@ -130,7 +131,7 @@ function App() {
         }
       />
       <Route
-        path="/viewconcern"
+        path={`/view-concern/:id`}
         element={
           <Layout>
             <ViewConcern />
@@ -169,6 +170,14 @@ function App() {
         element={
           <TenantLayout className="bg-white1">
             <TenantHome />
+          </TenantLayout>
+        }
+      />
+            <Route
+        path="/tenant/profile"
+        element={
+          <TenantLayout className="bg-white1">
+            <ProfileTenant />
           </TenantLayout>
         }
       />

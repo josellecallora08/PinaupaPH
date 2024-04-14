@@ -4,7 +4,10 @@ import SearchBar from '../../Component/SearchBar'
 import ApartmentCard from '../../Component/ApartmentCard'
 import AddApartment from '../../Component/AddApartment'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchApartments, handleSearchApartment } from '../../features/apartment'
+import {
+  fetchApartments,
+  handleSearchApartment,
+} from '../../features/apartment'
 
 const Apartment = () => {
   const dispatch = useDispatch()
@@ -12,10 +15,9 @@ const Apartment = () => {
   const apartment = useSelector((state) => state.apartment.data)
   const [searchItem, setSearchItem] = useState('')
 
-  const handleSearch  = (e) => {
+  const handleSearch = (e) => {
     setSearchItem(e.target.value)
   }
-
 
   const [isAddApartmentFormOpen, setIsAddApartmentFormOpen] = useState(false)
   const toggleAddApartmentForm = () => {
@@ -23,12 +25,12 @@ const Apartment = () => {
   }
 
   useEffect(() => {
-   if(searchItem && searchItem !== ''){
-    dispatch(handleSearchApartment(searchItem))
-    console.log(apartment)
-   } else {
-    dispatch(fetchApartments())
-   }
+    if (searchItem && searchItem !== '') {
+      dispatch(handleSearchApartment(searchItem))
+      console.log(apartment)
+    } else {
+      dispatch(fetchApartments())
+    }
   }, [searchItem])
 
   // useEffect(() => {
@@ -43,11 +45,9 @@ const Apartment = () => {
         <div className="lg:justify-between md:justify-between flex-wrap justify-end flex items-center gap-2 w-full">
           <div className="w-full md:max-w-60">
             <SearchBar onSearch={handleSearch} />
+            
           </div>
-          <button
-            onClick={toggleAddApartmentForm}
-            className="lg:text-xs md:text-sm lg:p-3 uppercase p-2 text-xs text-white rounded-lg bg-dark-blue flex items-center justify-center gap-2 "
-          >
+          <button onClick={toggleAddApartmentForm} className="btn md:btn-wide w-full bg-primary-color text-white hover:text-primary-color">
             <FaPlus />
             Add Apartment
           </button>

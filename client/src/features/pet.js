@@ -67,7 +67,7 @@ export const fetchPets = (user_id) => async (dispatch) => {
     }
 
     const json = await response.json()
-    dispatch(fetchPetsSuccess(json))
+    dispatch(fetchPetsSuccess(json.response))
   } catch (err) {
     console.log('Unable to fetch all pets')
     dispatch(actionPetFailed(err.message))
@@ -80,7 +80,7 @@ export const fetchPet = (user_id, pet_id) => async (dispatch) => {
 
     dispatch(fetchPetStart())
     const response = await fetch(
-      `${base_url}/api/user/${user_id}/pet/v1?pet_id=${pet_id}`,
+      `${import.meta.env.VITE_URL}/api/user/${user_id}/pet/v1?pet_id=${pet_id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -105,7 +105,7 @@ export const createPet = (user_id, fields) => async (dispatch) => {
     const token = Cookies.get('token')
 
     dispatch(fetchPetStart())
-    const response = await fetch(`${base_url}/api/user/${user_id}/create_pet`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/user/${user_id}/create_pet`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -132,7 +132,7 @@ export const editPet = (user_id, pet_id, fields) => async (dispatch) => {
 
     dispatch(fetchPetStart())
     const response = await fetch(
-      `${base_url}/api/user/${user_id}/update_pet?pet_id=${pet_id}`,
+      `${import.meta.env.VITE_URL}/api/user/${user_id}/update_pet?pet_id=${pet_id}`,
       {
         method: 'PATCH',
         headers: {

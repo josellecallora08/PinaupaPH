@@ -107,7 +107,7 @@ export const fetchHouseholds = (user_id) => async (dispatch) => {
 
     const json = await response.json()
     console.log(json)
-    dispatch(fetchHouseholdsSuccess(json))
+    dispatch(fetchHouseholdsSuccess(json.response))
   } catch (err) {
     dispatch(fetchFailed(err.message))
   }
@@ -117,7 +117,7 @@ export const editHousehold = (user_id, household_id, fields) => async (dispatch)
   try {
     dispatch(fetchHouseholdStart())
     const token = Cookies.get('token')
-    const response = await fetch(`${base_url}/api/user/${user_id}/update_household?household_id=${household_id}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/user/${user_id}/update_household?household_id=${household_id}`, {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -141,7 +141,7 @@ export const deleteHousehold = (user_id, household_id) => async (dispatch) => {
   try {
     dispatch(fetchHouseholdStart())
     const token = Cookies.get('token')
-    const response = await fetch(`${base_url}/api/user/${user_id}/delete_household?household_id=${household_id}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/user/${user_id}/delete_household?household_id=${household_id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,

@@ -50,7 +50,7 @@ export const isLoggedin = () => async (dispatch) => {
       return
     }
 
-    const response = await fetch(`${base_url}/api/user/`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/user/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -73,7 +73,7 @@ export const isLogin = (credentials, navigate) => async (dispatch) => {
     if(credentials.username === '' || credentials.password === ''){
       throw new Error("Inputs cannot be empty")
     }
-    const response = await fetch(`${base_url}/api/user/login`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/user/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

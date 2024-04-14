@@ -28,7 +28,7 @@ const ManualInovoice = ({ setModal }) => {
         className="absolute w-full h-full flex items-center justify-center bg-black/20 backdrop-blur-sm"
       ></div>
       <div className="w-full md:w-1/5 h-fit bg-white z-10 rounded-md shadow-md flex flex-col overflow-hidden">
-        <h1 className="bg-primary uppercase font-bold tracking-wider text-white p-3">
+        <h1 className="bg-primary-color uppercase font-bold tracking-wider text-white p-3">
           Prepare Invoice
         </h1>
         <div className="w-full h-full flex justify-between py-5">
@@ -68,14 +68,14 @@ const ManualInovoice = ({ setModal }) => {
             <div className="w-full h-full flex gap-2 max-h-12">
               <button
                 type="submit"
-                className="w-full border border-primary text-white rounded-md bg-primary p-2"
+                className="w-full border border-primary-color text-white rounded-md bg-primary-color p-2"
               >
                 Submit
               </button>
               <button
                 type="button"
                 onClick={() => setModal((prevState) => !prevState)}
-                className="w-full border border-primary text-primary rounded-md p-2"
+                className="w-full border border-primary-color text-primary-color rounded-md p-2"
               >
                 Cancel
               </button>

@@ -42,7 +42,7 @@ export const createPaymentIntent = (userId, fields) => async (dispatch) => {
     const token = Cookies.get('token')
     dispatch(startLoading())
     const response = await fetch(
-      `${base_url}/api/payment/create_intent/${userId}`,
+      `${import.meta.env.VITE_URL}/api/payment/create_intent/${userId}`,
       {
         method: 'POST',
         headers: {
@@ -72,7 +72,7 @@ export const createPayment =
           headers: {
             accept: 'application/json',
             'Content-Type': 'application/json',
-            Authorization: `Basic c2tfdGVzdF9OOU1lc2lmczdMcTM1a0NzbXRZN3RuTlA6`,
+            Authorization: `Basic ${import.meta.env.VITE_PAYMONGO_TOKEN}`,
           },
           body: JSON.stringify({
             data: {
@@ -102,14 +102,14 @@ export const createPayment =
           headers: {
             accept: 'application/json',
             'Content-Type': 'application/json',
-            Authorization: `Basic c2tfdGVzdF9OOU1lc2lmczdMcTM1a0NzbXRZN3RuTlA6`,
+            Authorization: `Basic ${import.meta.env.VITE_PAYMONGO_TOKEN}`,
           },
           body: JSON.stringify({
             data: {
               attributes: {
                 payment_method: `${json.data.id}`,
                 client_key: `${clientId}`,
-                return_url: 'http://localhost:5173/dashboard',
+                return_url: `${import.meta.env.VITE_RETURN_URL}`,
               },
             },
           }),
@@ -129,7 +129,7 @@ export const createPayment =
 
 // const handleCheckout = async() => {
 //     try{
-//       const response = await fetch(`${payment_url}/checkout`, {
+//       const response = await fetch(`${import.meta.env.VITE_URL}/checkout`, {
 //         method: 'POST',
 //         headers:{
 //           authorization: `Bearer ${'token'}`

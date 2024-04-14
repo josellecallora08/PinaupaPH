@@ -123,7 +123,7 @@ module.exports.fetchReports = async (req, res) => {
 module.exports.fetchReport = async (req, res) => {
   const { report_id } = req.query
   try {
-    const report = await REPORTMODEL.findById(report_id)
+    const report = await REPORTMODEL.findById(report_id).populate('user_id').populate('unit_id').populate('comments.user_id')
     if (!report)
       return res
         .status(httpStatusCodes.NOT_FOUND)
