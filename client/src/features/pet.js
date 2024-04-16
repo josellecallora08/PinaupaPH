@@ -1,8 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { base_url } from '../utils/constants'
 import Cookies from 'js-cookie'
 
-const token = Cookies.get('token')
 const petSlice = createSlice({
   name: 'pet',
   initialState: {
@@ -56,7 +54,7 @@ export const fetchPets = (user_id) => async (dispatch) => {
   try {
     dispatch(fetchPetStart())
     const token = Cookies.get('token')
-    const response = await fetch(`${base_url}/api/user/${user_id}/fetch/pets`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/user/${user_id}/fetch/pets`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -169,7 +167,7 @@ export const deletePet = (pet_id) => async (dispatch) => {
     const token = Cookies.get('token')
 
     dispatch(fetchPetStart())
-    const response = await fetch(`${base_url}/api/user/delete_pet/${pet_id}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/user/delete_pet/${pet_id}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,

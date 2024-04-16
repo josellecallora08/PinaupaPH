@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import SearchBar from '../../Component/SearchBar'
 import { FaPlus } from 'react-icons/fa6'
 import { IoIosArrowDown } from 'react-icons/io'
-import ApartmentStatusCard from '../../Component/ApartmentStatusCard'
-import AddRoom from '../../Component/AddRoom'
-import EditApartment from '../../Component/EditApartment'
+import ApartmentStatusCard from '../../Component/AdminComponent/ApartmentStatusCard'
+import AddRoom from '../../Component/AdminComponent/AddRoom'
+import EditApartment from '../../Component/AdminComponent/EditApartment'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import EditApartmentDetails from '../../Component/EditApartmentDetails'
+import EditApartmentDetails from '../../Component/AdminComponent/EditApartmentDetails'
 import { fetchUnitsApartment } from '../../features/unit'
 import { deleteApartment, fetchApartment } from '../../features/apartment'
 const ApartmentProfile = () => {
@@ -63,11 +63,11 @@ const ApartmentProfile = () => {
   const dropdownItems = ['Available Units', 'Occupied Units']
 
   return (
-    <div>
-      <div className="w-full  h-full pb-10  bg-white1">
+    <>
+      <div className="w-full h-full pb-10  bg-white1">
         {/* Upper part of Apartment Profile */}
         <h1 className="uppercase font-bold px-10 p-5">View Apartment</h1>
-        <div className=" flex bg-white gap-10 mx-5 px-5 py-4 rounded-md shadow-md shadow-gray ">
+        <div className=" flex gap-10 mx-5 px-5 py-4 rounded-md shadow-md shadow-gray ">
           <div className="lg:w-1/2">
             <h1 className="lg:text-3xl md:text-3xl text-black text-2xl mb-3">
               {apartment?.name}
@@ -140,7 +140,7 @@ const ApartmentProfile = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   )
 }
 

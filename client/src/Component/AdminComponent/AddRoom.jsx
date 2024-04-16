@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react'
 import { useDispatch } from "react-redux";
-import { createUnit } from "../features/unit";
+import { createUnit } from "../../features/unit";
 import { IoMdClose } from "react-icons/io";
 const AddRoom = ({apartment_id,setIsAddRoomFormOpen}) => {
   const [selectedAddApartmentOption, setSelectedAddApartmentOption] = useState('')

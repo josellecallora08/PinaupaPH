@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { createUnit } from '../features/unit'
+import { createUnit } from '../../features/unit'
 import { IoMdClose } from 'react-icons/io'
 const EditApartmentUnit = ({ apartment_id, setIsEditApartmentUnit }) => {
   const [isFormOpen, setIsFormOpen] = useState(false)

@@ -3,7 +3,6 @@ import SearchBar from '../../Component/SearchBar'
 import TenantConcernCard from '../../Component/Tenant Component/TenantConcernCard'
 import { FaPlus } from 'react-icons/fa6'
 import CreateTicket from '../../Component/Tenant Component/CreateTicket'
-import { base_url } from '../../utils/constants'
 import {useDispatch} from 'react-redux'
 import { handleSearchUser } from '../../features/user'
 

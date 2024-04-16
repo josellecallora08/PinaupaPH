@@ -1,17 +1,14 @@
 import React, { useState } from 'react'
 import logo from '/logo.svg'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import Password1 from '/Password1.svg'
-import { base_url } from '../utils/constants'
 const ResetPass = () => {
   const navigate = useNavigate()
   const [pass, setPass] = useState({
     password: '',
     confirmpassword: '',
   })
-
   const { id } = useParams()
-
   const handleInput = (e) => {
     const { name, value } = e.target
     setPass((prev) => ({
@@ -24,7 +21,7 @@ const ResetPass = () => {
     e.preventDefault()
     try {
       const response = await fetch(
-        `${base_url}/api/user/reset-password/user?id=${id}`,
+        `${import.meta.env.VITE_URL}/api/user/reset-password/user?id=${id}`,
         {
           method: 'POST',
           headers: {
@@ -48,13 +45,15 @@ const ResetPass = () => {
 
   return (
     <>
-      <div className=" w-full h-screen py-10 px-10">
-        <img
-          src={logo}
-          alt="PinaupaPH logo"
-          className="lg:block lg:ml-10 hidden  "
-        />
-        <div className="lg:flex-row lg:ml-20  flex flex-col items-center">
+      <div className=" w-full h-screen py-10 px-10 flex flex-col">
+        <Link to="/">
+          <img
+            src={logo}
+            alt="PinaupaPH logo"
+            className="lg:block lg:ml-10 hidden  "
+          />
+        </Link>
+        <div className="lg:flex-row h-full flex flex-col items-center justify-center">
           <div className="  lg:w-1/2 lg:mt-0 mt-5">
             <img
               src={logo}
@@ -70,7 +69,7 @@ const ResetPass = () => {
 
           <div className="lg:shadow-md lg:rounded-md lg:shadow-dark-gray lg:w-1/3 p-10">
             <div className="">
-              <h1 className="lg:text-3xl text-2xl font-bold text-primary">
+              <h1 className="lg:text-3xl text-2xl font-bold text-primary-color">
                 Reset your password
               </h1>
               <p className="text-sm mt-3  text-dark-gray">
@@ -81,7 +80,7 @@ const ResetPass = () => {
             <form onSubmit={handleSubmit} className="  w-full mt-3 ">
               <label
                 htmlFor="new password"
-                className="text-primary font-bold text-lg"
+                className="text-primary-color font-bold text-lg"
               >
                 New Password
               </label>
@@ -95,7 +94,7 @@ const ResetPass = () => {
 
               <label
                 htmlFor="confirmpassword"
-                className="text-primary font-bold text-lg"
+                className="text-primary-color font-bold text-lg"
               >
                 Confirm Password
               </label>
@@ -106,7 +105,7 @@ const ResetPass = () => {
                 placeholder="Confirm your new password"
                 className="mr-10 rounded-md py-3 border-2 px-3 border-dark-gray w-full mt-2"
               />
-              <button className="lg:mt-10 lg:mb-4 bg-primary text-white w-full mt-5 py-3 px-2 rounded-md hover:opacity-80">
+              <button className="lg:mt-10 lg:mb-4 bg-primary-color text-white w-full mt-5 py-3 px-2 rounded-md hover:opacity-80">
                 Send
               </button>
             </form>

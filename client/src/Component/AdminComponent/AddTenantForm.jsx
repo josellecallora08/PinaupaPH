@@ -1,11 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import Cookies from 'js-cookie'
-import { base_url } from '../utils/constants'
+import React from 'react'
 import { IoMdClose } from 'react-icons/io'
 
-import { useDispatch, useSelector } from 'react-redux'
-import { createTenant } from '../features/user'
-import { fetchUnits } from '../features/unit'
+import { useSelector } from 'react-redux'
 
 const AddTenantForm = ({
   handleSubmit,
