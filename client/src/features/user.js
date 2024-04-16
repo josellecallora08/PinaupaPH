@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { base_url } from '../utils/constants'
 import Cookies from 'js-cookie'
-const token = Cookies.get('token')
 const userSlice = createSlice({
   name: 'user',
   initialState: {
@@ -107,11 +105,14 @@ export const fetchUser = (userId) => async (dispatch) => {
   try {
     dispatch(fetchUserStart())
     const token = Cookies.get('token')
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/user/tenant?user_id=${userId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/user/tenant?user_id=${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    })
+    )
 
     if (!response.ok) {
       const json = await response.json()
@@ -129,11 +130,14 @@ export const fetchUsers = () => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchUserStart())
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/user/tenants`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/user/tenants`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    })
+    )
     if (!response.ok) {
       const json = await response.json()
       throw new Error(json.error)
@@ -150,14 +154,17 @@ export const editUser = (userId, credentials) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchUserStart())
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/user/${userId}/update_profile`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-type': 'application/json',
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/user/${userId}/update_profile`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
       },
-      body: JSON.stringify(credentials),
-    })
+    )
 
     if (!response.ok) {
       const json = await response.json()
@@ -202,6 +209,7 @@ export const editUserApartment = (userId, credentials) => async (dispatch) => {
 
 export const deleteUser = (userId) => async (dispatch) => {
   try {
+    const token = Cookies.get('token')
     dispatch(fetchUserStart())
     const response = await fetch(
       `${import.meta.env.VITE_URL}/api/user/delete_tenant?user_id=${userId}`,

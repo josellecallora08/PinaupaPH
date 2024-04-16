@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { FaPlus } from 'react-icons/fa6'
 import SearchBar from '../../Component/SearchBar'
-import ApartmentCard from '../../Component/ApartmentCard'
-import AddApartment from '../../Component/AddApartment'
+import ApartmentCard from '../../Component/AdminComponent/ApartmentCard'
+import AddApartment from '../../Component/AdminComponent/AddApartment'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchApartments,
@@ -38,16 +38,18 @@ const Apartment = () => {
   // }, [])
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-screen bg-white1">
       {/* Top of Apartment Tab */}
-      <div className="w-11/12 m-auto h-full">
+      <div className="w-11/12 m-auto h-full ">
         <h1 className="uppercase font-bold py-5">Apartments Listing </h1>
         <div className="lg:justify-between md:justify-between flex-wrap justify-end flex items-center gap-2 w-full">
           <div className="w-full md:max-w-60">
             <SearchBar onSearch={handleSearch} />
-            
           </div>
-          <button onClick={toggleAddApartmentForm} className="btn md:btn-wide w-full bg-primary-color text-white hover:text-primary-color">
+          <button
+            onClick={toggleAddApartmentForm}
+            className="btn md:btn-wide w-full bg-primary-color text-white hover:text-primary-color"
+          >
             <FaPlus />
             Add Apartment
           </button>

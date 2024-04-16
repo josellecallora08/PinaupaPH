@@ -9,7 +9,7 @@ import 'rsuite/Dropdown/styles/index.css'
 
 const LeaseView = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-white1">
       <div className="pl-5 pt-5 font-bold text-base">
         <Link to={'/dashboard'} className="hover:underline">
           DOCUMENTS

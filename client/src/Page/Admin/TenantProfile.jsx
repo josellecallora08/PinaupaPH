@@ -10,7 +10,7 @@ import EditTenantAccount from '../../Component/EditTenantAccount'
 import EditFamMemTable from '../../Component/EditFamMemTable'
 import DocumentCard from '../../Component/DocumentCard'
 import AddHousehold from '../../Component/AddHousehold'
-import EditApartment from '../../Component/EditApartment'
+import EditApartment from '../../Component/AdminComponent/EditApartment'
 import TransactionTable from '../../Component/TransactionTable'
 import TransactionMobile from '../../Component/TransactionMobile'
 import { GrFormView, GrFormAdd } from 'react-icons/gr'
@@ -82,7 +82,7 @@ const TenantProfile = () => {
   
   const birthday = new Date(tenant?.birthday).toLocaleDateString()
   return (
-    <div className="bg-white1 ">
+    <div className="bg-white1  h-full ">
       {/* Tenant Profile Header */}
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="lg:mt-2 lg:ml-10 uppercase font-bold  p-5 mx-4">
@@ -124,7 +124,7 @@ const TenantProfile = () => {
         </div>
       </div>
 
-      <div className="w-11/12 m-auto h-full rounded-md">
+      <div className="w-11/12 m-auto  rounded-md">
         {activeTab === 'profile' && (
           <div className=" lg:mt-5 mt-10   ">
             {TenantProfileInfo.map((profile, index) => (
@@ -365,6 +365,7 @@ const TenantProfile = () => {
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-1/2 h-auto bg-white rounded-md relative">
                         <AddHousehold
+                          id={tenant.id}
                           setIsAddHouseholdForm={setIsAddHouseholdForm}
                         />
                       </div>
@@ -427,7 +428,10 @@ const TenantProfile = () => {
                   {isAddPetForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-1/2 bg-white rounded-lg relative">
-                        <AddPet setIsAddPetForm={setIsAddPetForm} />
+                        <AddPet 
+                        id={tenant.id}
+                        setIsAddPetForm={setIsAddPetForm} 
+                        />
                       </div>
                     </div>
                   )}

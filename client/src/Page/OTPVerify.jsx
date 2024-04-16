@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import logo from '/logo.svg'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import EmailSent1 from '/EmailSent1.svg'
-import { base_url } from '../utils/constants'
-
 const OTPVerify = () => {
   const [values, setValues] = useState(['', '', '', '', '', ''])
   const [error, setError] = useState(null)
@@ -39,9 +37,12 @@ const OTPVerify = () => {
     console.log(pin)
     try {
       const response = await fetch(
-        `${base_url}/api/user/otp?id=${id}&pin=${pin}`,
+        `${import.meta.env.VITE_URL}/api/user/otp?id=${id}&pin=${pin}`,
         {
           method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
       )
 
@@ -59,25 +60,30 @@ const OTPVerify = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${base_url}/otp-alive?id=${id}`)
-        if(!response.ok){
-          alert("OTP expired")
+        const response = await fetch(
+          `${import.meta.env.VITE_URL}/otp-alive?id=${id}`,
+        )
+        if (!response.ok) {
+          const error = await response.json()
           navigate('/')
+          throw new Error(error)
         }
       } catch (error) {
-        
+        console.log(err.message)
       }
     }
-  })
+  }, [])
   return (
     <>
-      <div className="w-full h-screen py-10 px-10">
-        <img
-          src={logo}
-          alt="PinaupaPH logo"
-          className="lg:block lg:ml-10 hidden  "
-        />
-        <div className="lg:flex-row lg:ml-20  flex flex-col items-center">
+      <div className="w-full h-screen py-10 px-10 flex flex-col">
+        <Link to={'/'}>
+          <img
+            src={logo}
+            alt="PinaupaPH logo"
+            className="lg:block lg:ml-10 hidden  "
+          />
+        </Link>
+        <div className="lg:flex-row h-full  flex flex-col justify-center items-center">
           <div className="lg:w-1/2 lg:mt-0 mt-5">
             <img
               src={logo}
@@ -93,7 +99,7 @@ const OTPVerify = () => {
 
           <div className="lg:shadow-md lg:rounded-md lg:w-1/3 lg:shadow-dark-gray p-10">
             <div className="">
-              <h1 className="lg:text-3xl text-2xl font-bold text-primary">
+              <h1 className="lg:text-3xl text-2xl font-bold text-primary-color">
                 Check your Email.
               </h1>
               <p className="text-sm mt-3  text-dark-gray">
@@ -102,12 +108,12 @@ const OTPVerify = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="w-full mt-3">
-              <div className="flex gap-3 justify-center">
+              <div className="flex gap-3 justify-around">
                 {values.map((value, index) => (
                   <input
                     key={index}
                     type="number"
-                    className="border-2 border-primary w-10 h-16 rounded-md text-3xl text-center"
+                    className="border-2 border-primary-color w-full max-w-16 h-16 rounded-md text-3xl text-center"
                     value={value}
                     onChange={(e) => handleChange(index, e)}
                     ref={(el) => (inputRefs.current[index] = el)}
@@ -115,10 +121,10 @@ const OTPVerify = () => {
                 ))}
               </div>
 
-              <button className="lg:mt-10 bg-primary text-white w-full mt-5 py-3 px-2 rounded-md hover:opacity-80">
+              <button className="lg:mt-10 bg-primary-color text-white w-full mt-5 py-3 px-2 rounded-md hover:opacity-80">
                 Send
               </button>
-              <button className="lg:mb-4 bg-white text-primary border-2 border-primary w-full mt-2 py-3 px-2 rounded-md hover:opacity-80">
+              <button className="lg:mb-4 bg-white text-primary-color border-2 border-primary-color w-full mt-2 py-3 px-2 rounded-md hover:opacity-80">
                 Send Again
               </button>
             </form>
