@@ -6,9 +6,10 @@ import comments from '/comments.svg'
 import pfp from '/pfp.svg'
 import sample from '/background.jpg'
 import { useDispatch, useSelector } from 'react-redux'
-import { IoIosCheckboxOutline } from "react-icons/io";
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import { LuTrash2 } from "react-icons/lu";
+import { IoIosCheckboxOutline } from 'react-icons/io'
+import { BsThreeDotsVertical } from 'react-icons/bs'
+import { LuTrash2 } from 'react-icons/lu'
+import { fetchReport } from '../../features/report'
 const ViewConcern = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
@@ -24,12 +25,15 @@ const ViewConcern = () => {
       'Are you sure you want to delete this Issue?',
     )
     if (isConfirmed) {
-   
     } else {
       console.log('Deletion cancelled')
     }
-
   }
+
+  useEffect(() => {
+    dispatch(fetchReport(id))
+    console.log(report)
+  }, [])
 
   return (
     <>
@@ -44,56 +48,58 @@ const ViewConcern = () => {
               <div className=" relative row-span-1 grid grid-cols-2 items-center">
                 <div className="col-span-1 h-full flex items-center gap-5">
                   <figure className="w-full h-full min-h-20 min-w-20 max-w-20 max-h-20 rounded-full shadow-md overflow-hidden">
-                    <img src={pfp} className="w-full h-full bg-white" alt="" />
+                    <img
+                      src={report?.user_id.profile_image.image_url}
+                      className="w-full h-full bg-white"
+                      alt=""
+                    />
                   </figure>
                   <div className="w-full">
                     <p className="text-sm  xl:text-lg font-semibold">
-                      Joselle E. Callora
+                      {report?.user_id.name}
                     </p>
                     <p className="text-xs">
-                      <span>UNIT - </span>001
+                      <span>UNIT - </span>
+                      {report?.unit_id.unit_no}
                     </p>
                   </div>
                 </div>
                 <div className=" col-span-1 xl:w-full xl:mb-4 items-center  text-sm xl:text-base flex justify-end ">
-                  <p className="xl:mt-1  ">January 03, 2024</p>
-                  <div className=''>
-                  <BsThreeDotsVertical
-                    className="  w-7 h-auto ml-10 cursor-pointer text-primary-color"
-                    onClick={toggleDot}
-                  />
+                  <p className="xl:mt-1  ">
+                    {new Date(report?.createdAt).toDateString()}
+                  </p>
+                  <div className="">
+                    <BsThreeDotsVertical
+                      className="  w-7 h-auto ml-10 cursor-pointer text-primary-color"
+                      onClick={toggleDot}
+                    />
                   </div>
-   
                 </div>
 
                 {isDotOpen && (
-                  <div className='absolute top-16 right-6 shadow-sm shadow-dark-gray bg-white  '>
-                    <div className='py-2 px-10 flex items-center gap-3 cursor-pointer hover:bg-dark-gray/20'><IoIosCheckboxOutline size={20} color='green'/> Resolve</div>
-                    <div onClick={handleDelete} className='py-2 px-10 flex items-center gap-3 cursor-pointer hover:bg-dark-gray/20'><LuTrash2 size={20} color='red'/> Cancel</div>
+                  <div className="absolute top-16 right-6 shadow-sm shadow-dark-gray bg-white  ">
+                    <div className="py-2 px-10 flex items-center gap-3 cursor-pointer hover:bg-dark-gray/20">
+                      <IoIosCheckboxOutline size={20} color="green" /> Resolve
+                    </div>
+                    <div
+                      onClick={handleDelete}
+                      className="py-2 px-10 flex items-center gap-3 cursor-pointer hover:bg-dark-gray/20"
+                    >
+                      <LuTrash2 size={20} color="red" /> Cancel
+                    </div>
                   </div>
                 )}
               </div>
               {/*  */}
               <div className="row-auto flex flex-col gap-5">
                 <p className="font-bold h-fit">
-                  SINK LEAKING - Maintenance Report
+                  {' '}
+                  <span className="uppercase">{report?.title}</span> -{' '}
+                  <span>{report?.type}</span>
                 </p>
                 <div className="h-full text-sm ">
                   <p className="text-ellipsis xl:max-w-auto max-h-[125px] xl:text-wrap overflow-hidden">
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                    Ducimus, et modi aliquid velit, eligendi expedita, illo
-                    consequuntur amet provident fugit aspernatur autem rerum.
-                    Cupiditate ea corrupti sit culpa quia voluptatibus doloribus
-                    minima ipsam nobis necessitatibus nesciunt dicta aperiam
-                    dolorem quaerat, rem similique, recusandae est velit?
-                    Obcaecati aut eligendi blanditiis quam? Lorem ipsum dolor,
-                    sit amet consectetur adipisicing elit. Ducimus, et modi
-                    aliquid velit, eligendi expedita, illo consequuntur amet
-                    provident fugit aspernatur autem rerum. Cupiditate ea
-                    corrupti sit culpa quia voluptatibus doloribus minima ipsam
-                    nobis necessitatibus nesciunt dicta aperiam dolorem quaerat,
-                    rem similique, recusandae est velit? Obcaecati aut eligendi
-                    blanditiis quam?
+                    {report?.description}
                   </p>
                 </div>
               </div>
@@ -134,61 +140,23 @@ const ViewConcern = () => {
                   </div>
                 </div>
                 <div className="w-full h-full ">
-                  <div className="w-full h-auto max-h-[600px] px-5 hover:overflow-y-scroll overflow-hidden">
-                    <div className="min-h-20 w-full flex gap-2 items-center overflow-hidden">
-                      <figure className="w-12 h-12 max-w-12  max-h-12  rounded-full">
-                        <img src={pfp} className="w-full h-full" alt="" />
-                      </figure>
-                      <div className="w-11/12 text-xs md:text-base rounded-md bg-gray/50 p-3">
-                        Lorem ipsum dolor sit amet consectetur, adipisicing
-                        elit. Odio ratione adipisci autem qui vitae optio veniam
-                        odit, accusamus dolore aperiam?
+                  <div
+                    className={`w-full h-auto max-h-[600px] px-5 ${report?.comments.length > 10 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}
+                  >
+                    {report?.comments.map((val, key) => (
+                      <div className="min-h-20 w-full flex gap-2 items-center overflow-hidden">
+                        <figure className="w-12 h-12 max-w-12  max-h-12  rounded-full">
+                          <img
+                            src={val.user_id.profile_image.image_url}
+                            className="w-full h-full rounded-full"
+                            alt=""
+                          />
+                        </figure>
+                        <div className="w-fit text-xs md:text-base rounded-md bg-gray/50 p-3">
+                          {val.comment}
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="min-h-20 w-full flex gap-2 items-center overflow-hidden">
-                      <figure className="w-12 h-12 max-w-12  max-h-12  rounded-full">
-                        <img src={pfp} className="w-full h-full" alt="" />
-                      </figure>
-                      <div className="w-11/12 text-xs md:text-base rounded-md bg-gray/50 p-3">
-                        Lorem ipsum dolor sit amet consectetur, adipisicing
-                        elit. Odio ratione adipisci autem qui vitae optio veniam
-                        odit, accusamus dolore aperiam?
-                      </div>
-                    </div>
-
-                    <div className="min-h-20 w-full flex gap-2 items-center overflow-hidden">
-                      <figure className="w-12 h-12 max-w-12  max-h-12  rounded-full">
-                        <img src={pfp} className="w-full h-full" alt="" />
-                      </figure>
-                      <div className="w-11/12 text-xs md:text-base rounded-md bg-gray/50 p-3">
-                        Lorem ipsuasdasdm dolor sit amet consectetur,
-                        adipisicing elit. Odio ratione adipisci autem qui vitae
-                        optio veniam odit, accusamus dolore aperiam?
-                      </div>
-                    </div>
-
-                    <div className="min-h-20 w-full flex gap-2 items-center overflow-hidden">
-                      <figure className="w-12 h-12 max-w-12  max-h-12  rounded-full">
-                        <img src={pfp} className="w-full h-full" alt="" />
-                      </figure>
-                      <div className="w-11/12 text-xs md:text-base rounded-md bg-gray/50 p-3">
-                        Lorem ipsum dolor sit amet consectetur, adipisicing
-                        elit. Odio ratione adipisci autem qui vitae optio veniam
-                        odit, accusamus dolore aperiam?
-                      </div>
-                    </div>
-
-                    <div className="min-h-20 w-full flex gap-2 items-center overflow-hidden">
-                      <figure className="w-12 h-12 max-w-12  max-h-12  rounded-full">
-                        <img src={pfp} className="w-full h-full" alt="" />
-                      </figure>
-                      <div className="w-11/12 text-xs md:text-base rounded-md bg-gray/50 p-3">
-                        Lorem ipsum dolor sit amet consectetur, adipisicing
-                        elit. Odio ratione adipisci autem qui vitae optio veniam
-                        odit, accusamus dolore aperiam?
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
                 <div className="w-full h-full flex items-center max-h-32 bg-primary-color">
