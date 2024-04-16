@@ -39,9 +39,12 @@ const OTPVerify = () => {
     console.log(pin)
     try {
       const response = await fetch(
-        `${base_url}/api/user/otp?id=${id}&pin=${pin}`,
+        `${import.meta.env.VITE_URL}/api/user/otp?id=${id}&pin=${pin}`,
         {
           method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
       )
 
@@ -59,24 +62,29 @@ const OTPVerify = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${base_url}/otp-alive?id=${id}`)
-        if(!response.ok){
-          alert("OTP expired")
+        const response = await fetch(
+          `${import.meta.env.VITE_URL}/otp-alive?id=${id}`,
+        )
+        if (!response.ok) {
+          const error = await response.json()
           navigate('/')
+          throw new Error(error)
         }
       } catch (error) {
-        
+        console.log(err.message)
       }
     }
-  })
+  }, [])
   return (
     <>
       <div className="w-full h-screen py-10 px-10">
-        <img
-          src={logo}
-          alt="PinaupaPH logo"
-          className="lg:block lg:ml-10 hidden  "
-        />
+        <Link to={'/'}>
+          <img
+            src={logo}
+            alt="PinaupaPH logo"
+            className="lg:block lg:ml-10 hidden  "
+          />
+        </Link>
         <div className="lg:flex-row lg:ml-20  flex flex-col items-center">
           <div className="lg:w-1/2 lg:mt-0 mt-5">
             <img
