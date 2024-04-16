@@ -1,8 +1,8 @@
 import React, { useEffect,useState } from 'react'
 import { MdOutlineModeEditOutline, MdOutlineClose} from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUnit } from '../features/unit';
-import apartment from '../features/apartment';
+import { fetchUnit } from '../../features/unit';
+import apartment from '../../features/apartment';
 import EditApartmentUnit from './EditApartmentUnit';
 
 

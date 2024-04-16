@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { base_url } from '../utils/constants'
 import Cookies from 'js-cookie'
 const apartmentSlice = createSlice({
   name: 'apartment',

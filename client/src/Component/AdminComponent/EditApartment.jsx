@@ -2,9 +2,9 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { IoMdClose } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
-import { editApartment, fetchApartment } from '../features/apartment';
-import { fetchUnits } from '../features/unit';
-import { editUser, editUserApartment } from '../features/user';
+import { editApartment, fetchApartment } from '../../features/apartment';
+import { fetchUnits } from '../../features/unit';
+import { editUser, editUserApartment } from '../../features/user';
 
 const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
   const dispatch = useDispatch()

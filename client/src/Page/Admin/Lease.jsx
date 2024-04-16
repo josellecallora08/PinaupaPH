@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import SearchBar from '../../Component/SearchBar'
 import LeaseCard from '../../Component/LeaseCard'
 import { FaPlus } from 'react-icons/fa6'
-import AddLease from '../../Component/AddLease'
+import AddLease from '../../Component/AdminComponent/AddLease'
 import { Link } from 'react-router-dom'
 
 import 'react-datepicker/dist/react-datepicker.css'

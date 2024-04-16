@@ -7,7 +7,7 @@ import Apartment from './Page/Admin/Apartment'
 import Security from './Page/Admin/Security'
 import Concern from './Page/Admin/Concern'
 import Profile from './Page/Admin/Profile'
-import Least from './Page/Admin/Least'
+import Least from './Page/Admin/Lease'
 import Invoice from './Page/Admin/Invoice'
 import Login from './Page/Login'
 import TenantCard from './Component/TenantCard'
@@ -60,7 +60,9 @@ function App() {
               <Dashboard />
             </Layout>
           ) : role?.role === 'Tenant' ? (
-            <TenantHome />
+            <Layout className="bg-white1">
+              <TenantHome />
+            </Layout>
           ) : (
             <Navigate to="/" />
           )
@@ -174,7 +176,7 @@ function App() {
           </TenantLayout>
         }
       />
-            <Route
+      <Route
         path="/tenant/profile"
         element={
           <TenantLayout className="bg-white1">
@@ -182,7 +184,7 @@ function App() {
           </TenantLayout>
         }
       />
-        <Route
+      <Route
         path="/tenant/security"
         element={
           <TenantLayout className="bg-white1">
@@ -190,7 +192,7 @@ function App() {
           </TenantLayout>
         }
       />
-            <Route
+      <Route
         path="/tenant/document/lease"
         element={
           <TenantLayout className="bg-white1">
@@ -206,7 +208,7 @@ function App() {
           </TenantLayout>
         }
       />
-            <Route
+      <Route
         path="/tenant/payment"
         element={
           <TenantLayout className="bg-white1">
@@ -222,7 +224,7 @@ function App() {
           </TenantLayout>
         }
       />
-            <Route
+      <Route
         path="/tenant/viewconcern"
         element={
           <TenantLayout className="bg-white1">
@@ -230,9 +232,6 @@ function App() {
           </TenantLayout>
         }
       />
-
-    
-
     </Routes>
   )
 }

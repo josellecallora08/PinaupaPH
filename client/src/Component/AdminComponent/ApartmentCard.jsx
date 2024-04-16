@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { fetchApartments } from '../features/apartment'
+import { fetchApartments } from '../../features/apartment'
 const ApartmentCard = ({ val, num }) => {
   const dispatch = useDispatch()
   const data = useSelector((state) => state.apartment.data)
