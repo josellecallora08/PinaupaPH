@@ -100,7 +100,7 @@ module.exports.sign_up = async (req, res) => {
     const unit_status = await UNITMODEL.findById(unit_id)
     if (unit_status.occupied === true) {
       return res
-        .status(httpStatusCodes.BAD_REQUEST)
+        .status(httpStatusCodes.CONFLICT)
         .json({ error: `Unit ${unit_id} is already occupied.` })
     }
 

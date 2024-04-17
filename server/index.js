@@ -17,7 +17,7 @@ const payment_route = require('./routes/payment')
 const {
   scheduledInvoice,
   deleteOTP,
-} = require('./controllers/invoice_controller')
+} = require('./controllers/cron_controller')
 
 const app = express()
 

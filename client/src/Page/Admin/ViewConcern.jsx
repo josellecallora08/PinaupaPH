@@ -10,10 +10,12 @@ import { IoIosCheckboxOutline } from 'react-icons/io'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { LuTrash2 } from 'react-icons/lu'
 import { fetchReport } from '../../features/report'
+import Loading from '../../Component/LoadingComponent/Loading'
 const ViewConcern = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
   const report = useSelector((state) => state.report.single)
+  const loading = useSelector(state => state.report.loading)
   const comment = useSelector((state) => state.comment.data)
   const messageContainerRef = useRef(null)
   const [isDotOpen, setIsDotOpen] = useState(false)
@@ -37,7 +39,7 @@ const ViewConcern = () => {
 
   return (
     <>
-      <div className="w-full h-full flex flex-col pb-5 xl:bg-gray text-primary-color">
+      {loading ? <Loading/> : <div className="w-full h-full flex flex-col pb-5 xl:bg-gray text-primary-color">
         <div className="w-11/12 m-auto h-fit py-2">
           <h1 className="uppercase font-bold">Concern and Issue</h1>
         </div>
@@ -47,10 +49,10 @@ const ViewConcern = () => {
               {/*  */}
               <div className=" relative row-span-1 grid grid-cols-2 items-center">
                 <div className="col-span-1 h-full flex items-center gap-5">
-                  <figure className="w-full h-full min-h-20 min-w-20 max-w-20 max-h-20 rounded-full shadow-md overflow-hidden">
+                  <figure className="w-full h-full max-w-20 max-h-20 rounded-full shadow-xl  overflow-hidden">
                     <img
                       src={report?.user_id.profile_image.image_url}
-                      className="w-full h-full bg-white"
+                      className="w-full h-full object-contain"
                       alt=""
                     />
                   </figure>
@@ -145,10 +147,10 @@ const ViewConcern = () => {
                   >
                     {report?.comments.map((val, key) => (
                       <div className="min-h-20 w-full flex gap-2 items-center overflow-hidden">
-                        <figure className="w-12 h-12 max-w-12  max-h-12  rounded-full">
+                        <figure className="w-full h-full max-w-12 max-h-12 overflow-hidden rounded-full">
                           <img
                             src={val.user_id.profile_image.image_url}
-                            className="w-full h-full rounded-full"
+                            className="w-full h-full object-contain"
                             alt=""
                           />
                         </figure>
@@ -182,7 +184,7 @@ const ViewConcern = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div>}
     </>
   )
 }

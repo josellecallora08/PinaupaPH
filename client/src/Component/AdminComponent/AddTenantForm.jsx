@@ -7,10 +7,12 @@ const AddTenantForm = ({
   handleSubmit,
   handleInput,
   setIsAddTenantFormOpen,
-  error
+  error,
+  apartmentId,
+  setApartmentId
 }) => {
   const unit = useSelector((state) => state.unit.data)
-
+  const apartment = useSelector((state) => state.apartment.data)
   return (
     <div className="relative">
       <div className="w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center ">
@@ -23,11 +25,11 @@ const AddTenantForm = ({
         method="POST"
         className="lg:w-[30rem] w-[20rem] h-[25rem] p-3 overflow-y-auto"
       >
-            {error && (
-            <div className="  w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
-              {error}
-            </div>
-          )}
+        {error && (
+          <div className="  w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+            {error}
+          </div>
+        )}
         <button className="absolute top-4 right-6">
           <IoMdClose
             onClick={() => setIsAddTenantFormOpen((prevState) => !prevState)}
@@ -143,6 +145,32 @@ const AddTenantForm = ({
           />
         </div>
         {/* <h1 className="text-xl font-bold mb-4">Apartment Details</h1> */}
+
+        <div className="mb-4">
+          <label
+            htmlFor="apartment_building"
+            className="block text-gray-700 text-sm font-bold mb-2 "
+          >
+            Apartment Building
+          </label>
+          <select
+            name="apartment_id"
+            id="apartment_id"
+            onChange={(e) => setApartmentId(e.target.value)}
+            className="w-full py-2 px-3 border-2 border-[#9e9e9e] rounded"
+          >
+            <option className="rounded-none" value="">
+              Select Apartment Building
+            </option>
+            {apartment?.map((val, key) => (
+              <option key={key} className="rounded-none" value={`${val._id}`}>
+                {val.name}
+              </option>
+            ))}
+
+          </select>
+        </div>
+
         <div className="mb-4">
           <label
             htmlFor="apartment_unit"
@@ -155,6 +183,7 @@ const AddTenantForm = ({
             id="unit_id"
             onChange={handleInput}
             className="w-full py-2 px-3 border-2 border-[#9e9e9e] rounded"
+            disabled={apartmentId === ''}
           >
             <option className="rounded-none" value="someOption" hidden>
               Apartment Unit
@@ -166,27 +195,6 @@ const AddTenantForm = ({
             ))}
           </select>
         </div>
-
-        <div className="mb-4">
-          <label
-            htmlFor="apartment_building"
-            className="block text-gray-700 text-sm font-bold mb-2 "
-          >
-            Apartment Building
-          </label>
-          <select
-            name="building_id"
-            id="building_id"
-            onChange={handleInput}
-            className="w-full py-2 px-3 border-2 border-[#9e9e9e] rounded"
-          >
-            <option className="rounded-none" value="someOption" >
-              Apartment Building
-            </option>
-            
-          </select>
-        </div>
-
 
         <div className="mb-4">
           <label

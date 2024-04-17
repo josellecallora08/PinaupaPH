@@ -11,20 +11,19 @@ const ConcernCard = ({ val, num }) => {
   }
   return (
     <>
-
-    <Link to={`/view-concern/${val._id}`}>
+      <Link to={`/view-concern/${val._id}`}>
         <div className=" flex h-28 w-full mt-5 items-center rounded-tl-lg rounded-bl-lg bg-white  shadow-md shadow-gray">
           <div
             className={` h-28 w-4 rounded-tl-lg rounded-bl-lg ${val?.status ? 'bg-lime' : 'bg-red'}`}
           ></div>
           <div className=" flex justify-evenly w-full ">
-            <div className="">
+            <figure className="w-full h-full max-w-20 max-h-20 overflow-hidden rounded-full">
               <img
                 src={val?.user?.profile_image.image_url}
-                className="rounded-full h-16 w-16"
+                className="size-full object-contain"
                 alt=""
               />
-            </div>
+            </figure>
             <div className="">
               <div className="font-bold text-lg">{val.user.name}</div>
               <div className="text-sm text-dark-gray">{val.title}</div>
@@ -35,14 +34,10 @@ const ConcernCard = ({ val, num }) => {
             <div className=" text-sm mt-1">
               {new Date(val.createdAt).toLocaleDateString()}
             </div>
-           
+
           </div>
         </div>
       </Link>
-
- 
-
-   
     </>
   )
 }

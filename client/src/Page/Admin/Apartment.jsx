@@ -8,10 +8,11 @@ import {
   fetchApartments,
   handleSearchApartment,
 } from '../../features/apartment'
+import Loading from '../../Component/LoadingComponent/Loading'
 
 const Apartment = () => {
   const dispatch = useDispatch()
-  const unitLoading = useSelector((state) => state.unit.loading)
+  const loading = useSelector((state) => state.apartment.loading)
   const apartment = useSelector((state) => state.apartment.data)
   const [searchItem, setSearchItem] = useState('')
 
@@ -56,7 +57,9 @@ const Apartment = () => {
         </div>
         {/* Body of Tenant Tab */}
         <div className="lg:grid-cols-2 2xl:grid-cols-3 grid 2xl:grid-rows-4 grid-cols-1 gap-4 py-5">
-          {apartment?.map((val, key) => (
+          {loading ? 
+          <Loading/>
+          : apartment?.map((val, key) => (
             <ApartmentCard key={key} val={val} num={key} />
           ))}
         </div>
