@@ -5,6 +5,7 @@ import EmailSent1 from '/EmailSent1.svg'
 const OTPVerify = () => {
   const [values, setValues] = useState(['', '', '', '', '', ''])
   const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
   const inputRefs = useRef([])
   const { id } = useParams()
   const navigate = useNavigate()
@@ -32,9 +33,14 @@ const OTPVerify = () => {
   }
 
   const handleSubmit = async (e) => {
+    setLoading(true)
     e.preventDefault()
     const pin = values.join('')
     console.log(pin)
+    if(values.some(value => value.trim() === '')){
+      setError("Pins cannot be empty...")
+      return
+    }
     try {
       const response = await fetch(
         `${import.meta.env.VITE_URL}/api/user/otp?id=${id}&pin=${pin}`,
@@ -48,11 +54,14 @@ const OTPVerify = () => {
 
       if (!response.ok) {
         setError('Invalid Pin')
+        setLoading(false)
         return
       }
       const json = await response.json()
+      setLoading(false)
       navigate(`/reset-password/${json}`)
     } catch (err) {
+      setLoading(false)
       setError(err.message)
     }
   }
@@ -76,11 +85,11 @@ const OTPVerify = () => {
   return (
     <>
       <div className="w-full h-screen py-10 px-10 flex flex-col">
-        <Link to={'/'}>
+        <Link to="/" className="w-full h-full lg:max-w-40 max-h-20">
           <img
             src={logo}
             alt="PinaupaPH logo"
-            className="lg:block lg:ml-10 hidden  "
+            className="lg:block w-full max-w-52 max-h-20 h-full lg:ml-10 hidden  "
           />
         </Link>
         <div className="lg:flex-row h-full  flex flex-col justify-center items-center">
@@ -106,7 +115,11 @@ const OTPVerify = () => {
                 We’ve send the OTP to your Email.
               </p>
             </div>
-
+            {error && (
+              <div className="shadow-xl border border-red/50 rounded-lg bg-red/10 h-full max-h-auto p-5 my-5">
+                <p>{error}</p>
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="w-full mt-3">
               <div className="flex gap-3 justify-around">
                 {values.map((value, index) => (
@@ -121,10 +134,10 @@ const OTPVerify = () => {
                 ))}
               </div>
 
-              <button className="lg:mt-10 bg-primary-color text-white w-full mt-5 py-3 px-2 rounded-md hover:opacity-80">
+              <button className="lg:mt-10 font-semibold bg-primary-color text-white w-full mt-5 py-3 px-2 rounded-md hover:opacity-80">
                 Send
               </button>
-              <button className="lg:mb-4 bg-white text-primary-color border-2 border-primary-color w-full mt-2 py-3 px-2 rounded-md hover:opacity-80">
+              <button className="lg:mb-4 font-semibold bg-white text-primary-color border-2 border-primary-color w-full mt-2 py-3 px-2 rounded-md hover:opacity-80">
                 Send Again
               </button>
             </form>
