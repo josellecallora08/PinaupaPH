@@ -7,7 +7,7 @@ const {
 
 const router = Router()
 
-router.post('/create_intent/:user_id?', create_intent)
+router.post('/create_intent', create_intent)
 // router.post('/payment_method', payment_method)
 router.post('/checkout', checkout)
 module.exports = router

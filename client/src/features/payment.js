@@ -31,7 +31,7 @@ const paymentSlice = createSlice({
 export const { startLoading, paymentSuccess, fetchKeySuccess, actionFailed } =
   paymentSlice.actions
 
-export const createPaymentIntent = (userId, fields) => async (dispatch) => {
+export const createPaymentIntent = (userId) => async (dispatch) => {
   /* fields {
         amount: 6000,
         payment_method: atome, card, dob, paymaya, billease, gcash, grabpay,
@@ -41,13 +41,13 @@ export const createPaymentIntent = (userId, fields) => async (dispatch) => {
     const token = Cookies.get('token')
     dispatch(startLoading())
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/payment/create_intent/${userId}`,
+      `${import.meta.env.VITE_URL}/api/payment/create_intent?user_id=${userId}`,
       {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(fields),
       },
     )
     if (!response.ok) {
