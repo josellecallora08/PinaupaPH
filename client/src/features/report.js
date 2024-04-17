@@ -62,6 +62,7 @@ export const createReport = (user_id, fields) => async (dispatch) => {
 export const fetchReports = () => async (dispatch) => {
   try {
     const token = Cookies.get('token')
+    dispatch(fetchReportStart())
     const response = await fetch(`${import.meta.env.VITE_URL}/api/report/`, {
       method: 'GET',
       headers: {
@@ -82,6 +83,7 @@ export const fetchReports = () => async (dispatch) => {
 }
 export const fetchReport = (report_id) => async (dispatch) => {
   try {
+    dispatch(fetchReportStart())
     const token = Cookies.get('token')
     const response = await fetch(`${import.meta.env.VITE_URL}/api/report/v1?report_id=${report_id}`, {
         method: 'GET',
@@ -105,6 +107,7 @@ export const fetchReport = (report_id) => async (dispatch) => {
 export const editReport = (report_id, fields) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
+    dispatch(fetchReportStart())
     const response = await fetch(`${import.meta.env.VITE_URL}/api/report/v1?report_id=${report_id}`, {
         method: 'PATCH',
         headers: {
@@ -124,6 +127,7 @@ export const editReport = (report_id, fields) => async (dispatch) => {
 }
 export const deleteReport = () => async (dispatch) => {
   try {
+    dispatch(fetchReportStart())
     const token = Cookies.get('token')
     const response = await fetch(`${import.meta.env.VITE_URL}/api/report/v1?report_id=${report_id}`, {
         method: 'DELETE',

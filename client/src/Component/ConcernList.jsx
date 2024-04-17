@@ -3,14 +3,14 @@ import SearchBar from '../Component/SearchBar'
 import ConcernCard from './ConcernCard'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchReports } from '../features/report'
+import Loading from './LoadingComponent/Loading'
 const ConcernList = () => {
-  const [searchItem, setSearchItem] = useState('')
   const [StatselectedOption, setStatSelectedOption] = useState('')
   const [ConcernselectedOption, setConcernselectedOption] = useState('')
+  const loading = useSelector((state) => state.report.loading)
   const dispatch = useDispatch()
   const reports = useSelector((state) => state.report.data)
   const handleSearch = (e) => {
-    setSearchItem(e.target.value)
   }
   const handleStatOptionChange = (e) => {
     setStatSelectedOption(e.target.value)
@@ -53,10 +53,12 @@ const ConcernList = () => {
         </div>
 
         <div className="lg:grid lg:grid-cols-3 lg:gap-y-2 lg:gap-x-3">
-          {reports?.map((val, key) => (
-            
-            <ConcernCard key={key} val={val} num={key} />
-          ))}
+          {loading ?
+            <Loading />
+            : reports?.map((val, key) => (
+              <ConcernCard key={key} val={val} num={key} />
+            ))
+          }
         </div>
       </div>
     </>

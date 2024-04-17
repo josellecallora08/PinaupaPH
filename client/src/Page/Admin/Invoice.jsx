@@ -15,11 +15,12 @@ const Invoice = () => {
 
   useEffect(() => {
     const handleFilter = () => {}
-
     document.addEventListener('keydown', handleFilter)
-
     return document.removeEventListener('keydown', handleFilter)
   }, [])
+
+  useEffect(() => {
+  })
 
   return (
     <>

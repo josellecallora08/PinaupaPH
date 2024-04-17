@@ -24,18 +24,16 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`fixed z-50 md:static w-3/5 min-h-screen h-auto left-0 top-20 bg-white ${menu ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 flex flex-col md:max-w-[200px] ${menu ? 'md:w-full' : 'md:w-16'} duration-100 ease-in-out shadow-xl md:shadow-md`}
+      className={`fixed z-50 md:static w-3/5 min-h-screen h-auto left-0 top-20 bg-white ${menu ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 flex flex-col md:max-w-[300px] ${menu ? 'md:w-full' : 'md:w-16'} duration-100 ease-in-out shadow-xl md:shadow-md`}
     >
       <div className="sticky top-0">
-        <figure className="max-h-20 h-full w-full flex justify-center items-center">
-          <Link>
-            <img
-              src={menu ? logo : m_logo}
-              alt=""
-              className="duration-300 ease-in-out"
-            />
-          </Link>
-        </figure>
+        <Link className='w-full h-full max-h-20 flex justify-center items-center'>
+          <img
+            src={menu ? logo : m_logo}
+            alt=""
+            className="duration-300 w-full max-w-32 max-h-12 h-full object-fill ease-in-out"
+          />
+        </Link>
         <nav className="w-full h-full">
           <ul className="w-full m-auto flex flex-col items-center gap-5 mt-5 md:mt-10 text-sm">
             <li className="w-full h-full ">
@@ -142,7 +140,7 @@ const Sidebar = () => {
                 onClick={handleDocs}
                 className={`flex items-center justify-between w-4/5  m-auto h-auto hover:bg-primary-color/5 rounded-md ${menu ? 'p-5' : 'p-3'}`}
               >
-                <div className="flex justify-between items-center gap-2">
+                <div className="flex justify-between items-center gap-5">
                   <figure
                     className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}
                   >
@@ -181,7 +179,7 @@ const Sidebar = () => {
                       className={`${menu ? 'p-3' : 'p-3'} w-full h-full`}
                       to={'/document/lease-agreement'}
                     >
-                      <span>Lease Agreement</span>
+                      <span className='font-semibold'>Lease Agreement</span>
                     </Link>
                   </li>
                   <li
@@ -191,7 +189,7 @@ const Sidebar = () => {
                       className={` ${menu ? 'p-3' : 'p-3'} w-full h-full`}
                       to={'/document/invoice'}
                     >
-                      <span>Invoices</span>
+                      <span className='font-semibold'>Invoices</span>
                     </Link>
                   </li>
                 </ul>
@@ -200,7 +198,7 @@ const Sidebar = () => {
             <li className="w-full h-full">
               <Link
                 to={`/concern&issue`}
-                className={`flex items-center center w-4/5  mx-auto h-full hover:bg-primary-color/5 rounded-md ${menu ? 'px-5 py-2' : 'p-3'}`}
+                className={`flex items-center center w-4/5  mx-auto h-full hover:bg-primary-color/5 rounded-md ${menu ? 'p-5' : 'p-3'}`}
               >
                 <figure
                   className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}

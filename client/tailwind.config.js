@@ -23,6 +23,12 @@ export default {
       'dark-gray': '#9E9C9C',
       'light-gray': '#7A7A7A',
     },
+    fontFamily:{
+      'regular': ['Poppins-regular', 'sans-serif'],
+      'semibold': ['Poppins-semibold', 'sans-serif'],
+      'bold': ['Poppins-bold', 'sans-serif'],
+      'light': ['Poppins-light', 'sans-serif'],
+    }
 
   },
   plugins: [

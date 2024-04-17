@@ -143,7 +143,6 @@ export const fetchUsers = () => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    console.log(json)
     dispatch(fetchUserSuccess(json.response))
   } catch (err) {
     dispatch(actionUserFailed(err.message))
