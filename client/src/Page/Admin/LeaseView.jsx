@@ -1,4 +1,5 @@
 import React from 'react'
+import  pinaupa from '/logo.svg'
 import { Dropdown } from 'rsuite'
 import { CiEdit } from 'react-icons/ci'
 import { BsDownload } from 'react-icons/bs'
@@ -44,14 +45,27 @@ const LeaseView = () => {
       </Dropdown>
 
       <div className="flex justify-center align-middle">
-        <div className="xl:w-[13.6in] lg:w-[6.8in] xl:min-h-[17.6in] lg:min-h-[8.8in] xl:p-[1in] lg:p-[0.5in] m-[1rem] shadow-lg shadow-light-gray bg-white ">
-          <p className="xl:text-4xl lg:text-2xl font-bold font-serif text-center xl:mb-12 lg:mb-6 ">
-            KONTRATA SA PAGPAPAUPA
-          </p>
-          <p className="font-serif lg:text-nowrap xl:mb-12 lg:mb-6 xl:text-xl lg:text-sm">
+
+        <div className=" p-6 xl:w-[13.6in] lg:w-[6.8in] xl:min-h-[17.6in] lg:min-h-[8.8in] xl:p-[1in] lg:p-[0.5in] m-[1rem] shadow-lg shadow-light-gray bg-white ">
+          <div className='pb-4 flex justify-between min-pb-4 border-b-4 border-gray-400'>
+            <figure>
+              <img src={pinaupa} className='h-12 lg:h-20' />
+            </figure>
+            <p className="pt-2 lg:pt-4 xl:text-4xl lg:text-xl font-bold font-serif  xl:mb-12 lg:mb-2 ">
+                KONTRATA SA PAGPAPAUPA
+            </p>
+          </div>
+         
+
+          <p className="font-serif lg:text-nowrap xl:mb-12 xl:text-xl lg:text-sm pb-6 pt-6">
             <span className="font-bold">Lokasyon: </span>Blk.L Lot 18 A,
             Butterfly Street. South Garden Homes, Salitran 3, Dasmarines
           </p>
+          <p className=" xl:text-xl lg:text-sm font-serif xl:mb-2 lg:mb-1 pb-4 font-bold">
+            {' '}
+            SA MGA KINAUUKULANG NITO,
+          </p>
+
           <p className=" xl:text-xl lg:text-sm font-serif xl:mb-2 lg:mb-1">
             {' '}
             Ang kontratang ito ay nababago taon-taon at ang may-ari ng bahay ay
@@ -136,7 +150,7 @@ const LeaseView = () => {
         </div>
       </div>
       <div className="flex justify-center align-middle">
-        <div className="xl:w-[13.6in] lg:w-[6.8in] xl:min-h-[17.6in] lg:min-h-[8.8in] p-[1in] m-[1rem] shadow-lg shadow-light-gray bg-white ">
+        <div className=" pl-6 pt-20 pr-6 xl:w-[13.6in] lg:w-[6.8in] xl:min-h-[17.6in] lg:min-h-[8.8in] xl:p-[1in] lg:p-[0.5in] m-[1rem] shadow-lg shadow-light-gray bg-white ">
           <div className="flex flex-row xl:mx-[2.5rem] lg:mx-[1.rem] xl:mt-60 lg:mt-40">
             <p className=" xl:text-xl lg:text-sm">
               ____________________________________________
@@ -156,7 +170,7 @@ const LeaseView = () => {
             </p>
           </div>
 
-          <p className="xl:mt-60 lg:mt-40 xl:text-xl lg:text-sm font-serif xl:leading-8 lg:leading-5">
+          <p className="pt-20 xl:mt-60 lg:mt-40 xl:text-xl lg:text-sm font-serif xl:leading-8 lg:leading-5">
             Nilagdaan namin ang kasunduang ito ngayong ________, ng
             _____________ dito sa Blk. 8, Lot 18A Butterfly Street, South Garden
             Homes, Salitran 3, Dasmarinas City, Cavite
@@ -168,15 +182,15 @@ const LeaseView = () => {
           <p className="xl:mt-10 lg:mt-5 xl:text-2xl lg:text-xl font-bold font-serif">
             Araw ng bayad:
           </p>
-          <div className="h-60"></div>
+          <div className="h-60 lg:h-60"></div>
 
-          <p className=" xl:text-2xl lg:text-xlfont-serif font-bold underline">
+          <p className="xl:text-2xl lg:text-xlfont-serif font-bold underline">
             Mga saksi sa kasunduan
           </p>
           <p className="xl:mt-10 lg:mt-5 xl:text-2xl lg:text-xlfont-serif font-bold underline">
             1.)
           </p>
-          <p className=" xl:text-2xl lg:text-xlfont-serif font-bold underline">
+          <p className="pb-20 xl:text-2xl lg:text-xlfont-serif font-bold underline">
             2.)
           </p>
         </div>
