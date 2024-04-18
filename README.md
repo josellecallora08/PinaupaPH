@@ -53,8 +53,8 @@ This is our Academic Capstone Project.
 - **Document Management:**
   - Centralized storage for important documents such as leases, invoices, and receipts.
 
-- **CCTV Integration:**
-  - Remotely viewing of surveillances footages.
+<!-- - **CCTV Integration:**
+  - Remotely viewing of surveillances footages. -->
 
 ## Tech Stack
 
@@ -81,7 +81,7 @@ This is our Academic Capstone Project.
 ### Prerequisites
 
 - Node.js and npm installed.
-- MongoDB database set up.
+- MongoDB Database set up.
 
 ### Installation
 
