@@ -1,11 +1,19 @@
-import React, { useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { createInvoice } from '../features/invoice'
+import { fetchUsers } from '../features/user'
 
 const ManualInovoice = ({ setModal }) => {
   const dispatch = useDispatch()
+  const [user, setUser] = useState('')
   const modal = useRef(null)
-
-  const handleInvoice = () => {}
+  const users = useSelector((state) => state.user.data)
+  const units = useSelector((state) => state.unit.data)
+  const handleInvoice = (e) => {
+    e.preventDefault()
+    console.log(user)
+    dispatch(createInvoice(user))
+  }
 
   useEffect(() => {
     const closeModal = (e) => {
@@ -20,7 +28,9 @@ const ManualInovoice = ({ setModal }) => {
       document.removeEventListener('keydown', closeModal)
     }
   }, [])
-
+  useEffect(() => {
+    dispatch(fetchUsers())
+  }, [])
   return (
     <div className="fixed w-full h-full flex  items-center justify-center z-10 ">
       <div
@@ -37,34 +47,12 @@ const ManualInovoice = ({ setModal }) => {
             method="POST"
             className="w-4/5 m-auto h-full flex flex-col gap-3 z-10"
           >
-            <div className="w-full h-full max-h-12 border-2 border-[#9e9e9e] rounded-md overflow-hidden">
-              <select
-                name=""
-                id=""
-                className="w-full h-full appearance-none outline-none p-2"
-              >
-                <option value="">Select Apartment</option>
-              </select>
-            </div>
-            <div className="w-full h-full max-h-12 border-2 border-[#9e9e9e] rounded-md overflow-hidden">
-              <select
-                name=""
-                id=""
-                className="w-full h-full appearance-none p-2 outline-none"
-              >
-                <option value="">Select Tenant</option>
-              </select>
-            </div>
-            <div className="w-full h-full max-h-12 border-2 border-[#9e9e9e] rounded-md overflow-hidden">
-              <input
-                type="number"
-                placeholder="Amount"
-                className="w-full h-full p-2 outline-none"
-              />
-            </div>
-            <div className="w-full h-full max-h-12 border-2 border-[#9e9e9e] rounded-md overflow-hidden">
-              <input type="date" className="w-full h-full p-2 outline-none" />
-            </div>
+            <select onChange={(e) => setUser(e.target.value)} className="select font-semibold select-bordered w-full max-w-xs">
+            <option value=''>Select Tenant</option>
+              {users?.map((val, key) => (
+                <option value={`${val._id}`}>{val.name}</option>
+              ))}
+            </select>
             <div className="w-full h-full flex gap-2 max-h-12">
               <button
                 type="submit"
