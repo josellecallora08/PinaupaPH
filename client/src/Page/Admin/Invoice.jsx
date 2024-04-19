@@ -28,10 +28,10 @@ const Invoice = () => {
   const handleSearch = async (e) => {
     setFilter(e.target.value)
   }
-  useEffect(() => {
-    dispatch(searchInvoice(filter))
-    console.log(invoices)
-  }, [filter])
+  // useEffect(() => {
+  //   dispatch(searchInvoice(filter))
+  //   console.log(invoices)
+  // }, [filter])
 
   return (
     <>

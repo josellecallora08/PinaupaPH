@@ -14,6 +14,9 @@ const INVOICEMODEL = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    cloudinary_public_id: {
+      type: String
+    },
     status: {
       type: Boolean,
       default: 0

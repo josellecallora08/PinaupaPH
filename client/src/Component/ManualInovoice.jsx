@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { createInvoice } from '../features/invoice'
 import { fetchUsers } from '../features/user'
+import { useParams } from 'react-router-dom'
 
 const ManualInovoice = ({ setModal }) => {
   const dispatch = useDispatch()
@@ -28,9 +29,13 @@ const ManualInovoice = ({ setModal }) => {
       document.removeEventListener('keydown', closeModal)
     }
   }, [])
+
   useEffect(() => {
     dispatch(fetchUsers())
   }, [])
+  
+
+
   return (
     <div className="fixed w-full h-full flex  items-center justify-center z-10 ">
       <div
@@ -47,8 +52,11 @@ const ManualInovoice = ({ setModal }) => {
             method="POST"
             className="w-4/5 m-auto h-full flex flex-col gap-3 z-10"
           >
-            <select onChange={(e) => setUser(e.target.value)} className="select font-semibold select-bordered w-full max-w-xs">
-            <option value=''>Select Tenant</option>
+            <select
+              onChange={(e) => setUser(e.target.value)}
+              className="select font-semibold select-bordered w-full max-w-xs"
+            >
+              <option value="">Select Tenant</option>
               {users?.map((val, key) => (
                 <option value={`${val._id}`}>{val.name}</option>
               ))}
