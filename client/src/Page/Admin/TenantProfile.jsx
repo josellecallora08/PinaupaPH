@@ -297,7 +297,7 @@ const TenantProfile = () => {
                 {/* Right profile */}
                 <div className="lg:w-1/2  lg:overflow-y-auto lg:origin-left lg:border-l-4 lg:border-dark-blue ">
                   {/*Family Members */}
-                  <div className="relative lg:mb-24">
+                  <div className="relative lg:mb-3">
                     <div className="lg:p-3 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
                       <h1 className="lg:text-xl font-bold">
                         Household Details
@@ -332,7 +332,7 @@ const TenantProfile = () => {
                       </div>
                     )}
 
-                    <div className="text-sm md:text-base p-3 flex flex-col gap-5 ">
+                    <div className="text-sm md:text-base p-3 flex flex-col gap-5 overflow-y-auto h-[20rem] ">
                       {households?.map((val, key) => (
                         <div key={key} className="w-full flex flex-col md:gap-2">
                           <div className="flex gap-5">
@@ -406,7 +406,7 @@ const TenantProfile = () => {
                       </div>
                     )}
 
-                    <div className="lg:p-3 flex gap-28 ml-2">
+                    <div className="lg:p-3 flex gap-28 ml-2 overflow-y-auto h-[10rem]">
                       <div className="lg:text-base ">
                         <p>Name</p>
                         <p>Species</p>

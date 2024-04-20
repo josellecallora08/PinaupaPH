@@ -31,6 +31,7 @@ import TenantSecurity from './Page/Tenant/TenantSecurity'
 import TenantHome from './Page/Tenant/TenantHome'
 import ProfileTenant from './Page/Tenant/ProfileTenant'
 import TenantViewConcern from './Page/Tenant/TenantViewConcern'
+import InvoiceFormat from './Component/InvoiceFormat'
 
 function App() {
   const user = useSelector((state) => state.auth.isAuthenticated)
@@ -97,6 +98,14 @@ function App() {
         element={
           <Layout className="bg-white1">
             <Apartment />
+          </Layout>
+        }
+      />
+      <Route
+        path="/invoice/:invoice_id"
+        element={
+          <Layout className="bg-white1">
+            <InvoiceFormat />
           </Layout>
         }
       />

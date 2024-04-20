@@ -2,13 +2,9 @@ const mongoose = require('mongoose')
 
 const INVOICEMODEL = new mongoose.Schema(
   {
-    user_id: {
+    tenant_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
-    },
-    unit_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'units',
+      ref: 'tenant',
     },
     reference: {
       type: String,
@@ -18,15 +14,13 @@ const INVOICEMODEL = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    from: {
-      type: Date,
+    cloudinary_public_id: {
+      type: String
     },
-    to: {
-      type: Date,
-    },
-    due: {
-      type: Date,
-    },
+    status: {
+      type: Boolean,
+      default: 0
+    }
   },
   { timestamps: true },
 )

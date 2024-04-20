@@ -28,11 +28,16 @@ const Sidebar = () => {
     >
       <div className="sticky top-0">
         <Link className='w-full h-full max-h-20 flex justify-center items-center'>
-          <img
-            src={menu ? logo : m_logo}
+          {menu ? <img
+            src={logo}
             alt=""
-            className="duration-300 w-full max-w-32 max-h-12 h-full object-fill ease-in-out"
+            className="duration-300 w-full max-w-44 max-h-20 h-full object-fill ease-in-out"
+          /> : <img
+            src={m_logo}
+            alt=""
+            className="duration-300 w-full max-w-28 max-h-8 h-full object-fill ease-in-out"
           />
+          }
         </Link>
         <nav className="w-full h-full">
           <ul className="w-full m-auto flex flex-col items-center gap-5 mt-5 md:mt-10 text-sm">

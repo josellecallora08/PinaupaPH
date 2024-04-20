@@ -40,17 +40,17 @@ const Login = () => {
       {loading ? (
         <SearchLoading />
       ) : (
-        <div className="w-full h-screen py-5">
+        <div className="w-full h-screen py-5 px-10  bg-white1">
           <div className="  lg:items-start lg:ml-28 flex flex-col items-center justify-center ">
             <Link to={'/'} className='flex justify-center'>
               <img
                 src={logo}
                 alt="PinaupaPH logo"
-                className="lg:w-48 w-1/2 my-10"
+                className="lg:w-40 w-1/2 my-10"
               />
             </Link>
           </div>
-          <div className="lg:flex lg:w-full lg:flex-row-reverse items-center lg:justify-between mx-10 ">
+          <div className="lg:flex lg:w-full lg:flex-row-reverse items-center lg:justify-between  ">
             <img
               src={logImg}
               alt=""
@@ -59,8 +59,8 @@ const Login = () => {
             <p className="lg:hidden text-lg text-dark-gray">
               Sign in your account
             </p>
-            <form className="lg:w-1/3 lg:ml-20 lg:rounded-md lg:p-10 lg:h-fit lg:bg-white lg:shadow-md ">
-              <h1 className="lg:text-4xl lg:font-bold lg:block hidden ">
+            <form className="lg:w-1/3 lg:ml-20 lg:rounded-md lg:p-5 lg:h-fit lg:bg-white lg:shadow-md ">
+              <h1 className="lg:text-2xl lg:font-bold lg:block text-primary-color hidden ">
                 Sign In
               </h1>
               {error && <p className="text-red border border-red/50 font-regular mt-5 rounded-xl shadow-md bg-red/10 p-5">{error}</p>}

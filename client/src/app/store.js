@@ -10,7 +10,9 @@ import menuReducer from '../features/menu'
 import commentReducer from '../features/comment'
 import reportReducer from '../features/report'
 import householdReducer from '../features/household'
+import invoiceReducer from '../features/invoice'
 import petReducer from '../features/pet'
+
 
 export const store = configureStore({
   reducer: {
@@ -25,6 +27,7 @@ export const store = configureStore({
     comment: commentReducer,
     report: reportReducer,
     household: householdReducer,
-    pet: petReducer
+    pet: petReducer,
+    invoice: invoiceReducer
   },
 })

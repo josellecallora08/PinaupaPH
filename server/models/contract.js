@@ -23,6 +23,9 @@ const CONTRACTMODEL = new mongoose.Schema(
       type: Number,
     },
     witnesses: [WITNESSMODEL],
+    cloudinary_public_id: {
+      type:String
+    }
   },
   { timestamps: true },
 )
