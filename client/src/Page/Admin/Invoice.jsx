@@ -13,7 +13,7 @@ import { FaPlus } from 'react-icons/fa6';
 import ManualInovoice from '../../Component/ManualInovoice';
 import SearchBar from '../../Component/SearchBar';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchInvoices } from '../../features/invoice';
+import { deleteInvoices, fetchInvoices } from '../../features/invoice';
 
 const Invoice = () => {
   const [filter, setFilter] = useState('');
@@ -34,6 +34,10 @@ const Invoice = () => {
     setDropdownIndex(index === dropdownIndex ? null : index);
   };
 
+  const handleDelete = (id) => {
+    dispatch(deleteInvoices(id))
+    alert("hello")
+  }
   return (
     <>
       <div className="w-full h-full bg-gray">
@@ -77,10 +81,10 @@ const Invoice = () => {
                   {invoices?.filter(item => item.status === false).map((val, index) => (
                     <tr key={index} className="text-center text-xs md:text-base">
                       <td className="text-primary-color font-regular p-3">{val?.reference}</td>
-                      <td className="text-sm md:text-base font-regular text-primary-color p-3">{val?.tenant_id.user_id.name}</td>
-                      <td className="p-3">{(val.tenant_id.balance - val.amount).toFixed(2)}</td>
-                      <td className="p-2">{(val.amount).toFixed(2)}</td>
-                      <th className={`font-semibold ${val.status === false ? 'text-red' : 'text-primary-color'} p-3 w-1/5`}>{val.status === false ? 'Unpaid' : 'Paid'}</th>
+                      <td className="text-sm md:text-base font-regular text-primary-color p-3">{val?.tenant_id?.user_id.name}</td>
+                      <td className="p-3">{(val?.tenant_id?.balance - val?.amount).toFixed(2)}</td>
+                      <td className="p-2">{(val?.amount).toFixed(2)}</td>
+                      <th className={`font-semibold ${val?.status === false ? 'text-red' : 'text-primary-color'} p-3 w-1/5`}>{val?.status === false ? 'Unpaid' : 'Paid'}</th>
                       <td className=" text-primary-color p-3 flex justify-center">
                         <div className="relative">
                           <button className="relative focus:outline-none my-3" onClick={() => handleDropdownClick(index)}>
@@ -92,10 +96,10 @@ const Invoice = () => {
                                 <button className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3 hover:bg-gray w-full"><FaCheck/> Paid</button>
                               </li>
                               <li>
-                                <button className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3  hover:bg-gray w-full"><RiDeleteBin6Line/> Delete</button>
+                                <button onClick={() => handleDelete(val?._id)} className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3  hover:bg-gray w-full"><RiDeleteBin6Line/> Delete</button>
                               </li>
                               <li>
-                                <Link to={`/invoice/${val._id}`} className="flex items-center gap-3 px-4 py-2 text-sm text-primary-color hover:bg-gray w-full">
+                                <Link to={`/invoice/${val?._id}`} className="flex items-center gap-3 px-4 py-2 text-sm text-primary-color hover:bg-gray w-full">
                                   <FaRegEye/> View
                                 </Link>
                               </li>

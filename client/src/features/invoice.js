@@ -136,7 +136,7 @@ export const fetchInvoices = () => async (dispatch) => {
     }
 
     const json = await response.json()
-    console.log(json)
+    console.log(json.response)
     dispatch(fetchInvoicesSuccess(json.response))
   } catch (err) {
     dispatch(fetchFailed(err.message))
@@ -173,10 +173,25 @@ export const editInvoices = () => async (dispatch) => {
     dispatch(fetchFailed(err.message))
   }
 }
-export const deleteInvoices = () => async (dispatch) => {
+export const deleteInvoices = (invoice_id) => async (dispatch) => {
   try {
     dispatch(fetchStart())
     const token = Cookies.get('token')
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/invoice/delete?invoice_id=${invoice_id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error)
+    }
+    const json = await response.json()
+    console.log(json.response)
+    dispatch(fetchInvoicesSuccess())
   } catch (err) {
     dispatch(fetchFailed(err.message))
   }

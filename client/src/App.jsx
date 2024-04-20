@@ -86,6 +86,14 @@ function App() {
         }
       />
       <Route
+        path="/tenantprofile/:id"
+        element={
+            <Layout className="bg-white1">
+              <TenantProfile />
+            </Layout>
+        }
+      />
+      <Route
         path="/tenant"
         element={
           user ? (
