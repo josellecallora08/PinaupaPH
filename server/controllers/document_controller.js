@@ -6,10 +6,11 @@ const UNITMODEL = require('../models/unit')
 const path = require('path')
 const pdf = require('html-pdf')
 const fs = require('fs').promises
+const cloudinary = require('cloudinary').v2;
 const pdf_template = require('../template/contract')
 
 module.exports.generate_contract = async (req, res) => {
-  const { user_id, unit_id} = req.params
+  const { user_id, unit_id } = req.params
   const { deposit, advance, from_date, to_date } = req.body
   try {
     const user_response = await USERMODEL.findById(user_id)
@@ -20,6 +21,90 @@ module.exports.generate_contract = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'User or Unit Not found' })
     }
+    const file = `Lease_Agreement_${unit_response.unit_no}-${user_response.name}`
+    const filePath = path.join(
+      __dirname,
+      '../documents/contracts',
+      `${file}.pdf`,
+    )
+
+    const details = {
+      name: user_response.name,
+      deposit: deposit,
+      advance: advance,
+      unit_no: unit_response.unit_no,
+      rent: unit_response.rent,
+      from_date: from_date,
+      to_date: to_date,
+    }
+    const pdfBuffer = await new Promise((resolve, reject) => {
+      pdf.create(pdf_template(details), {}).toFile(filePath, (err, result) => {
+        if (err) reject(err)
+        else resolve(result)
+      })
+    })
+
+    const cloudinaryResponse = await new Promise((resolve, reject) => {
+      cloudinary.uploader
+        .upload_stream(
+          {
+            resource_type: 'raw', // Specify resource type as 'raw' for PDF
+            public_id: reference, // Public ID in Cloudinary
+            folder: 'PinaupaPH/Contracts', // Folder in Cloudinary where PDF will be stored
+            overwrite: false, // Do not overwrite if file with the same name exists
+          },
+          (error, result) => {
+            if (error) reject(error)
+            else resolve(result)
+          },
+        )
+        .end(pdfBuffer)
+    })
+
+    if (!cloudinaryResponse || !cloudinaryResponse.public_id) {
+      return res
+        .status(httpStatusCodes.CONFLICT)
+        .json({ error: 'Failed to upload PDF to Cloudinary...' })
+    }
+
+    const contractResponse = await CONTRACTMODEL.create({
+      user_id,
+      unit_id,
+      advance,
+      from_date,
+      to_date,
+    })
+    if (!contractResponse)
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Contract Not found' })
+
+    return res.status(httpStatusCodes.CREATED).json({
+      message: 'Created Contract and Successfully saved to Database',
+    })
+  } catch (err) {
+    console.error({ error: err.message })
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message})
+  }
+}
+
+module.exports.generate_pdf = async (req, res) => {
+  try {
+    const { user_id, unit_id } = req.params
+
+    const user_response = await USERMODEL.findById(user_id)
+    if (!user_response)
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'User Not found' })
+
+    const unit_response = await UNITMODEL.findById(unit_id)
+    if (!unit_response)
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Unit Not found' })
 
     const filePath = path.join(
       __dirname,
@@ -27,51 +112,18 @@ module.exports.generate_contract = async (req, res) => {
       `Lease_Agreement_${unit_response.unit_no}-${user_response.name}.pdf`,
     )
 
-    try {
-      // Check if the file already exists
-      await fs.access(filePath)
-      return res
-        .status(httpStatusCodes.FOUND)
-        .json({ error: 'Contract Exists' })
-    } catch (error) {
-      // File does not exist, proceed with generating the PDF
-      const details = {
-        name: user_response.name,
-        deposit: deposit,
-        advance: advance,
-        unit_no: unit_response.unit_no,
-        rent: unit_response.rent,
-        from_date: from_date,
-        to_date: to_date,
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="Lease_Agreement_${unit_response.unit_no}-${user_response.name}.pdf"`,
+    )
+    res.setHeader('Content-Type', 'application/pdf')
+
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        console.error(err)
+        res.status(500).send('Error sending PDF')
       }
-
-      await new Promise((resolve, reject) => {
-        pdf
-          .create(pdf_template(details), {})
-          .toFile(filePath, (err, result) => {
-            if (err) reject(err)
-            else resolve(result)
-          })
-      })
-
-      const contractResponse = await CONTRACTMODEL.create({
-        user_id,
-        unit_id,
-        advance,
-        from_date,
-        to_date,
-      })
-      if (!contractResponse)
-        return res
-          .status(httpStatusCodes.NOT_FOUND)
-          .json({ error: 'Contract Not found' })
-
-      return res.status(httpStatusCodes.CREATED).json({
-        message: 'Created Contract and Successfully saved to Database',
-        name: details.name,
-        unit_no: details.unit_no,
-      })
-    }
+    })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -79,39 +131,6 @@ module.exports.generate_contract = async (req, res) => {
       .json({ error: 'Server Error' })
   }
 }
-
-module.exports.generate_pdf = async (req, res) => {
-  try {
-    const { user_id, unit_id } = req.params;
-
-    const user_response = await USERMODEL.findById(user_id);
-    if (!user_response)
-      return res.status(httpStatusCodes.NOT_FOUND).json({ error: 'User Not found' });
-
-    const unit_response = await UNITMODEL.findById(unit_id);
-    if (!unit_response)
-      return res.status(httpStatusCodes.NOT_FOUND).json({ error: 'Unit Not found' });
-
-    const filePath = path.join(
-      __dirname,
-      '../documents/contracts',
-      `Lease_Agreement_${unit_response.unit_no}-${user_response.name}.pdf`
-    );
-
-    res.setHeader('Content-Disposition', `attachment; filename="Lease_Agreement_${unit_response.unit_no}-${user_response.name}.pdf"`);
-    res.setHeader('Content-Type', 'application/pdf');
-    
-    res.sendFile(filePath, (err) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error sending PDF');
-      }
-    });
-  } catch (err) {
-    console.error({ error: err.message });
-    return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Server Error' });
-  }
-};
 module.exports.fetch_contract = async (req, res) => {
   try {
   } catch (err) {}
@@ -186,4 +205,3 @@ module.exports.remove_contract = async (req, res) => {
       .json({ error: 'Server Error' })
   }
 }
-

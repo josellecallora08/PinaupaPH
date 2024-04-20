@@ -1,4 +1,5 @@
-return `
+module.exports = ({name,unit_no,balance,due,createdAt}) => {
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -107,7 +108,7 @@ return `
               <tr>
                 <td class="title">
                   <img
-                    src="/pinaupa-logo.svg"
+                    src="./logo.svg"
                     style="width: 100%; max-width: 300px"
                     alt="Logo"
                   />
@@ -184,3 +185,5 @@ return `
 </body>
 </html>
 `
+
+}

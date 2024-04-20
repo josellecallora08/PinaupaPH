@@ -112,6 +112,7 @@ export const fetchApartments = () => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
+    console.log(json)
     dispatch(fetchApartmentSuccess(json))
   } catch (err) {
     dispatch(actionApartmentFailed(err.message))

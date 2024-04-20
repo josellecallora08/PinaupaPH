@@ -4,34 +4,50 @@ import { BiEdit } from "react-icons/bi";
 import EditOwnerDetails from '../../Component/EditOwnerDetails'
 import ChangePd from '../../Component/ChangePd'
 import { isLoggedin } from '../../features/authentication';
+import { changeProfile } from '../../features/user';
 
 
 const Profile = () => {
   const [modal, setIsModalOpen] = useState(false)
   const [changeModal, setchangeModal] = useState(false)
+  const [selectedFile, setSelectedFile] = useState(null)
   const dispatch = useDispatch()
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0])
+  }
+
   const user = useSelector(state => state.auth.user)
   const toggleModal = () => {
     setIsModalOpen(!modal)
+  }
+  const handleConfirm = (e) => {
+    e.preventDefault()
+    dispatch(changeProfile(user.id, user.image_id, selectedFile))
+    // Logic to handle confirmation
+    // For example, you can dispatch an action to update the profile picture
+    // or call an API to update the profile picture on the server
+    // After handling the confirmation, close the modal
+    setchangeModal(false)
   }
 
   useEffect(() => {
     dispatch(isLoggedin())
     console.log(user?.birthday)
   }, [])
+
   return (
     <>{modal ? <EditOwnerDetails setIsModalOpen = {setIsModalOpen}/> :''}
-      {changeModal ? <ChangePd setchangeModal= {setchangeModal} /> :''}
+      {changeModal ? <ChangePd selectedFile={selectedFile} setSelectedFile={setSelectedFile} handleFileChange={handleFileChange} setChangeModal= {setchangeModal} handleConfirm={handleConfirm} /> :''}
     
-    <div className='flex flex-col gap-5 w-full h-full py-5'>
+    <div className='flex flex-col gap-5 w-full h-full py-5 bg-white1'>
       <p className='h-full max-h-5 text-2xl font-bold w-11/12 m-auto py-2'>PROFILE</p>
       {/* Profile / landlord */}
       <div className='w-full h-full '>
         <div className='flex justify-center w-11/12 h-full m-auto rounded-md shadow-md flex-col md:flex-row' >
             <div className='flex flex-col w-full h-full'>
                 <div className="flex justify-center items-center w-full h-full">
-                  <figure className='flex justify-center items-center w-full h-full md:max-w-60 md:max-h-60  max-w-40 max-h-40 '>
-                    <img src={user?.image} className='w-full h-full pt-2' onClick={() => setchangeModal(prevState => !prevState)}/>
+                  <figure className=' border-black border-2 cursor-pointer flex justify-center items-center w-full h-full md:max-w-60 md:max-h-60  max-w-40 max-h-40 rounded-full '>
+                    <img src={user?.image} className='w-full h-full p-1 rounded-full' onClick={() => setchangeModal(prevState => !prevState)}/>
                   </figure>
                 </div>
               <div className="w-full h-full max-h-10 flex justify-center items-center py-6">

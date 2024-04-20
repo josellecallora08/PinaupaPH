@@ -12,8 +12,14 @@
     "check-format": "prettier --check \"**/*.js\""
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/material": "^5.15.15",
+    "@mui/x-date-pickers": "^7.2.0",
     "@reduxjs/toolkit": "^2.0.1",
+    "axios": "^1.6.8",
     "chart.js": "^4.4.2",
+    "dayjs": "^1.11.10",
     "file-saver": "^2.0.5",
     "flowbite-react": "^0.7.3",
     "js-cookie": "^3.0.5",

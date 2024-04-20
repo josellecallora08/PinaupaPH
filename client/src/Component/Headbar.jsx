@@ -107,7 +107,7 @@ const Headbar = () => {
             </figure>
           </button>
           <div>
-            <span className="text-gray text-sm md:text-regular font-semibold">
+            <span className="text-gray text-sm md:text-regular font-light">
               {completeDate}
             </span>
           </div>
@@ -124,10 +124,10 @@ const Headbar = () => {
             <ul>
               <div className="absolute top-full right-2 text-black rounded-bl-md rounded-br-md shadow-2xl bg-white shadow-light-gray   ">
                 <ul>
-                  <li className="text-sm font-medium w-32 py-1  hover:bg-gray pl-3 ">
+                  <li className="text-sm font-semibold w-32 py-1  hover:bg-gray pl-3 ">
                     <Link to={'/profile'}>Profile</Link>
                   </li>
-                  <li className="text-sm font-medium w-32 py-1  hover:bg-gray pl-3 ">
+                  <li className="text-sm font-semibold w-32 py-1  hover:bg-gray pl-3 ">
                     <button type="button" onClick={handleLogout}>
                       Logout
                     </button>

@@ -1,7 +1,7 @@
 import React from 'react'
 const SearchBar = ({ onSearch }) => {
   return (
-    <label className="input input-bordered flex items-center gap-2 bg-white">
+    <label className="input input-bordered flex font-semibold items-center gap-2 bg-white">
       <input
         type="text"
         className="grow"

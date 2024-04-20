@@ -31,6 +31,7 @@ import TenantSecurity from './Page/Tenant/TenantSecurity'
 import TenantHome from './Page/Tenant/TenantHome'
 import ProfileTenant from './Page/Tenant/ProfileTenant'
 import TenantViewConcern from './Page/Tenant/TenantViewConcern'
+import InvoiceFormat from './Component/InvoiceFormat'
 
 function App() {
   const user = useSelector((state) => state.auth.isAuthenticated)
@@ -69,6 +70,30 @@ function App() {
         }
       />
       <Route
+        path="/dashboard"
+        element={
+          role?.role === 'Admin' ? (
+            <Layout className="bg-white1">
+              <Dashboard />
+            </Layout>
+          ) : role?.role === 'Tenant' ? (
+            <Layout className="bg-white1">
+              <TenantHome />
+            </Layout>
+          ) : (
+            <Navigate to="/" />
+          )
+        }
+      />
+      <Route
+        path="/tenantprofile/:id"
+        element={
+            <Layout className="bg-white1">
+              <TenantProfile />
+            </Layout>
+        }
+      />
+      <Route
         path="/tenant"
         element={
           user ? (
@@ -81,22 +106,60 @@ function App() {
         }
       />
       <Route
-        path={`/tenantprofile/:id`}
+        path="/concern&issue"
         element={
-          user ? (
+          role?.role === 'Admin' ? (
             <Layout className="bg-white1">
-              <TenantProfile />
+              <Concern />
+            </Layout>
+          ) : role?.role === 'Tenant' ? (
+            <Layout className="bg-white1">
+              <TenantConcern />
             </Layout>
           ) : (
-            <Login />
+            <Navigate to="/" />
           )
         }
       />
+      <Route
+        path={`/view-concern/:id`}
+        element={
+          role?.role === 'Admin' ? (
+            <Layout className="bg-white1">
+              <ViewConcern />
+            </Layout>
+          ) : role?.role === 'Tenant' ? (
+            <Layout className="bg-white1">
+              <TenantViewConcern />
+            </Layout>
+          ) : (
+            <Navigate to="/tenant/viewconcern" />
+          )
+        }
+      />
+
+      {/*<Route
+        path={`/view-concern/:id`}
+        element={
+          <Layout>
+            <ViewConcern />
+          </Layout>
+        }
+      />*/}
+
       <Route
         path="/apartment"
         element={
           <Layout className="bg-white1">
             <Apartment />
+          </Layout>
+        }
+      />
+      <Route
+        path="/invoice/:invoice_id"
+        element={
+          <Layout className="bg-white1">
+            <InvoiceFormat />
           </Layout>
         }
       />
@@ -108,39 +171,24 @@ function App() {
           </Layout>
         }
       />
+    
       <Route
         path="/security"
         element={
-          <Layout className="bg-white1">
-            <Security />
-          </Layout>
+          role?.role === 'Admin' ? (
+            <Layout className="bg-white1">
+              <Security />
+            </Layout>
+          ) : role?.role === 'Tenant' ? (
+            <Layout className="bg-white1">
+              <TenantSecurity />
+            </Layout>
+          ) : (
+            <Navigate to="/" />
+          )
         }
       />
 
-      <Route
-        path="/security"
-        element={
-          <Layout className="bg-white1">
-            <Security />
-          </Layout>
-        }
-      />
-      <Route
-        path="/concern&issue"
-        element={
-          <Layout className="bg-white1">
-            <Concern />
-          </Layout>
-        }
-      />
-      <Route
-        path={`/view-concern/:id`}
-        element={
-          <Layout>
-            <ViewConcern />
-          </Layout>
-        }
-      />
 
       <Route
         path="/profile"
@@ -158,24 +206,28 @@ function App() {
           </Layout>
         }
       />
-      <Route
-        path="/document/invoice"
+
+
+<Route
+             path="/document/invoice"
         element={
-          <Layout className="bg-white1">
-            <Invoice />
-          </Layout>
+          role?.role === 'Admin' ? (
+            <Layout className="bg-white1">
+                <Invoice />
+            </Layout>
+          ) : role?.role === 'Tenant' ? (
+            <Layout className="bg-white1">
+              <TenantInvoice />
+            </Layout>
+          ) : (
+            <Navigate to="/" />
+          )
         }
       />
+      
 
       {/* Tenant Side */}
-      <Route
-        path="/tenant/home"
-        element={
-          <TenantLayout className="bg-white1">
-            <TenantHome />
-          </TenantLayout>
-        }
-      />
+
       <Route
         path="/tenant/profile"
         element={
@@ -184,14 +236,14 @@ function App() {
           </TenantLayout>
         }
       />
-      <Route
+{/*      <Route
         path="/tenant/security"
         element={
           <TenantLayout className="bg-white1">
             <TenantSecurity />
           </TenantLayout>
         }
-      />
+      />*/}
       <Route
         path="/tenant/document/lease"
         element={
@@ -200,14 +252,7 @@ function App() {
           </TenantLayout>
         }
       />
-      <Route
-        path="/tenant/document/invoice"
-        element={
-          <TenantLayout className="bg-white1">
-            <TenantInvoice />
-          </TenantLayout>
-        }
-      />
+
       <Route
         path="/tenant/payment"
         element={
@@ -216,15 +261,8 @@ function App() {
           </TenantLayout>
         }
       />
-      <Route
-        path="/tenant/concern"
-        element={
-          <TenantLayout className="bg-white1">
-            <TenantConcern />
-          </TenantLayout>
-        }
-      />
-      <Route
+
+      {/*   <Route
         path="/tenant/viewconcern"
         element={
           <TenantLayout className="bg-white1">
@@ -232,6 +270,7 @@ function App() {
           </TenantLayout>
         }
       />
+      */}
     </Routes>
   )
 }

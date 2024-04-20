@@ -36,7 +36,7 @@ const EditApartmentUnit = ({ apartment_id, setIsEditApartmentUnit }) => {
             Edit Apartment Unit
           </h1>
         </div>
-        <form className="lg:w-[30rem] w-[22rem] h-[22rem] px-4 overflow-y-auto ">
+        <form className="lg:w-[30rem] w-[22rem] h-auto pt-5 px-4 overflow-y-auto ">
           <button className="absolute top-4 right-6">
             <IoMdClose
               onClick={() => setIsEditApartmentUnit((prevState) => !prevState)}
@@ -51,36 +51,6 @@ const EditApartmentUnit = ({ apartment_id, setIsEditApartmentUnit }) => {
               {error}
             </div>
           )}
-
-          <div className="">
-            <div>
-              <h1 className='my-2 font-bold'>Apartment Unit Details</h1>
-              <div className='mb-2'>Apartment</div>
-              <select
-                className="   bg-white text-black w-full h-10 mb-3 p-1 rounded-lg border-2 z-50"
-                value={selectedApartmentOption}
-                onChange={handleApartmentOptionChange}
-                required
-                style={{ color: selectedApartmentOption ? 'black' : 'gray', borderColor:'black' }}
-              >
-                <option style={{ color: 'gray' }} value="" hidden>
-                  Select Building
-                </option>
-                <option value="option1" className=" rounded-none">
-                  Option 1
-                </option>
-                <option value="option2" className="">
-                  Option 2
-                </option>
-                <option value="option3" className="">
-                  Option 3
-                </option>
-              </select>
-            </div>
-          </div>
-
-
-
           <div className="mb-4">
             <label
               htmlFor="address"
