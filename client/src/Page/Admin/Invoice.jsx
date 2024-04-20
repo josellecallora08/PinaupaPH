@@ -39,16 +39,29 @@ const Invoice = () => {
         <div className="w-11/12 m-auto h-full flex flex-col">
           <h1 className="font-bold py-5 tracking-wider">DOCUMENTS / INVOICE</h1>
           <div className="w-full h-full flex flex-col md:flex-row gap-2 items-center justify-between max-h-24 ">
-            <SearchBar onSearch={handleSearch} />
-            <button
+          <SearchBar />
+          <div className="flex items-center justify-center my-10  lg:justify-end w-full order-2 ml-auto gap-2">
+              <select
+                className="border bg-white border-gray rounded-md px-5 py-2"
+                onChange={(e) => setFilter(e.target.value)}
+                value={filter}
+              >
+                <option value="" hidden>Filter</option>
+                <option value="paid">Paid</option>
+                <option value="unpaid">Unpaid</option>
+              </select>
+              <button
               onClick={() => setModal((prevState) => !prevState)}
-              className="btn md:btn-wide w-full bg-primary-color text-white hover:text-primary-color"
+              className="btn md:btn-wide w-1/2  bg-primary-color text-white hover:text-primary-color"
             >
               <FaPlus />
               Prepare Invoice
             </button>
+            </div>
+            
+   
           </div>
-          <div className="w-full h-full py-5">
+          <div className="w-full h-full py-5 mt-4">
             <div className="relative w-full h-full max-h-[660px] bg-white overflow-y-scroll border-primary-color border-l-4 border-b-4">
               <table className="w-full h-auto max-h-full ">
                 <thead className="sticky top-0 bg-primary-color z-10">

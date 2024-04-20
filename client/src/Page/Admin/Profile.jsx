@@ -23,15 +23,15 @@ const Profile = () => {
     <>{modal ? <EditOwnerDetails setIsModalOpen = {setIsModalOpen}/> :''}
       {changeModal ? <ChangePd setchangeModal= {setchangeModal} /> :''}
     
-    <div className='flex flex-col gap-5 w-full h-full py-5'>
+    <div className='flex flex-col gap-5 w-full h-full py-5 bg-white1'>
       <p className='h-full max-h-5 text-2xl font-bold w-11/12 m-auto py-2'>PROFILE</p>
       {/* Profile / landlord */}
       <div className='w-full h-full '>
         <div className='flex justify-center w-11/12 h-full m-auto rounded-md shadow-md flex-col md:flex-row' >
             <div className='flex flex-col w-full h-full'>
                 <div className="flex justify-center items-center w-full h-full">
-                  <figure className='flex justify-center items-center w-full h-full md:max-w-60 md:max-h-60  max-w-40 max-h-40 '>
-                    <img src={user?.image} className='w-full h-full pt-2' onClick={() => setchangeModal(prevState => !prevState)}/>
+                  <figure className=' border-black border-2 cursor-pointer flex justify-center items-center w-full h-full md:max-w-60 md:max-h-60  max-w-40 max-h-40 rounded-full '>
+                    <img src={user?.image} className='w-full h-full p-1 rounded-full' onClick={() => setchangeModal(prevState => !prevState)}/>
                   </figure>
                 </div>
               <div className="w-full h-full max-h-10 flex justify-center items-center py-6">
