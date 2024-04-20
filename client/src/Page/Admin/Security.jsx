@@ -1,11 +1,13 @@
 import React from 'react'
 import { Progress } from 'flowbite-react'
 
+
 const Security = () => {
   return (
     
-    <div className='w-full h-full'>
-      <div className='h-full max-h-5 text-2xl font-bold w-11/12 m-auto py-8 mb-4'>
+    <div className='w-full h-full bg-white1  '>
+    
+      <div className='h-full max-h-5 text-2xl font-bold w-11/12 m-auto py-8 mb-4 text-primary-color'>
         SECURITY
       </div>
      
@@ -24,8 +26,8 @@ const Security = () => {
         <div className='w-full h-full bg-[#183044] rounded-md shadow-md flex justify-center items-center'>
           <div className='md:w-[350px] md:h-[220px] h-[180px] w-[150px] rounded-md bg-white my-4'>1</div>
         </div> */}
+    
       </div>
-      
     
     </div>
     
