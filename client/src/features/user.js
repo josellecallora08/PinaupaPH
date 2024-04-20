@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import Cookies from 'js-cookie'
+import { isLoggedin } from './authentication'
 const userSlice = createSlice({
   name: 'user',
   initialState: {
@@ -201,6 +202,43 @@ export const editUserApartment = (userId, credentials) => async (dispatch) => {
     // const json = await user.json()
     // dispatch(editUserSuccess(userId))
     dispatch(fetchUser(userId))
+  } catch (err) {
+    dispatch(actionUserFailed(err.message))
+  }
+}
+
+export const changeProfile = (userId, public_id, imageFile) => async (dispatch) => {
+  try {
+    dispatch(fetchUserStart())
+    const token = Cookies.get('token')
+
+    // Create a new FormData object
+    const formData = new FormData()
+    formData.append('profile_image', imageFile) // Append the image file
+    console.log("aosidjoa2isjd")
+
+    // Make the fetch request
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/user/profile?public_id=${public_id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData, // Set the body of the request to the FormData object
+      },
+    )
+    console.log("aosidjoaisjd")
+
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json)
+      // Handle error response
+    }
+    
+    const json = await response.json()
+    console.log(json)
+    dispatch(isLoggedin())
   } catch (err) {
     dispatch(actionUserFailed(err.message))
   }

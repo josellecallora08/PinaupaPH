@@ -38,7 +38,7 @@ export const {
 } = invoiceSlice.actions
 export const generateInvoice = (invoice_id) => async (dispatch) => {
   try {
-    const token = Cookies.get('token');
+    const token = Cookies.get('token')
     const response = await fetch(
       `${import.meta.env.VITE_URL}/api/invoice/generate?invoice_id=${invoice_id}`,
       {
@@ -47,25 +47,24 @@ export const generateInvoice = (invoice_id) => async (dispatch) => {
           Authorization: `Bearer ${token}`,
         },
       },
-    );
+    )
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error);
+      const error = await response.json()
+      throw new Error(error.error)
     }
 
     // Parse the response to get the Cloudinary URL
-    const { url } = await response.json();
-
+    const { url } = await response.json()
+    console.log(url)
     // Use the URL to trigger the file download
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = 'invoice'; // You can customize the filename here
-    anchor.click();
+    const anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = 'invoice.pdf' // You can customize the filename here
+    anchor.click()
   } catch (err) {
-    dispatch(fetchFailed(err.message));
+    dispatch(fetchFailed(err.message))
   }
-};
-
+}
 
 export const searchInvoice = (filter) => async (dispatch) => {
   try {
@@ -173,13 +172,14 @@ export const editInvoices = () => async (dispatch) => {
     dispatch(fetchFailed(err.message))
   }
 }
-export const deleteInvoices = (invoice_id) => async (dispatch) => {
+export const deleteInvoices = (id) => async (dispatch) => {
   try {
     dispatch(fetchStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/invoice/delete?invoice_id=${invoice_id}`,
+      `${import.meta.env.VITE_URL}/api/invoice/delete?invoice_id=${id}`,
       {
+        method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
         },

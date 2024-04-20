@@ -9,11 +9,15 @@ const ManualInovoice = ({ setModal }) => {
   const [user, setUser] = useState('')
   const modal = useRef(null)
   const users = useSelector((state) => state.user.data)
+  const loading = useSelector((state) => state.invoice.loading)
   const units = useSelector((state) => state.unit.data)
   const handleInvoice = (e) => {
     e.preventDefault()
     console.log(user)
     dispatch(createInvoice(user))
+    if(!loading){
+      setModal(state => !state)
+    }
   }
 
   useEffect(() => {
@@ -66,7 +70,7 @@ const ManualInovoice = ({ setModal }) => {
                 type="submit"
                 className="w-full border border-primary-color text-white rounded-md bg-primary-color p-2"
               >
-                Submit
+                {loading ? 'Downloading...' : 'Submit'}
               </button>
               <button
                 type="button"

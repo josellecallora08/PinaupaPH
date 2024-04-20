@@ -528,7 +528,7 @@ module.exports.fetch_data = async (req, res) => {
 
 // * Done checking on POSTMAN API
 module.exports.update_profile = async (req, res) => {
-  const { user_id } = req.params
+  const { user_id } = req.query
   const {
     name,
     username,
@@ -698,7 +698,6 @@ module.exports.update_profile_picture = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to change image' })
     }
-
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: 'Profile has been changed' })

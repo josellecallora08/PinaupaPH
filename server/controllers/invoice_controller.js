@@ -10,32 +10,47 @@ const pdf = require('html-pdf')
 const fs = require('fs').promises
 const cloudinary = require('cloudinary').v2 // Import Cloudinary SDK
 module.exports.generateInvoice = async (req, res) => {
-  const { invoice_id } = req.query;
+  const { invoice_id } = req.query
   try {
     // Fetch the invoice details from the database
-    const invoice = await INVOICEMODEL.findById(invoice_id);
+    const invoice = await INVOICEMODEL.findById(invoice_id)
     if (!invoice) {
-      return res.status(httpStatusCodes.NOT_FOUND).json({ error: 'Invoice not found' });
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Invoice not found' })
     }
 
     // Retrieve the public ID of the invoice PDF from the invoice details
-    const { cloudinary_public_id } = invoice;
+    const { cloudinary_public_id } = invoice
+    console.log(cloudinary_public_id)
 
     // Fetch the file from Cloudinary
-    const cloudinaryUrl = cloudinary.url(cloudinary_public_id, { resource_type: 'raw' });
+    const cloudinaryUrl = cloudinary.url(cloudinary_public_id, {
+      resource_type: 'raw',
+    })
+    console.log(cloudinaryUrl)
+    // Fetch the PDF content from Cloudinary
+    const response = await fetch(cloudinaryUrl)
+    if (!response.ok) {
+      throw new Error('Failed to fetch PDF from Cloudinary')
+    }
 
     // Set response headers for file download
-    res.setHeader('Content-Disposition', `attachment; filename="invoice.pdf"`);
-    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="invoice.pdf"`)
+    res.setHeader('Content-Type', 'application/pdf')
 
-    // Redirect the client to the Cloudinary URL for download
-    return res.redirect(cloudinaryUrl);
+    // Pipe the PDF content directly to the response stream
+    const pdfBuffer = await response.buffer()
+
+    // Send the PDF buffer in the response
+    res.send(pdfBuffer)
   } catch (err) {
-    console.error({ error: err.message });
-    return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Server Error' });
+    console.error({ error: err.message })
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Server Error' })
   }
-};
-
+}
 
 module.exports.createInvoice = async (req, res) => {
   const { user_id } = req.query
@@ -214,7 +229,7 @@ module.exports.searchInvoice = async (req, res) => {
         .json({ error: 'No data found...' })
     }
 
-    return res.status(httpStatusCodes.OK).json({ response })
+    res.send(response)
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
@@ -273,7 +288,10 @@ module.exports.deleteInvoice = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Failed to delete invoice...' })
     }
+    const pdfPublicId = response.cloudinary_public_id // Assuming there's a field named pdfPublicId in your invoice model
 
+    // Delete the PDF file from Cloudinary
+    await cloudinary.uploader.destroy(pdfPublicId)
     return res.status(httpStatusCodes.OK).json({ response })
   } catch (err) {
     return res
