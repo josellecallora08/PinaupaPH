@@ -97,7 +97,8 @@ module.exports.createInvoice = async (req, res) => {
       cloudinary.uploader
         .upload_stream(
           {
-            resource_type: 'raw', // Specify resource type as 'raw' for PDF
+            resource_type: 'raw',
+            format: 'pdf', // Specify resource type as 'raw' for PDF
             public_id: reference, // Public ID in Cloudinary
             folder: 'PinaupaPH/Invoices', // Folder in Cloudinary where PDF will be stored
             overwrite: false, // Do not overwrite if file with the same name exists
