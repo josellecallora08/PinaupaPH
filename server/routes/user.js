@@ -59,7 +59,7 @@ router.post('/:user_id/create_household', requireAuth, create_household)
 router.post('/:user_id/create_pet', requireAuth, create_pet)
 
 router.patch(
-  '/display_picture',
+  '/profile',
   upload.single('profile_image'),
   requireAuth,
   update_profile_picture,
