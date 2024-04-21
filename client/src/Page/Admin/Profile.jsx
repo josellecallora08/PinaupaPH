@@ -37,7 +37,7 @@ const Profile = () => {
 
   return (
     <>{modal ? <EditOwnerDetails setIsModalOpen = {setIsModalOpen}/> :''}
-      {changeModal ? <ChangePd selectedFile={selectedFile} setSelectedFile={setSelectedFile} handleFileChange={handleFileChange} setChangeModal= {setchangeModal} handleConfirm={handleConfirm} /> :''}
+      {changeModal ? <ChangePd userImage={user?.image} selectedFile={selectedFile} setSelectedFile={setSelectedFile} handleFileChange={handleFileChange} setChangeModal= {setchangeModal} handleConfirm={handleConfirm} /> :''}
     
     <div className='flex flex-col gap-5 w-full h-full py-5 bg-white1'>
       <p className='h-full max-h-5 text-2xl font-bold w-11/12 m-auto py-2'>PROFILE</p>

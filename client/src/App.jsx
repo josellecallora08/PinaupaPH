@@ -88,9 +88,9 @@ function App() {
       <Route
         path="/tenantprofile/:id"
         element={
-            <Layout className="bg-white1">
-              <TenantProfile />
-            </Layout>
+          <Layout className="bg-white1">
+            <TenantProfile />
+          </Layout>
         }
       />
       <Route
@@ -108,13 +108,9 @@ function App() {
       <Route
         path="/concern&issue"
         element={
-          role?.role === 'Admin' ? (
+          user ? (
             <Layout className="bg-white1">
               <Concern />
-            </Layout>
-          ) : role?.role === 'Tenant' ? (
-            <Layout className="bg-white1">
-              <TenantConcern />
             </Layout>
           ) : (
             <Navigate to="/" />
@@ -171,7 +167,7 @@ function App() {
           </Layout>
         }
       />
-    
+
       <Route
         path="/security"
         element={
@@ -188,7 +184,6 @@ function App() {
           )
         }
       />
-
 
       <Route
         path="/profile"
@@ -207,24 +202,18 @@ function App() {
         }
       />
 
-
-<Route
-             path="/document/invoice"
+      <Route
+        path="/document/invoice"
         element={
-          role?.role === 'Admin' ? (
+          user ? (
             <Layout className="bg-white1">
-                <Invoice />
-            </Layout>
-          ) : role?.role === 'Tenant' ? (
-            <Layout className="bg-white1">
-              <TenantInvoice />
+              <Invoice />
             </Layout>
           ) : (
             <Navigate to="/" />
           )
         }
       />
-      
 
       {/* Tenant Side */}
 
@@ -236,7 +225,7 @@ function App() {
           </TenantLayout>
         }
       />
-{/*      <Route
+      {/*      <Route
         path="/tenant/security"
         element={
           <TenantLayout className="bg-white1">
