@@ -27,7 +27,9 @@ const Least = () => {
           </Link>
         </div>
         <div className="flex flex-col gap-2 md:flex-row justify-between items-center">
-          <SearchBar />
+          <div className='w-full md:w-auto'>
+            <SearchBar />
+          </div>
           <button
             onClick={toggleModal}
             className="btn md:btn-wide w-full bg-primary-color text-white hover:text-primary-color"
@@ -37,7 +39,7 @@ const Least = () => {
           </button>
         </div>
 
-        <div className=" md:grid-cols-2  grid grid-cols-1 mt-3">
+        <div className=" md:grid-cols-2  grid grid-cols-1 gap-2 mt-3">
           <LeaseCard />
           <LeaseCard />
           <LeaseCard />
