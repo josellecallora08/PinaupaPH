@@ -44,8 +44,8 @@ const Invoice = () => {
   return (
     <>
       <div className="w-full h-full bg-gray">
-        <div className="lg:px-10 px-4 w-full m-auto h-full flex flex-col ">
-          <h1 className="font-bold pb-3 pt-4 tracking-wider">
+        <div className="lg:px-10 px-4 w-full m-auto h-full flex flex-col gap-2 ">
+          <h1 className="font-bold pt-4 tracking-wider">
             DOCUMENTS / INVOICE
           </h1>
           <div className="w-full h-full max-h-20 flex flex-col md:flex-row gap-2 py-3 items-center justify-between ">

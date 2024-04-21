@@ -100,7 +100,7 @@ const Tenant = () => {
               <SearchBar onSearch={handleSearch} />
             </div>
             <div className="flex items-center gap-5 py-5">
-              <div className="lg:text-sm flex items-center justify-center">
+              <div className="w-full lg:text-sm flex items-center justify-center">
                 <select className="select font-semibold select-bordered w-full max-w-xs">
                   {apartment?.map((val, key) => (
                     <option key={key} value={val._id} >
@@ -111,7 +111,7 @@ const Tenant = () => {
               </div>
               <button
                 onClick={toggleAddTenantForm}
-                className="btn btn-wide bg-primary-color font-bold uppercase text-white hover:text-primary-color"
+                className="btn w-fit md:btn-wide bg-primary-color font-bold uppercase text-white hover:text-primary-color"
               >
                 <FaPlus />
                 Add Tenant
@@ -120,7 +120,7 @@ const Tenant = () => {
           </div>
 
           {/* Body of Tenant Tab */}
-          <div className="lg:grid-cols-3  md:grid-cols-2 grid grid-cols-1 gap-4">
+          <div className="lg:grid-cols-3  md:grid-cols-2 grid grid-cols-1 gap-4 ">
             {loading ?
               <SearchLoading /> : tenant?.map((val, key) => (
                 <TenantCard key={key} data={val} />

@@ -31,7 +31,7 @@ const Sidebar = () => {
           {menu ? <img
             src={logo}
             alt=""
-            className="duration-300 w-full max-w-44 max-h-20 h-full object-fill ease-in-out"
+            className="duration-300 mt-10 md:mt-0 w-full max-w-44 max-h-20 h-full object-fill ease-in-out"
           /> : <img
             src={m_logo}
             alt=""
