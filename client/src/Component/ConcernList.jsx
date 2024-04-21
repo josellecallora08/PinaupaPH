@@ -4,14 +4,15 @@ import ConcernCard from './ConcernCard'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchReports } from '../features/report'
 import Loading from './LoadingComponent/Loading'
+import { FaPlus } from 'react-icons/fa6'
 const ConcernList = () => {
   const [StatselectedOption, setStatSelectedOption] = useState('')
   const [ConcernselectedOption, setConcernselectedOption] = useState('')
+  const user = useSelector((state) => state.auth.user)
   const loading = useSelector((state) => state.report.loading)
   const dispatch = useDispatch()
   const reports = useSelector((state) => state.report.data)
-  const handleSearch = (e) => {
-  }
+  const handleSearch = (e) => {}
   const handleStatOptionChange = (e) => {
     setStatSelectedOption(e.target.value)
   }
@@ -49,16 +50,43 @@ const ConcernList = () => {
               <option>Han Solo</option>
               <option>Greedo</option>
             </select>
+            {user && user.role === 'Tenant' ? (
+              <button className="btn btn-wide bg-primary-color font-bold uppercase text-white hover:text-primary-color">
+                <FaPlus />
+                Add Report
+              </button>
+            ) : (
+              ''
+            )}
           </div>
         </div>
 
         <div className="lg:grid lg:grid-cols-3 lg:gap-y-2 lg:gap-x-3">
-          {loading ?
+          {user && user?.role === 'Admin' ? (
+            loading ? (
+              <Loading />
+            ) : (
+              reports?.map((val, key) => (
+                <ConcernCard key={key} val={val} num={key} />
+              ))
+            )
+          ) : user?.role === 'Tenant' ? (
+            loading ? (
+              <Loading />
+            ) : (
+              reports
+                ?.filter((item) => item.user_id === user?.id)
+                .map((val, key) => (
+                  <ConcernCard key={key} val={val} num={key} />
+                ))
+            )
+          ) : loading ? (
             <Loading />
-            : reports?.map((val, key) => (
+          ) : (
+            reports?.map((val, key) => (
               <ConcernCard key={key} val={val} num={key} />
             ))
-          }
+          )}
         </div>
       </div>
     </>

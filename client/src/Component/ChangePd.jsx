@@ -3,7 +3,7 @@ import { IoMdClose } from 'react-icons/io'
 import { useDispatch } from 'react-redux'
 import { changeProfile } from '../features/user'
 
-const ChangePd = ({ selectedFile, setSelectedFile, handleFileChange, setChangeModal, handleConfirm }) => {
+const ChangePd = ({ userImage, selectedFile, setSelectedFile, handleFileChange, setChangeModal, handleConfirm }) => {
 
 
   return (
@@ -29,7 +29,7 @@ const ChangePd = ({ selectedFile, setSelectedFile, handleFileChange, setChangeMo
             />
           ) : (
             <img
-              src={user?.image}
+              src={userImage}
               alt="Profile"
               className="w-full h-full object-cover rounded-full"
             />

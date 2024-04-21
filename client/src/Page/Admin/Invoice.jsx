@@ -19,6 +19,7 @@ const Invoice = () => {
   const [deleteInvoice, setDeleteInvoice] = useState(false)
   const [filter, setFilter] = useState('')
   const [status, setStatus] = useState('')
+  const user = useSelector((state) => state.auth.user)
   const [modal, setModal] = useState(false)
   const [dropdownIndex, setDropdownIndex] = useState(null) // To keep track of which dropdown is open
   const dispatch = useDispatch()
@@ -32,7 +33,7 @@ const Invoice = () => {
     dispatch(fetchInvoices())
     setDeleteInvoice(false)
   }, [deleteInvoice])
-
+  
   const handleSearch = (e) => {
     setFilter(e.target.value)
   }
@@ -84,65 +85,129 @@ const Invoice = () => {
                   </tr>
                 </thead>
                 <tbody className="w-full h-full bg-white font-regular">
-                  {invoices
-                    ?.filter((item) => item.status === false)
-                    .map((val, index) => (
-                      <tr
-                        key={index}
-                        className="text-center text-xs md:text-base"
-                      >
-                        <td className="text-primary-color font-regular p-3">
-                          {val?.reference}
-                        </td>
-                        <td className="text-sm md:text-base font-regular text-primary-color p-3">
-                          {val?.tenant_id?.user_id.name}
-                        </td>
-                        <td className="p-3">
-                          {(val?.tenant_id?.balance - val?.amount).toFixed(2)}
-                        </td>
-                        <td className="p-2">{(val?.amount).toFixed(2)}</td>
-                        <th
-                          className={`font-semibold ${val?.status === false ? 'text-red' : 'text-primary-color'} p-3 w-1/5`}
-                        >
-                          {val?.status === false ? 'Unpaid' : 'Paid'}
-                        </th>
-                        <td className=" text-primary-color p-3 flex justify-center">
-                          <div className="relative">
-                            <button
-                              className="relative focus:outline-none my-3"
-                              onClick={() => handleDropdownClick(index)}
+                  {user && user.role === 'Admin'
+                    ? invoices
+                        ?.filter((item) => item.status === false)
+                        .map((val, index) => (
+                          <tr
+                            key={index}
+                            className="text-center text-xs md:text-base"
+                          >
+                            <td className="text-primary-color font-regular p-3">
+                              {val?.reference}
+                            </td>
+                            <td className="text-sm md:text-base font-regular text-primary-color p-3">
+                              {val?.tenant_id?.user_id.name}
+                            </td>
+                            <td className="p-3">
+                              {(val?.tenant_id?.balance - val?.amount).toFixed(
+                                2,
+                              )}
+                            </td>
+                            <td className="p-2">{(val?.amount).toFixed(2)}</td>
+                            <th
+                              className={`font-semibold ${val?.status === false ? 'text-red' : 'text-primary-color'} p-3 w-1/5`}
                             >
-                              <BsThreeDotsVertical size={25} />
-                            </button>
-                            {dropdownIndex === index && (
-                              <ul className="absolute w-36 right-0 top-7 bg-white shadow-md rounded-md z-10">
-                                <li>
-                                  <button className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3 hover:bg-gray w-full">
-                                    <FaCheck /> Paid
-                                  </button>
-                                </li>
-                                <li>
-                                  <button
-                                    onClick={() => handleDelete(val?._id)}
-                                    className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3  hover:bg-gray w-full"
-                                  >
-                                    <RiDeleteBin6Line /> Delete
-                                  </button>
-                                </li>
-                                <li>
-                                  <Link
-                                    to={`/invoice/${val?._id}`}
-                                    className="flex items-center gap-3 px-4 py-2 text-sm text-primary-color hover:bg-gray w-full"
-                                  >
-                                    <FaRegEye /> View
-                                  </Link>
-                                </li>
-                              </ul>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                              {val?.status === false ? 'Unpaid' : 'Paid'}
+                            </th>
+                            <td className=" text-primary-color p-3 flex justify-center">
+                              <div className="relative">
+                                <button
+                                  className="relative focus:outline-none my-3"
+                                  onClick={() => handleDropdownClick(index)}
+                                >
+                                  <BsThreeDotsVertical size={25} />
+                                </button>
+                                {dropdownIndex === index && (
+                                  <ul className="absolute w-36 right-0 top-7 bg-white shadow-md rounded-md z-10">
+                                    <li>
+                                      <button className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3 hover:bg-gray w-full">
+                                        <FaCheck /> Paid
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <button
+                                        onClick={() => handleDelete(val?._id)}
+                                        className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3  hover:bg-gray w-full"
+                                      >
+                                        <RiDeleteBin6Line /> Delete
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <Link
+                                        to={`/invoice/${val?._id}`}
+                                        className="flex items-center gap-3 px-4 py-2 text-sm text-primary-color hover:bg-gray w-full"
+                                      >
+                                        <FaRegEye /> View
+                                      </Link>
+                                    </li>
+                                  </ul>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                    : invoices
+                        ?.filter((item) => item.status === false && item.tenant_id.user_id._id === user.id)
+                        .map((val, index) => (
+                          <tr
+                            key={index}
+                            className="text-center text-xs md:text-base"
+                          >
+                            <td className="text-primary-color font-regular p-3">
+                              {val?.reference}
+                            </td>
+                            <td className="text-sm md:text-base font-regular text-primary-color p-3">
+                              {val?.tenant_id?.user_id.name}
+                            </td>
+                            <td className="p-3">
+                              {(val?.tenant_id?.balance - val?.amount).toFixed(
+                                2,
+                              )}
+                            </td>
+                            <td className="p-2">{(val?.amount).toFixed(2)}</td>
+                            <th
+                              className={`font-semibold ${val?.status === false ? 'text-red' : 'text-primary-color'} p-3 w-1/5`}
+                            >
+                              {val?.status === false ? 'Unpaid' : 'Paid'}
+                            </th>
+                            <td className=" text-primary-color p-3 flex justify-center">
+                              <div className="relative">
+                                <button
+                                  className="relative focus:outline-none my-3"
+                                  onClick={() => handleDropdownClick(index)}
+                                >
+                                  <BsThreeDotsVertical size={25} />
+                                </button>
+                                {dropdownIndex === index && (
+                                  <ul className="absolute w-36 right-0 top-7 bg-white shadow-md rounded-md z-10">
+                                    <li>
+                                      <button className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3 hover:bg-gray w-full">
+                                        <FaCheck /> Paid
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <button
+                                        onClick={() => handleDelete(val?._id)}
+                                        className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3  hover:bg-gray w-full"
+                                      >
+                                        <RiDeleteBin6Line /> Delete
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <Link
+                                        to={`/invoice/${val?._id}`}
+                                        className="flex items-center gap-3 px-4 py-2 text-sm text-primary-color hover:bg-gray w-full"
+                                      >
+                                        <FaRegEye /> View
+                                      </Link>
+                                    </li>
+                                  </ul>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
                 </tbody>
               </table>
             </div>

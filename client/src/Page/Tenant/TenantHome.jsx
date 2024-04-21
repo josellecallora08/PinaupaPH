@@ -49,7 +49,7 @@ const TenantHome = () => {
                 <div className="w-full p-2 bg-primary-color text-white font-semibold text-xl">
                   Calendar
                 </div>
-                <div>
+                <div className="w-full">
                   <Calendar />
                 </div>
               </div>
