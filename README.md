@@ -53,8 +53,8 @@ This is our Academic Capstone Project.
 - **Document Management:**
   - Centralized storage for important documents such as leases, invoices, and receipts.
 
-<!-- - **CCTV Integration:**
-  - Remotely viewing of surveillances footages. -->
+- **CCTV Integration:**
+  - Remotely viewing of surveillances footages.
 
 ## Tech Stack
 
