@@ -165,7 +165,7 @@ const Dashboard = () => {
                           <p className="text-[#9e9e9e] text-xs text-center xl:text-base font-semibold">
                             Total Paid
                           </p>
-                          <p className="font-bold text-center text-xl xl:text-4xl">
+                          <p className="font-bold text-center text-lg xl:text-4xl">
                             9,000.00
                           </p>
                         </div>
