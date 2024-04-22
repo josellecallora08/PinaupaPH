@@ -120,13 +120,9 @@ function App() {
       <Route
         path={`/view-concern/:id`}
         element={
-          user ? (
             <Layout className="bg-white1">
               <ViewConcern />
             </Layout>
-          ) : (
-            <Navigate to={'/'} />
-          )
         }
       />
 

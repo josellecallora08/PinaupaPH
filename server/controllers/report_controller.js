@@ -139,7 +139,7 @@ module.exports.fetchReport = async (req, res) => {
 }
 
 module.exports.createComment = async (req, res) => {
-  const { user_id, report_id } = req.params
+  const { user_id, report_id } = req.query
   const { comment } = req.body
   try {
     const report = await REPORTMODEL.findById(report_id)
@@ -151,16 +151,15 @@ module.exports.createComment = async (req, res) => {
     const details = { user_id, comment }
     report.comments.push(details)
     await report.save()
-    return res.status(200).json({ msg: 'Comment sent.' })
+    return res.status(httpStatusCodes.OK).json({ msg: 'Comment sent.' })
   } catch (err) {
     console.log(err.message)
-    return res.status(500).json({ error: `Server Error: ${err.message}` })
+    return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: err.message })
   }
 }
 
 module.exports.editComment = async (req, res) => {
-  const { report_id } = req.params
-  const { comment_id } = req.query
+  const { comment_id, report_id } = req.query
   const { comment } = req.body
   try {
     const report = await REPORTMODEL.findById(report_id)
@@ -219,7 +218,7 @@ module.exports.deleteComment = async (req, res) => {
   }
 }
 module.exports.fetchComments = async (req, res) => {
-  const { report_id } = req.params
+  const { report_id } = req.query
   try {
     const report = await REPORTMODEL.findById(report_id)
     if (!report)
@@ -236,8 +235,7 @@ module.exports.fetchComments = async (req, res) => {
   }
 }
 module.exports.fetchComment = async (req, res) => {
-  const { report_id } = req.params
-  const { comment_id } = req.query
+  const { report_id, comment_id } = req.query
   try {
     const report = await REPORTMODEL.findById(report_id)
     if (!report)
