@@ -70,6 +70,17 @@ module.exports.fetch_apartment = async (req, res) => {
 module.exports.create_apartment = async (req, res) => {
   try {
     const { name, address, province, barangay } = req.body
+    const details = {}
+    if (!name || !address || !province || !barangay)
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Please fill all the blanks.' })
+
+    if (name !== '' && name) details.name = name
+    if (address !== '' && address) details.address = address
+    if (province !== '' && province) details.province = province
+    if (barangay !== '' && barangay) details.barangay = barangay
+
     if (await APARTMENTMODEL.findOne({ name })) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
