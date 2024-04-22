@@ -31,40 +31,6 @@ const Headbar = () => {
     dispatch(toggleProfile())
   }
 
-  const pfpmenu = [
-    {
-      title: 'Profile',
-      path: '/profile',
-    },
-    {
-      title: 'Logout',
-      path: handleLogout,
-    },
-  ]
-  const month = [
-    'January',
-    'February',
-    'March',
-    'Apri',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ]
-  const day = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-  ]
-
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentDate(new Date())
@@ -90,7 +56,7 @@ const Headbar = () => {
   const paddedMinute = Minute < 10 ? `0${Minute}` : Minute;
   const paddedSecond = Second < 10 ? `0${Second}` : Second;
   
-  const completeDate = `${dayName[Day]}, ${monthName[Month]} ${Today < 10 ? `0${Today}` : Today}, ${Year} ${paddedHour}:${paddedMinute}:${paddedSecond} ${AMPM}`;
+  const completeDate = `${monthName[Month]} ${Today < 10 ? `0${Today}` : Today}, ${Year} ${paddedHour}:${paddedMinute}:${paddedSecond} ${AMPM}`;
   
   
   return (

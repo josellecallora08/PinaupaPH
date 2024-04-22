@@ -5,6 +5,7 @@ import ApartmentCard from '../../Component/AdminComponent/ApartmentCard'
 import AddApartment from '../../Component/AdminComponent/AddApartment'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  createApartment,
   fetchApartments,
   handleSearchApartment,
 } from '../../features/apartment'
@@ -34,9 +35,28 @@ const Apartment = () => {
     }
   }, [searchItem])
 
-  // useEffect(() => {
-  //   dispatch(fetchUnitsApartment())
-  // }, [])
+  const error = useSelector((state) => state.apartment.error)
+  const [fields, setFields] = useState({
+    name: '',
+    address: '',
+    province: '',
+    barangay: '',
+  })
+
+  const handleInput = (e) => {
+    const { name, value } = e.target
+    setFields((components) => ({
+      ...components,
+      [name]: value,
+    }))
+  }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    dispatch(createApartment(fields))
+    if (error !== null) {
+      setIsAddApartmentFormOpen((prevState) => !prevState)
+    }
+  } 
 
   return (
     <div className="w-full h-screen bg-white1">
@@ -57,11 +77,13 @@ const Apartment = () => {
         </div>
         {/* Body of Tenant Tab */}
         <div className="lg:grid-cols-2 2xl:grid-cols-3 grid 2xl:grid-rows-4 grid-cols-1 gap-4 py-5">
-          {loading ? 
-          <Loading/>
-          : apartment?.map((val, key) => (
-            <ApartmentCard key={key} val={val} num={key} />
-          ))}
+          {loading ? (
+            <Loading />
+          ) : (
+            apartment?.map((val, key) => (
+              <ApartmentCard key={key} val={val} num={key} />
+            ))
+          )}
         </div>
       </div>
       {isAddApartmentFormOpen && (
@@ -69,6 +91,10 @@ const Apartment = () => {
           <div className="lg:w-auto h-auto  lg:mt-2 mt-14 w-10/12 bg-white  rounded-md">
             <AddApartment
               setIsAddApartmentFormOpen={setIsAddApartmentFormOpen}
+              fields={fields}
+              handleInput={handleInput}
+              handleSubmit={handleSubmit}
+              error={error}
             />
           </div>
         </div>

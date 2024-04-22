@@ -74,6 +74,9 @@ export const handleSearchApartment = (filter) => async (dispatch) => {
 }
 
 export const createApartment = (fields) => async (dispatch) => {
+  if(fields.name === '' || fields.address === '' || fields.provice === '' || fields.barangay === ''){
+      dispatch(actionApartmentFailed("Please fill all the inputs."))
+  }
   try {
     dispatch(apartmentStart())
     const token = Cookies.get('token')

@@ -12,6 +12,7 @@ import reportReducer from '../features/report'
 import householdReducer from '../features/household'
 import invoiceReducer from '../features/invoice'
 import petReducer from '../features/pet'
+import socketReducer from '../features/socket'
 
 
 export const store = configureStore({
@@ -28,6 +29,7 @@ export const store = configureStore({
     report: reportReducer,
     household: householdReducer,
     pet: petReducer,
-    invoice: invoiceReducer
+    invoice: invoiceReducer,
+    socket: socketReducer
   },
 })

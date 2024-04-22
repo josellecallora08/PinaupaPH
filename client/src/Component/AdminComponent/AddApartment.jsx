@@ -1,31 +1,12 @@
-import { IoMdClose } from 'react-icons/io'
-import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { createApartment } from '../../features/apartment'
+import React from 'react'
 
-const AddApartment = ({ setIsAddApartmentFormOpen }) => {
-  const dispatch = useDispatch()
-  const error = useSelector((state) => state.apartment.error)
-  const [fields, setFields] = useState({
-    name: '',
-    address: '',
-    province: '',
-    barangay: '',
-  })
-
-  const handleInput = (e) => {
-    const { name, value } = e.target
-    setFields((components) => ({
-      ...components,
-      [name]: value,
-    }))
-  }
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    dispatch(createApartment(fields))
-    setIsAddApartmentFormOpen((prevState) => !prevState)
-  }
-
+const AddApartment = ({
+  setIsAddApartmentFormOpen,
+  fields,
+  handleInput,
+  handleSubmit,
+  error,
+}) => {
   return (
     <>
       <div className="relative w-full flex py-4 rounded-t-md bg-dark-blue text-white items-center ">
@@ -39,12 +20,12 @@ const AddApartment = ({ setIsAddApartmentFormOpen }) => {
         className="lg:w-[40rem] py-2 w-full h-[25rem] px-3 overflow-y-auto  "
       >
         {error && (
-          <div className=" hidden w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+          <p className="text-red border border-red/50 font-regular mt-5 rounded-xl shadow-md bg-red/10 p-5">
             {error}
-          </div>
+          </p>
         )}
 
-        <div className='py-5'>
+        <div className="py-5">
           <div className="mb-2">
             <label
               htmlFor="name"
@@ -58,7 +39,6 @@ const AddApartment = ({ setIsAddApartmentFormOpen }) => {
               name="name"
               value={fields.name}
               placeholder="Enter your Apartment Name"
-              required
               onChange={handleInput}
               className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
@@ -77,7 +57,6 @@ const AddApartment = ({ setIsAddApartmentFormOpen }) => {
               name="address"
               value={fields.address}
               onChange={handleInput}
-              required
               placeholder="Enter your Address"
               className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
@@ -95,7 +74,6 @@ const AddApartment = ({ setIsAddApartmentFormOpen }) => {
               id="province"
               name="province"
               value={fields.province}
-              required
               onChange={handleInput}
               placeholder="Enter your Province/City"
               className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -114,9 +92,8 @@ const AddApartment = ({ setIsAddApartmentFormOpen }) => {
               id="barangay"
               name="barangay"
               value={fields.barangay}
-              required
               onChange={handleInput}
-              placeholder="Enter your email"
+              placeholder="Enter your barangay"
               className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
