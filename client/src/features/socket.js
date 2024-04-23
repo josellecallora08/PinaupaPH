@@ -22,7 +22,7 @@ export const { fetchConnected, fetchDisconnected } = socketSlice.actions
 
 export const fetchComments = (id) => async (dispatch) => {
     console.log(id)
-  const socket = io(`${import.meta.env.VITE_URL}`)
+  const socket = io(`${import.meta.env.VITE_URL}/`)
 
   socket.on('connect', () => {
     console.log('Socket Connected')

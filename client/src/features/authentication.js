@@ -62,7 +62,7 @@ export const isLoggedin = () => async (dispatch) => {
     const data = await response.json()
     dispatch(loginSuccess(data))
   } catch (err) {
-    dispatch(loginFailed(err.message))
+      dispatch(loginFailed(err.message))
   }
 }
 

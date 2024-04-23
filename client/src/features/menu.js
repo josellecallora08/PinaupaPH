@@ -23,7 +23,9 @@ const menuSlice = createSlice({
     },
     toggleCloseSidebar: (state) => {
       state.sidebar = false
-      state.doc_dropdown = false
+      if (state.doc_dropdown == true) {
+        state.doc_dropdown = !state.doc_dropdown
+      }
     },
     toggleCloseNotif: (state) => {
       state.notif = false
