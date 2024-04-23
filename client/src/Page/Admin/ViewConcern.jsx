@@ -84,7 +84,7 @@ const ViewConcern = () => {
                   <figure className="w-full h-full max-w-20 max-h-20 rounded-full shadow-xl  overflow-hidden">
                     <img
                       src={report?.user_id.profile_image.image_url}
-                      className="w-full h-full object-contain"
+                      className="w-full h-full"
                       alt=""
                     />
                   </figure>
@@ -132,7 +132,7 @@ const ViewConcern = () => {
                   <span>{report?.type}</span>
                 </p>
                 <div className="h-full text-sm ">
-                  <p className="text-ellipsis xl:max-w-auto max-h-[125px] xl:text-wrap overflow-hidden">
+                  <p className="text-ellipsis font-regular xl:max-w-auto max-h-[125px] xl:text-wrap overflow-hidden">
                     {report?.description}
                   </p>
                 </div>
@@ -175,10 +175,10 @@ const ViewConcern = () => {
                 </div>
                 <div className="w-full h-full ">
                   <div
-                    className={`w-full h-auto max-h-[600px] px-5 ${report?.comments.length > 5 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}
+                    className={`w-full h-auto max-h-[600px] font-regular flex flex-col gap-2 px-5 ${report?.comments.length > 5 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}
                   >
                     {report?.comments.map((val, key) => (
-                      <div className="min-h-20 w-full flex gap-2 items-center overflow-hidden">
+                      <div className="min-h-12 w-full flex gap-2 items-center overflow-hidden">
                         <figure className="w-full h-full max-w-12 max-h-12 overflow-hidden rounded-full">
                           <img
                             src={val.user_id.profile_image.image_url}

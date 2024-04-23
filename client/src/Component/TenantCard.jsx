@@ -4,12 +4,14 @@ const TenantCard = ({ data }) => {
   return (
     <Link to={`/tenantprofile/${data._id}`} className="relative">
       <div className="lg:text-base flex bg-white  h-[150px]  rounded-md relative text-xs shadow-sm shadow-light-gray  hover:scale-105 hover:transition hover:z-10 hover:ease-in hover:duration-100 ">
-        <div>
-          <img
-            src={data?.image}
-            className="w-24 h-full rounded-tl-md border-r-2 border-primary-color rounded-bl-md rounded-tr-none"
-            alt=""
-          />
+        <div className='size-full max-w-28 flex items-center justify-center'>
+          <figure className='size-full max-h-20 max-w-20 rounded-full overflow-hidden'>
+            <img
+              src={data?.image}
+              className=""
+              alt=""
+            />
+          </figure>
         </div>
         <div className="lg:ml-10 ml-3 mt-8 flex flex-col gap-1 ">
           <p className="lg:text-xl font-bold text-md">
