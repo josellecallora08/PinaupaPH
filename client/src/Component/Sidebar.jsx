@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { toggleCloseSidebar, toggleDocs } from '../features/menu'
 import { isLogout } from '../features/authentication'
 import logo from '/logo.svg'
@@ -20,6 +20,7 @@ const Sidebar = () => {
   const menu = useSelector((state) => state.toggle.sidebar)
   const docs = useSelector((state) => state.toggle.doc_dropdown)
   const user = useSelector((state) => state.auth.user)
+  const location = useLocation();
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const handleOutsideClick = (event) => {
@@ -30,7 +31,7 @@ const Sidebar = () => {
   };
 
   useEffect(() => {
-      document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('mousedown', handleOutsideClick);
 
     // Cleanup the event listener
     return () => {
@@ -45,6 +46,9 @@ const Sidebar = () => {
     dispatch(isLogout(navigate))
   }
 
+  const isActive = (route) => {
+    return location.pathname === route;
+  };
   return (
     <div
       ref={sidebarRef}
@@ -68,7 +72,7 @@ const Sidebar = () => {
             <li className="w-full h-fit ">
               <Link
                 to={'/dashboard'}
-                className={`flex items-center center w-4/5 m-auto h-full hover:bg-primary-color/5 rounded-md ${menu ? 'p-5' : 'p-3'} `}
+                className={`flex items-center center w-4/5 m-auto h-full hover:bg-primary-color/5 rounded-md ${menu ? 'p-5' : 'p-3'} ${isActive('/dashboard') ? 'bg-primary-color' : ''} `}
               >
                 <figure
                   className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}
@@ -80,7 +84,7 @@ const Sidebar = () => {
                   />
                 </figure>
                 {menu ? (
-                  <span className="font-semibold text-primary-color">
+                  <span className={`font-semibold text-primary-color ${isActive('/dashboard') ? 'text-white' : ''}`}>
                     Dashboard
                   </span>
                 ) : (
@@ -94,7 +98,7 @@ const Sidebar = () => {
                 <li className="w-full h-fit ">
                   <Link
                     to={'/tenant'}
-                    className={`flex items-center center w-4/5  m-auto h-full hover:bg-primary-color/5 rounded-md ${menu ? 'p-5' : 'p-3'}`}
+                    className={`flex items-center center w-4/5  m-auto h-full hover:bg-primary-color/5 rounded-md ${menu ? 'p-5' : 'p-3'} `}
                   >
                     <figure
                       className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}
