@@ -47,7 +47,7 @@ export const createComment =
     try {
       dispatch(fetchCommentStart())
       const token = Cookies.get('token')
-      const socket = io(`${import.meta.env.VITE_URL}`)
+      const socket = io(`${import.meta.env.VITE_URL}/`)
       console.log(token)
       const response = await fetch(
         `${import.meta.env.VITE_URL}/api/report/comments/v1?user_id=${userId}&report_id=${reportId}`,

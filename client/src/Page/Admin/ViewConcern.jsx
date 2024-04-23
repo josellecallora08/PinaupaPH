@@ -13,6 +13,7 @@ import { LuTrash2 } from 'react-icons/lu'
 import { fetchReport } from '../../features/report'
 import Loading from '../../Component/LoadingComponent/Loading'
 import { fetchComments } from '../../features/socket'
+import { isLoggedin } from '../../features/authentication'
 const ViewConcern = () => {
   const { id } = useParams()
   const dispatch = useDispatch()
@@ -35,21 +36,21 @@ const ViewConcern = () => {
       console.log('Deletion cancelled')
     }
   }
+  useEffect(() => {
+    dispatch(isLoggedin())
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault() // Prevent default form submission behavior
-    if (comment.trim()) {
-      // Ensure there's a valid comment
-      dispatch(createComment(user.id, id, comment)) // Submit the comment
-      setComments('') // Reset the textarea
-    }
+    dispatch(createComment(user.id, id, comment)) // Submit the comment
+    setComments(null) // Reset the textarea
   }
 
   useEffect(() => {
     const sendMessage = (e) => {
       if (e.key === 'Enter') {
         e.preventDefault()
-        handleSubmit()
+        handleSubmit(e)
         setComments(null)
       }
     }
@@ -63,12 +64,19 @@ const ViewConcern = () => {
 
   useEffect(() => {
     dispatch(fetchReport(id))
-    console.log(report)
   }, [])
 
   useEffect(() => {
     dispatch(fetchComments(id))
   }, [])
+
+  useEffect(() => {
+    const container = messageContainerRef.current;
+  
+    if (container && report && report.comments.length > 0) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }, [report, comment]);
   return (
     <>
       <div className="w-full h-full flex flex-col pb-5 xl:bg-gray text-primary-color">
@@ -173,12 +181,12 @@ const ViewConcern = () => {
                     </p>
                   </div>
                 </div>
-                <div className="w-full h-full ">
-                  <div
+                <div className="w-full h-full " >
+                  <div ref={messageContainerRef}
                     className={`w-full h-auto max-h-[600px] font-regular flex flex-col gap-2 px-5 ${report?.comments.length > 5 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}
                   >
                     {report?.comments.map((val, key) => (
-                      <div className="min-h-12 w-full flex gap-2 items-center overflow-hidden">
+                      <div key={key} className="min-h-12 w-full flex gap-2 items-center overflow-hidden">
                         <figure className="w-full h-full max-w-12 max-h-12 overflow-hidden rounded-full">
                           <img
                             src={val.user_id.profile_image.image_url}
@@ -202,6 +210,7 @@ const ViewConcern = () => {
                       <textarea
                         name="comment"
                         id="comment"
+                        value={comment|| ''}
                         onChange={(e) => setComments(e.target.value)}
                         placeholder="Send Message"
                         className="w-full h-full bg-white  rounded-md outline-none border-2 border-gray p-5"
