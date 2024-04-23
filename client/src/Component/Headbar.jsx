@@ -4,19 +4,21 @@ import { useState } from 'react'
 import { TbBellRinging } from 'react-icons/tb'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { toggleCloseProfile, toggleProfile, toggleSidebar } from '../features/menu'
+import { toggleCloseNotif, toggleCloseProfile, toggleNotification, toggleProfile, toggleSidebar } from '../features/menu'
 import menu from '/menu.svg'
 import close from '/close.svg'
 import { isLogout, logout } from '../features/authentication'
 import { useNavigate } from 'react-router-dom'
+import Notification from './Notification'
 
 const Headbar = () => {
   const sidebar = useSelector((state) => state.toggle.sidebar) //for sidebar ternary
   const profile = useSelector((state) => state.toggle.profile) //for profile ternary
+  const notif = useSelector((state) => state.toggle.notif)
   const user = useSelector((state) => state.auth.user)
+  const notifBg = useRef(null)
   const [currentDate, setCurrentDate] = useState(new Date())
-  const menuBg = useRef()
-  const menuBtn = useRef()
+  const menuBg = useRef(null)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -31,7 +33,7 @@ const Headbar = () => {
   //function for profile toggle buttons
   const handleProfile = () => {
     dispatch(toggleProfile())
-    console.log("asdasd ",profile)
+    console.log("asdasd ", profile)
   }
 
   useEffect(() => {
@@ -42,23 +44,27 @@ const Headbar = () => {
     return () => clearInterval(interval)
   }, [])
 
-  // useEffect(() => {
-  //   const closeMenu = (e) => {
-  //     // Check if the click occurred outside the menu
-  //     if (menuBg.current && !menuBg.current.contains(e.target)) {
-  //       dispatch(toggleCloseProfile());
-  //       // Call handleProfile if the click was outside the menu
-  //     }
-  //   };
+  useEffect(() => {
+    const closeMenu = (e) => {
+      // Check if the click occurred outside the menu
+      if (menuBg.current && !menuBg.current.contains(e.target)) {
+        dispatch(toggleCloseProfile());
+        // Call handleProfile if the click was outside the menu
+      }
+      
+      if(notifBg.current && !notifBg.current.contains(e.target)){
+        dispatch(toggleCloseNotif());
+      }
+    };
 
-  //   // Add event listener when the component mounts
-  //   document.addEventListener('click', closeMenu);
+    // Add event listener when the component mounts
+    document.addEventListener('mousedown', closeMenu);
 
-  //   // Cleanup function to remove the event listener when the component unmounts
-  //   return () => {
-  //     document.removeEventListener('click', closeMenu);
-  //   };
-  // }, []); // Include menu and handleProfile in the dependency array
+    // Cleanup function to remove the event listener when the component unmounts
+    return () => {
+      document.removeEventListener('mousedown', closeMenu);
+    };
+  }, []); // Include menu and handleProfile in the dependency array
 
   // const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   const monthName = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -78,13 +84,16 @@ const Headbar = () => {
   const paddedSecond = Second < 10 ? `0${Second}` : Second;
 
   const completeDate = `${monthName[Month]} ${Today < 10 ? `0${Today}` : Today}, ${Year} ${paddedHour}:${paddedMinute}:${paddedSecond} ${AMPM}`;
-
+  const handleNotif = () => {
+    dispatch(toggleNotification())
+  }
 
   return (
-    <div className="w-full h-full max-h-20 sticky top-0 z-20 bg-primary-color">
+    <div  className="w-full h-full max-h-20 sticky top-0 z-20 bg-primary-color">
+       {notif ? <Notification notifBg = {notifBg} /> : ''}
       <div className=" flex justify-between items-center p-5 w-full relative m-auto  ">
         <div className="flex items-center gap-5">
-          <button ref={menuBtn} onClick={handleSidebar} className="flex items-center">
+          <button onClick={handleSidebar} className="flex items-center">
             <figure className="w-full h-full max-w-5 max-h-5">
               <img
                 src={sidebar ? close : menu}
@@ -100,7 +109,11 @@ const Headbar = () => {
           </div>
         </div>
         <div className="flex items-center">
-          <TbBellRinging size={25} color="white" />
+          <button onClick={handleNotif} className='relative'>
+            <TbBellRinging size={25} color="white" />
+            <span className='absolute text-white bg-red/80 w-full max-w-[15px] rounded-full text-sm -top-2 -right-1'>1</span>
+          </button>
+         
           <img
             src={user?.image}
             alt=""

@@ -95,11 +95,11 @@ const Tenant = () => {
         <div className="w-11/12 flex flex-col m-auto">
           {/* Top of Tenant Tab */}
           <h1 className="uppercase font-bold pt-5">List of Tenant </h1>
-          <div className="lg:w-full lg:flex-nowrap py-5 flex flex-wrap justify-end lg:justify-between items-center">
+          <div className="lg:w-full lg:flex-nowrap py-5 flex gap-5 flex-wrap justify-end lg:justify-between items-center">
             <div className="w-full md:max-w-60 max-w-full">
               <SearchBar onSearch={handleSearch} />
             </div>
-            <div className="flex items-center gap-5">
+            <div className="w-full lg:w-fit flex items-center gap-5">
               <div className="w-full lg:text-sm flex items-center justify-center">
                 <select className="select font-semibold select-bordered w-full max-w-xs">
                   {apartment?.map((val, key) => (
