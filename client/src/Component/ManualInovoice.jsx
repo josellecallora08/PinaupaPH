@@ -15,7 +15,7 @@ const ManualInovoice = ({ setModal }) => {
     e.preventDefault()
     console.log(user)
     dispatch(createInvoice(user))
-    if(!loading){
+    if(loading){
       setModal(state => !state)
     }
   }

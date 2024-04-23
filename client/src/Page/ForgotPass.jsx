@@ -28,23 +28,25 @@ const ForgotPass = () => {
   }
   return (
     <>
-      <div className=" w-full h-screen py-10 px-10">
-        <Link to="/" className='w-full h-full lg:max-w-10 max-h-20'>
-          <img
-            src={logo}
-            alt="PinaupaPH logo"
-            className="lg:block w-full max-w-52 max-h-20 h-full lg:ml-10 hidden  "
-          />
-        </Link>
+      <div className=" w-full h-screen py-5 px-10">
+        <div className="w-11/12 h-full max-h-40 m-auto flex justify-center lg:justify-start">
+          <Link to={'/'} className='size-full max-w-40 flex justify-center'>
+            <img
+              src={logo}
+              alt="PinaupaPH logo"
+              className="w-full my-10"
+            />
+          </Link>
+        </div>
         <div className="lg:flex-row  flex flex-col items-center justify-center ">
           <div className="  lg:w-1/2 lg:mt-0 mt-5">
-            <Link to="/" className='w-full h-full lg:max-w-10 max-h-20'>
+            {/* <Link to="/" className='w-full h-full lg:max-w-10 max-h-20'>
               <img
                 src={logo}
                 alt="PinaupaPH logo"
                 className="lg:hidden max-w-52 mx-auto"
               />
-            </Link>
+            </Link> */}
             <img
               src={ForgotPass1}
               alt="Forgot Password Picture"

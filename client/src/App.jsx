@@ -22,26 +22,22 @@ import Cookies from 'js-cookie'
 import ForgotPass from './Page/ForgotPass'
 import OTPVerify from './Page/OTPVerify'
 import ResetPass from './Page/ResetPass'
-import TenantLayout from './Component/Tenant Component/TenantLayout'
 import TenantPayment from './Page/Tenant/TenantPayment'
-import TenantInvoice from './Page/Tenant/TenantInvoice'
-import TenantConcern from './Page/Tenant/TenantConcern'
 import TenantLease from './Page/Tenant/TenantLease'
 import TenantSecurity from './Page/Tenant/TenantSecurity'
 import TenantHome from './Page/Tenant/TenantHome'
 import ProfileTenant from './Page/Tenant/ProfileTenant'
-import TenantViewConcern from './Page/Tenant/TenantViewConcern'
 import InvoiceFormat from './Component/InvoiceFormat'
+import TermsAndConditions from './Page/TermsAndCondition'
+import ContactUsAdmin from './Page/ContactUs'
 
 function App() {
   const user = useSelector((state) => state.auth.isAuthenticated)
   const role = useSelector((state) => state.auth.user)
   const dispatch = useDispatch()
-  const navigate = useNavigate()
 
   useEffect(() => {
     dispatch(isLoggedin())
-    console.log('1')
   }, [])
 
   return (
@@ -53,6 +49,30 @@ function App() {
       <Route path="/forgot-password" element={<ForgotPass />} />
       <Route path="/otp-verify/:id" element={<OTPVerify />} />
       <Route path="/reset-password/:id" element={<ResetPass />} />
+      <Route
+        path="/terms&condition"
+        element={
+          user ? (
+            <Layout>
+              <TermsAndConditions />
+            </Layout>
+          ) : (
+            <Navigate to={'/'} />
+          )
+        }
+      />
+        <Route
+        path="/contact"
+        element={
+          user ? (
+            <Layout className="bg-white1">
+              <ContactUsAdmin />
+            </Layout>
+          ) : (
+            <Navigate to={'/'} />
+          )
+        }
+      />
       <Route
         path="/dashboard"
         element={

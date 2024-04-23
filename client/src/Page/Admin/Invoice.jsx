@@ -43,12 +43,12 @@ const Invoice = () => {
 
   return (
     <>
-      <div className="w-full h-full bg-gray">
-        <div className="lg:px-10 px-4 w-full m-auto h-full flex flex-col gap-2 ">
-          <h1 className="font-bold pt-4 tracking-wider">
+      <div className="w-full h-full bg-white1">
+        <div className=" w-11/12 m-auto h-full flex flex-col gap-2 ">
+          <h1 className="font-bold pt-5 tracking-wider">
             DOCUMENTS / INVOICE
           </h1>
-          <div className="w-full h-full max-h-20 flex flex-col md:flex-row gap-2 py-3 items-center justify-between ">
+          <div className="w-full h-full max-h-20 flex flex-col md:flex-row gap-2 py-5 items-center justify-between ">
             <div className="w-full md:w-fit">
               <SearchBar />
             </div>
@@ -71,7 +71,7 @@ const Invoice = () => {
               </button>
             </div>
           </div>
-          <div className="w-full h-full py-5 mt-4">
+          <div className="w-full h-full ">
             <div className="relative w-full h-full max-h-[660px] bg-white overflow-y-scroll border-primary-color border-l-4 border-b-4">
               <table className="w-full h-auto  ">
                 <thead className="sticky top-0 bg-primary-color z-10">
@@ -93,24 +93,24 @@ const Invoice = () => {
                             key={index}
                             className="text-center text-xs md:text-base"
                           >
-                            <td className="text-primary-color font-regular p-3">
+                            <td className="text-primary-color font-regular p-2">
                               {val?.reference}
                             </td>
-                            <td className="text-sm md:text-base font-regular text-primary-color p-3">
+                            <td className="text-sm md:text-base font-regular text-primary-color p-2">
                               {val?.tenant_id?.user_id.name}
                             </td>
-                            <td className="p-3">
+                            <td className="p-2">
                               {(val?.tenant_id?.balance - val?.amount).toFixed(
                                 2,
                               )}
                             </td>
                             <td className="p-2">{(val?.amount).toFixed(2)}</td>
                             <th
-                              className={`font-semibold ${val?.status === false ? 'text-red' : 'text-primary-color'} p-3 w-1/5`}
+                              className={`font-semibold ${val?.status === false ? 'text-red' : 'text-primary-color'} p-2 w-1/5`}
                             >
                               {val?.status === false ? 'Unpaid' : 'Paid'}
                             </th>
-                            <td className=" text-primary-color p-3 flex justify-center">
+                            <td className=" text-primary-color p-2 flex justify-center">
                               <div className="relative">
                                 <button
                                   className="relative focus:outline-none my-3"

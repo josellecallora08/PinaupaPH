@@ -189,7 +189,7 @@ module.exports.sign_in = async (req, res) => {
         .json({ error: 'Invalid Credentials (temp - Password)' })
 
     // Create token
-    const token = createToken(response._id, response.username, response.role)
+  
 
     // // Store token in the database with TTL
     // if (!(await TOKENMODEL.findOne({user_id:response._id}))) {
@@ -215,6 +215,7 @@ module.exports.sign_in = async (req, res) => {
     //       .json({ error: 'Unable to store token in DB' })
 
     // // Set token in cookie (optional)
+    const token = createToken(response._id, response.username, response.role)
     res.cookie('token', token, { maxAge: 300000 })
 
     return res
