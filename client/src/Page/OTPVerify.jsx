@@ -37,7 +37,7 @@ const OTPVerify = () => {
     e.preventDefault()
     const pin = values.join('')
     console.log(pin)
-    if(values.some(value => value.trim() === '')){
+    if (values.some(value => value.trim() === '')) {
       setError("Pins cannot be empty...")
       return
     }
@@ -85,20 +85,24 @@ const OTPVerify = () => {
   return (
     <>
       <div className="w-full h-screen py-10 px-10 flex flex-col">
-        <Link to="/" className="w-full h-full lg:max-w-40 max-h-20">
-          <img
-            src={logo}
-            alt="PinaupaPH logo"
-            className="lg:block w-full max-w-52 max-h-20 h-full lg:ml-10 hidden  "
-          />
-        </Link>
-        <div className="lg:flex-row h-full  flex flex-col justify-center items-center">
-          <div className="lg:w-1/2 lg:mt-0 mt-5">
+        <div className="hidden w-11/12 h-full max-h-40 m-auto lg:flex justify-center lg:justify-start">
+          <Link to={'/'} className='size-full max-w-40 flex justify-center'>
             <img
               src={logo}
               alt="PinaupaPH logo"
-              className="lg:hidden mx-auto"
+              className="w-full my-10"
             />
+          </Link>
+        </div>
+        <div className="lg:flex-row h-full  flex flex-col justify-center items-center">
+          <div className="lg:w-1/2 lg:mt-0 mt-5">
+          <Link to="/" className='w-full h-full lg:max-w-10 max-h-20'>
+              <img
+                src={logo}
+                alt="PinaupaPH logo"
+                className="lg:hidden max-w-52 mx-auto"
+              />
+            </Link>
             <img
               src={EmailSent1}
               alt="Forgot Password Picture"

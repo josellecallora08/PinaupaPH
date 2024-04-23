@@ -40,13 +40,13 @@ const Login = () => {
       {loading ? (
         <SearchLoading />
       ) : (
-        <div className="w-full h-screen py-5 px-10  bg-white1">
-          <div className="  lg:items-start lg:ml-28 flex flex-col items-center justify-center ">
-            <Link to={'/'} className='flex justify-center'>
+        <div className="w-full h-screen py-5 px-10 ">
+          <div className="w-11/12 h-full max-h-40 m-auto flex justify-center lg:justify-start">
+            <Link to={'/'} className='size-full max-w-40 flex justify-center'>
               <img
                 src={logo}
                 alt="PinaupaPH logo"
-                className="lg:w-40 w-1/2 my-10"
+                className="w-full my-10"
               />
             </Link>
           </div>
@@ -59,30 +59,30 @@ const Login = () => {
             <p className="lg:hidden text-lg text-dark-gray">
               Sign in your account
             </p>
-            <form className="lg:w-1/3 lg:ml-20 lg:rounded-md lg:p-5 lg:h-fit lg:bg-white lg:shadow-md ">
-              <h1 className="lg:text-2xl lg:font-bold lg:block text-primary-color hidden ">
+            <form className="lg:w-1/3 lg:ml-20 lg:rounded-md lg:p-5 lg:h-fit lg:bg-white1 lg:shadow-md ">
+              <h1 className="lg:text-3xl lg:font-bold lg:block text-primary-color hidden ">
                 Sign In
               </h1>
               {error && <p className="text-red border border-red/50 font-regular mt-5 rounded-xl shadow-md bg-red/10 p-5">{error}</p>}
-              <div className="flex flex-col text-lg text-primary-color font-semibold mt-3">
-                <label htmlFor="email">Email</label>
+              <div className="flex flex-col  text-primary-color mt-3">
+                <label htmlFor="email" className='font-bold'>Email</label>
                 <input
                   type="text"
                   name="username"
                   onChange={handleInputChange}
                   placeholder="e.g juan.delacruz@gmail.com"
-                  className="border-2 bg-white1 border-dark-gray w-full p-3 rounded-md"
+                  className="border-2 font-regular bg-white text-md border-dark-gray w-full p-3 rounded-md"
                   value={credentials.username}
                 />
               </div>
-              <div className="flex flex-col text-lg text-primary-color font-semibold mt-3">
-                <label htmlFor="password">Password</label>
+              <div className="flex flex-col  text-primary-color mt-3">
+                <label htmlFor="password"  className='font-bold'>Password</label>
                 <input
                   type="password"
                   name="password"
                   onChange={handleInputChange}
-                  placeholder="********"
-                  className="border-2 bg-white1 border-dark-gray w-full p-3 rounded-md"
+                  placeholder="Enter your password"
+                  className="border-2 font-regular bg-white text-md border-dark-gray w-full p-3 rounded-md"
                   value={credentials.password}
                 />
               </div>
