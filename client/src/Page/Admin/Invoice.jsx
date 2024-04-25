@@ -13,30 +13,45 @@ import { FaPlus } from 'react-icons/fa6'
 import ManualInovoice from '../../Component/ManualInovoice'
 import SearchBar from '../../Component/SearchBar'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteInvoices, fetchInvoices } from '../../features/invoice'
+import {
+  deleteInvoices,
+  editInvoices,
+  fetchInvoices,
+  searchInvoice,
+} from '../../features/invoice'
 
 const Invoice = () => {
-  const [deleteInvoice, setDeleteInvoice] = useState(false)
+  const [update, setUpdate] = useState(false)
   const [filter, setFilter] = useState('')
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState(false)
   const user = useSelector((state) => state.auth.user)
+  const msg = useSelector((state) => state.invoice.msg)
   const [modal, setModal] = useState(false)
   const [dropdownIndex, setDropdownIndex] = useState(null) // To keep track of which dropdown is open
   const dispatch = useDispatch()
   const invoices = useSelector((state) => state.invoice.data)
   const handleDelete = async (id) => {
     dispatch(deleteInvoices(id))
-    setDeleteInvoice(true)
+    setUpdate(true)
   }
 
-  useEffect(() => {
-    dispatch(fetchInvoices())
-    setDeleteInvoice(false)
-  }, [deleteInvoice])
-  
   const handleSearch = (e) => {
     setFilter(e.target.value)
   }
+  const handlePaid = (id) => {
+    dispatch(editInvoices(id, true))
+    setUpdate(true)
+  }
+  console.log(status)
+  useEffect(() => {
+    if (filter && filter !== '') {
+      dispatch(searchInvoice(filter))
+    } else {
+      dispatch(fetchInvoices())
+      setUpdate(false)
+    }
+  }, [filter, update, msg, status])
+
   const handleDropdownClick = (index) => {
     setDropdownIndex(index === dropdownIndex ? null : index)
   }
@@ -45,19 +60,18 @@ const Invoice = () => {
     <>
       <div className="w-full h-full bg-white1">
         <div className=" w-11/12 m-auto h-full flex flex-col gap-2 ">
-          <h1 className="font-bold pt-5 tracking-wider">
-            DOCUMENTS / INVOICE
-          </h1>
+          <h1 className="font-bold pt-5 tracking-wider">DOCUMENTS / INVOICE</h1>
           <div className="w-full h-full max-h-20 flex flex-col md:flex-row gap-2 py-5 items-center justify-between ">
             <div className="w-full md:w-fit">
-              <SearchBar />
+              <SearchBar onSearch={handleSearch} />
             </div>
             <div className="flex items-center justify-center lg:justify-end w-full order-2 ml-auto gap-2">
               <div className="w-full md:w-fit">
                 <select
-                  onChange={() => setStatus(e.target.value)}
+                  onChange={(e) => setStatus(JSON.parse(e.target.value))}
                   className="select font-semibold select-bordered w-full max-w-xs"
                 >
+                  <option defaultValue="false">Select Status</option>
                   <option value="true">Paid</option>
                   <option value="false">Unpaid</option>
                 </select>
@@ -87,14 +101,14 @@ const Invoice = () => {
                 <tbody className="w-full h-full bg-white font-regular">
                   {user && user.role === 'Admin'
                     ? invoices
-                        ?.filter((item) => item.status === false)
+                        ?.filter((item) => item.status == status)
                         .map((val, index) => (
                           <tr
                             key={index}
                             className="text-center text-xs md:text-base"
                           >
                             <td className="text-primary-color font-regular p-2">
-                              {val?.reference}
+                              {val?.pdf?.reference}
                             </td>
                             <td className="text-sm md:text-base font-regular text-primary-color p-2">
                               {val?.tenant_id?.user_id.name}
@@ -120,19 +134,28 @@ const Invoice = () => {
                                 </button>
                                 {dropdownIndex === index && (
                                   <ul className="absolute w-36 right-0 top-7 bg-white shadow-md rounded-md z-10">
-                                    <li>
-                                      <button className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3 hover:bg-gray w-full">
-                                        <FaCheck /> Paid
-                                      </button>
-                                    </li>
-                                    <li>
-                                      <button
-                                        onClick={() => handleDelete(val?._id)}
-                                        className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3  hover:bg-gray w-full"
-                                      >
-                                        <RiDeleteBin6Line /> Delete
-                                      </button>
-                                    </li>
+                                    {val?.status === false && (
+                                      <>
+                                        <li>
+                                          <button
+                                            onClick={() => handlePaid(val?._id)}
+                                            className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3 hover:bg-gray w-full"
+                                          >
+                                            <FaCheck /> Paid
+                                          </button>
+                                        </li>
+                                        <li>
+                                          <button
+                                            onClick={() =>
+                                              handleDelete(val?._id)
+                                            }
+                                            className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3  hover:bg-gray w-full"
+                                          >
+                                            <RiDeleteBin6Line /> Delete
+                                          </button>
+                                        </li>
+                                      </>
+                                    )}
                                     <li>
                                       <Link
                                         to={`/invoice/${val?._id}`}
@@ -148,14 +171,18 @@ const Invoice = () => {
                           </tr>
                         ))
                     : invoices
-                        ?.filter((item) => item.status === false && item.tenant_id.user_id._id === user.id)
+                        ?.filter(
+                          (item) =>
+                            item.status == status &&
+                            item.tenant_id.user_id._id === user.id,
+                        )
                         .map((val, index) => (
                           <tr
                             key={index}
                             className="text-center text-xs md:text-base"
                           >
                             <td className="text-primary-color font-regular p-3">
-                              {val?.reference}
+                              {val?.pdf?.reference}
                             </td>
                             <td className="text-sm md:text-base font-regular text-primary-color p-3">
                               {val?.tenant_id?.user_id.name}
@@ -181,19 +208,28 @@ const Invoice = () => {
                                 </button>
                                 {dropdownIndex === index && (
                                   <ul className="absolute w-36 right-0 top-7 bg-white shadow-md rounded-md z-10">
-                                    <li>
-                                      <button className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3 hover:bg-gray w-full">
-                                        <FaCheck /> Paid
-                                      </button>
-                                    </li>
-                                    <li>
-                                      <button
-                                        onClick={() => handleDelete(val?._id)}
-                                        className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3  hover:bg-gray w-full"
-                                      >
-                                        <RiDeleteBin6Line /> Delete
-                                      </button>
-                                    </li>
+                                    {val?.status === false && (
+                                      <>
+                                        <li>
+                                          <button
+                                            onClick={() => handlePaid(val?._id)}
+                                            className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3 hover:bg-gray w-full"
+                                          >
+                                            <FaCheck /> Paid
+                                          </button>
+                                        </li>
+                                        <li>
+                                          <button
+                                            onClick={() =>
+                                              handleDelete(val?._id)
+                                            }
+                                            className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3  hover:bg-gray w-full"
+                                          >
+                                            <RiDeleteBin6Line /> Delete
+                                          </button>
+                                        </li>
+                                      </>
+                                    )}
                                     <li>
                                       <Link
                                         to={`/invoice/${val?._id}`}
