@@ -18,6 +18,7 @@ router.patch('/v1', editReport)
 router.delete('/v1', deleteReport)
 router.get('/', fetchReports)
 router.get('/v1', fetchReport)
+
 router.post('/comments/v1', createComment)
 router.patch('/', editComment)
 router.delete('/', deleteComment)

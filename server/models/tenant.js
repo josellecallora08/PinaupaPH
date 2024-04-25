@@ -4,7 +4,7 @@ const PAYMENTMODEL = new mongoose.Schema(
   {
     receipt_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'RECEIPTMODEL',
+      ref: 'recipt',
       required: true,
     },
     payment_method: {
@@ -63,7 +63,6 @@ const TENANTMODEL = new mongoose.Schema(
     unit_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'units',
-      // required: true,
     },
     deposit: {
       type: Number,
@@ -79,7 +78,7 @@ const TENANTMODEL = new mongoose.Schema(
     },
     monthly_due: {
       type: Date,
-      default: null,
+      default: Date.now(),
     },
     payment: [PAYMENTMODEL],
     household: [HOUSEHOLDMODEL],

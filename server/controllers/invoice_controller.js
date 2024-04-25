@@ -12,7 +12,6 @@ const cloudinary = require('cloudinary').v2 // Import Cloudinary SDK
 module.exports.generateInvoice = async (req, res) => {
   const { invoice_id } = req.query
   try {
-    // Fetch the invoice details from the database
     const invoice = await INVOICEMODEL.findById(invoice_id)
     if (!invoice) {
       return res
@@ -21,26 +20,31 @@ module.exports.generateInvoice = async (req, res) => {
     }
 
     // Retrieve the public ID of the invoice PDF from the invoice details
-    const { cloudinary_public_id } = invoice
-    console.log(cloudinary_public_id)
+    const { public_id } = invoice.pdf
+    console.log(public_id)
 
     // Fetch the file from Cloudinary
-    const cloudinaryUrl = cloudinary.url(cloudinary_public_id, {
+    const cloudinaryUrl = cloudinary.url(public_id, {
       resource_type: 'raw',
     })
     console.log(cloudinaryUrl)
     // Fetch the PDF content from Cloudinary
     const response = await fetch(cloudinaryUrl)
     if (!response.ok) {
-      throw new Error('Failed to fetch PDF from Cloudinary')
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Failed to fetch PDF from Cloudinary' })
     }
 
     // Set response headers for file download
     res.setHeader('Content-Disposition', `attachment; filename="invoice.pdf"`)
     res.setHeader('Content-Type', 'application/pdf')
 
-    // Pipe the PDF content directly to the response stream
-    const pdfBuffer = await response.buffer()
+    // Convert the response body to an ArrayBuffer
+    const arrayBuffer = await response.arrayBuffer()
+
+    // Convert the ArrayBuffer to a Buffer
+    const pdfBuffer = Buffer.from(arrayBuffer)
 
     // Send the PDF buffer in the response
     res.send(pdfBuffer)
@@ -48,7 +52,7 @@ module.exports.generateInvoice = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error' })
+      .json({ error: err.message })
   }
 }
 
@@ -72,7 +76,7 @@ module.exports.createInvoice = async (req, res) => {
 
     const ref_user = user_id.toString().slice(-3)
     const ref_unit = tenant.unit_id.unit_no
-    const reference = `INV-${day}${month}${year}-${ref_unit}-${ref_user}`
+    const reference = `INV${day}${month}${year}${ref_unit}${ref_user}`
 
     const existingInvoice = await cloudinary.search
       .expression(`public_id:${reference}`)
@@ -84,7 +88,7 @@ module.exports.createInvoice = async (req, res) => {
         .json({ error: 'Invoice already exists in Cloudinary.' })
     }
 
-    const isExisting = await INVOICEMODEL.findOne({ reference })
+    const isExisting = await INVOICEMODEL.findOne({ 'pdf.reference': reference })
     if (isExisting) {
       return res
         .status(httpStatusCodes.FOUND)
@@ -114,9 +118,8 @@ module.exports.createInvoice = async (req, res) => {
           {
             resource_type: 'raw',
             format: 'pdf', // Specify resource type as 'raw' for PDF
-            public_id: reference, // Public ID in Cloudinary
             folder: 'PinaupaPH/Invoices', // Folder in Cloudinary where PDF will be stored
-            overwrite: false, // Do not overwrite if file with the same name exists
+            overwrite: true, // Do not overwrite if file with the same name exists
           },
           (error, result) => {
             if (error) reject(error)
@@ -131,13 +134,14 @@ module.exports.createInvoice = async (req, res) => {
         .status(httpStatusCodes.CONFLICT)
         .json({ error: 'Failed to upload PDF to Cloudinary...' })
     }
-
+    console.log(cloudinaryResponse)
     console.log(cloudinaryResponse.public_id)
     const response = await INVOICEMODEL.create({
       tenant_id: tenant._id,
-      reference: reference,
+      'pdf.public_id': cloudinaryResponse.public_id,
+      'pdf.pdf_url': cloudinaryResponse.secure_url,
+      'pdf.reference': reference,
       amount: tenant.unit_id.rent,
-      cloudinary_public_id: cloudinaryResponse.public_id, // Save public ID from Cloudinary
     })
 
     if (!response) {
@@ -162,6 +166,7 @@ module.exports.createInvoice = async (req, res) => {
 
 module.exports.fetchInvoices = async (req, res) => {
   try {
+    console.log('hello')
     const response = await INVOICEMODEL.find().populate({
       path: 'tenant_id',
       populate: {
@@ -189,37 +194,63 @@ module.exports.searchInvoice = async (req, res) => {
     const response = await INVOICEMODEL.aggregate([
       {
         $lookup: {
-          from: 'tenants', // Assuming the collection name for tenants is 'tenants'
+          from: 'tenants',
           localField: 'tenant_id',
           foreignField: '_id',
           as: 'tenant',
         },
       },
       {
-        $unwind: '$tenant', // Since $lookup produces an array, unwind to destructure it
+        $unwind: '$tenant',
       },
       {
         $lookup: {
-          from: 'users', // Assuming the collection name for users is 'users'
+          from: 'users',
           localField: 'tenant.user_id',
           foreignField: '_id',
-          as: 'tenant.user',
+          as: 'user',
         },
       },
       {
+        $unwind: '$user',
+      },
+      {
         $lookup: {
-          from: 'units', // Assuming the collection name for units is 'units'
+          from: 'units',
           localField: 'tenant.unit_id',
           foreignField: '_id',
-          as: 'tenant.unit',
+          as: 'unit',
         },
+      },
+      {
+        $unwind: '$unit',
       },
       {
         $match: {
           $or: [
-            { 'tenant.user.name': { $regex: filter, $options: 'i' } }, // Match user name
-            { 'tenant.unit.unit_no': { $regex: filter, $options: 'i' } }, // Match unit number
+            { 'user.name': { $regex: filter, $options: 'i' } },
+            { 'unit.unit_no': { $regex: filter, $options: 'i' } },
           ],
+        },
+      },
+      {
+        $project: {
+          tenant_id: {
+            user_id: '$user',
+            unit_id: '$unit',
+            deposit: '$tenant.deposit',
+            advance: '$tenant.advance',
+            balance: '$tenant.balance',
+            monthly_due: '$tenant.monthly_due',
+            payment: '$tenant.payment',
+            household: '$tenant.household',
+            pet: '$tenant.pet',
+            createdAt: '$tenant.createdAt',
+            updatedAt: '$tenant.updatedAt',
+          },
+          amount: 1,
+          pdf: 1,
+          status: 1,
         },
       },
     ])
@@ -229,7 +260,7 @@ module.exports.searchInvoice = async (req, res) => {
         .json({ error: 'No data found...' })
     }
 
-    res.send(response)
+    return res.status(httpStatusCodes.OK).json({ response })
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
@@ -261,8 +292,7 @@ module.exports.fetchInvoice = async (req, res) => {
 }
 
 module.exports.editInvoice = async (req, res) => {
-  const { invoice_id } = req.query
-  const { status } = req.body
+  const { invoice_id, status } = req.query
   try {
     const response = await INVOICEMODEL.findByIdAndUpdate(invoice_id, {
       status,
@@ -272,6 +302,9 @@ module.exports.editInvoice = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to update invoice...' })
     }
+    return res
+      .status(httpStatusCodes.OK)
+      .json({ msg: 'Invoice has been updated.', response })
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
@@ -288,11 +321,25 @@ module.exports.deleteInvoice = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Failed to delete invoice...' })
     }
-    const pdfPublicId = response.cloudinary_public_id // Assuming there's a field named pdfPublicId in your invoice model
 
-    // Delete the PDF file from Cloudinary
-    await cloudinary.uploader.destroy(pdfPublicId)
-    return res.status(httpStatusCodes.OK).json({ response })
+    const tenant = await TENANTMODEL.findById(response.tenant_id)
+    if (!tenant) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Failed to delete invoice...' })
+    }
+
+    tenant.balance -= response.amount
+
+    await tenant.save()
+    const pdfPublicId = response.pdf.public_id
+
+    await cloudinary.uploader
+      .destroy(`${pdfPublicId}`, { resource_type: 'raw' })
+      .then((result) => console.log(result))
+    return res
+      .status(httpStatusCodes.OK)
+      .json({ msg: 'Invoice has been deleted.', response})
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)

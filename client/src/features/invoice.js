@@ -9,19 +9,35 @@ const invoiceSlice = createSlice({
     error: null,
     data: null,
     single: null,
+    msg: null,
   },
   reducers: {
     fetchStart: (state, action) => {
       state.loading = true
       state.error = null
+      state.msg = null
     },
     fetchInvoicesSuccess: (state, action) => {
       state.loading = false
       state.data = action.payload
     },
+    editInvoicesSuccess: (state, action) => {
+      state.data = state.data.map((item) =>
+        item?.pdf?.reference === action.payload.pdf.reference
+          ? action.payload
+          : item
+      )
+      state.msg = action.payload.msg
+    },
     fetchInvoiceSuccess: (state, action) => {
       state.loading = false
       state.single = action.payload
+    },
+    deleteInvoiceSuccess: (state, action) => {
+      state.data = state.data.filter(
+        (item) => item?.pdf?.reference !== action.payload.pdf.reference,
+      )
+      state.msg = action.payload.msg
     },
     fetchFailed: (state, action) => {
       state.loading = false
@@ -34,7 +50,9 @@ export const {
   fetchStart,
   fetchInvoicesSuccess,
   fetchInvoiceSuccess,
+  editInvoicesSuccess,
   fetchFailed,
+  deleteInvoiceSuccess,
 } = invoiceSlice.actions
 export const generateInvoice = (invoice_id) => async (dispatch) => {
   try {
@@ -42,25 +60,26 @@ export const generateInvoice = (invoice_id) => async (dispatch) => {
     const response = await fetch(
       `${import.meta.env.VITE_URL}/api/invoice/generate?invoice_id=${invoice_id}`,
       {
-        method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
         },
       },
     )
     if (!response.ok) {
-      const error = await response.json()
-      throw new Error(error.error)
+      const json = await response.json()
+      dispatch(fetchFailed(json.error))
+      throw new Error('Failed to download the invoice')
     }
 
-    // Parse the response to get the Cloudinary URL
-    const { url } = await response.json()
-    console.log(url)
-    // Use the URL to trigger the file download
-    const anchor = document.createElement('a')
-    anchor.href = url
-    anchor.download = 'invoice.pdf' // You can customize the filename here
-    anchor.click()
+    const blob = await response.blob()
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', 'invoice.pdf')
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    dispatch(actionSuccess('Success'))
   } catch (err) {
     dispatch(fetchFailed(err.message))
   }
@@ -71,7 +90,7 @@ export const searchInvoice = (filter) => async (dispatch) => {
     dispatch(fetchStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/invoice?filter=${filter}`,
+      `${import.meta.env.VITE_URL}/api/invoice/search?filter=${filter}`,
       {
         method: 'GET',
         headers: {
@@ -107,8 +126,9 @@ export const createInvoice = (user_id) => async (dispatch) => {
       },
     )
     if (!response.ok) {
-      const error = await response.json()
-      throw new Error(error.error)
+      const json = await response.json()
+      console.log(json.error)
+      throw new Error(json.error)
     }
 
     const json = await response.json()
@@ -154,8 +174,9 @@ export const fetchInvoice = (invoice_id) => async (dispatch) => {
       },
     )
     if (!response.ok) {
-      const error = await response.json()
-      throw new Error(error)
+      const json = await response.json()
+      dispatch(fetchFailed(json.error))
+      throw new Error(json.error)
     }
     const json = await response.json()
     console.log(json.response)
@@ -164,10 +185,26 @@ export const fetchInvoice = (invoice_id) => async (dispatch) => {
     dispatch(fetchFailed(err.message))
   }
 }
-export const editInvoices = () => async (dispatch) => {
+export const editInvoices = (id, status) => async (dispatch) => {
   try {
     dispatch(fetchStart())
     const token = Cookies.get('token')
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/invoice/paid?invoice_id=${id}&status=${status}`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error)
+    }
+    const json = await response.json()
+    console.log(json)
+    dispatch(editInvoicesSuccess(json))
   } catch (err) {
     dispatch(fetchFailed(err.message))
   }
@@ -190,8 +227,7 @@ export const deleteInvoices = (id) => async (dispatch) => {
       throw new Error(error)
     }
     const json = await response.json()
-    console.log(json.response)
-    dispatch(fetchInvoicesSuccess())
+    dispatch(deleteInvoiceSuccess(json))
   } catch (err) {
     dispatch(fetchFailed(err.message))
   }

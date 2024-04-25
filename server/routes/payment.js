@@ -2,7 +2,6 @@ const { Router } = require('express')
 const {
   // checkout,
   createIntent,
-  createPaymentMethod,
 } = require('../controllers/payment_controller')
 
 const router = Router()
