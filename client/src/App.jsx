@@ -30,6 +30,7 @@ import ProfileTenant from './Page/Tenant/ProfileTenant'
 import InvoiceFormat from './Component/InvoiceFormat'
 import TermsAndConditions from './Page/TermsAndCondition'
 import ContactUsAdmin from './Page/ContactUs'
+import ErrorPage from './Page/ErrorPage'
 
 function App() {
   const user = useSelector((state) => state.auth.isAuthenticated)
@@ -42,6 +43,7 @@ function App() {
 
   return (
     <Routes>
+      <Route path='*' element={<ErrorPage/>} />
       <Route
         path="/"
         element={user ? <Navigate to="/dashboard" /> : <Login />}
