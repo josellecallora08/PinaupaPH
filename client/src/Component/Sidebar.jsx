@@ -22,6 +22,7 @@ import contact_ from '/contact_white.svg'
 import term from '/terms.svg'
 import term_ from '/terms_white.svg'
 import logout from '/logout.svg'
+
 const Sidebar = () => {
   const sidebarRef = useRef(null);
   const menu = useSelector((state) => state.toggle.sidebar)
@@ -56,14 +57,14 @@ const Sidebar = () => {
   return (
     <div
       ref={sidebarRef}
-      className={`fixed z-50 md:static w-3/5 max-h-screen h-full left-0 top-20 bg-white ${menu ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 flex flex-col md:max-w-[300px] ${menu ? 'md:w-full' : 'md:w-16'} duration-300 ease-in-out shadow-xl md:shadow-md `}
+      className={`fixed z-50  md:static w-3/5  max-h-screen h-full left-0 top-20 bg-white ${menu ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 flex flex-col md:max-w-[300px] ${menu ? 'md:w-full' : 'md:w-16'} duration-300 ease-in-out shadow-xl md:shadow-md `}
     >
       <div className="sticky top-0 size-full flex flex-col ">
         <Link className='w-full h-full max-h-20 flex justify-center items-center'>
           {menu ? <img
             src={logo}
             alt=""
-            className="duration-300 mt-10 md:mt-0 w-full max-w-44 max-h-20 h-full object-fill ease-in-out"
+            className="duration-300  w-full max-w-44 max-h-20 h-full object-fill ease-in-out"
           /> : <img
             src={m_logo}
             alt=""
@@ -72,11 +73,11 @@ const Sidebar = () => {
           }
         </Link>
         <nav className="relative  w-full h-full">
-          <ul className=" w-full m-auto flex flex-col items-center mt-5 md:mt-10 text-sm">
+          <ul className=" w-full m-auto flex flex-col gap-1 items-center text-sm ">
             <li className="w-full h-fit ">
               <Link
                 to={'/dashboard'}
-                className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5 m-auto h-full hover:bg-primary-color/5 rounded-md ${menu ? 'p-5' : 'p-3'} ${isActive('/dashboard') ? 'bg-primary-color' : ''} `}
+                className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5 m-auto h-full hover:bg-primary-color/40 rounded-md ${menu ? 'p-3 md:p-5' : 'p-3'} ${isActive('/dashboard') ? 'bg-primary-color' : ''} `}
               >
                 <figure
                   className={`${menu ? '' : 'flex justify-center'} max-w-5 max-h-5 w-full h-full`}
@@ -102,7 +103,7 @@ const Sidebar = () => {
                 <li className="w-full h-fit ">
                   <Link
                     to={'/tenant'}
-                    className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5 m-auto h-full hover:bg-primary-color/5 rounded-md ${menu ? 'p-5' : 'p-3'} 
+                    className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5 m-auto h-full hover:bg-primary-color/40 rounded-md ${menu ? 'p-3 md:p-5' : 'p-3'} 
                     ${isActive('/tenant') ? 'bg-primary-color' : ''} `}
                   >
                     <figure
@@ -126,7 +127,7 @@ const Sidebar = () => {
                 <li className="w-full h-fit">
                   <Link
                     to={'/apartment'}
-                    className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5 m-auto h-full hover:bg-primary-color/5 rounded-md ${menu ? 'p-5' : 'p-3'} ${isActive('/apartment') ? 'bg-primary-color' : ''}`}
+                    className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5 m-auto h-full hover:bg-primary-color/40 rounded-md ${menu ? 'p-3 md:p-5' : 'p-3'} ${isActive('/apartment') ? 'bg-primary-color' : ''}`}
                   >
                     <figure
                       className={`${menu ? '' : 'flex justify-center'} max-w-5 max-h-5 w-full h-full`}
@@ -153,7 +154,7 @@ const Sidebar = () => {
             <li className="w-full h-fit">
               <Link
                 to={`/security`}
-                className={`flex items-center ${!menu && 'justify-center'} w-4/5  m-auto h-full hover:bg-primary-color/5 rounded-md ${menu ? 'p-5' : 'p-3'} ${isActive('/security') ? 'bg-primary-color' : ''}`}
+                className={`flex items-center ${!menu && 'justify-center'} w-4/5  m-auto h-full hover:bg-primary-color/40 rounded-md ${menu ? 'p-3 md:p-5' : 'p-3'} ${isActive('/security') ? 'bg-primary-color' : ''}`}
               >
                 <figure
                   className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}
@@ -176,7 +177,7 @@ const Sidebar = () => {
             <li className="w-full h-fit flex flex-col cursor-pointer">
               <div
                 onClick={handleDocs}
-                className={`flex items-center justify-between gap-5 w-4/5  m-auto h-auto hover:bg-primary-color/5 rounded-md ${menu ? 'p-5' : 'p-3'} ${isActive('/document/lease-agreement') ? 'bg-primary-color' : isActive('/document/invoice') ? 'bg-primary-color' : ''}`}
+                className={`flex items-center justify-between gap-5 w-4/5  m-auto h-auto hover:bg-primary-color/40 rounded-md ${menu ? 'p-3 md:p-5' : 'p-3'} ${isActive('/document/lease-agreement') ? 'bg-primary-color' : isActive('/document/invoice') ? 'bg-primary-color' : ''}`}
               >
                 <div className="flex justify-between items-center gap-5">
                   <figure
@@ -211,7 +212,7 @@ const Sidebar = () => {
               <div className={`${docs ? '' : 'hidden'} w-full m-auto`}>
                 <ul className="flex flex-col">
                   <li
-                    className={`flex items-center ${!menu && 'justify-center'} w-4/5  m-auto h-full hover:bg-primary-color/5 rounded-md `}
+                    className={`flex items-center ${!menu && 'justify-center'} w-4/5  m-auto h-full hover:bg-primary-color/40 rounded-md `}
                   >
                     <Link
                       className={`${menu ? 'p-3' : 'p-3'} w-full h-full`}
@@ -221,7 +222,7 @@ const Sidebar = () => {
                     </Link>
                   </li>
                   <li
-                    className={`flex items-center center w-4/5  m-auto h-full hover:bg-primary-color/5 rounded-md`}
+                    className={`flex items-center center w-4/5  m-auto h-full hover:bg-primary-color/40 rounded-md`}
                   >
                     <Link
                       className={` ${menu ? 'p-3' : 'p-3'} w-full h-full`}
@@ -236,7 +237,7 @@ const Sidebar = () => {
             <li className="w-full h-fit">
               <Link
                 to={`/concern&issue`}
-                className={`flex items-center gap-5 ${!menu && 'justify-center'} w-4/5  mx-auto h-full hover:bg-primary-color/5 rounded-md ${menu ? 'p-5' : 'p-3'} ${isActive('/concern&issue') ? 'bg-primary-color' : ''}`}
+                className={`flex items-center gap-5 ${!menu && 'justify-center'} w-4/5  mx-auto h-full hover:bg-primary-color/40 rounded-md ${menu ? 'p-3 md:p-5' : 'p-3'} ${isActive('/concern&issue') ? 'bg-primary-color' : ''}`}
               >
                 <figure
                   className={`${menu ? '' : 'flex justify-center'} max-w-5  max-h-5 w-full h-full`}
@@ -259,7 +260,7 @@ const Sidebar = () => {
             <li className="w-full h-fit">
               <Link
                 to={`/terms&condition`}
-                className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5  mx-auto h-full hover:bg-primary-color/5 rounded-md ${menu ? 'p-5' : 'p-3'} ${isActive('/terms&condition') && 'bg-primary-color'}`}
+                className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5  mx-auto h-full hover:bg-primary-color/40 rounded-md ${menu ? 'p-3 md:p-5' : 'p-3'} ${isActive('/terms&condition') && 'bg-primary-color'}`}
               >
                 <figure
                   className={`${menu ? '' : 'flex justify-center'} max-w-5 max-h-5 w-full h-full`}
@@ -282,7 +283,7 @@ const Sidebar = () => {
             <li className="w-full h-fit">
               <Link
                 to={`/contact`}
-                className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5  mx-auto h-full hover:bg-primary-color/5 rounded-md ${menu ? 'p-5' : 'p-3'} ${isActive('/contact') && 'bg-primary-color'}`}
+                className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5  mx-auto h-full hover:bg-primary-color/40 rounded-md ${menu ? 'p-3 md:p-5' : 'p-3'} ${isActive('/contact') && 'bg-primary-color'}`}
               >
                 <figure
                   className={`${menu ? '' : 'flex justify-center'} max-w-5 max-h-5 w-full h-full`}
@@ -305,7 +306,7 @@ const Sidebar = () => {
             <li className="w-full h-fit md:[&:last-child]:absolute bottom-5">
               <button
                 onClick={handleLogout}
-                className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5 mx-auto h-full hover:bg-primary-color/5 rounded-md ${menu ? 'p-5' : 'p-3'}`}
+                className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5 mx-auto h-full hover:bg-primary-color/40 rounded-md ${menu ? 'p-3 md:p-5' : 'p-3'}`}
               >
                 <figure
                   className={`${menu ? '' : 'flex justify-center'}  max-w-5 max-h-5 w-full h-full`}
