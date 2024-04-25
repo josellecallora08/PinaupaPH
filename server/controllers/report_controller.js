@@ -2,20 +2,47 @@ const REPORTMODEL = require('../models/report')
 const httpStatusCodes = require('../constants/constants')
 const USERMODEL = require('../models/user')
 const UNITMODEL = require('../models/unit')
-module.exports.createReport = async (req, res) => {
+
+module.exports.searchReport = async (req, res) => {
+  const { filter } = req.query
   try {
-    const { user_id } = req.params
-    const { unit_id } = req.query
-    const { title, description, image, type } = req.body
-    const details = {}
-    if (user_id !== '') details.user_id = user_id
-    if (!unit_id) {
+    const response = REPORTMODEL.find({
+      $or: [
+        { 'tenant_id.user_id.name': { $regex: filter, $options: 'i' } },
+        { 'tenant_id.unit_id.unit_no': { $regex: filter, $options: 'i' } }
+      ]
+    }).populate({
+      path: 'tenant_id',
+      populate: {
+        path: 'user_id unit_id'
+      }
+    })
+    if (!response) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'Unit ID not found' })
-    } else {
-      details.unit_id = unit_id
+        .json({ error: 'No data found...' })
     }
+
+    return res.status(httpStatusCodes.OK).json({ response })
+  } catch (err) {
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
+  }
+}
+
+module.exports.createReport = async (req, res) => {
+  try {
+    const { user_id } = req.query
+    const { title, description, image, type } = req.body
+    const details = {}
+    const tenant = await TENANTMODEL.findOne({ user_id }).populate('user_id').populate('unit_id')
+    if (!tenant) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Tenant not found' })
+    }
+    details.tenant_id = tenant._id
     if (title !== '') details.title = title
     if (description !== '') details.description = description
     // if(image !== '') details.image = image
@@ -62,13 +89,13 @@ module.exports.editReport = async (req, res) => {
 module.exports.deleteReport = async (req, res) => {
   const { report_id } = req.query
   try {
-    const report = await REPORTMODEL.findByIdAndDelete(report_id)
-    if (!report)
+    const response = await REPORTMODEL.findByIdAndDelete(report_id)
+    if (!response)
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Report not found' })
 
-    return res.status(httpStatusCodes.OK).json({ msg: 'Report deleted.' })
+    return res.status(httpStatusCodes.OK).json({ msg: 'Report has been deleted.' })
   } catch (err) {
     console.log(err.message)
     return res
@@ -78,40 +105,19 @@ module.exports.deleteReport = async (req, res) => {
 }
 module.exports.fetchReports = async (req, res) => {
   try {
-    const reports = await REPORTMODEL.aggregate([
-      {
-        $lookup: {
-          from: 'users', // collection name for USERMODEL
-          localField: 'user_id',
-          foreignField: '_id',
-          as: 'user',
-        },
-      },
-      {
-        $unwind: '$user',
-      },
-      {
-        $lookup: {
-          from: 'units', // collection name for UNITMODEL
-          localField: 'unit_id',
-          foreignField: '_id',
-          as: 'unit',
-        },
-      },
-      {
-        $unwind: '$unit',
-      },
-      {
-        $sort: { createdAt: -1 },
-      },
-    ])
+    const response = await REPORTMODEL.find().populate({
+      path: 'tenant_id',
+      populate: {
+        path: 'user_id unit_id'
+      }
+    })
 
-    if (!reports.length)
+    if (!response)
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Report not found' })
 
-    return res.status(httpStatusCodes.OK).json({ reports })
+    return res.status(httpStatusCodes.OK).json({ response })
   } catch (err) {
     console.log(err.message)
     return res
@@ -123,13 +129,18 @@ module.exports.fetchReports = async (req, res) => {
 module.exports.fetchReport = async (req, res) => {
   const { report_id } = req.query
   try {
-    const report = await REPORTMODEL.findById(report_id).populate('user_id').populate('unit_id').populate('comments.user_id')
-    if (!report)
+    const response = await REPORTMODEL.findById(report_id).populate({
+      path: 'tenant_id',
+      populate: {
+        path: 'user_id unit_id'
+      }
+    })
+    if (!response)
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Report not found' })
 
-    return res.status(httpStatusCodes.OK).json({ report })
+    return res.status(httpStatusCodes.OK).json({ response })
   } catch (err) {
     console.log(err.message)
     return res
@@ -142,15 +153,15 @@ module.exports.createComment = async (req, res) => {
   const { user_id, report_id } = req.query
   const { comment } = req.body
   try {
-    const report = await REPORTMODEL.findById(report_id)
-    if (!report)
+    const response = await REPORTMODEL.findById(report_id)
+    if (!response)
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Report not found' })
 
     const details = { user_id, comment }
-    report.comments.push(details)
-    await report.save()
+    response.comments.push(details)
+    await response.save()
     return res.status(httpStatusCodes.OK).json({ msg: 'Comment sent.' })
   } catch (err) {
     console.log(err.message)
@@ -162,13 +173,13 @@ module.exports.editComment = async (req, res) => {
   const { comment_id, report_id } = req.query
   const { comment } = req.body
   try {
-    const report = await REPORTMODEL.findById(report_id)
-    if (!report)
+    const response = await REPORTMODEL.findById(report_id)
+    if (!response)
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Report not found' })
 
-    const index = report.comments.findIndex(
+    const index = response.comments.findIndex(
       (item) => item._id.toString() === comment_id,
     )
     if (index === -1) {
@@ -177,8 +188,8 @@ module.exports.editComment = async (req, res) => {
         .json({ error: 'Unable to update comment' })
     }
 
-    report.comments[index].comment = comment
-    await report.save()
+    response.comments[index].comment = comment
+    await response.save()
     return res.status(httpStatusCodes.OK).json({ msg: 'Comment updated' })
   } catch (err) {
     console.log(err.message)

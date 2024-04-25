@@ -67,10 +67,10 @@ export const createComment =
       }
       const json = await response.json()
       console.log(json)
-      socket.emit('send-message')
+      socket.emit('send-comment')
       dispatch(fetchReports())
     } catch (err) {
-      dispatch(actionFailed(err.messaage))
+      dispatch(actionFailed(err.message))
     }
   }
 export const fetchComments = (reportId) => async (dispatch) => {
@@ -91,7 +91,7 @@ export const fetchComments = (reportId) => async (dispatch) => {
     const json = await response.json()
     dispatch(fetchReports(json))
   } catch (err) {
-    dispatch(actionFailed(err.messaage))
+    dispatch(actionFailed(err.message))
   }
 }
 
@@ -114,7 +114,7 @@ export const fetchComment = (reportId, commentId) => async (dispatch) => {
     const json = await response.json()
     dispatch(fetchComment(json.response))
   } catch (err) {
-    dispatch(actionFailed(err.messaage))
+    dispatch(actionFailed(err.message))
   }
 }
 
@@ -141,7 +141,7 @@ export const editComment =
       const json = await response.json()
       dispatch(fetchReports())
     } catch (err) {
-      dispatch(actionFailed(err.messaage))
+      dispatch(actionFailed(err.message))
     }
   }
 
@@ -165,7 +165,7 @@ export const deleteComment = (reportId) => async (dispatch) => {
     const json = await response.json()
     dispatch(fetchReports())
   } catch (err) {
-    dispatch(actionFailed(err.messaage))
+    dispatch(actionFailed(err.message))
   }
 }
 

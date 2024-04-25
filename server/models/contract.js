@@ -8,24 +8,25 @@ const WITNESSMODEL = new mongoose.Schema({
 
 const CONTRACTMODEL = new mongoose.Schema(
   {
-    user_id: {
+    tenant_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
+      ref: 'tenant',
     },
-    unit_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'units',
-    },
-    contract_id: {
-      type: String,
+    pdf: {
+      public_id: {
+        type: String
+      },
+      pdf_url: {
+        type: String
+      },
+      reference: {
+        type: String
+      }
     },
     advance: {
       type: Number,
     },
     witnesses: [WITNESSMODEL],
-    cloudinary_public_id: {
-      type:String
-    }
   },
   { timestamps: true },
 )

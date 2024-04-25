@@ -124,7 +124,7 @@ module.exports.create_apartment = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message })
   }
 }
 
@@ -216,7 +216,7 @@ module.exports.edit_apartment = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message })
   }
 }
 // ? Tested API
@@ -246,7 +246,7 @@ module.exports.delete_apartment = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message })
   }
 }
 // ? Tested API
@@ -274,7 +274,7 @@ module.exports.fetch_unit = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message })
   }
 }
 
@@ -300,7 +300,7 @@ module.exports.fetch_unit_apartment = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message })
   }
 }
 
@@ -319,7 +319,7 @@ module.exports.fetch_units = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message })
   }
 }
 

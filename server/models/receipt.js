@@ -2,27 +2,28 @@ const mongoose = require('mongoose')
 
 const RECEIPTMODEL = new mongoose.Schema(
   {
-    user_id: {
+    tenant_id:{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
-      required: true,
+      ref: 'tenant'
     },
-    unit_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'units',
+    pdf: {
+      public_id: {
+        type: String
+      },
+      pdf_url: {
+        type: String
+      },
+      reference: {
+        type: String
+      }
     },
     amount: {
       type: Number,
     },
-    from_month: {
-      type: Date,
-    },
-    to_month: {
-      type: Date,
-    },
-    date_payment: {
-      type: Date,
-    },
+    status: {
+      type: Boolean,
+      default: 0
+    }
   },
   { timestamps: true },
 )

@@ -114,9 +114,8 @@ module.exports.createInvoice = async (req, res) => {
           {
             resource_type: 'raw',
             format: 'pdf', // Specify resource type as 'raw' for PDF
-            public_id: reference, // Public ID in Cloudinary
             folder: 'PinaupaPH/Invoices', // Folder in Cloudinary where PDF will be stored
-            overwrite: false, // Do not overwrite if file with the same name exists
+            overwrite: true, // Do not overwrite if file with the same name exists
           },
           (error, result) => {
             if (error) reject(error)
@@ -135,9 +134,10 @@ module.exports.createInvoice = async (req, res) => {
     console.log(cloudinaryResponse.public_id)
     const response = await INVOICEMODEL.create({
       tenant_id: tenant._id,
-      reference: reference,
-      amount: tenant.unit_id.rent,
-      cloudinary_public_id: cloudinaryResponse.public_id, // Save public ID from Cloudinary
+      'pdf.public_id': cloudinaryResponse.public_id,
+      'pdf.pdf_url': cloudinaryResponse.secure_url,
+      'pdf.reference': reference,
+      amount: tenant.unit_id.rent
     })
 
     if (!response) {
@@ -186,50 +186,24 @@ module.exports.fetchInvoices = async (req, res) => {
 module.exports.searchInvoice = async (req, res) => {
   const { filter } = req.query
   try {
-    const response = await INVOICEMODEL.aggregate([
-      {
-        $lookup: {
-          from: 'tenants', // Assuming the collection name for tenants is 'tenants'
-          localField: 'tenant_id',
-          foreignField: '_id',
-          as: 'tenant',
-        },
-      },
-      {
-        $unwind: '$tenant', // Since $lookup produces an array, unwind to destructure it
-      },
-      {
-        $lookup: {
-          from: 'users', // Assuming the collection name for users is 'users'
-          localField: 'tenant.user_id',
-          foreignField: '_id',
-          as: 'tenant.user',
-        },
-      },
-      {
-        $lookup: {
-          from: 'units', // Assuming the collection name for units is 'units'
-          localField: 'tenant.unit_id',
-          foreignField: '_id',
-          as: 'tenant.unit',
-        },
-      },
-      {
-        $match: {
-          $or: [
-            { 'tenant.user.name': { $regex: filter, $options: 'i' } }, // Match user name
-            { 'tenant.unit.unit_no': { $regex: filter, $options: 'i' } }, // Match unit number
-          ],
-        },
-      },
-    ])
+    const response = await INVOICEMODEL.find({
+      $or: [
+        { 'tenant_id.user_id.name': { $regex: filter, $options: 'i' } },
+        { 'tenant_id.unit_id.unit_no': { $regex: filter, $options: 'i' } },
+      ]
+    }).populate({
+      path: 'tenant_id',
+      populate: {
+        path: 'user_id unit_id'
+      }
+    })
     if (!response) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'No data found...' })
     }
 
-    res.send(response)
+    return res.status(httpStatusCodes.OK).json({ response })
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
@@ -288,7 +262,7 @@ module.exports.deleteInvoice = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Failed to delete invoice...' })
     }
-    const pdfPublicId = response.cloudinary_public_id // Assuming there's a field named pdfPublicId in your invoice model
+    const pdfPublicId = response.pdf.public_id // Assuming there's a field named pdfPublicId in your invoice model
 
     // Delete the PDF file from Cloudinary
     await cloudinary.uploader.destroy(pdfPublicId)
