@@ -134,11 +134,15 @@ const TenantHome = () => {
                   <h1>Invoice Payable:</h1>
                   <p>10,000php</p>
                 </div>
-                <div className="flex justify-center w-full">
+                <Link to="/tenant/payment">
+                <div className="flex justify-center w-full hover:opacity-80">
+                  
                   <button className="bg-primary-color w-full text-white p-5">
                     Pay Now
                   </button>
+                 
                 </div>
+                </Link>
               </div>
             </div>
 
