@@ -49,7 +49,7 @@ const TenantHome = () => {
             </div>
 
             {/* Issue Card */}
-            <div className="md:order-none col-span-2 row-span-4 bg-white order-3">
+            <div className="md:order-none col-span-2 row-span-4 bg-white order-3 shadow-md shadow-dark-gray">
               <div className="w-full h-fit bg-primary-color text-white p-2 ">
                 Issue Card
               </div>
@@ -168,14 +168,16 @@ const TenantHome = () => {
                   </div>
                   <div>Today</div>
                 </div>
-                <div className="text-primary-color px-5">
-                  <h1 className="text-center text-xl">Electric Power Outage</h1>
+                <div className="text-primary-color  px-5">
+                  <h1 className="text-center mb-2 text-xl">Electric Power Outage</h1>
 
-                  <p>
+                  <p className="text-sm overflow-y-auto h-[200px] ">
                     Lorem ipsum dolor sit, amet consectetur adipisicing elit.
                     Fugit, eos! Nesciunt tempore rerum magni corporis a velit
                     provident facilis, adipisci magnam quaerat aperiam, quia
                     odit sapiente. At ipsam dolore qui!
+                 
+                    
                   </p>
                 </div>
               </div>
