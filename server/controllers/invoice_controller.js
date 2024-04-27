@@ -58,7 +58,6 @@ module.exports.generateInvoice = async (req, res) => {
 
 module.exports.createInvoice = async (req, res) => {
   const { user_id } = req.query
-
   const current_date = new Date()
   const day = current_date.getDate()
   const month = current_date.getMonth()
@@ -88,7 +87,9 @@ module.exports.createInvoice = async (req, res) => {
         .json({ error: 'Invoice already exists in Cloudinary.' })
     }
 
-    const isExisting = await INVOICEMODEL.findOne({ 'pdf.reference': reference })
+    const isExisting = await INVOICEMODEL.findOne({
+      'pdf.reference': reference,
+    })
     if (isExisting) {
       return res
         .status(httpStatusCodes.FOUND)
@@ -292,6 +293,7 @@ module.exports.fetchInvoice = async (req, res) => {
 }
 
 module.exports.editInvoice = async (req, res) => {
+  //Once edited PDF on cloudinary must be updated as well
   const { invoice_id, status } = req.query
   try {
     const response = await INVOICEMODEL.findByIdAndUpdate(invoice_id, {
@@ -339,7 +341,7 @@ module.exports.deleteInvoice = async (req, res) => {
       .then((result) => console.log(result))
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Invoice has been deleted.', response})
+      .json({ msg: 'Invoice has been deleted.', response })
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)

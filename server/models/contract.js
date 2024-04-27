@@ -23,9 +23,6 @@ const CONTRACTMODEL = new mongoose.Schema(
         type: String
       }
     },
-    advance: {
-      type: Number,
-    },
     witnesses: [WITNESSMODEL],
   },
   { timestamps: true },
