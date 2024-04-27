@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { isLoggedin } from '../../features/authentication'
 import Calendar from '../../Component/Tenant Component/Calendar'
-
+import issue from '/Issue.svg'
 const TenantHome = () => {
   const loading = useSelector((state) => state.auth.loading)
   const user = useSelector((state) => state.auth.user)
@@ -49,9 +49,10 @@ const TenantHome = () => {
             </div>
 
             {/* Issue Card */}
-            <div className="md:order-none col-span-2 row-span-4 bg-white order-3 shadow-md shadow-dark-gray">
-              <div className="w-full h-fit bg-primary-color text-white p-2 ">
-                Issue Card
+            <div className="md:order-none col-span-2 row-span-4 bg-white order-3 ">
+              <div className="w-full h-fit py-4 flex items-center gap-3 text-black p-2 ">
+                <div><img src={issue} alt="" className='w-10 h-10' /></div>
+               <div>CONCERN AND ISSUE STATUS</div>
               </div>
               <div className=" overflow-y-auto h-40">
                 <table className="w-full">

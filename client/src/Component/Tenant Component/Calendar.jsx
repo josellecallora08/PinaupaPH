@@ -61,7 +61,8 @@ const Calendars = () => {
           
     
           .react-calendar__tile--now {
-            color: white; /* Set text color of today's date to white */
+            color: white;
+            background-color: #183044; /* Set text color of today's date to white */
           }
           .react-calendar__tile--active {
             background-color: #007bff; /* Set background color of active date */
