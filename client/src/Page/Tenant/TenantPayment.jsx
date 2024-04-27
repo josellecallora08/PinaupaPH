@@ -111,6 +111,7 @@ const TenantPayment = () => {
                         </label>
                         <input
                           type="text"
+                          placeholder='Enter Name'
                           id="name"
                           name="name"
                           value={formData.name}
@@ -128,6 +129,7 @@ const TenantPayment = () => {
                         </label>
                         <input
                           type="text"
+                          placeholder='Enter Contact Number'
                           id="contactNumber"
                           name="contactNumber"
                           value={formData.contactNumber}
@@ -145,6 +147,7 @@ const TenantPayment = () => {
                         </label>
                         <input
                           type="email"
+                          placeholder='Enter Email'
                           id="email"
                           name="email"
                           value={formData.email}
@@ -166,6 +169,61 @@ const TenantPayment = () => {
                 <h1 className="text-primary-color font-bold mb-4 ">
                   CASH PAYMENT
                 </h1>
+                <h1 className="mb-3 text-primary-color ">Personal Information</h1>
+                      <div className="mb-4">
+                        <label
+                          htmlFor="name"
+                          className="block font-medium text-primary-color"
+                        >
+                          Name
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Enter Name"
+                          id="name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          autoComplete="off"
+                          className="mt-1 px-2 py-1 text-primary-color border bg-white border-dark-gray rounded-md w-full"
+                        />
+                      </div>
+                      <div className="mb-4">
+                        <label
+                          htmlFor="contactNumber"
+                          className="block font-medium text-primary-color"
+                        >
+                          Contact Number
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Enter Contact Number"
+                          id="contactNumber"
+                          name="contactNumber"
+                          value={formData.contactNumber}
+                          onChange={handleChange}
+                          autoComplete="off"
+                          className="mt-1 px-2 py-1 border text-primary-color bg-white border-dark-gray rounded-md w-full"
+                        />
+                      </div>
+                      <div className="">
+                        <label
+                          htmlFor="email"
+                          className="block font-medium text-primary-color"
+                        >
+                          Email
+                        </label>
+                        <input
+                          type="email"
+                          placeholder="Enter Email"
+                          id="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleChange}
+                          autoComplete="off"
+                          className="mt-1 px-2 py-1 text-primary-color border bg-white border-dark-gray rounded-md w-full"
+                        />
+                      </div>
                 <label
                   htmlFor="amount"
                   className="block font-medium text-primary-color"
