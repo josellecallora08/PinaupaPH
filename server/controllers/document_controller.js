@@ -3,9 +3,7 @@ const TENANTMODEL = require('../models/tenant')
 const USERMODEL = require('../models/user')
 const CONTRACTMODEL = require('../models/contract')
 const UNITMODEL = require('../models/unit')
-const path = require('path')
 const pdf = require('html-pdf')
-const fs = require('fs').promises
 const cloudinary = require('cloudinary').v2
 const pdf_template = require('../template/contract')
 
@@ -35,7 +33,7 @@ module.exports.fetchContracts = async (req, res) => {
 module.exports.fetchContract = async (req, res) => {
   const { contract_id } = req.query
   try {
-    const response = await CONTRACTMODEL.findbyId(contract_id).populate({
+    const response = await CONTRACTMODEL.findById(contract_id).populate({
       path: 'tenant_id',
       populate: {
         path: 'user_id unit_id',
@@ -288,7 +286,7 @@ module.exports.generateContract = async (req, res) => {
   }
 }
 module.exports.editContract = async (req, res) => {
-  const { contract_id, public_id } = req.query
+  const { contract_id } = req.query
   const { witness, witness2 } = req.body
   const information = {}
 
@@ -353,10 +351,9 @@ module.exports.editContract = async (req, res) => {
       cloudinary.uploader
         .upload_stream(
           {
-            public_id: public_id,
+            public_id: response.pdf.public_id,
             resource_type: 'raw',
             format: 'pdf', // Specify resource type as 'raw' for PDF
-            folder: 'PinaupaPH/Contracts', // Folder in Cloudinary where PDF will be stored
             overwrite: true, // Do not overwrite if file with the same name exists
           },
           (error, result) => {
@@ -392,7 +389,7 @@ module.exports.deleteContract = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Failed to delete contract1' })
 
-    const user_response = await TENANTMODEL.findbyId(response.tenant_id)
+    const user_response = await TENANTMODEL.findById(response.tenant_id)
     if (!user_response)
       return res
         .status(httpStatusCodes.NOT_FOUND)
