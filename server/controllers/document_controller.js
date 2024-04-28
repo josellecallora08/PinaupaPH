@@ -3,44 +3,186 @@ const TENANTMODEL = require('../models/tenant')
 const USERMODEL = require('../models/user')
 const CONTRACTMODEL = require('../models/contract')
 const UNITMODEL = require('../models/unit')
-const path = require('path')
 const pdf = require('html-pdf')
-const fs = require('fs').promises
-const cloudinary = require('cloudinary').v2;
+const cloudinary = require('cloudinary').v2
 const pdf_template = require('../template/contract')
 
-module.exports.generate_contract = async (req, res) => {
-  const { user_id, unit_id } = req.params
-  const { deposit, advance, from_date, to_date } = req.body
+module.exports.fetchContracts = async (req, res) => {
   try {
-    const user_response = await USERMODEL.findById(user_id)
-    const unit_response = await UNITMODEL.findById(unit_id)
+    const response = await CONTRACTMODEL.find({}).populate({
+      path: 'tenant_id',
+      populate: {
+        path: 'user_id unit_id',
+      },
+    })
 
-    if (!user_response || !unit_response) {
+    if (!response) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'User or Unit Not found' })
+        .json({ error: 'Failed fetching the invoices.' })
     }
-    const file = `Lease_Agreement_${unit_response.unit_no}-${user_response.name}`
-    const filePath = path.join(
-      __dirname,
-      '../documents/contracts',
-      `${file}.pdf`,
-    )
 
-    const details = {
-      name: user_response.name,
-      deposit: deposit,
-      advance: advance,
-      unit_no: unit_response.unit_no,
-      rent: unit_response.rent,
-      from_date: from_date,
-      to_date: to_date,
+    return res.status(httpStatusCodes.OK).json({ response })
+  } catch (err) {
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
+  }
+}
+
+module.exports.fetchContract = async (req, res) => {
+  const { contract_id } = req.query
+  try {
+    const response = await CONTRACTMODEL.findById(contract_id).populate({
+      path: 'tenant_id',
+      populate: {
+        path: 'user_id unit_id',
+      },
+    })
+
+    if (!response) {
+      return res.status(httpStatusCodes.NOT_FOUND).json({
+        error: `Failed to fetch invoice of ${response.tenant_id.user_id.name}.`,
+      })
     }
+
+    return res.status(httpStatusCodes.OK).json({ response })
+  } catch (err) {
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
+  }
+}
+
+module.exports.searchContract = async (req, res) => {
+  try {
+    const { filter } = req.query
+    const response = await CONTRACTMODEL.aggregate([
+      {
+        $lookup: {
+          from: 'tenants',
+          localField: 'tenant_id',
+          foreignField: '_id',
+          as: 'tenant',
+        },
+      },
+      {
+        $unwind: {
+          path: '$tenant',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'tenant.user_id',
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+      {
+        $unwind: {
+          path: '$user',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'units',
+          localField: 'tenant.unit_id',
+          foreignField: '_id',
+          as: 'unit',
+        },
+      },
+      {
+        $unwind: {
+          path: '$unit',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $match: {
+          $or: [
+            { 'user.name': { $regex: filter, $options: 'i' } },
+            { 'unit.unit_no': { $regex: filter, $options: 'i' } },
+          ],
+        },
+      },
+      {
+        $project: {
+          tenant_id: {
+            user_id: '$user',
+            unit_id: '$unit',
+            deposit: '$tenant.deposit',
+            advance: '$tenant.advance',
+            balance: '$tenant.balance',
+            monthly_due: '$tenant.monthly_due',
+            payment: '$tenant.payment',
+            household: '$tenant.household',
+            pet: '$tenant.pet',
+            createdAt: '$tenant.createdAt',
+            updatedAt: '$tenant.updatedAt',
+          },
+          witnesses: 1,
+        },
+      },
+    ])
+
+    if (!response) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'No Data Found...' })
+    }
+
+    return res.status(httpStatusCodes.OK).json({ response })
+  } catch (err) {
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
+  }
+}
+
+module.exports.createContract = async (req, res) => {
+  const { user_id } = req.query
+  // const { from_date, to_date } = req.body
+  const current_date = new Date()
+  const day = current_date.getDate()
+  const month = current_date.getMonth()
+  const year = current_date.getFullYear()
+
+  try {
+    const response = await TENANTMODEL.findOne({ user_id })
+      .populate('user_id unit_id apartment_id')
+     
+    console.log('Response', response)
+    if (!response) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Tenant Not found' })
+    }
+    const reference = `Lease_Agreement_${response.unit_id.unit_no}-${response.user_id.name}-${month}${day}${year}`
+    const existingInvoice = await cloudinary.search
+      .expression(`public_id:${reference}`)
+      .execute()
+
+    if (existingInvoice.total_count > 0) {
+      return res
+        .status(httpStatusCodes.FOUND)
+        .json({ error: 'Invoice already exists in Cloudinary.' })
+    }
+    const isExisting = await CONTRACTMODEL.findOne({
+      'pdf.reference': reference,
+    })
+    if (isExisting) {
+      return res
+        .status(httpStatusCodes.FOUND)
+        .json({ error: 'Invoice exists...' })
+    }
+    console.log(response)
     const pdfBuffer = await new Promise((resolve, reject) => {
-      pdf.create(pdf_template(details), {}).toFile(filePath, (err, result) => {
+      pdf.create(pdf_template({response}), {}).toBuffer((err, buffer) => {
         if (err) reject(err)
-        else resolve(result)
+        else resolve(buffer)
       })
     })
 
@@ -48,10 +190,10 @@ module.exports.generate_contract = async (req, res) => {
       cloudinary.uploader
         .upload_stream(
           {
-            resource_type: 'raw', // Specify resource type as 'raw' for PDF
-            public_id: reference, // Public ID in Cloudinary
+            resource_type: 'raw',
+            format: 'pdf', // Specify resource type as 'raw' for PDF
             folder: 'PinaupaPH/Contracts', // Folder in Cloudinary where PDF will be stored
-            overwrite: false, // Do not overwrite if file with the same name exists
+            overwrite: true, // Do not overwrite if file with the same name exists
           },
           (error, result) => {
             if (error) reject(error)
@@ -68,140 +210,170 @@ module.exports.generate_contract = async (req, res) => {
     }
 
     const contractResponse = await CONTRACTMODEL.create({
-      user_id,
-      unit_id,
-      advance,
-      from_date,
-      to_date,
+      tenant_id: response?._id,
+      'pdf.public_id': cloudinaryResponse.public_id,
+      'pdf.pdf_url': cloudinaryResponse.secure_url,
+      'pdf.reference': reference,
     })
+
+    // To Follow up the Push for Witnesses
+
     if (!contractResponse)
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Contract Not found' })
 
     return res.status(httpStatusCodes.CREATED).json({
-      message: 'Created Contract and Successfully saved to Database',
+      msg: 'Successfully Created Contract!',
     })
   } catch (err) {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: err.message})
+      .json({ error: err.message })
   }
 }
 
-module.exports.generate_pdf = async (req, res) => {
+module.exports.generateContract = async (req, res) => {
   try {
-    const { user_id, unit_id } = req.params
+    const { contract_id } = req.query
 
-    const user_response = await USERMODEL.findById(user_id)
-    if (!user_response)
+    const contract = await CONTRACTMODEL.findById(contract_id)
+    if (!contract)
       return res
         .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'User Not found' })
+        .json({ error: 'Contract Not found' })
 
-    const unit_response = await UNITMODEL.findById(unit_id)
-    if (!unit_response)
+    const { public_id } = contract.pdf
+    console.log(public_id)
+
+    // Fetch the file from Cloudinary
+    const cloudinaryUrl = cloudinary.url(public_id, {
+      resource_type: 'raw',
+    })
+    const response = await fetch(cloudinaryUrl)
+    if (!response.ok) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'Unit Not found' })
-
-    const filePath = path.join(
-      __dirname,
-      '../documents/contracts',
-      `Lease_Agreement_${unit_response.unit_no}-${user_response.name}.pdf`,
-    )
-
+        .json({ error: 'Failed to fetch PDF from Cloudinary' })
+    }
     res.setHeader(
       'Content-Disposition',
-      `attachment; filename="Lease_Agreement_${unit_response.unit_no}-${user_response.name}.pdf"`,
+      `attachment; filename="LeaseAgreement.pdf"`,
     )
     res.setHeader('Content-Type', 'application/pdf')
 
-    res.sendFile(filePath, (err) => {
-      if (err) {
-        console.error(err)
-        res.status(500).send('Error sending PDF')
-      }
-    })
+    const arrayBuffer = await response.arrayBuffer()
+
+    // Convert the ArrayBuffer to a Buffer
+    const pdfBuffer = Buffer.from(arrayBuffer)
+
+    // Send the PDF buffer in the response
+    res.send(pdfBuffer)
   } catch (err) {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error' })
+      .json({ error: err.message })
   }
 }
-module.exports.fetch_contract = async (req, res) => {
-  try {
-  } catch (err) {}
-}
-
-module.exports.edit_contract = async (req, res) => {
-  const { contract_id } = req.params
+module.exports.editContract = async (req, res) => {
+  const { contract_id } = req.query
   const { witness, witness2 } = req.body
-  const details = {}
+  const information = {}
 
   if (!advance == '') {
-    details.advance = advance
+    information.advance = advance
   }
   if (!witness == '') {
-    details.from_date = witness
+    information.from_date = witness
   }
   if (!witness2 == '') {
-    details.to_date = witness2
+    information.to_date = witness2
   }
 
   try {
-    const response = await CONTRACTMODEL.findByIdAndUpdate(
-      { _id: contract_id },
-      details,
-    )
+    const response = await CONTRACTMODEL.findById(contract_id).populate({
+      path: 'tenant_id',
+      populate: {
+        path: 'user_id unit_id apartment_id',
+      },
+    })
     if (!response)
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to update contract' })
 
-    await this.generate_contract()
+    console.log(response)
 
+    const pdfBuffer = await new Promise((resolve, reject) => {
+      pdf.create(pdf_template({response}), {}).toBuffer((err, buffer) => {
+        if (err) reject(err)
+        else resolve(buffer)
+      })
+    })
+
+    const cloudinaryResponse = await new Promise((resolve, reject) => {
+      cloudinary.uploader
+        .upload_stream(
+          {
+            public_id: response.pdf.public_id,
+            resource_type: 'raw',
+            format: 'pdf', // Specify resource type as 'raw' for PDF
+            overwrite: true, // Do not overwrite if file with the same name exists
+          },
+          (error, result) => {
+            if (error) reject(error)
+            else resolve(result)
+          },
+        )
+        .end(pdfBuffer)
+    })
+
+    if (!cloudinaryResponse || !cloudinaryResponse.public_id) {
+      return res
+        .status(httpStatusCodes.CONFLICT)
+        .json({ error: 'Failed to upload PDF to Cloudinary...' })
+    }
+    // await this.generate_contract()
+    //Once edited PDF on cloudinary must be updated as well
     return res.status(httpStatusCodes.OK).json({ msg: 'Updated contract' })
   } catch (err) {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error' })
+      .json({ error: err.message })
   }
 }
 
-module.exports.remove_contract = async (req, res) => {
+module.exports.deleteContract = async (req, res) => {
   try {
-    const { contract_id } = req.params
-    const response = await CONTRACTMODEL.findByIdAndDelete({ _id: contract_id })
+    const { contract_id } = req.query
+    const response = await CONTRACTMODEL.findByIdAndDelete(contract_id)
     if (!response)
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Failed to delete contract1' })
 
-    const user_response = await TENANTMODEL.findOne({
-      user_id: response.user_id,
-    })
+    const user_response = await TENANTMODEL.findById(response.tenant_id)
     if (!user_response)
       return res
         .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'Failed to delete contract2' })
+        .json({ error: 'Failed to delete contract due to not found user.' })
 
-    const unit_response = await UNITMODEL.findById({ _id: response.unit_id })
-    if (!unit_response)
-      return res
-        .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'Unit not found' })
+    const pdfPublicId = response.pdf.public_id
 
-    const pdf_file_path = `documents/contracts/Lease_Agreement_${unit_response.unit_no}-${user_response.user_id}.pdf`
-    await fs.unlink(pdf_file_path)
-    return res.status(httpStatusCodes.OK).json({ msg: 'Contract Deleted' })
+    await cloudinary.uploader
+      .destroy(`${pdfPublicId}`, { resource_type: 'raw' })
+      .then((result) => console.log(result))
+
+    return res
+      .status(httpStatusCodes.OK)
+      .json({ msg: 'Contract Deleted', response })
   } catch (err) {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error' })
+      .json({ error: err.message })
   }
 }

@@ -34,7 +34,7 @@ router.patch('/:apartment_id/edit_apartment', edit_apartment)
 router.patch('/:apartment_id/edit_apartment_unit/:unit_id', edit_apartment_unit)
 router.delete('/:apartment_id', delete_apartment)
 router.delete(
-  '/:apartment_id/delete_apartment_unit/:unit_id',
+  '/:apartment_id/delete_apartment_unit',
   delete_apartment_unit,
 )
 

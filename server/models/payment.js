@@ -6,6 +6,17 @@ const PAYMENTMODEL = new mongoose.Schema(
       ref: 'RECEIPTMODEL',
       required: true,
     },
+    pdf: {
+      public_id: {
+        type: String
+      },
+      pdf_url: {
+        type: String
+      },
+      reference: {
+        type: String
+      }
+    },
     payment_method: {
       type: String,
     },

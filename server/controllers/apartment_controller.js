@@ -124,7 +124,7 @@ module.exports.create_apartment = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message })
   }
 }
 
@@ -216,7 +216,7 @@ module.exports.edit_apartment = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message })
   }
 }
 // ? Tested API
@@ -246,7 +246,7 @@ module.exports.delete_apartment = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message })
   }
 }
 // ? Tested API
@@ -274,7 +274,7 @@ module.exports.fetch_unit = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message })
   }
 }
 
@@ -300,7 +300,7 @@ module.exports.fetch_unit_apartment = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message })
   }
 }
 
@@ -319,7 +319,7 @@ module.exports.fetch_units = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message })
   }
 }
 
@@ -329,10 +329,8 @@ module.exports.create_apartment_unit = async (req, res) => {
     const { apartment_id } = req.params
     const { rent, unit_no } = req.body
     const details = { rent, unit_no }
-
-    const apartment = await APARTMENTMODEL.findById({
-      _id: apartment_id,
-    })
+    console.log(req.body)
+    const apartment = await APARTMENTMODEL.findById(apartment_id)
       .populate({
         path: 'units',
         model: UNITMODEL,
@@ -429,11 +427,10 @@ module.exports.edit_apartment_unit = async (req, res) => {
 // ? Tested API
 module.exports.delete_apartment_unit = async (req, res) => {
   try {
-    const { apartment_id, unit_id } = req.params
+    const { apartment_id} = req.params
+    const { unit_id } = req.query
 
-    const apartment_response = await APARTMENTMODEL.findById({
-      _id: apartment_id,
-    })
+    const apartment_response = await APARTMENTMODEL.findById(apartment_id)
     if (!apartment_response) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
@@ -465,6 +462,6 @@ module.exports.delete_apartment_unit = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message })
   }
 }

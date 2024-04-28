@@ -92,6 +92,7 @@ export const createTenant = (fields) => async (dispatch) => {
 
     if (!response.ok) {
       const json = await response.json()
+      console.log(json.error)
       throw new Error(json.error)
     }
 

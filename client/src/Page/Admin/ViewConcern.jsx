@@ -72,7 +72,7 @@ const ViewConcern = () => {
 
   useEffect(() => {
     const container = messageContainerRef.current;
-  
+
     if (container && report && report.comments.length > 0) {
       container.scrollTop = container.scrollHeight;
     }
@@ -210,7 +210,7 @@ const ViewConcern = () => {
                       <textarea
                         name="comment"
                         id="comment"
-                        value={comment|| ''}
+                        value={comment || ''}
                         onChange={(e) => setComments(e.target.value)}
                         placeholder="Send Message"
                         className="w-full h-full bg-white  rounded-md outline-none border-2 border-gray p-5"

@@ -16,6 +16,8 @@ const apartment_route = require('./routes/apartment')
 const document_route = require('./routes/document')
 const invoice_route = require('./routes/invoice')
 const payment_route = require('./routes/payment')
+const contact_route = require('./routes/contact')
+const announcement_route = require('./routes/announcement')
 
 const { scheduledInvoice, deleteOTP } = require('./controllers/cron_controller')
 
@@ -68,9 +70,19 @@ mongoose
         console.log('Disconnected')
       })
 
-      socket.on('send-message', () => {
-        io.emit('receive-message')
-        io.emit('receive-notification')
+      socket.on('send-comment', () => {
+        io.emit('receive-comment')
+        io.emit('receive-comment-notification')
+      })
+
+      socket.on('send-payment', () => {
+        io.emit('receive-payment')
+        io.emit('receive-payment-notification')
+      })
+
+      socket.on('send-announcement', () => {
+        io.emit('receive-announcement')
+        io.emit('receive-announcement-notification')
       })
     })
     server.listen(process.env.PORT, () => {
@@ -92,9 +104,10 @@ app.use('/api/user', user_route)
 app.use('/api/cctv', cctv_route)
 app.use('/api/report', report_route)
 app.use('/api/apartment', apartment_route)
-app.use('/api/documents', document_route)
+app.use('/api/document', document_route)
 app.use('/api/invoice', invoice_route)
 app.use('/api/payment', payment_route)
+app.use('/api/announcement', payment_route)
 
 // Default route
 app.get('/', (req, res) => {

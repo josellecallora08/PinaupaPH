@@ -5,20 +5,22 @@ const INVOICEMODEL = new mongoose.Schema(
     tenant_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'tenant',
-    },
-    reference: {
-      type: String,
-      required: true,
+      required: true
     },
     amount: {
       type: Number,
       required: true,
     },
-    cloudinary_public_id: {
-      type: String
-    },
-    download_link :{
-      type:String
+    pdf: {
+      public_id: {
+        type: String
+      },
+      pdf_url: {
+        type: String
+      },
+      reference: {
+        type: String
+      }
     },
     status: {
       type: Boolean,

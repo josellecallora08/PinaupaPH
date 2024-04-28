@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-
+import { io } from 'socket.io-client'
 const paymentSlice = createSlice({
   name: 'payment',
   initialState: {
@@ -96,6 +96,7 @@ export const createPaymentIntent = (userId) => async (dispatch) => {
 export const createPayment =
   (fields, intentId, clientId) => async (dispatch) => {
     try {
+      const socket = io(`${import.meta.env.VITE_URL}/`)
       const response = await fetch(
         `https://api.paymongo.com/v1/payment_methods`,
         {
@@ -125,7 +126,6 @@ export const createPayment =
         throw new Error(json)
       }
       const json = await response.json()
-      
       // {
       //   "data": {
       //     "id": "pm_hYrUUSfRGEs8ZNmG6fATWs9m",
@@ -167,6 +167,7 @@ export const createPayment =
         throw new Error(json.error)
       }
       const data = await post_payment.json()
+      socket.emit('send-payment')
       console.log(data)
       window.open(data.data.attributes.next_action.redirect.url)
     } catch (err) {

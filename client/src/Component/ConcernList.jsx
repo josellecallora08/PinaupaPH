@@ -5,8 +5,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchReports } from '../features/report'
 import Loading from './LoadingComponent/Loading'
 import { FaPlus } from 'react-icons/fa6'
+import CreateTicket from './Tenant Component/CreateTicket'
 const ConcernList = () => {
   const [StatselectedOption, setStatSelectedOption] = useState('')
+  const [isCreateTicket, setisCreateTicket] = useState(false)
   const [ConcernselectedOption, setConcernselectedOption] = useState('')
   const user = useSelector((state) => state.auth.user)
   const loading = useSelector((state) => state.report.loading)
@@ -51,10 +53,14 @@ const ConcernList = () => {
               <option>Greedo</option>
             </select>
             {user && user.role === 'Tenant' ? (
-              <button className="btn btn-wide bg-primary-color font-bold uppercase text-white hover:text-primary-color">
-                <FaPlus />
-                Add Report
-              </button>
+              <>
+                <button onClick={() => setisCreateTicket(prevState => !prevState)} className="btn btn-wide bg-primary-color font-bold uppercase text-white hover:text-primary-color">
+                  <FaPlus />
+                  Add Report
+                </button>
+
+               {isCreateTicket &&  <CreateTicket setisCreateTicket={setisCreateTicket} />}
+              </>
             ) : (
               ''
             )}

@@ -7,7 +7,11 @@ import { FiEdit } from 'react-icons/fi'
 import { IoIosArrowDown } from 'react-icons/io'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { editInvoices, fetchInvoice, generateInvoice } from '../features/invoice'
+import {
+  editInvoices,
+  fetchInvoice,
+  generateInvoice,
+} from '../features/invoice'
 
 const InvoiceFormat = () => {
   const dispatch = useDispatch()
@@ -27,25 +31,25 @@ const InvoiceFormat = () => {
     console.log(invoice_id)
   }
 
-  const handlePayment = async () => {
-    dispatch(editInvoices(invoice_id))
-  }
-  const dropdownItems = [
-    {
-      title: 'Download',
-      func: handleDownload,
-      svg: <MdOutlineFileDownload size={25} />,
-    },
-    {
-      title: 'Paid',
-      func: handlePayment,
-      svg: <FiPrinter size={25} />,
-    },
-    {
-      title: 'Edit',
-      svg: <FiEdit size={25} />,
-    },
-  ]
+  // const handlePayment = async () => {
+  //   dispatch(editInvoices(invoice_id))
+  // }
+  // const dropdownItems = [
+  //   {
+  //     title: 'Download',
+  //     func: handleDownload,
+  //     svg: <MdOutlineFileDownload size={25} />,
+  //   },
+  //   {
+  //     title: 'Paid',
+  //     func: handlePayment,
+  //     svg: <FiPrinter size={25} />,
+  //   },
+  //   {
+  //     title: 'Edit',
+  //     svg: <FiEdit size={25} />,
+  //   },
+  // ]
 
   return (
     <div>
@@ -55,27 +59,13 @@ const InvoiceFormat = () => {
             <h1 className="lg:ml-24  font-bold  lg:mb-10  tracking-wider uppercase">
               View Invoice
             </h1>
-             <button
-              onClick={toggle}
-              className="lg:mr-32 lg:mb-6 flex font-regular items-center border-2 border-gray  mr-4 mb-2 justify-between w-48 p-2 ml-auto text-base rounded-tr-lg rounded-tl-lg"
+            <button
+              onClick={handleDownload}
+              className="btn w-fit md:btn-wide bg-primary-color font-bold uppercase text-white hover:text-primary-color"
             >
-              Select Action
-              <IoIosArrowDown size={25} className={open ? 'rotate-180' : ''} />
+              Download PDF
             </button>
           </div>
-
-          {open && (
-            <div className="lg:right-32 font-regular absolute top-full right-4 w-48 bg-white shadow-sm shadow-light-gray ">
-              {dropdownItems.map((item, index) => (
-                <div key={index}>
-                  <button onClick={item.func} className="flex items-center gap-5 px-4 text-left py-2 hover:bg-gray w-full">
-                    {item.svg}
-                    {item.title}{' '}
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
         <div className="invoice-box mx-auto">
           <table cellPadding="0" cellSpacing="0">
@@ -91,7 +81,7 @@ const InvoiceFormat = () => {
                       />
                     </td>
                     <td className="font-regular">
-                      Reference No. : {invoice?.reference}
+                      Reference No. : {invoice?.pdf?.reference}
                       <br />
                       Created: {new Date(invoice?.createdAt).toDateString()}
                       <br />

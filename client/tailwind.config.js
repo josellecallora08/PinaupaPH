@@ -31,6 +31,9 @@ export default {
     }
 
   },
+  daisyui: {
+    darkTheme: "light",
+   },
   plugins: [
     require('tailwindcss-animate'),
     require("daisyui")

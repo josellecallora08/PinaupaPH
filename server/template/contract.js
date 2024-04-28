@@ -1,10 +1,4 @@
-module.exports = ({
-  name = 'Joselle Callora',
-  deposit,
-  advance,
-  unit_no,
-  rent,
-}) => {
+module.exports = ({ response }) => {
   const today = new Date()
   let months = [
     'January',
@@ -89,10 +83,10 @@ gap:50px;
   <body>
       <div class="container">
           <h1>Kontrata sa Pagpapaupa</h1>
-          <p><strong>Lokasyon:</strong> (address)</p>
+          <p><strong>Lokasyon:</strong> ${response?.apartment_id.address}</p>
           <p>Ang kontratang ito ay nagbabago taon-taon. Ang may-ari ng bahay ay may karapatang magpaalis sa umuupa kapag nilabag ang mga sumusunod:</p>
           <ol>
-              <li>Ang upa o renta sa bawat buwan ay nagkakahalaga ng (amount).</li>
+              <li>Ang upa o renta sa bawat buwan ay nagkakahalaga ng ${response?.unit_id.rent}.</li>
               <li>Dapat mayroong paunang isang (1) buwang upa o renta at isang buwang deposito. Ang paunang bayad na ito ay magagamit lamang kapag paalis na ang umuupa at ito ay pambayad sa huling dalawang buwang upa. Ang isang buwang deposito ay nakalaan para sa mga konsumo ng tubig at kuryente at sa mga nasirang pasilidad ng bahay, kung mayroon man.</li>
               <li>Kapag hindi makabayad ng isang buwang upa o renta sa bahay, may karapatan ang may-ari na abisuhan ang umuupa na umalis agad-agad at dumulong sa kinauukulan kung hindi sumunod.</li>
               <li>Ang isang (1) buwan deposito at isang (1) buwang advance na bayad ay:
@@ -111,7 +105,7 @@ gap:50px;
               <li>Ano mang pangyayari o nasira sa bahay ay dapat ipaalam agad-agad sa may-ari ng bahay.</li>
               <li>Isauli ang susi sa may-ari ng bahay sa oras o araw na lumipat ng sa ibang tirahan. Bawal iwanan ito kung kani-kanino. Dapat may release order o clearance galing sa homeowners’s bago aalis.</li>
           </ol>
-          <p>Nilagdaan namin ang kasunduang ito ngayong (date) dito sa (address).</p>
+          <p>Nilagdaan namin ang kasunduang ito ngayong ${response?.createdAt} dito sa ${response?.apartment_id.address}, ${response?.apartment_id.province} ${response?.apartment_id.barangay}.</p>
           <p>Petsa ng simula ng kontrata: (date)</p>
           <div class="sign-container">
           <div  class="signature">
@@ -119,7 +113,7 @@ gap:50px;
 		<p class="title">Owner</p>
           </div>
           <div  class="signature">
-              <p>Josefino C. Callora</p>
+              <p>${response?.user_id.name}</p>
 <p class="title">Rentee</p>
           </div>
           </div>

@@ -1,82 +1,77 @@
-import React from 'react';
-import dayjs from 'dayjs';
-import Badge from '@mui/material/Badge';
-import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { PickersDay } from '@mui/x-date-pickers/PickersDay';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { DayCalendarSkeleton } from '@mui/x-date-pickers/DayCalendarSkeleton';
+import React, { useState } from 'react';
+import Calendar from 'react-calendar';
+import './Calendar.css'; // Import the default calendar styles
 
-const today = dayjs();
-const initialValue = today.startOf('month');
-
-function ServerDay(props) {
-  const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
-  const isSelected =
-    !props.outsideCurrentMonth && highlightedDays.indexOf(props.day.date()) >= 0;
-
-  return (
-    <Badge
-      key={props.day.toString()}
-      overlap="circular"
-      badgeContent={isSelected ? '💸' : undefined}
-    >
-      <PickersDay {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} />
-    </Badge>
-  );
-}
-
-export default function DateCalendarServerRequest() {
-  const requestAbortController = React.useRef(null);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [highlightedDays, setHighlightedDays] = React.useState([]);
-
-  const fetchHighlightedDays = (date) => {
-    const controller = new AbortController();
-    const daysInMonth = date.daysInMonth();
-    const lastDayOfMonth = date.endOf('month').date();
-
-    const daysToHighlight = [15, lastDayOfMonth]; // Highlight 15th and last day of the month
-
-    setHighlightedDays(daysToHighlight);
-    setIsLoading(false);
-
-    requestAbortController.current = controller;
-  };
-
-  React.useEffect(() => {
-    fetchHighlightedDays(initialValue);
-    return () => requestAbortController.current?.abort();
-  }, []);
-
-  const handleMonthChange = (date) => {
-    if (requestAbortController.current) {
-      requestAbortController.current.abort();
+const Calendars = () => {
+  // Define a function to determine the class name for each date tile
+  const tileClassName = ({ date, view }) => {
+    // Check if the date is a Sunday
+    if (date.getDay() === 0) {
+      return 'sunday'; // Apply the 'sunday' class name for Sundays
     }
-    setIsLoading(true);
-    setHighlightedDays([]);
-    fetchHighlightedDays(date);
+    // Check if the date is the 15th day of the month or the last day of the month
+    if (date.getDate() === 15 || isLastDayOfMonth(date)) {
+      return 'highlighted-day'; // Apply the 'highlighted-day' class name for the specified days
+    }
+    // Return an empty string for other dates
+    return '';
+  };
+
+  // Function to check if a given date is the last day of the month
+  const isLastDayOfMonth = (date) => {
+    const nextDay = new Date(date);
+    nextDay.setDate(date.getDate() + 1);
+    return nextDay.getDate() === 1;
+  };
+
+  // Function to check if a given date is today
+  const isToday = (date) => {
+    const today = new Date();
+    return date.getDate() === today.getDate() && date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
+  };
+
+  // Define a function to render content for each tile (emoji for highlighted days)
+  const tileContent = ({ date }) => {
+    // Check if the date is the 15th day of the month or the last day of the month
+    if (date.getDate() === 15 || isLastDayOfMonth(date)) {
+      return <span role="img" aria-label="emoji">💸</span>; // Emoji for highlighted days
+    }
+    return null;
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className="w-full h-auto">
-        <DateCalendar
-          autoFocus
-          defaultValue={initialValue}
-          loading={isLoading}
-          onMonthChange={handleMonthChange}
-          renderLoading={() => <DayCalendarSkeleton />}
-          slots={{ day: ServerDay }}
-          slotProps={{ day: { highlightedDays } }}
-          dateRange={{
-            minDate: today.subtract(1, 'year').startOf('month'), // Set min date to 1 year ago
-            maxDate: today.add(1, 'year').endOf('month'), // Set max date to 1 year ahead
-          }}
-          dayMinWidth={50} // Adjust the size of day cells
-          toolbarFormat="MMMM YYYY" // Show month and year in toolbar
-        />
-      </div>
-    </LocalizationProvider>
+    <div style={{ width: '100%' }}>
+      <Calendar
+        tileClassName={tileClassName} // Pass the tileClassName function to the Calendar component
+        tileContent={tileContent} // Pass the tileContent function to the Calendar component
+      />
+      <style>
+        {`
+          .react-calendar__tile {
+            color: black; /* Set the color of all dates to black */
+          }
+          .sunday {
+            color: red; /* Set the color of Sundays to red */
+          }
+          .highlighted-day {
+           /* Highlighted day background color */
+            color: black; /* Highlighted day text color */
+             /* Optional: Round the corners of highlighted days */
+          }
+          
+    
+          .react-calendar__tile--now {
+            color: white;
+            background-color: #183044; /* Set text color of today's date to white */
+          }
+          .react-calendar__tile--active {
+            background-color: #007bff; /* Set background color of active date */
+            color: white; /* Set text color of active date to white */
+          }
+        `}
+      </style>
+    </div>
   );
-}
+};
+
+export default Calendars;

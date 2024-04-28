@@ -6,14 +6,16 @@ const {
   deleteInvoice,
   searchInvoice,
   generateInvoice,
+  editInvoice,
 } = require('../controllers/invoice_controller')
 const requireAuth = require('../middleware/requireAuth')
 
-const route = Router()
-route.get('/generate', generateInvoice)
-route.post('/create', requireAuth, createInvoice)
-route.get('/list', requireAuth, fetchInvoices)
-route.get('', searchInvoice)
-route.get('/fetch', requireAuth, fetchInvoice)
-route.delete('/delete',requireAuth, deleteInvoice)
-module.exports = route
+const router = Router()
+router.get('/generate', generateInvoice)
+router.post('/create', createInvoice)
+router.get('/list', requireAuth, fetchInvoices)
+router.get('/search', searchInvoice)
+router.get('/list/v1', fetchInvoice)
+router.delete('/delete',requireAuth, deleteInvoice)
+router.patch('/update',  editInvoice)
+module.exports = router
