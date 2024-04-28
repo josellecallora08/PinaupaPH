@@ -25,6 +25,7 @@ import logout from '/logout.svg';
 import announcement from '/announcement.svg';
 import announcement_ from '/announcement_.svg';
 
+
 const Sidebar = () => {
   const sidebarRef = useRef(null);
   const menu = useSelector((state) => state.toggle.sidebar);
@@ -66,7 +67,9 @@ const Sidebar = () => {
         menu ? 'translate-x-0' : '-translate-x-full'
       } md:translate-x-0 flex flex-col md:max-w-[300px] ${menu ? 'md:w-full' : 'md:w-16'} duration-300 ease-in-out shadow-xl md:shadow-md`}
     >
+
       <div className="sticky top-0 size-full flex flex-col overflow-y-auto ">
+        
         <Link className="w-full h-full max-h-20 flex justify-center items-center">
           {menu ? (
             <img
@@ -84,22 +87,24 @@ const Sidebar = () => {
         </Link>
         <nav className="relative w-full h-full pt-2">
           <ul className="w-full m-auto flex flex-col gap-1 items-center text-sm ">
-            <li className="w-full h-fit">
-              <Link
-                to={'/dashboard'}
-                className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5 m-auto h-full hover:bg-primary-color/40 rounded-md ${
-                  menu ? 'p-3 md:p-5' : 'p-3'
-                } ${isActive('/dashboard') ? 'bg-primary-color' : ''} `}
-              >
-                <figure className={`${menu ? '' : 'flex justify-center'} max-w-5 max-h-5 w-full h-full`}>
-                  <img src={isActive('/dashboard') ? dashboard_ : dashboard} alt="" className="size-full object-contain" />
-                </figure>
-                {menu ? (
-                  <span className={`font-semibold text-primary-color ${isActive('/dashboard') ? 'text-white' : ''}`}>Dashboard</span>
-                ) : (
-                  ''
-                )}
-              </Link>
+          <li className="w-full h-fit">
+
+                <Link
+                  to={'/dashboard'}
+                  className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5 m-auto h-full hover:bg-primary-color/40 rounded-md ${
+                    menu ? 'p-3 md:p-5' : 'p-3'
+                  } ${isActive('/dashboard') ? 'bg-primary-color' : ''} `}
+                >
+                  <figure className={`${menu ? '' : 'flex justify-center'} max-w-5 max-h-5 w-full h-full`} >
+                    <img src={isActive('/dashboard') ? dashboard_ : dashboard} alt="" className="size-full object-contain "   />
+                  </figure>
+                  {menu ? (
+                    <span className={`font-semibold text-primary-color ${isActive('/dashboard') ? 'text-white' : ''}`}>Dashboard</span>
+                  ) : (
+                    ''
+                  )}
+                </Link>
+
             </li>
             {user?.role === 'Admin' && (
               <>

@@ -81,7 +81,7 @@ const Announcement = () => {
           </button>
         </div>
         {/* Tabs */}
-        <div className="flex items-center bg-white gap-7 p-2 pb-6 pl-7 mt-5">
+        <div className="flex items-center bg-white gap-7 p-2 pb-6 pt-5 pl-7 mt-5 rounded-tl-lg rounded-tr-lg">
           {/* Filter Tabs */}
           <button
             className={`filter-tab ${filter === 'All' ? 'active' : ''}`}
@@ -118,7 +118,7 @@ const Announcement = () => {
           </button>
         </div>
         {/* Body of Announcement Tab */}
-        <div className="w-full h-80 overflow-x-auto px-8 mb-2 bg-white">
+        <div className="xl:h-[35rem] w-full h-80 overflow-x-auto px-8 mb-2 rounded-bl-lg rounded-br-lg bg-white">
           {/* Announcement Cards */}
           <div className="flex flex-wrap mt-5 ">
             {announcements
