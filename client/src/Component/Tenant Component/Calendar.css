@@ -1,0 +1,77 @@
+/* Style for calendar container */
+.react-calendar{
+  padding: 10px;
+  width: 100%;
+}
+.react-calendar__tile {
+  color: black; /* Set the color of all dates to black */
+}
+.highlighted-day {
+  
+  color: green; /* Highlighted day text color */
+  
+}
+.react-calendar__month-view__day{
+  color: black;
+  text-decoration: underline;
+}
+
+/* Style for calendar header */
+.calendar-header {
+  text-align: center;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  color: #f0f0f0;
+}
+
+/* Style for weekdays */
+.react-calendar__month-view__weekdays {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+/* Style for individual day tile */
+.react-calendar__tile {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.react-calendar__tile{
+  color:black
+}
+
+/* Style for today's day */
+.react-calendar__tile--now {
+  background-color: #183044;
+  color: white
+} 
+
+/* Style for Sunday */
+.react-calendar__month-view__weekdays__weekday:nth-child(7) {
+  color: red;
+}
+.react-calendar__month-view__weekdays__weekday{
+  color:black;
+  text-decoration: underline;
+  background-color: white;
+}
+
+/* Style for month selector */
+.react-calendar__navigation__label {
+  text-align: center;
+}
+.react-calendar__navigation{
+  text-align: center ;
+  margin-bottom: 10px;
+  color:black
+}
+.react-calendar__tile--active {
+  background-color: gray;
+  
+}
+.react-calendar__navigation__arrow {
+  color:black;
+  font-weight: bold;
+  width: 30px;
+  font-size: 1.2em;
+}

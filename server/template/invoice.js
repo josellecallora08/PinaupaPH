@@ -1,4 +1,4 @@
-module.exports = ({name,unit_no,balance,due,createdAt}) => {
+module.exports = ({response}) => {
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -107,16 +107,17 @@ module.exports = ({name,unit_no,balance,due,createdAt}) => {
             <table>
               <tr>
                 <td class="title">
-                  <img
-                    src="./logo.svg"
+                  <h3
                     style="width: 100%; max-width: 300px"
-                    alt="Logo"
-                  />
+                    
+                  >
+                  PinaupaPH
+                  </h3>
                 </td>
                 <td>
-                  Invoice #: 123<br />
-                  Created: January 1, 2023<br />
-                  Due: February 1, 2023
+                  Invoice #: ${response?.pdf.reference}<br />
+                  Created: ${new Date(response?.createdAt)}<br />
+                  Due: ${new Date(response?.tenant_id.monthly_due)}
                 </td>
               </tr>
             </table>
@@ -134,9 +135,9 @@ module.exports = ({name,unit_no,balance,due,createdAt}) => {
                 </td>
                 <td class="my-5">
                   <span>Invoice To: </span><br />
-                  Acme Corp.<br />
-                  John Doe<br />
-                  john@example.com
+                  ${response?.tenant_id.user_id.username}<br />
+                  ${response?.tenant_id.user_id.name}<br />
+                  ${response?.tenant_id.user_id.email}
                 </td>
               </tr>
             </table>
@@ -149,35 +150,39 @@ module.exports = ({name,unit_no,balance,due,createdAt}) => {
         </tr>
         <tr>
           <td colspan="2">
-            House Number: Unit 001<br />
+            House Number: Unit ${response?.tenant_id.unit_id.unit_no}<br />
             House Type: PentHouse<br />
-            Status: <span class="text-lime font-bold">Paid</span>
+            Status: <span class="text-lime font-bold">${response?.status === false ? 'Unpaid' : 'Paid'}</span>
           </td>
         </tr>
 
         <tr class="heading">
           <td>Item</td>
-          <td>Price</td>
+          <td>Amount</td>
         </tr>
 
         <tr class="item">
           <td>Monthly Rent</td>
-          <td>$300.00</td>
+          <td>${(response.tenant_id.unit_id.rent).toLocaleString('en-PH', {
+            style: 'currency',
+            currency: 'PHP',
+          })}</td>
         </tr>
 
         <tr class="item">
-          <td>Water Bill</td>
-          <td>$75.00</td>
-        </tr>
-
-        <tr class="item last">
-          <td>Electricity Bill</td>
-          <td>$10.00</td>
+          <td>Previous Bill</td>
+          <td>${(response.tenant_id.balance - response.tenant_id.unit_id.rent).toLocaleString('en-PH', {
+            style: 'currency',
+            currency: 'PHP',
+          })}</td>
         </tr>
 
         <tr class="total">
           <td></td>
-          <td>Total: $385.00</td>
+          <td>Total: ${(response.tenant_id.balance).toLocaleString('en-PH', {
+            style: 'currency',
+            currency: 'PHP',
+          })}</td>
         </tr>
       </table>
     </div>

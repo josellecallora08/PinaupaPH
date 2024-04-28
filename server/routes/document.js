@@ -6,17 +6,17 @@ const {
   deleteContract,
   editContract,
   createContract,
-  generatePdf,
+  generateContract,
 } = require('../controllers/document_controller')
 
 const router = Router()
 
-router.post('/generate_contract', createContract)
-router.get('/fetch_contract', generatePdf)
+router.post('/create', createContract)
+router.get('/generate', generateContract)
 router.get('/search', searchContract)
 router.get('/list', fetchContracts)
 router.get('/list/v1', fetchContract)
-router.patch('/edit', editContract)
+router.patch('/update', editContract)
 router.delete('/delete', deleteContract)
 
 module.exports = router

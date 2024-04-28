@@ -12,10 +12,10 @@ const requireAuth = require('../middleware/requireAuth')
 
 const router = Router()
 router.get('/generate', generateInvoice)
-router.post('/create', requireAuth, createInvoice)
+router.post('/create', createInvoice)
 router.get('/list', requireAuth, fetchInvoices)
 router.get('/search', searchInvoice)
-router.get('/fetch', requireAuth, fetchInvoice)
+router.get('/list/v1', fetchInvoice)
 router.delete('/delete',requireAuth, deleteInvoice)
-router.patch('/paid', requireAuth, editInvoice)
+router.patch('/update',  editInvoice)
 module.exports = router
