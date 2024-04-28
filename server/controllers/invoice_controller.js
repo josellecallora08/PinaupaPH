@@ -1,11 +1,7 @@
-const USERMODEL = require('../models/user')
-const UNITMODEL = require('../models/unit')
 const TENANTMODEL = require('../models/tenant')
-const OTPMODEL = require('../models/otp')
 const INVOICEMODEL = require('../models/invoice')
 const httpStatusCodes = require('../constants/constants')
 const pdf_template = require('../template/invoice')
-const path = require('path')
 const pdf = require('html-pdf')
 const fs = require('fs').promises
 const cloudinary = require('cloudinary').v2 // Import Cloudinary SDK
@@ -64,8 +60,7 @@ module.exports.createInvoice = async (req, res) => {
   const year = current_date.getFullYear()
   try {
     const tenant = await TENANTMODEL.findOne({ user_id })
-      .populate('user_id')
-      .populate('unit_id')
+      .populate('user_id unit_id apartment_id')
 
     if (!tenant) {
       return res
@@ -111,6 +106,16 @@ module.exports.createInvoice = async (req, res) => {
         unit_id: {
           unit_no: tenant?.unit_id.unit_no,
           rent: tenant?.unit_id.rent
+        },
+        apartment_id: {
+          name: tenant?.apartment_id.name,
+          address: tenant?.apartment_id.address,
+          barangay: tenant?.apartment_id.barangay,
+          province: tenant?.apartment_id.province,
+          image: {
+            apartment_image_url: tenant?.apartment_id.image.apartment_image_url,
+            apartment_public_id: tenant?.apartment_id.image.apartment_public_id
+          }
         },
         balance: tenant?.balance,
         monthly_due: tenant?.monthly_due
@@ -181,7 +186,6 @@ module.exports.createInvoice = async (req, res) => {
 
 module.exports.fetchInvoices = async (req, res) => {
   try {
-    console.log('hello')
     const response = await INVOICEMODEL.find().populate({
       path: 'tenant_id',
       populate: {
@@ -289,7 +293,7 @@ module.exports.fetchInvoice = async (req, res) => {
     const response = await INVOICEMODEL.findById(invoice_id).populate({
       path: 'tenant_id',
       populate: {
-        path: 'user_id unit_id', // Populate user_id and unit_id fields in TENANTMODEL
+        path: 'user_id unit_id apartment_id', // Populate user_id and unit_id fields in TENANTMODEL
       },
     })
     if (!response) {
@@ -297,7 +301,6 @@ module.exports.fetchInvoice = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Failed fetching the invoices.' })
     }
-    console.log(response)
     return res.status(httpStatusCodes.OK).json({ response })
   } catch (err) {
     return res
@@ -314,7 +317,7 @@ module.exports.editInvoice = async (req, res) => {
     }).populate({
       path: 'tenant_id',
       populate: {
-        path: 'user_id unit_id'
+        path: 'user_id unit_id apartment_id'
       }
     })
     if (!response) {

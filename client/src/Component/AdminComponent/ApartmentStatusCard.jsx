@@ -1,7 +1,7 @@
 import React, { useEffect,useState } from 'react'
 import { MdOutlineModeEditOutline, MdOutlineClose} from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUnit } from '../../features/unit';
+import { deleteUnit, fetchUnit } from '../../features/unit';
 import apartment from '../../features/apartment';
 import EditApartmentUnit from './EditApartmentUnit';
 
@@ -15,6 +15,9 @@ const ApartmentStatusCard = ({apartmentId, val}) => {
   const unit = useSelector(state => state.unit.data)
   const loading = useSelector(state => state.unit.loading)
 
+  const handleDelete = (unitId) => {
+    dispatch(deleteUnit(apartmentId, unitId))
+  }
   return (
     <>
       <div className="relative flex  overflow-hidden shadow-md shadow-gray rounded-lg">
@@ -26,7 +29,7 @@ const ApartmentStatusCard = ({apartmentId, val}) => {
             <p><span className='text-2xl font-black ml-5'>PHP {val.rent}</span> /per month</p>
             <div className='lg:justify-end lg:mr-5 md:justify-end md:mr-5  lg:mt-14 flex gap-2 mt-16 ml-44 pb-2'>
               <button className='lg:p-2  bg-blue p-1 rounded-md' onClick={toggleisEditApartmentUnit}><MdOutlineModeEditOutline size={15} color='white'/></button>
-              <button className='lg:p-2  bg-red p-1 rounded-md'><MdOutlineClose size={15} color='white'/></button>
+              <button onClick={() => handleDelete(val._id)} className='lg:p-2  bg-red p-1 rounded-md'><MdOutlineClose size={15} color='white'/></button>
             </div>
             
         </div>

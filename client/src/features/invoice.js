@@ -31,7 +31,8 @@ const invoiceSlice = createSlice({
     },
     fetchInvoiceSuccess: (state, action) => {
       state.loading = false
-      state.single = action.payload
+      state.single = action.payload.response
+      state.msg = action.payload.msg
     },
     deleteInvoiceSuccess: (state, action) => {
       state.data = state.data.filter(
@@ -166,7 +167,7 @@ export const fetchInvoice = (invoice_id) => async (dispatch) => {
     dispatch(fetchStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/invoice/fetch?invoice_id=${invoice_id}`,
+      `${import.meta.env.VITE_URL}/api/invoice/list/v1?invoice_id=${invoice_id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -180,7 +181,7 @@ export const fetchInvoice = (invoice_id) => async (dispatch) => {
     }
     const json = await response.json()
     console.log(json.response)
-    dispatch(fetchInvoiceSuccess(json.response))
+    dispatch(fetchInvoiceSuccess(json))
   } catch (err) {
     dispatch(fetchFailed(err.message))
   }

@@ -50,6 +50,8 @@ export const {
 export const createUnit = (fields, apartmentId) => async (dispatch) => {
   try {
     dispatch(startUnit())
+    const token = Cookies.get('token')
+
     const response = await fetch(
       `${import.meta.env.VITE_URL}/api/apartment/${apartmentId}/create_apartment_unit`,
       {
@@ -76,6 +78,8 @@ export const createUnit = (fields, apartmentId) => async (dispatch) => {
 export const fetchUnits = () => async (dispatch) => {
   try {
     dispatch(startUnit())
+    const token = Cookies.get('token')
+
     const response = await fetch(`${import.meta.env.VITE_URL}/api/apartment/units`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -166,9 +170,10 @@ export const editUnit = (apartmentId, unitId) => async (dispatch) => {
 
 export const deleteUnit = (apartmentId, unitId) => async (dispatch) => {
   try {
+    const token = Cookies.get('token')
     dispatch(startUnit())
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/apartment/${apartmentId}/delete_apartment_unit/${unitId}`,
+      `${import.meta.env.VITE_URL}/api/apartment/${apartmentId}/delete_apartment_unit?unit_id=${unitId}`,
       {
         method: 'DELETE',
         headers: {

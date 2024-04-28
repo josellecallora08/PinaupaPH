@@ -137,7 +137,7 @@ const ApartmentProfile = () => {
       {isAddRoomFormOpen && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="lg:w-auto lg:h-auto lg:mt-16 pb-5 bg-white  rounded-md">
-            <AddRoom setIsAddRoomFormOpen={setIsAddRoomFormOpen} />
+            <AddRoom apartment_id={apartment._id} setIsAddRoomFormOpen={setIsAddRoomFormOpen} />
           </div>
         </div>
       )}

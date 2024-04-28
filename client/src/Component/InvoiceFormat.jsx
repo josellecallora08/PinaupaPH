@@ -31,25 +31,25 @@ const InvoiceFormat = () => {
     console.log(invoice_id)
   }
 
-  const handlePayment = async () => {
-    dispatch(editInvoices(invoice_id))
-  }
-  const dropdownItems = [
-    {
-      title: 'Download',
-      func: handleDownload,
-      svg: <MdOutlineFileDownload size={25} />,
-    },
-    {
-      title: 'Paid',
-      func: handlePayment,
-      svg: <FiPrinter size={25} />,
-    },
-    {
-      title: 'Edit',
-      svg: <FiEdit size={25} />,
-    },
-  ]
+  // const handlePayment = async () => {
+  //   dispatch(editInvoices(invoice_id))
+  // }
+  // const dropdownItems = [
+  //   {
+  //     title: 'Download',
+  //     func: handleDownload,
+  //     svg: <MdOutlineFileDownload size={25} />,
+  //   },
+  //   {
+  //     title: 'Paid',
+  //     func: handlePayment,
+  //     svg: <FiPrinter size={25} />,
+  //   },
+  //   {
+  //     title: 'Edit',
+  //     svg: <FiEdit size={25} />,
+  //   },
+  // ]
 
   return (
     <div>

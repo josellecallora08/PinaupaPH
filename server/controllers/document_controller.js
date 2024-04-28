@@ -152,9 +152,9 @@ module.exports.createContract = async (req, res) => {
 
   try {
     const response = await TENANTMODEL.findOne({ user_id })
-      .populate('user_id')
-      .populate('unit_id')
-
+      .populate('user_id unit_id apartment_id')
+     
+    console.log('Response', response)
     if (!response) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
@@ -178,17 +178,9 @@ module.exports.createContract = async (req, res) => {
         .status(httpStatusCodes.FOUND)
         .json({ error: 'Invoice exists...' })
     }
-    const details = {
-      name: response?.user_id.name,
-      deposit: response?.deposit,
-      advance: response?.advance,
-      unit_no: response?.unit_id.unit_no,
-      rent: response?.unit_id.rent,
-      // from_date: from_date,
-      // to_date: to_date,
-    }
+    console.log(response)
     const pdfBuffer = await new Promise((resolve, reject) => {
-      pdf.create(pdf_template(details), {}).toBuffer((err, buffer) => {
+      pdf.create(pdf_template({response}), {}).toBuffer((err, buffer) => {
         if (err) reject(err)
         else resolve(buffer)
       })
@@ -304,7 +296,7 @@ module.exports.editContract = async (req, res) => {
     const response = await CONTRACTMODEL.findById(contract_id).populate({
       path: 'tenant_id',
       populate: {
-        path: 'user_id unit_id',
+        path: 'user_id unit_id apartment_id',
       },
     })
     if (!response)
@@ -312,36 +304,10 @@ module.exports.editContract = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to update contract' })
 
-    const apartmentResponse = await APARTMENTMODEL.find()
-    const apartmentWithUnit = apartmentResponse.filter((apartment) => {
-      return apartment.units.some((unit) => {
-        return unit._id.toString() === response.tenant_id.unit_id._id.toString()
-      })
-    })
-
-    if (apartmentWithUnit.length === 0) {
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Unit not found...' })
-    }
-
-    const details = apartmentWithUnit.map((apartment) => {
-      const unit = apartment.units.find((unit) => {
-        return unit._id.toString() === response.tenant_id.unit_id._id.toString()
-      })
-
-      return {
-        name: response?.tenant_id.user_id.name,
-        deposit: response?.tenant_id.deposit,
-        advance: response?.tenant_id.advance,
-        unit_no: unit.unit_no,
-        rent: unit.rent,
-        address: apartment?.address,
-      }
-    })
+    console.log(response)
 
     const pdfBuffer = await new Promise((resolve, reject) => {
-      pdf.create(pdf_template(details), {}).toBuffer((err, buffer) => {
+      pdf.create(pdf_template({response}), {}).toBuffer((err, buffer) => {
         if (err) reject(err)
         else resolve(buffer)
       })
