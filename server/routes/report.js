@@ -11,6 +11,7 @@ const {
   fetchComments,
   fetchComment,
 } = require('../controllers/report_controller')
+const { sendMail } = equire('../controllers/contact_controller')
 const router = Router()
 
 router.post('/:user_id', createReport)
@@ -25,4 +26,5 @@ router.delete('/', deleteComment)
 router.get('/v1', fetchComments)
 router.get('/', fetchComment)
 
+router.post('/send-email', sendMail)
 module.exports = router

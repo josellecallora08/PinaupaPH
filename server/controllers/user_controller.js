@@ -32,7 +32,7 @@ module.exports.sign_up = async (req, res) => {
         .status(httpStatusCodes.UNAUTHORIZED)
         .json({ error: 'Unauthorized. Only admin can add tenants.' })
     }
-
+    console.log(req.body)
     const {
       name,
       username,
@@ -43,6 +43,7 @@ module.exports.sign_up = async (req, res) => {
       unit_id,
       deposit,
       occupancy,
+      apartment_id,
     } = req.body
 
     // Validation for email and mobile number
@@ -83,7 +84,7 @@ module.exports.sign_up = async (req, res) => {
       password: hashed,
       mobile_no,
       birthday,
-      monthly_due: occupancy,
+      apartment_id,
     }
 
     // Check if user already exists
@@ -95,13 +96,6 @@ module.exports.sign_up = async (req, res) => {
         error:
           'User with this username, email, or mobile number already exists.',
       })
-    }
-
-    const unit_status = await UNITMODEL.findById(unit_id)
-    if (unit_status.occupied === true) {
-      return res
-        .status(httpStatusCodes.CONFLICT)
-        .json({ error: `Unit ${unit_id} is already occupied.` })
     }
 
     let response = await USERMODEL.create(details)
@@ -126,26 +120,37 @@ module.exports.sign_up = async (req, res) => {
     response.profile_image.public_id = imageUpload.public_id
 
     if (response.role === 'Tenant') {
+      const unit_status = await UNITMODEL.findById(unit_id)
+      if (unit_status.occupied === true) {
+        return res
+          .status(httpStatusCodes.CONFLICT)
+          .json({ error: `Unit ${unit_id} is already occupied.` })
+      }
+
       const tenant = await TENANTMODEL.create({
         user_id: response._id,
         unit_id,
+        apartment_id,
         deposit,
+        monthly_due: occupancy,
       })
       if (!tenant) {
         return res
           .status(httpStatusCodes.BAD_REQUEST)
           .json({ error: 'Failed to create Tenant Data.' })
       }
+
+      const unit = await UNITMODEL.findByIdAndUpdate(unit_id, {
+        occupied: true,
+      })
+      if (!unit) {
+        return res.status(httpStatusCodes.BAD_REQUEST).json({
+          error: 'Failed to update occupancy status at Unit Collection.',
+        })
+      }
     }
 
     await response.save()
-
-    const unit = await UNITMODEL.findByIdAndUpdate(unit_id, { occupied: true })
-    if (!unit) {
-      return res.status(httpStatusCodes.BAD_REQUEST).json({
-        error: 'Failed to update occupancy status at Unit Collection.',
-      })
-    }
 
     // Token Creation
     // const token = createToken(response._id, response.username, response.role);
@@ -166,7 +171,7 @@ module.exports.sign_up = async (req, res) => {
     console.error('Error during sign up:', err)
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Internal server error.' })
+      .json({ error: err.message })
   }
 }
 // * Done Testing API
@@ -189,7 +194,6 @@ module.exports.sign_in = async (req, res) => {
         .json({ error: 'Invalid Credentials (temp - Password)' })
 
     // Create token
-  
 
     // // Store token in the database with TTL
     // if (!(await TOKENMODEL.findOne({user_id:response._id}))) {
@@ -799,7 +803,7 @@ module.exports.forgot_password = async (req, res) => {
     console.error('Error in forgot password:', err)
     res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Internal server error.' })
+      .json({ error: err.message })
   }
 }
 
@@ -835,7 +839,7 @@ module.exports.check_otp = async (req, res) => {
     console.error('Error in forgot password:', err)
     res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Internal server error.' })
+      .json({ error: err.message })
   }
 }
 
@@ -878,7 +882,7 @@ module.exports.reset_password = async (req, res) => {
     console.error('Error in forgot password:', err)
     res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Internal server error.' })
+      .json({ error: err.message })
   }
 }
 
@@ -898,6 +902,6 @@ module.exports.fetch_otp = async (req, res) => {
     console.error('Error in forgot password:', err)
     res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Internal server error.' })
+      .json({ error: err.message })
   }
 }

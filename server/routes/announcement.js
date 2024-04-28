@@ -1,5 +1,11 @@
 const Router = require('express')
-const { createAnnouncement, fetchAnnouncements, fetchAnnouncement, editAnnouncement, deleteAnnouncement } = require('../controllers/announcement_controller')
+const {
+  createAnnouncement,
+  fetchAnnouncements,
+  fetchAnnouncement,
+  editAnnouncement,
+  deleteAnnouncement,
+} = require('../controllers/announcement_controller')
 
 const router = Router()
 

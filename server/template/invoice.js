@@ -46,6 +46,7 @@ module.exports = ({response}) => {
 
     .invoice-box table tr.information table td {
       padding-bottom: 40px;
+      text-transform: capitalize;
     }
 
     .invoice-box table tr.heading td {
@@ -116,8 +117,8 @@ module.exports = ({response}) => {
                 </td>
                 <td>
                   Invoice #: ${response?.pdf.reference}<br />
-                  Created: ${new Date(response?.createdAt)}<br />
-                  Due: ${new Date(response?.tenant_id.monthly_due)}
+                  Created: ${new Date(response?.createdAt).toDateString()}<br />
+                  Due: ${new Date(response?.tenant_id.monthly_due).toDateString()}
                 </td>
               </tr>
             </table>
@@ -129,9 +130,9 @@ module.exports = ({response}) => {
             <table>
               <tr>
                 <td>
-                  Sparksuite, Inc.<br />
-                  12345 Sunny Road<br />
-                  Sunnyville, CA 12345
+                  ${response?.tenant_id.apartment_id.name}<br />
+                  ${response?.tenant_id.apartment_id.address}<br />
+                  ${response?.tenant_id.apartment_id.barangay}
                 </td>
                 <td class="my-5">
                   <span>Invoice To: </span><br />

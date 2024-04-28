@@ -64,6 +64,10 @@ const TENANTMODEL = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'units',
     },
+    apartment_id:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'apartment'
+    },
     deposit: {
       type: Number,
       default: 0,
@@ -83,6 +87,10 @@ const TENANTMODEL = new mongoose.Schema(
     payment: [PAYMENTMODEL],
     household: [HOUSEHOLDMODEL],
     pet: [PETMODEL],
+    isDelete: {
+      type: Boolean,
+      default: false
+    }
   },
   { timestamps: true },
 )

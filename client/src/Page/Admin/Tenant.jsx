@@ -35,7 +35,7 @@ const Tenant = () => {
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value)
   }
-  const [apartmentId, setApartmentId] = useState('')
+  // const [apartmentId, setApartmentId] = useState('')
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(createTenant(fields))
@@ -47,6 +47,7 @@ const Tenant = () => {
       email: '',
       password: '',
       unit_id: '',
+      apartment_id: '',
       deposit: '',
       occupancy: '',
     })
@@ -79,10 +80,10 @@ const Tenant = () => {
   }
 
   useEffect(() => {
-    if (apartmentId === '') return;
-    console.log(apartmentId)
-    dispatch(fetchUnitsApartment(apartmentId))
-  }, [apartmentId])
+    if (fields.apartment_id === '') return;
+    console.log(fields.apartment_id)
+    dispatch(fetchUnitsApartment(fields.apartment_id))
+  }, [fields.apartment_id])
 
   useEffect(() => {
     dispatch(fetchApartments())
@@ -134,8 +135,6 @@ const Tenant = () => {
                   handleSubmit={handleSubmit}
                   error={error}
                   handleInput={handleInput}
-                  setApartmentId={setApartmentId}
-                  apartmentId={apartmentId}
                   setIsAddTenantFormOpen={setIsAddTenantFormOpen}
                 />
               </div>

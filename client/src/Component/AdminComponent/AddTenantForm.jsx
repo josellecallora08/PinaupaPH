@@ -4,12 +4,11 @@ import { IoMdClose } from 'react-icons/io'
 import { useSelector } from 'react-redux'
 
 const AddTenantForm = ({
+  fields,
   handleSubmit,
   handleInput,
   setIsAddTenantFormOpen,
   error,
-  apartmentId,
-  setApartmentId
 }) => {
   const unit = useSelector((state) => state.unit.data)
   const apartment = useSelector((state) => state.apartment.data)
@@ -156,7 +155,7 @@ const AddTenantForm = ({
           <select
             name="apartment_id"
             id="apartment_id"
-            onChange={(e) => setApartmentId(e.target.value)}
+            onChange={handleInput}
             className="w-full py-2 px-3 border-2 border-[#9e9e9e] rounded"
           >
             <option className="rounded-none" value="">
@@ -183,7 +182,7 @@ const AddTenantForm = ({
             id="unit_id"
             onChange={handleInput}
             className="w-full py-2 px-3 border-2 border-[#9e9e9e] rounded"
-            disabled={apartmentId === ''}
+            disabled={fields.apartment_id === ''}
           >
             <option className="rounded-none" value="someOption" hidden>
               Apartment Unit

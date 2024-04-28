@@ -5,6 +5,7 @@ const INVOICEMODEL = new mongoose.Schema(
     tenant_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'tenant',
+      required: true
     },
     amount: {
       type: Number,
