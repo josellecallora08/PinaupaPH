@@ -31,6 +31,7 @@ import InvoiceFormat from './Component/InvoiceFormat'
 import TermsAndConditions from './Page/TermsAndCondition'
 import ContactUsAdmin from './Page/ContactUs'
 import ErrorPage from './Page/ErrorPage'
+import Announcement from './Page/Admin/Announcement'
 
 function App() {
   const user = useSelector((state) => state.auth.isAuthenticated)
@@ -43,7 +44,7 @@ function App() {
 
   return (
     <Routes>
-      <Route path='*' element={<ErrorPage/>} />
+      <Route path="*" element={<ErrorPage />} />
       <Route
         path="/"
         element={user ? <Navigate to="/dashboard" /> : <Login />}
@@ -63,7 +64,7 @@ function App() {
           )
         }
       />
-        <Route
+      <Route
         path="/contact"
         element={
           user ? (
@@ -115,6 +116,20 @@ function App() {
           </Layout>
         }
       />
+
+      <Route
+        path="/announcement"
+        element={
+          role?.role === 'Admin' ? (
+            <Layout className="bg-white1">
+              <Announcement />
+            </Layout>
+          ) : (
+            <Navigate to="/" />
+          )
+        }
+      />
+
       <Route
         path="/tenant"
         element={
@@ -142,9 +157,9 @@ function App() {
       <Route
         path={`/view-concern/:id`}
         element={
-            <Layout className="bg-white1">
-              <ViewConcern />
-            </Layout>
+          <Layout className="bg-white1">
+            <ViewConcern />
+          </Layout>
         }
       />
 
