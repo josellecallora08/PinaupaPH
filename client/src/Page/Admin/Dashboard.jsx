@@ -83,7 +83,7 @@ const Dashboard = () => {
                 Dashboard
               </Link>
             </div>
-            <div className="w-11/12 xl:max-h-[800px] flex flex-col m-auto xl:grid grid-cols-3 gap-5 grid-rows-7">
+            <div className="w-11/12 xl:max-h-[800px] bg-white1 flex flex-col m-auto xl:grid grid-cols-3 gap-5 grid-rows-7">
               <div className="lg:pt-4 flex justify-between items-center col-span-3 row-span-1  rounded-md overflow-hidden shadow-md bg-white ">
                 <figure className="w-full h-full max-w-max md:max-w-fit">
                   <img

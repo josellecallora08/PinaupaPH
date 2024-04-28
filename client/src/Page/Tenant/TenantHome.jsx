@@ -22,7 +22,7 @@ const TenantHome = () => {
         <span className="loading loading-bars loading-md"></span>
       ) : (
         <div className="w-full h-full md:h-auto xl:h-full xl:max-h-auto flex flex-col items-start bg-white1">
-          <div className="w-11/12 h-fit m-auto py-5 lg:py-0 ">
+          <div className="w-11/12 h-fit  m-auto py-5 lg:py-0 ">
             <Link
               to="/dashboard"
               className="uppercase font-bold hover:underline"
@@ -148,7 +148,7 @@ const TenantHome = () => {
             </div>
 
             {/* Calendar Card */}
-            <div className="md:order-none col-span-1 row-span-1 bg-white h-fit order-last ">
+            <div className="md:order-none col-span-1 row-span-1 bg-white h-full order-last ">
               <div className="w-full h-10 bg-primary-color text-white p-2">
                 Calendar
               </div>

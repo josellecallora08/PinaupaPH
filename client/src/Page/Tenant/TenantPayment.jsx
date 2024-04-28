@@ -77,22 +77,22 @@ const TenantPayment = () => {
               <div>
                 {selectedOption === 'ewallet' && (
                   <div className=" mb-5 pt-3">
-                    <div className="flex items-center justify-center gap-2 my-5 ">
-                      <button className="w-32 h-20 flex justify-center items-center focus:outline-none shadow-md shadow-dark-gray rounded-md">
+                    <div className="flex items-center justify-center gap-5 my-5  ">
+                      <button className=" w-32 h-20 flex justify-center items-center focus:outline-none focus:scale-110 shadow-md shadow-dark-gray rounded-md focus:ring-2 focus:ring-blue-500">
                         <img
                           src={gcashlogo}
                           alt="GCash"
-                          className="max-w-full max-h-full"
+                          className="max-w-full max-h-full "
                         />
                       </button>
-                      <button className="w-32 h-20 flex justify-center items-center focus:outline-none shadow-md shadow-dark-gray rounded-md">
+                      <button className="w-32 h-20 flex justify-center items-center focus:outline-none focus:scale-110 shadow-md shadow-dark-gray rounded-md focus:ring-2 focus:ring-lime">
                         <img
                           src={paymayalogo}
                           alt="Paymaya"
                           className="max-w-full max-h-full"
                         />
                       </button>
-                      <button className="w-32 h-20 flex justify-center items-center focus:outline-none shadow-md shadow-dark-gray rounded-md">
+                      <button className="w-32 h-20 flex justify-center items-center focus:outline-none focus:scale-110 shadow-md shadow-dark-gray rounded-md focus:ring-2 focus:ring-primary-color">
                         <img
                           src={grabpaylogo}
                           alt="GrabPay"
