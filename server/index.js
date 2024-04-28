@@ -16,7 +16,6 @@ const apartment_route = require('./routes/apartment')
 const document_route = require('./routes/document')
 const invoice_route = require('./routes/invoice')
 const payment_route = require('./routes/payment')
-const contact_route = require('./routes/contact')
 const announcement_route = require('./routes/announcement')
 
 const { scheduledInvoice, deleteOTP } = require('./controllers/cron_controller')

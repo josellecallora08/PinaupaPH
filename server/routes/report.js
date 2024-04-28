@@ -11,7 +11,7 @@ const {
   fetchComments,
   fetchComment,
 } = require('../controllers/report_controller')
-const { sendMail } = equire('../controllers/contact_controller')
+const { sendMail } = require('../controllers/contact_controller')
 const router = Router()
 
 router.post('/:user_id', createReport)
