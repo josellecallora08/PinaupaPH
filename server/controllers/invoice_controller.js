@@ -125,7 +125,13 @@ module.exports.createInvoice = async (req, res) => {
 
     // Generate PDF in memory
     const pdfBuffer = await new Promise((resolve, reject) => {
-      pdf.create(pdf_template({ response: details }), {}).toBuffer((err, buffer) => {
+      pdf.create(pdf_template({ response: details }), {
+        childProcessOptions: {
+          env: {
+            OPENSSL_CONF: '/dev/null'
+          }
+        }
+      }).toBuffer((err, buffer) => {
         if (err) reject(err)
         else resolve(buffer)
       })
