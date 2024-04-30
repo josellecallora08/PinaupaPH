@@ -28,4 +28,4 @@ const RECEIPTMODEL = new mongoose.Schema(
   { timestamps: true },
 )
 
-module.exports = mongoose.model('receipt', RECEIPTMODEL)
+module.exports = mongoose.model('receipts', RECEIPTMODEL)

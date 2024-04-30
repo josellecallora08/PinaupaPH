@@ -7,6 +7,7 @@ const ANNOUCEMENTMODEL = new mongoose.Schema({
     },
     type: {
         type: String,
+        required:true
     },
     description: {
         type: String,
@@ -23,4 +24,4 @@ const ANNOUCEMENTMODEL = new mongoose.Schema({
     
 }, {timestamps: true})
 
-module.exports = mongoose.model('annoucements', ANNOUCEMENTMODEL)
+module.exports = mongoose.model('announcements', ANNOUCEMENTMODEL)

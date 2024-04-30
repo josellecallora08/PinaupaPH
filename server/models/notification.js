@@ -1,18 +1,40 @@
 const mongoose = require('mongoose')
 
 const NOTIFMODEL = new mongoose.Schema({
-    user_id: {
+    sender_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'users',
+        ref: 'user',
         required: true
+    },
+    receiver_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'tenant',
+        default: null
     },
     type: {
         type: String,
-        enum: [null, 'Payment', 'Comment', 'Announcement'],
+        enum: ['Payment', 'Comment', 'Announcement', 'Report'],
         default: null
     },
-    description: {
-        type: String,
+    announcement_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'announcements'
+    },
+    comment_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'reports.comments'
+    },
+    payment_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'payments'
+    },
+    report_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'reports'
+    },
+    isRead: {
+        type: Boolean,
+        default: false
     }
 
 }, { timestamps: true })

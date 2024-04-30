@@ -1,22 +1,44 @@
 const USERMODEL = require('../models/user')
 const TENANTMODEL = require('../models/tenant')
+const NOTIFMODEL = require('../models/notification')
 const ANNOUCEMENTMODELMODEL = require('../models/announcement')
 const httpStatusCodes = require('../constants/constants')
 
 module.exports.createAnnouncement = async (req, res) => {
   try {
-    const { title, type, description, status } = req.body
+    const id = req.user.id
+    const role = req.user.role
+    const { title, type, description } = req.body
+    console.log(req.body)
     const details = {}
     if (title !== '') details.title = title
     if (type !== '') details.type = type
     if (description !== '') details.description = description
 
-    const response = await ANNOUCEMENTMODELMODEL.create({})
+    if (role !== "Admin") {
+      return res.status(httpStatusCodes.UNAUTHORIZED).json({ error: "Only Admin can create announcements..." })
+    }
+    const response = await ANNOUCEMENTMODELMODEL.create(details)
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to create announcement' })
     }
+    const tenants = await TENANTMODEL.find()
+    if (!tenants) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unable to create announcement' })
+    }
+    console.log(tenants)
+    await Promise.all(tenants.map(async (user) => {
+      await NOTIFMODEL.create({
+        sender_id: id,
+        receiver_id: user.user_id,
+        type: 'Announcement',
+        announcement_id: response._id
+      })
+    }))
 
     return res
       .status(httpStatusCodes.OK)
@@ -30,11 +52,11 @@ module.exports.createAnnouncement = async (req, res) => {
 
 module.exports.fetchAnnouncements = async (req, res) => {
   try {
-    const response = await ANNOUCEMENTMODELMODEL.find({})
+    const response = await ANNOUCEMENTMODELMODEL.find()
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Unable to find announcement' })
+        .json({ error: 'No announcement...' })
     }
 
     return res.status(httpStatusCodes.OK).json({ response })
@@ -52,7 +74,7 @@ module.exports.fetchAnnouncement = async (req, res) => {
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Unable to create announcement' })
+        .json({ error: 'Annoucement not found...' })
     }
 
     return res.status(httpStatusCodes.OK).json({ response })
@@ -71,11 +93,11 @@ module.exports.editAnnouncement = async (req, res) => {
   if (type !== '') details.type = type
   if (description !== '') details.description = description
   details.status = true
-  
+
   try {
     const response = await ANNOUCEMENTMODELMODEL.findByIdAndUpdate(
       announcement_id,
-      { details },
+      details,
     )
     if (!response) {
       return res
