@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { isLoggedin } from '../../features/authentication'
 import Loading from '../../Component/LoadingComponent/Loading'
-import Toast from '../../Component/Toast'
+import NotificationToast from '../../Component/ToastComponent/NotificationToast'
 
 const Dashboard = () => {
   const loading = useSelector((state) => state.auth.loading)
@@ -73,8 +73,8 @@ const Dashboard = () => {
         <Loading />
       ) : (
         <> 
-          <Toast message={"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident dolores cum quam itaque a sunt."} />
-          <div className="w-full h-full md:h-auto xl:h-full xl:max-h-auto flex flex-col items-start  bg-white1">
+          <NotificationToast message={"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident dolores cum quam itaque a sunt."} />
+          <div className="w-full h-full md:h-auto xl:h-full xl:max-h-auto flex flex-col items-start bg-white1">
             <div className="w-11/12 h-fit m-auto py-5 lg:py-0">
               <Link
                 to="/dashboard"

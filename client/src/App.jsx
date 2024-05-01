@@ -84,7 +84,7 @@ function App() {
             <Layout className="bg-white1">
               <Dashboard />
             </Layout>
-          ) : role?.role === 'Tenant' ? (
+          ) : role?.user_id.role === 'Tenant' ? (
             <Layout className="bg-white1">
               <TenantHome />
             </Layout>
@@ -100,7 +100,7 @@ function App() {
             <Layout className="bg-white1">
               <Dashboard />
             </Layout>
-          ) : role?.role === 'Tenant' ? (
+          ) : role?.user_id.role === 'Tenant' ? (
             <Layout className="bg-white1">
               <TenantHome />
             </Layout>

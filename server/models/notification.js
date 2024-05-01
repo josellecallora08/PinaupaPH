@@ -35,6 +35,10 @@ const NOTIFMODEL = new mongoose.Schema({
     isRead: {
         type: Boolean,
         default: false
+    },
+    isShown: {
+        type: Boolean,
+        default: false
     }
 
 }, { timestamps: true })

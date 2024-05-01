@@ -3,61 +3,6 @@ const TENANTMODEL = require('../models/tenant')
 const INVOICEMODEL = require('../models/invoice')
 const httpStatusCodes = require('../constants/constants')
 const NOTIFMODEL = require('../models/notification')
-// module.exports.createIntent = async (req, res) => {
-//   const { user_id } = req.query
-//   try {
-//     const tenant = await TENANTMODEL.findOne({ user_id })
-//       .populate('user_id unit_id')
-//     if (!tenant) {
-//       return res.status(httpStatusCodes.NOT_FOUND).json({ error: "Failed to create payment, user not found..." })
-//     }
-//     const url = 'https://api.paymongo.com/v1/payment_intents'
-//     const options = {
-//       method: 'POST',
-//       headers: {
-//         accept: 'application/json',
-//         'content-type': 'application/json',
-//         authorization: `Basic ${Buffer.from(process.env.PAYMONGO_SECRET_KEY).toString('base64')}`,
-//       },
-//       body: JSON.stringify({
-//         data: {
-//           attributes: {
-//             amount: tenant.unit_id.rent,
-//             payment_method_allowed: [
-//               // 'atome',
-//               // 'card',
-//               // 'dob',
-//               'paymaya',
-//               // 'billease',
-//               'gcash',
-//               'grab_pay',
-//             ],
-//             payment_method_options: { card: { request_three_d_secure: 'any' } },
-//             currency: 'PHP',
-//             capture_type: 'automatic',
-//             statement_descriptor: 'Apartment Rental Fee',
-//             description: 'Monthly Rent',
-//           },
-//         },
-//       }),
-//     }
-
-//     const response = await fetch(url, options)
-//     if (!response)
-//       return res
-//         .status(httpStatusCodes.BAD_REQUEST)
-//         .json({ error: 'Endpoint Problem' })
-
-//     const data = await response.json()
-
-//     return res.status(httpStatusCodes.OK).json(data)
-//   } catch (err) {
-//     console.error({ error: err.message })
-//     return res
-//       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-//       .json({ error: 'Server Error' })
-//   }
-// }
 
 module.exports.createPayment = async (req, res) => {
   try {

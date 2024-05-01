@@ -13,8 +13,7 @@ const ManualInvoice = ({ setModal }) => {
 
   const handleInvoice = (e) => {
     e.preventDefault();
-    console.log(selectedUser);
-    dispatch(createInvoice(selectedUser));
+    dispatch(createInvoice(selectedUser.value));
     if (loading) {
       setModal((state) => !state);
     }
@@ -40,8 +39,8 @@ const ManualInvoice = ({ setModal }) => {
 
   const options = users
     ? users.slice(0, 4).map((user) => ({
-        value: user._id,
-        label: user.name,
+        value: user.user_id._id,
+        label: user.user_id.name,
       }))
     : [];
 

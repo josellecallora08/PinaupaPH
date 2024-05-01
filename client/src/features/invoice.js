@@ -133,6 +133,7 @@ export const createInvoice = (user_id) => async (dispatch) => {
     }
 
     const json = await response.json()
+    console.log(json)
     dispatch(fetchInvoices())
   } catch (err) {
     dispatch(fetchFailed(err.message))

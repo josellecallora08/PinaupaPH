@@ -9,11 +9,14 @@ import { createTenant, fetchUsers, handleSearchUser } from '../../features/user'
 import { fetchApartments } from '../../features/apartment'
 import { fetchUnits, fetchUnitsApartment } from '../../features/unit'
 import SearchLoading from '../../Component/LoadingComponent/Loading'
+import MessageToast from '../../Component/ToastComponent/MessageToast'
+import NotificationToast from '../../Component/ToastComponent/NotificationToast'
 
 const Tenant = () => {
   const [searchItem, setSearchItem] = useState('')
   const [isAddTenantFormOpen, setIsAddTenantFormOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState('')
+  const [isVisible, setIsVisible] = useState(true);
 
   const [fields, setFields] = useState({
     name: '',
@@ -32,6 +35,7 @@ const Tenant = () => {
   const loading = useSelector((state) => state.user.loading)
   const error = useSelector((state) => state.user.error)
   const apartment = useSelector((state) => state.apartment.data)
+  const msg = useSelector((state) => state.user.msg)
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value)
   }
@@ -92,6 +96,9 @@ const Tenant = () => {
 
   return (
     <>
+      {isVisible && <MessageToast message={msg} error={error} isVisible={isVisible} setIsVisible={setIsVisible} />}
+      {/* Add condition if unread it wont show as well */}
+      {/* <NotificationToast/> */}
       <div className="w-full h-full bg-white1">
         <div className="w-11/12 flex flex-col m-auto">
           {/* Top of Tenant Tab */}

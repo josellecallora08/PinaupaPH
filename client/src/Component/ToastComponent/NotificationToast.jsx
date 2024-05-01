@@ -1,6 +1,6 @@
 import close from '/close_red.svg'
 import pfp from '/pfp.svg'
-const Toast = ({ message }) => {
+const NotificationToast = ({ message }) => {
     return (
         <>
             <div className="fixed right-0 size-full max-w-[350px] flex flex-col items-end justify-end gap-2 py-5">
@@ -30,4 +30,4 @@ const Toast = ({ message }) => {
     )
 }
 
-export default Toast
+export default NotificationToast

@@ -87,7 +87,7 @@ const TenantProfile = () => {
     e.preventDefault()
     console.log('Form submitted')
   }
-
+  console.log(id)
   useEffect(() => {
     dispatch(fetchUser(id))
     console.log(tenant)
@@ -104,7 +104,7 @@ const TenantProfile = () => {
     };
   }, []);
   
-  const birthday = new Date(tenant?.birthday).toLocaleDateString()
+  const birthday = new Date(tenant?.user_id.birthday).toLocaleDateString()
   return (
     <div className="bg-white1  h-full ">
       {/* Tenant Profile Header */}
@@ -157,7 +157,7 @@ const TenantProfile = () => {
                   <div className="lg:items-center flex gap-3 relative mb-7 ">
                     <figure>
                       <img
-                        src={tenant?.image}
+                        src={tenant?.user_id.profile_image.image_url}
                         alt="Profile"
                         className="lg:w-24 rounded-full object-fill lg:h-24 w-14 h-14"
                       />
@@ -166,7 +166,7 @@ const TenantProfile = () => {
                       <h2 className="lg:text-2xl text-xl font-bold mb-2">
                         {tenant?.name}
                       </h2>
-                      <h2 className="lg:text-2xl">Unit - {tenant?.unit_no}</h2>
+                      <h2 className="lg:text-2xl">Unit - {tenant?.unit_id.unit_no}</h2>
                     </div>
                     <button
                       onClick={handleDeleteTenant}
@@ -213,7 +213,7 @@ const TenantProfile = () => {
                       <p className="lg:text-lg flex gap-[4.8rem] items-center">
                         Username
                         <span className="lg:text-base lg:ml-7 ml-6">
-                          {tenant?.username}
+                          {tenant?.user_id.username}
                         </span>
                       </p>
                       <p className="lg:text-lg flex gap-20 items-center">
@@ -259,10 +259,10 @@ const TenantProfile = () => {
                           <p>Email</p>
                         </div>
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
-                          <p className="">{tenant?.name}</p>
+                          <p className="">{tenant?.user_id.name}</p>
                           <p className="">{birthday}</p>
-                          <p className="">{tenant?.phone}</p>
-                          <p className="">{tenant?.email}</p>
+                          <p className="">{tenant?.user_id.mobile_no}</p>
+                          <p className="">{tenant?.user_id.email}</p>
                         </div>
                       </div>
                     </div>
@@ -310,7 +310,7 @@ const TenantProfile = () => {
                           <p>Date of Move-in</p>
                         </div>
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
-                          <p className="">Unit - {tenant?.unit_no}</p>
+                          <p className="">Unit - {tenant?.unit_id.unit_no}</p>
                           <p className="">{tenant?.deposit}</p>
                           <p className="">{tenant?.monthly_due}</p>
                         </div>

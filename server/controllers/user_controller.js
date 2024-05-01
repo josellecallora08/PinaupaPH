@@ -1,8 +1,6 @@
 const TENANTMODEL = require('../models/tenant')
 const USERMODEL = require('../models/user')
 const UNITMODEL = require('../models/unit')
-const PAYMENTMODEL = require('../models/payment')
-const TOKENMODEL = require('../models/token')
 const httpStatusCodes = require('../constants/constants')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
@@ -32,7 +30,6 @@ module.exports.sign_up = async (req, res) => {
         .status(httpStatusCodes.UNAUTHORIZED)
         .json({ error: 'Unauthorized. Only admin can add tenants.' })
     }
-    console.log(req.body)
     const {
       name,
       username,
@@ -98,7 +95,6 @@ module.exports.sign_up = async (req, res) => {
       })
     }
 
-    let response = await USERMODEL.create(details)
 
     // File Upload
     const imageUpload = await cloudinary.uploader.upload(
@@ -116,8 +112,16 @@ module.exports.sign_up = async (req, res) => {
         .json({ error: 'Failed to upload profile image.' })
     }
 
-    response.profile_image.image_url = imageUpload.secure_url
-    response.profile_image.public_id = imageUpload.public_id
+    let response = await USERMODEL.create({
+      name: name,
+      username: username,
+      email: email,
+      password: hashed,
+      mobile_no: mobile_no,
+      birthday: birthday,
+      'profile_image.image_url': imageUpload.secure_url,
+      'profile_image.public_id': imageUpload.public_id
+    })
 
     if (response.role === 'Tenant') {
       const unit_status = await UNITMODEL.findById(unit_id)
@@ -149,24 +153,10 @@ module.exports.sign_up = async (req, res) => {
         })
       }
     }
-
-    await response.save()
-
-    // Token Creation
-    // const token = createToken(response._id, response.username, response.role);
-    // res.cookie('token', token, { maxAge: 900000 });
-
-    // Sanitize response
-    // const sanitizedResponse = {
-    //   name: response.name,
-    //   username: response.username,
-    //   email: response.email,
-    //   role: response.role
-    // };
-
+    console.log(response)
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Created Account successfully!', response })
+      .json({ msg: 'Tenant account has been created.', response })
   } catch (err) {
     console.error('Error during sign up:', err)
     return res
@@ -193,32 +183,6 @@ module.exports.sign_in = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Invalid Credentials (temp - Password)' })
 
-    // Create token
-
-    // // Store token in the database with TTL
-    // if (!(await TOKENMODEL.findOne({user_id:response._id}))) {
-    //   const generateToken = await TOKENMODEL.create({
-    //     user_id: response._id,
-    //     token: token,
-    //     expiresAt: new Date(Date.now() + 60000), // Set expiry time for 5 minutes (300,000 milliseconds)
-    //   })
-
-    //   if (!generateToken)
-    //     return res
-    //       .status(httpStatusCodes.UNAUTHORIZED)
-    //       .json({ error: 'Unable to store token in DB' })
-    // }
-
-    // const generateToken = await TOKENMODEL.findOneAndUpdate({user_id:response._id},{
-    //   token: token
-    // })
-
-    // if (!generateToken)
-    //     return res
-    //       .status(httpStatusCodes.UNAUTHORIZED)
-    //       .json({ error: 'Unable to store token in DB' })
-
-    // // Set token in cookie (optional)
     const token = createToken(response._id, response.username, response.role)
     res.cookie('token', token, { maxAge: 300000 })
 
@@ -254,6 +218,20 @@ module.exports.search_user = async (req, res) => {
       },
       {
         $lookup: {
+          from: 'apartments',
+          localField: 'apartment_id',
+          foreignField: '_id',
+          as: 'apartment'
+        }
+      },
+      {
+        $unwind: {
+          path: '$apartment',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
           from: 'users',
           localField: 'user_id',
           foreignField: '_id',
@@ -275,6 +253,24 @@ module.exports.search_user = async (req, res) => {
         },
       },
       {
+        $project: {
+          tenant_id: {
+            user_id: '$user',
+            unit_id: '$unit',
+            apartment_id: '$apartment',
+          },
+          deposit: 1,
+          advance: 1,
+          balance: 1,
+          monthly_due: 1,
+          payment: 1,
+          household: 1,
+          pet: 1,
+          createdAt: 1,
+          updatedAt: 1
+        }
+      },
+      {
         $sort: { createdAt: -1 },
       },
     ])
@@ -285,36 +281,36 @@ module.exports.search_user = async (req, res) => {
         .json({ msg: 'No matching records..' })
     }
 
-    search = search.map((item) => {
-      let userData = {
-        _id: item.user_id._id,
-        name: item.user.name,
-        image: item.user.profile_image.image_url,
-        image_id: item.user.profile_image.public_id,
-        username: item.user.username,
-        email: item.user.email,
-        birthday: item.user.birthday,
-        phone: item.user.mobile_no,
-        role: item.user.role,
-        unit_id: '',
-        rent: '',
-        deposit: item.deposit,
-        advance: item.advance,
-        balance: item.balance,
-        monthly_due:
-          item.monthly_due !== null
-            ? new Date(item.monthly_due).toDateString()
-            : null,
-      }
+    // search = search.map((item) => {
+    //   let userData = {
+    //     _id: item.user_id._id,
+    //     name: item.user.name,
+    //     image: item.user.profile_image.image_url,
+    //     image_id: item.user.profile_image.public_id,
+    //     username: item.user.username,
+    //     email: item.user.email,
+    //     birthday: item.user.birthday,
+    //     phone: item.user.mobile_no,
+    //     role: item.user.role,
+    //     unit_id: '',
+    //     rent: '',
+    //     deposit: item.deposit,
+    //     advance: item.advance,
+    //     balance: item.balance,
+    //     monthly_due:
+    //       item.monthly_due !== null
+    //         ? new Date(item.monthly_due).toDateString()
+    //         : null,
+    //   }
 
-      if (item.unit_id) {
-        userData.unit_id = item.unit_id._id
-        userData.unit_no = item.unit.unit_no
-        userData.rent = item.unit.rent
-      }
+    //   if (item.unit_id) {
+    //     userData.unit_id = item.unit_id._id
+    //     userData.unit_no = item.unit.unit_no
+    //     userData.rent = item.unit.rent
+    //   }
 
-      return userData
-    })
+    //   return userData
+    // })
 
     return res.status(httpStatusCodes.OK).json({ response: search })
   } catch (err) {
@@ -334,57 +330,17 @@ module.exports.fetch_users = async (req, res) => {
   //     .status(httpStatusCodes.BAD_REQUEST)
   //     .json({ error: 'Unauthorized. Only admin can add tenants.' })
   // }
-  let user = await TENANTMODEL.find()
-    .populate({
-      path: 'user_id',
-      model: USERMODEL,
-      select: 'name username email profile_image birthday mobile_no role',
-    })
-    .populate({
-      path: 'unit_id',
-      model: UNITMODEL,
-      select: 'unit_no rent',
-    })
-    .select('-payment -household -pet -createdAt -updatedAt')
+  let response = await TENANTMODEL.find()
+    .populate('user_id unit_id apartment_id')
 
   try {
-    if (!user) {
+    if (!response) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'User not found' })
     }
 
-    user = user.map((item) => {
-      let userData = {
-        _id: item.user_id._id,
-        image: item.user_id.profile_image.image_url,
-        image_id: item.user_id.profile_image.public_id,
-        name: item.user_id.name,
-        username: item.user_id.username,
-        email: item.user_id.email,
-        birthday: item.user_id.birthday,
-        phone: item.user_id.mobile_no,
-        role: item.user_id.role,
-      }
-
-      if (item.unit_id) {
-        userData.unit_id = item.unit_id._id
-        userData.unit_no = item.unit_id.unit_no
-        userData.rent = item.unit_id.rent
-      }
-
-      userData.deposit = item.deposit
-      userData.advance = item.advance
-      userData.balance = item.balance
-      userData.monthly_due =
-        item.monthly_due !== null
-          ? new Date(item.monthly_due).toDateString()
-          : null
-
-      return userData
-    })
-
-    return res.status(httpStatusCodes.OK).json({ response: user })
+    return res.status(httpStatusCodes.OK).json({ response })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -395,55 +351,17 @@ module.exports.fetch_users = async (req, res) => {
 
 module.exports.fetch_user = async (req, res) => {
   const { user_id } = req.query
-  let user = await TENANTMODEL.findOne({ user_id: user_id })
-    .populate({
-      path: 'user_id',
-      model: USERMODEL,
-      select: 'name username email profile_image mobile_no role birthday',
-    })
-    .populate({
-      path: 'unit_id',
-      model: UNITMODEL,
-      select: 'unit_no rent',
-    })
-    .select('-payment -household -pet -createdAt -updatedAt')
+  let response = await TENANTMODEL.findOne({ user_id })
+    .populate('user_id unit_id apartment_id')
 
   try {
-    if (!user) {
+    if (!response) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'User not found' })
     }
 
-    let userData = {
-      id: user.user_id._id,
-      name: user.user_id.name,
-      image: user.user_id.profile_image.image_url,
-      image_id: user.user_id.profile_image.public_id,
-      birthday: user.user_id.birthday,
-      username: user.user_id.username,
-      email: user.user_id.email,
-      phone: user.user_id.mobile_no,
-      role: user.user_id.role,
-      unit_id: '',
-      unit_no: '',
-      rent: '',
-      deposit: user.deposit,
-      advance: user.advance,
-      balance: user.balance,
-      monthly_due:
-        user.monthly_due !== null
-          ? new Date(user.monthly_due).toDateString()
-          : null,
-    }
-
-    if (user.unit_id) {
-      userData.unit_id = user.unit_id._id
-      userData.unit_no = user.unit_id.unit_no
-      userData.rent = user.unit_id.rent
-    }
-
-    return res.status(httpStatusCodes.OK).json({ response: userData })
+    return res.status(httpStatusCodes.OK).json({ response })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -463,66 +381,18 @@ module.exports.fetch_data = async (req, res) => {
         return res
           .status(httpStatusCodes.BAD_REQUEST)
           .json({ error: 'User not found: Admin' })
-
-      response = {
-        id: response._id,
-        image: response.profile_image.image_url,
-        image_id: response.profile_image.public_id,
-        name: response.name,
-        username: response.username,
-        email: response.email,
-        phone: response.mobile_no,
-        role: response.role,
-        birthday: response.birthday,
-      }
-
       return res.status(httpStatusCodes.OK).json(response)
     }
 
-    let user = await TENANTMODEL.findOne({ user_id: user_id })
-      .populate({
-        path: 'user_id',
-        model: USERMODEL,
-        select: 'name username email profile_image mobile_no role',
-      })
-      .populate({
-        path: 'unit_id',
-        model: UNITMODEL,
-        select: 'unit_no rent',
-      })
-      .select('-payment -household -pet -createdAt -updatedAt')
+    let response = await TENANTMODEL.findOne({ user_id: user_id }).populate('user_id unit_id apartment_id')
 
-    if (!user) {
+    if (!response) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'User not found' })
     }
 
-    let userData = {
-      id: user.user_id._id,
-      image: user.user_id.profile_image.image_url,
-      image_id: user.user_id.profile_image.public_id,
-      name: user.user_id.name,
-      username: user.user_id.username,
-      email: user.user_id.email,
-      phone: user.user_id.mobile_no,
-      role: user.user_id.role,
-      deposit: user.deposit,
-      advance: user.advance,
-      balance: user.balance,
-      monthly_due:
-        user.monthly_due !== null
-          ? new Date(user.monthly_due).toDateString()
-          : null,
-    }
-
-    if (user.unit_id) {
-      userData.unit_id = user.unit_id._id
-      userData.unit_no = user.unit_id.unit_no
-      userData.rent = user.unit_id.rent
-    }
-
-    return res.status(httpStatusCodes.OK).json(userData)
+    return res.status(httpStatusCodes.OK).json(response)
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -606,7 +476,7 @@ module.exports.update_unit_info = async (req, res) => {
     const { unit_id, deposit, occupancy } = req.body
 
     // Find the current tenant
-    const tenant = await TENANTMODEL.findOne({ user_id: user_id })
+    const tenant = await TENANTMODEL.findOne({ user_id: user_id }).populate('user_id unit_id apartment_id')
     if (!tenant) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
@@ -752,10 +622,10 @@ module.exports.delete_tenant = async (req, res) => {
             .json({ error: 'Unable to locate Unit' })
       }
     }
-
+    console.log(response)
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Removed Successfully...', response })
+      .json({ msg: 'Tenant removed.', response })
   } catch (err) {
     console.error({ error: err.message })
     return res
