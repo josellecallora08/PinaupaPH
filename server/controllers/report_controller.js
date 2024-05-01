@@ -54,6 +54,19 @@ module.exports.createReport = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to report an issue' })
     }
+
+    const sendNotif = await NOTIFMODEL.create({
+      sender_id: user_id,
+      receiver_id: "",
+      type: "Report",
+      report_id: response._id
+    })
+    if (!sendNotif) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Failed to report an issue' })
+    }
+
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: 'Report submitted successfully' })

@@ -18,13 +18,19 @@ const userSlice = createSlice({
       state.loading = false
       state.data = action.payload
     },
+    insertUserSuccess: (state,action) => {
+      state.loading = false
+      state.data = [...state.data, action.payload.response]
+      state.msg = action.payload.msg
+    },
     fetchSingleUser: (state, action) => {
       state.loading = false
       state.single = action.payload
     },
     deleteUserSuccess: (state, action) => {
       state.loading = false
-      state.data = state.data.filter((user) => user._id !== action.payload)
+      state.msg = action.payload.msg
+      state.data = state.data.filter((user) => user._id !== action.payload.response._id)
     },
     editUserSuccess: (state, action) => {
       state.loading = false
@@ -33,6 +39,7 @@ const userSlice = createSlice({
           ? { ...user, ...action.payload.response }
           : user,
       )
+      state.msg = action.payload.msg
     },
     actionUserFailed: (state, action) => {
       state.loading = false
@@ -44,6 +51,7 @@ const userSlice = createSlice({
 export const {
   fetchUserStart,
   fetchUserSuccess,
+  insertUserSuccess,
   fetchSingleUser,
   deleteUserSuccess,
   editUserSuccess,
@@ -97,7 +105,7 @@ export const createTenant = (fields) => async (dispatch) => {
     }
 
     const json = await response.json()
-    dispatch(fetchUsers())
+    dispatch(insertUserSuccess(json))
   } catch (err) {
     dispatch(actionUserFailed(err.message))
   }
@@ -263,9 +271,9 @@ export const deleteUser = (userId) => async (dispatch) => {
       const json = await response.json()
       throw new Error(json.error)
     }
-    // const json = await deleteUser.json()
+    const json = await response.json()
 
-    dispatch(fetchUsers())
+    dispatch(deleteUserSuccess(json))
   } catch (err) {
     dispatch(actionUserFailed(err.message))
   }
