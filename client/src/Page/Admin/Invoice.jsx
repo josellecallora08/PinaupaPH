@@ -77,13 +77,13 @@ const Invoice = () => {
                   <option value="false">Unpaid</option>
                 </select>
               </div>
-              <button
+              {user?.role === "Admin" && <button
                 onClick={() => setModal((prevState) => !prevState)}
                 className="btn md:btn-wide w-1/2  bg-primary-color text-white hover:text-primary-color"
               >
                 <FaPlus />
                 Prepare Invoice
-              </button>
+              </button>}
             </div>
           </div>
           <div className="w-full h-80 ">

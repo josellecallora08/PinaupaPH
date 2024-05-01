@@ -144,7 +144,6 @@ module.exports.searchContract = async (req, res) => {
 
 module.exports.createContract = async (req, res) => {
   const { user_id } = req.query
-  // const { from_date, to_date } = req.body
   const current_date = new Date()
   const day = current_date.getDate()
   const month = current_date.getMonth()

@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom'
 import banner from '/banner.svg'
 const TenantCard = ({ data }) => {
   return (
-    <Link to={`/tenantprofile/${data._id}`} className="relative">
-      <div className="lg:text-base flex bg-white    w-full  h-[11rem]  rounded-md relative text-xs shadow-sm shadow-light-gray  hover:scale-105 hover:transition hover:z-10 hover:ease-in hover:duration-100 ">
+    <Link to={`/tenantprofile/${data.user_id._id}`} className="relative">
+      <div className="lg:text-base flex bg-white w-full h-[11rem] rounded-md relative text-xs shadow-sm shadow-light-gray hover:scale-105 hover:transition hover:z-10 hover:ease-in hover:duration-100 ">
         <div className='lg:ml-2 size-full max-w-28 flex items-center justify-center'>
           <figure className='size-full max-h-20 max-w-20 rounded-full overflow-hidden'>
             <img
-              src={data?.image}
+              src={data?.user_id.profile_image.image_url}
               className=""
               alt=""
             />
@@ -16,9 +16,9 @@ const TenantCard = ({ data }) => {
         <div className="lg:-ml-2 ml-3 mt-8 flex flex-col gap-1 ">
           <p className="xl:text-lg lg:text-sm md:text-base font-semibold text-lg mr-24">
             
-            <span>{data.name}</span>
+            <span>{data.user_id.name}</span>
           </p>
-          <p className="md:text-base text-sm font-semibold">{data.phone}</p>
+          <p className="md:text-base text-sm font-semibold">{data.user_id.phone}</p>
           <p className="bg-primary-color  text-white font-regular text-sm rounded-md p-2 w-36 mt-2 hover:opacity-70">
             Balance:  ₱ 
             <span className="font-semibold">

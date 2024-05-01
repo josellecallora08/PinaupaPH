@@ -16,6 +16,7 @@ const Tenant = () => {
   const [searchItem, setSearchItem] = useState('')
   const [isAddTenantFormOpen, setIsAddTenantFormOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState('')
+  const [isVisible, setIsVisible] = useState(true);
 
   const [fields, setFields] = useState({
     name: '',
@@ -95,7 +96,8 @@ const Tenant = () => {
 
   return (
     <>
-      <MessageToast message={msg} error={error} />
+      {isVisible && <MessageToast message={msg} error={error} isVisible={isVisible} setIsVisible={setIsVisible} />}
+      {/* Add condition if unread it wont show as well */}
       {/* <NotificationToast/> */}
       <div className="w-full h-full bg-white1">
         <div className="w-11/12 flex flex-col m-auto">

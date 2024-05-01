@@ -1,8 +1,24 @@
+import { useEffect, useState } from 'react';
 import close from '/close.svg'
-const MessageToast = ({ message, error }) => {
+const MessageToast = ({ message, error, isVisible, setIsVisible }) => {
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsVisible(false);
+        }, 5000);
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, []);
+
+    const handleHover = () => {
+        clearTimeout(timer);
+        setIsVisible(true);
+    };
     return (
         <>
-            <div className={`z-50 absolute top-24 right-5 bg-white1 ${message ? 'border-[#00ff00]' : error ? 'border-red' : 'border-primary-color'} border-2 size-full max-w-40 md:max-w-60 max-h-12 md:max-h-20 rounded-md shadow-md overflow-hidden`}>
+            <div onMouseEnter={handleHover} className={`z-50 absolute top-24 right-5 bg-white1 ${message ? 'border-[#00ff00]' : error ? 'border-red' : 'border-primary-color'} border-2 size-full max-w-40 md:max-w-60 max-h-12 md:max-h-20 rounded-md shadow-md overflow-hidden`}>
                 <div className="size-full p-2 bg-white1 flex items-center justify-center font-regular">
                     <p className='text-xs md:text-base text-center'>{message ? message : error}</p>
                 </div>

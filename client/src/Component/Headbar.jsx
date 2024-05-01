@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { TbBellRinging } from 'react-icons/tb';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -14,6 +14,7 @@ const Headbar = () => {
   const profile = useSelector((state) => state.toggle.profile);
   const notif = useSelector((state) => state.toggle.notif);
   const user = useSelector((state) => state.auth.user);
+  const [currentDate, setCurrentDate] = useState(new Date())
   const notifBg = useRef(null);
   const menuBg = useRef(null);
   const navigate = useNavigate();
@@ -34,10 +35,34 @@ const Headbar = () => {
       dispatch(toggleProfile());
     }
   };
+  const monthName = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+  const Today = new Date().getDate();
+  const Month = new Date().getMonth();
+  const Year = new Date().getFullYear();
+  const Day = new Date().getDay();
+  const Hour = new Date().getHours();
+  const timeHour = Hour > 12 ? Hour - 12 : Hour === 0 ? 12 : Hour;
+  const Minute = new Date().getMinutes();
+  const Second = new Date().getSeconds();
+  const AMPM = Hour >= 12 ? "PM" : "AM";
+
+  const paddedHour = timeHour < 10 ? `0${timeHour}` : timeHour;
+  const paddedMinute = Minute < 10 ? `0${Minute}` : Minute;
+  const paddedSecond = Second < 10 ? `0${Second}` : Second;
+
+  const completeDate = `${monthName[Month]} ${Today < 10 ? `0${Today}` : Today}, ${Year} ${paddedHour}:${paddedMinute}:${paddedSecond} ${AMPM}`;
   const handleNotif = () => {
     dispatch(toggleNotification());
   };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentDate(new Date())
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     profile && dispatch(toggleCloseProfile());
@@ -67,7 +92,7 @@ const Headbar = () => {
             <img src={sidebar ? close : menu} className="w-5 h-5" alt="" />
           </button>
           <div>
-            <span className="text-gray text-sm md:text-regular font-light">{new Date().toLocaleString()}</span>
+            <span className="text-gray text-sm md:text-regular font-light">{completeDate}</span>
           </div>
         </div>
         <div className="flex items-center">
@@ -75,22 +100,22 @@ const Headbar = () => {
             <TbBellRinging size={25} color="white" />
             <span className='absolute text-white bg-red/80 w-full max-w-[15px] rounded-full text-sm -top-2 -right-1'>1</span>
           </button>
-          <img src={user?.image} alt="" className="w-10 h-10 rounded-full ml-2 cursor-pointer profile-img" onClick={handleProfile} />
+          <img src={user.role === "Admin" ? user?.profile_image.image_url : user?.user_id.profile_image.image_url} alt="" className="w-10 h-10 rounded-full ml-2 cursor-pointer profile-img" onClick={handleProfile} />
           {profile && (
-  <div
-    ref={menuBg}
-    className={`absolute top-full right-2 w-48 mt-2 text-black rounded-md shadow-lg bg-white overflow-hidden transition-all duration-300 transform-gpu ${profile ? 'scale-y-100' : 'scale-y-0'} origin-top ease-in-out`}
-  >
-    <ul>
-      <li className="px-5 py-2 text-base font-regular hover:bg-primary-color cursor-pointer hover:text-white" onClick={handleProfile}>
-        <Link to={'/profile'}>Profile</Link>
-      </li>
-      <li className="px-5 py-2 text-base font-regular  hover:bg-primary-color cursor-pointer hover:text-white">
-        <button type="button" onClick={handleLogout} className="w-full text-left">Logout</button>
-      </li>
-    </ul>
-  </div>
-)}
+            <div
+              ref={menuBg}
+              className={`absolute top-full right-2 w-48 mt-2 text-black rounded-md shadow-lg bg-white overflow-hidden transition-all duration-300 transform-gpu ${profile ? 'scale-y-100' : 'scale-y-0'} origin-top ease-in-out`}
+            >
+              <ul>
+                <li className="px-5 py-2 text-base font-regular hover:bg-primary-color cursor-pointer hover:text-white" onClick={handleProfile}>
+                  <Link to={'/profile'}>Profile</Link>
+                </li>
+                <li className="px-5 py-2 text-base font-regular  hover:bg-primary-color cursor-pointer hover:text-white">
+                  <button type="button" onClick={handleLogout} className="w-full text-left">Logout</button>
+                </li>
+              </ul>
+            </div>
+          )}
 
 
         </div>
