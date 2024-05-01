@@ -11,8 +11,8 @@ const ApartmentCard = ({ val, num }) => {
   // }, [])
   return (
     <>
-        <Link to={`/apartment/${val._id}`} className="col-span-1 row-span-1  shadow-lg bg-white  overflow-hidden flex">
-          <div className="p-5 h-full w-full flex items-center">
+        <Link to={`/apartment/${val._id}`} className="col-span-1 rounded-md row-span-1 hover:scale-105 hover:transition hover:z-10 hover:ease-in hover:duration-100  shadow-lg bg-white  overflow-hidden flex">
+          <div className="p-5 h-full w-full flex items-center ">
             <div className="flex flex-col max-w-fit">
               <p className="flex ">
                 {/* <p className="w-28 text-xs lg:text-base">Name : </p> */}

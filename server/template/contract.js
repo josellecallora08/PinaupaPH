@@ -11,7 +11,7 @@ module.exports = ({ response }) => {
     'August',
     'September',
     'October',
-    'November',
+    'Novesmber',
     'December',
   ]
 
@@ -25,100 +25,183 @@ module.exports = ({ response }) => {
   return `
 
   <!DOCTYPE html>
-  <html lang="en">
-  <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Kontrata sa Pagpapaupa</title>
-      <style>
-          body {
-              font-family: Arial, sans-serif;
-              margin: 0;
-              padding: 0;
-              background-color: #f7f7f7;
-          }
-          .container {
-              max-width: 800px;
-              margin: 20px auto;
-              padding: 20px;
-              border-radius: 10px;
-              background-color: #fff;
-  
-          }
-          h1 {
-              text-align: center;
-              color: #333;
-              margin-bottom: 20px;
-          }
-          p {
-              margin-bottom: 10px;
-              color: #666;
-              text-align: justify;
-              line-height: 1.2;
-          }
-          ol {
-              margin-left: 20px;
-          }
-          ol li {
-              margin-bottom: 10px;
-          }
-          .signature {
-              margin-top: 30px;
-              text-align: center;
-          }
-          
-          .signature p {
-              margin-top: 0;
-              color: #666;
-              font-style: italic;
-          }
-	.sign-container{
-display:flex;
-align-items: center;
-gap:50px;
-	}
-         
-      </style>
-  </head>
-  <body>
-      <div class="container">
-          <h1>Kontrata sa Pagpapaupa</h1>
-          <p><strong>Lokasyon:</strong> ${response?.apartment_id.address}</p>
-          <p>Ang kontratang ito ay nagbabago taon-taon. Ang may-ari ng bahay ay may karapatang magpaalis sa umuupa kapag nilabag ang mga sumusunod:</p>
-          <ol>
-              <li>Ang upa o renta sa bawat buwan ay nagkakahalaga ng ${response?.unit_id.rent}.</li>
-              <li>Dapat mayroong paunang isang (1) buwang upa o renta at isang buwang deposito. Ang paunang bayad na ito ay magagamit lamang kapag paalis na ang umuupa at ito ay pambayad sa huling dalawang buwang upa. Ang isang buwang deposito ay nakalaan para sa mga konsumo ng tubig at kuryente at sa mga nasirang pasilidad ng bahay, kung mayroon man.</li>
-              <li>Kapag hindi makabayad ng isang buwang upa o renta sa bahay, may karapatan ang may-ari na abisuhan ang umuupa na umalis agad-agad at dumulong sa kinauukulan kung hindi sumunod.</li>
-              <li>Ang isang (1) buwan deposito at isang (1) buwang advance na bayad ay:
-                  <ol type="a">
-                      <li>Gagamitin lamang ang ikalawang buwang advance kapag nadesision na ang umuupa na aalis.</li>
-                      <li>Ang isang buwang deposito naman ay gagamitin para sa naiwang konsumo ng tubig at kuryente at kung mayroong nasirang pasilidad ng bahay kung sakali man. Pero kung di umabot ng 6 na buwan ang pangungupahan ay hindi na ito maisasauli pa.</li>
-                      <li>Ang isang buwang advance ay hindi maaring kuhanin bagkus ito ay dapat ikonsumo ng umuupa sa hanggang sa araw ng kanilang pag-alis sa paupahan.</li>
-                      <li>Kapag ang umuupa ay mapaalis dahil sa paglabag sa mga patakaran ng nagpapaupa, hindi na maaring makuha pa ang dalawang buwang advance kahit ito ay may nalalabi pang araw sa paupahan.</li>
-                  </ol>
-              </li>
-              <li>Ang lahat ng pasilidad ng bahay ay maayos nag-gumagana paglipat ng umuupa kaya ano mang masira ay dapat ipagawa ng umuupa at hindi ibabawas sa renta ng bahay kundi sa sariling gastos ng umuupa.</li>
-              <li>Sagot ng umuupa ang lahat ng konsumo sa tubig, kuryente, at homeowner’s fee buwan-buwan hanggat sila ay umuupa pa sa bahay. Responsibilidad din ng umuupa na panatilihin ang malinis na kalagayan ng bahay at paligid nito at pati na rin ang katahimikan.</li>
-              <li>Bawal mag-ipon ng flammable o burnable materials o anumang bagay na maaring pagmulan ng sunog sa bahay. Pananagutan ng umuupa anuman ang mangyari sa bahay habang siya ay nakaupa dito.</li>
-              <li>Bawal magpako sa mga dingding ng bahay. Kung sakaling may ilalagay na dekorasyon o kurtina ay dapat abisuhan ang may-ari ukol dito para walang masirang pasilidad ng bahay.</li>
-              <li>Bawal ang sobrang ingay, malakas na tunog ng radyo o TV, videoke, at iba pa.</li>
-              <li>Ano mang pangyayari o nasira sa bahay ay dapat ipaalam agad-agad sa may-ari ng bahay.</li>
-              <li>Isauli ang susi sa may-ari ng bahay sa oras o araw na lumipat ng sa ibang tirahan. Bawal iwanan ito kung kani-kanino. Dapat may release order o clearance galing sa homeowners’s bago aalis.</li>
-          </ol>
-          <p>Nilagdaan namin ang kasunduang ito ngayong ${response?.createdAt} dito sa ${response?.apartment_id.address}, ${response?.apartment_id.province} ${response?.apartment_id.barangay}.</p>
-          <p>Petsa ng simula ng kontrata: (date)</p>
-          <div class="sign-container">
-          <div  class="signature">
-              <p>Wendell C. Ibias</p>
-		<p class="title">Owner</p>
-          </div>
-          <div  class="signature">
-              <p>${response?.user_id.name}</p>
-<p class="title">Rentee</p>
-          </div>
-          </div>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+
+</head>
+
+<body style="font-family: Poppins;">
+  <div style="display: flex; justify-content: center; align-items: middle; font-size: 12px;">
+    <div
+      style="padding-top: 1.5rem; padding-left: 0.5in; padding-right: 0.5in; 
+      width: 8.5in; min-height: 11in; margin-top: 1rem; margin-bottom: 10rem;
+      box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1); 
+      background-color: #ffffff; ">
+      <div
+        style="font-family: Poppins; padding-bottom: 1rem; display: flex; justify-content: space-between; min-padding-bottom: 1rem; border-bottom: 4px solid #ccc;">
+        <div>
+          <img src="logo.svg" style="height: 1.5rem; width: auto;" />
+        </div>
+        <p style=" padding-top: 0.5rem; font-size: 20px; font-weight: bold; margin-bottom: 1.5rem;">
+          KONTRATA NG PAGPAPAUPA
+        </p>
       </div>
-  </body>
-  </html>
+
+      <p style="font-family: Poppins; white-space: nowrap; margin-bottom: 3rem;  margin-top: 40px;">
+        <span style="font-weight: bold; font-family: Poppins;">Lokasyon: </span>Blk.L Lot 18 A, Butterfly Street. South
+        Garden Homes, Salitran 3, Dasmarines
+      </p>
+      <p style="font-family: serif;  margin-bottom: 1rem; font-weight: bold;  font-family: Poppins;">
+        SA MGA KINAUUKULANG NITO,
+      </p>
+
+      <p style="font-family: serif;  margin-bottom: 1rem;font-family: Poppins;">
+        Ang kontratang ito ay nababago taon-taon at ang may-ari ng bahay ay may karapatang magpaalis sa umuupa kapag
+        nilabag ang mga sumusunod;
+      </p>
+      <p>
+        1.) Ang upa o renta sa bawat buwan ay nagkakahalaga ng{' '}
+        <span className="font-bold">PhP 3,500</span>
+      </p>
+
+      <p>
+        2.) Dapat ay may paunang isang (1) buwan na upa o renta sa isang (1)
+        buwang desposito at ito ay magagamit lamang kapag paalis na ang
+        naupa at ito ay pambayad sa huling dalawang buwang upa. Ang isang
+        buwang deposito naman ay nakalaan para sa maiiwang konsumo ng tubig
+        at kuryente at sa mga nasirang pasilidad ng bahay kung sakaling
+        mayroon man.
+      </p>
+
+      <p>
+        3.) Kapag hindi makabayad ng isang buwang upa o renta sa bahay, ang
+        may-ari ay may karapatang abisuhan ang umuupa na umalis agad-agad;
+        at dumulog sa kinauukulan kung hindi sumunod.
+      </p>
+
+      <p>
+        4.) Ang isang (1) buwang deposito at isang (1) buwang advance na
+        bayad ay;
+      </p>
+      <p>
+        A.) Gagamitin lamang ang ikalawang buwang advavnce kapag nagdesisyon
+        na ang umuupa na aalis.
+      </p>
+      <p>
+        B.) Ang isang buwang deposito naman ay gagamitin para sa naiwang
+        konsumo ng tubig at kuryente at kung mayroong nasirang pasilidad ng
+        bahay kung sakali man. Pero kung di umabot ng 6 na buwan ng ang
+        pangungupahan ay hindi na ito maisasauli pa.
+      </p>
+      <p>
+        C.) Ang isang buwang advance ay hindi maaring kuhanin bagkus ito ay
+        dapat ikonsumo ng umuupa hanggang sa araw ng kanilang pag alis sa
+        paupahan.
+      </p>
+      <p>
+        D.) Kapag ang umuupa ay mapaais dahil sa paglabag sa mga patakaran
+        ng nagpapa upa, hindi na maaring makuha pa ang dalawang buwang
+        advance kahit ito ay may nalalabi pang araw sa paupahan.
+      </p>
+
+      <p>
+        5.) Ang lahat ng pasilidad ng bahay ay maayos na gumagana pag lipat
+        ng umuupa kaya ano mang masira ay dapat ipagawa ng umuupa at hindi
+        ibabawas sa renta ng bahay kundi sa sariling gastos ng umuupa.
+      </p>
+      <p>
+        6.) sagot ng umuupa ang lahat ng konsumo sa tubig, kuryente at
+        homeowner's fee buwan buwan hanggat sila ay umuupa pa sa bahay.
+        Responsibilidad din ng umuupa na panatilihing malinis sa bahay at
+        paligid nito at pati na rin ang katahimikan.
+      </p>
+      <p>
+        7.) Bawal mag-ipon ng flammable o burnable materials o anumang bagay
+        na maaring pagmulan ng sunog sa bahay. Pananagutan ng umuupa anu man
+        ang mangyari sa bahay habang siya ay naka upa dito.
+      </p>
+      <p>
+        8.) Bawal magpako sa mga dingding ng bahay. Kung sakaling may
+        ilalagay na dekorasyon o kurtina ay dapat abisuhan ang may-ari ukol
+        dito para walang masirang pasilidad ng bahay.
+      </p>
+      <p>
+        9.) Bawal sobrang ingay, malakas na tunog ng radyo o tv, videoke,
+        etc.
+      </p>
+      <p>
+        10.) Ano mang pangyayari o nasira sa bahay ay dapat ipaalam agad
+        agad sa may-ari ng bahay;
+      </p>
+      <p>
+        11.) Isauli ang susi sa may-ari ng bahay sa oras o araw na lumipat
+        na sa ibang tirahan. Bawal iwanan ito kung kani-kanino. Dapat may
+        release order o cleaerance galing sa homeowner's bago aalis.
+      </p>
+
+
+
+    </div>
+  </div>
+  <div style="display: flex; justify-content: center; align-items: middle; font-size: 12px;">
+    <div
+      style="padding-left: 0.5in; padding-top: 5rem; padding-right: 0.5in; width: 8.5in; min-height: 11in;
+       box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1); background-color: #ffffff;
+       margin-top: 2rem;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        <div>
+          <hr>
+          <p style="text-align: center;">
+            Pangalan at Lagda ng Nagpapa upa
+          </p>
+        </div>
+
+        <div>
+          <hr>
+          <p>
+            Pangalan at Lagda ng Umuupa
+          </p>
+        </div>
+
+      </div>
+
+      <p style="margin-top: 200px">
+        Nilagdaan namin ang kasunduang ito ngayong ________, ng
+        _____________ dito sa Blk. 8, Lot 18A Butterfly Street, South Garden
+        Homes, Salitran 3, Dasmarinas City, Cavite
+      </p>
+
+      <p style="margin-top: 100px;">
+        Petsa ng simula ng kontrata:
+      </p>
+      <p>
+        Araw ng bayad:
+      </p>
+      <div className="h-60 lg:h-60"></div>
+
+      <p style="margin-top: 100px;">
+        Mga saksi sa kasunduan
+      </p>
+      <p>
+        1.)
+      </p>
+      <p>
+        2.)
+      </p>
+
+    </div>
+  </div>
+</body>
+
+</html>
 `
 }

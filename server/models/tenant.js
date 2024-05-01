@@ -4,7 +4,7 @@ const PAYMENTMODEL = new mongoose.Schema(
   {
     receipt_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'recipt',
+      ref: 'receipt',
       required: true,
     },
     payment_method: {

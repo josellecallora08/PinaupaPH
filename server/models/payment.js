@@ -3,19 +3,8 @@ const PAYMENTMODEL = new mongoose.Schema(
   {
     receipt_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'RECEIPTMODEL',
+      ref: 'receipts',
       required: true,
-    },
-    pdf: {
-      public_id: {
-        type: String
-      },
-      pdf_url: {
-        type: String
-      },
-      reference: {
-        type: String
-      }
     },
     payment_method: {
       type: String,

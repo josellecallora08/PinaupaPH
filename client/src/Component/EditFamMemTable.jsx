@@ -154,7 +154,7 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
           <div className="flex justify-end mb-8 mt-3 mr-10">
             <button
               type="submit"
-              className=" bg-primary-color text-white font-bold py-2 px-4 rounded"
+              className=" bg-primary-color text-white font-semibold py-2 px-4 rounded"
             >
               Submit
             </button>

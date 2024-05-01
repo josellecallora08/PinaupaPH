@@ -162,11 +162,45 @@ module.exports.createInvoice = async (req, res) => {
     }
     console.log(cloudinaryResponse)
     console.log(cloudinaryResponse.public_id)
+
+    const intent = await fetch(`${process.env.PAYMONGO_CREATE_INTENT}`, {
+      method: "POST",
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+        authorization: `Basic ${Buffer.from(process.env.PAYMONGO_SECRET_KEY).toString('base64')}`,
+      },
+      body: JSON.stringify({
+        data: {
+          attributes: {
+            amount: tenant.unit_id.rent,
+            payment_method_allowed: [
+              'paymaya',
+              'gcash',
+              'grab_pay',
+            ],
+            payment_method_options: { card: { request_three_d_secure: 'any' } },
+            currency: 'PHP',
+            capture_type: 'automatic',
+            statement_descriptor: 'Rental Fee',
+            description: 'Monthly Rent',
+          },
+        },
+      })
+    })
+    if (!intent) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Failed to create payment intent.' })
+    }
+    const json = await intent.json()
     const response = await INVOICEMODEL.create({
       tenant_id: tenant._id,
       'pdf.public_id': cloudinaryResponse.public_id,
       'pdf.pdf_url': cloudinaryResponse.secure_url,
       'pdf.reference': reference,
+      'intent.clientKey': json.data.attributes.client_key,
+      'intent.paymentIntent': json.data.id,
       amount: tenant.unit_id.rent,
     })
 
@@ -341,7 +375,13 @@ module.exports.editInvoice = async (req, res) => {
     }
 
     const pdfBuffer = await new Promise((resolve, reject) => {
-      pdf.create(pdf_template(response), {}).toBuffer((err, buffer) => {
+      pdf.create(pdf_template(response), {
+        childProcessOptions: {
+          env: {
+            OPENSSL_CONF: '/dev/null'
+          }
+        }
+      }).toBuffer((err, buffer) => {
         if (err) reject(err)
         else resolve(buffer)
       })

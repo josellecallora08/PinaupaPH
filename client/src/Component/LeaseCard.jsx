@@ -1,7 +1,15 @@
-import React from 'react'
-import { MdOutlineClose } from 'react-icons/md'
-import { MdOutlineRemoveRedEye } from 'react-icons/md'
+import React from 'react';
+import { MdOutlineClose, MdOutlineRemoveRedEye } from 'react-icons/md';
+import { Link } from 'react-router-dom';
+
 const LeaseCard = () => {
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      // Put your delete logic here
+      console.log("Deleting item...");
+    }
+  };
+
   return (
     <div className="flex flex-row shadow-sm shadow-light-gray rounded-md items-center">
       <div className='w-[95%] flex gap-2 items-center m-auto'>
@@ -16,17 +24,18 @@ const LeaseCard = () => {
         </div>
 
         <div className="flex items-center justify-end gap-3  w-full">
-          <button className="bg-primary-color p-2 inline-flex flex-row items-center rounded-md">
+          <Link to="/leaseview" className="bg-primary-color p-2 inline-flex gap-1 flex-row items-center rounded-md">
             <h1 className="text-white text-xs">View</h1>
-            <MdOutlineRemoveRedEye color="white" size={20} />
-          </button>
-          <button className="bg-red inline-flex p-2 flex-row items-center rounded-md">
+            <MdOutlineRemoveRedEye color="white" size={15} />
+          </Link>
+          
+          <button onClick={handleDelete} className="bg-red inline-flex p-2 flex-row items-center rounded-md">
             <MdOutlineClose color="white" size={18} />
           </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LeaseCard
+export default LeaseCard;

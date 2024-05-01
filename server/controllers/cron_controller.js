@@ -88,7 +88,13 @@ module.exports.scheduledInvoice = () => {
 
             const pdfBuffer = await new Promise((resolve, reject) => {
               pdf
-                .create(pdf_template({ response: details }), {})
+                .create(pdf_template({ response: details }), {
+                  childProcessOptions: {
+                    env: {
+                      OPENSSL_CONF: '/dev/null'
+                    }
+                  }
+                })
                 .toBuffer((err, buffer) => {
                   if (err) reject(err)
                   else resolve(buffer)
@@ -112,10 +118,43 @@ module.exports.scheduledInvoice = () => {
                 )
                 .end(pdfBuffer)
             })
+            const intent = await fetch(`${process.env.PAYMONGO_CREATE_INTENT}`, {
+              method: "POST",
+              headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                authorization: `Basic ${Buffer.from(process.env.PAYMONGO_SECRET_KEY).toString('base64')}`,
+              },
+              body: JSON.stringify({
+                data: {
+                  attributes: {
+                    amount: item.unit_id.rent,
+                    payment_method_allowed: [
+                      'paymaya',
+                      'gcash',
+                      'grab_pay',
+                    ],
+                    payment_method_options: { card: { request_three_d_secure: 'any' } },
+                    currency: 'PHP',
+                    capture_type: 'automatic',
+                    statement_descriptor: 'Rental Fee',
+                    description: 'Monthly Rent',
+                  },
+                },
+              })
+            })
+            if (!intent) {
+              console.log("Error in Creating Paymnt Intent...")
+              continue
+            }
+            const json = await intent.json()
+
             await INVOICEMODEL.create({
               tenant_id: item._id,
               'pdf.public_id': cloudinaryResponse.public_id,
               'pdf.pdf_url': cloudinaryResponse.secure_url,
+              'intent.clientKey': json.data.attributes.client_key,
+              'intent.paymentIntent': json.data.id,
               'pdf.reference': reference,
               amount,
             })
