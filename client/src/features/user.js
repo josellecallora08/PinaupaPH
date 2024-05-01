@@ -30,7 +30,7 @@ const userSlice = createSlice({
     deleteUserSuccess: (state, action) => {
       state.loading = false
       state.msg = action.payload.msg
-      state.data = state.data.filter((user) => user._id !== action.payload.response._id)
+      state.data = state.data.filter((user) => user.user_id._id !== action.payload.response._id)
     },
     editUserSuccess: (state, action) => {
       state.loading = false
