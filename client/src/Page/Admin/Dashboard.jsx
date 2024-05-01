@@ -74,7 +74,7 @@ const Dashboard = () => {
       ) : (
         <> 
           <Toast message={"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident dolores cum quam itaque a sunt."} />
-          <div className="w-full h-full md:h-auto xl:h-full xl:max-h-auto flex flex-col items-start bg-white1">
+          <div className="w-full h-full md:h-auto xl:h-full xl:max-h-auto flex flex-col items-start  bg-white1">
             <div className="w-11/12 h-fit m-auto py-5 lg:py-0">
               <Link
                 to="/dashboard"
@@ -84,7 +84,7 @@ const Dashboard = () => {
               </Link>
             </div>
             <div className="w-11/12 xl:max-h-[800px] bg-white1 flex flex-col m-auto xl:grid grid-cols-3 gap-5 grid-rows-7">
-              <div className="lg:pt-4 flex justify-between items-center col-span-3 row-span-1  rounded-md overflow-hidden shadow-md bg-white ">
+              <div className="lg:pt-4 flex justify-between items-center col-span-3 row-span-1  rounded-md overflow-hidden shadow-md bg-white1 ">
                 <figure className="w-full h-full max-w-max md:max-w-fit">
                   <img
                     src={City}
@@ -148,7 +148,7 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-span-3 row-span-2 grid grid-cols-4 md:grid-cols-3 grid-flow-row md:grid-rows-2 gap-5">
+              <div className="col-span-3 row-span-2 grid grid-cols-4 md:grid-cols-3 grid-flow-row md:grid-rows-2 gap-5 pb-7">
                 <div className="col-span-4 md:col-span-2 row-span-2 grid grid-cols-2 grid-rows-2 gap-5">
                   <div className="col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md">
                     <div className="w-full bg-primary-color max-w-20 flex items-center justify-center">

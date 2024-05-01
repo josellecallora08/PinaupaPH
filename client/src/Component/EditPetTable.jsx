@@ -142,7 +142,7 @@ const EditPetTable = ({setIsEditPetForm}) => {
   <div className="flex justify-end mb-10 mt-2 mr-10">
       <button
       type="submit"
-      className=" bg-primary text-white font-bold py-2 px-4  rounded"
+      className=" bg-primary-color text-white font-semibold py-2 px-4  rounded"
     >
       Submit
     </button>

@@ -41,7 +41,7 @@ const AddPet = ({ id, setIsAddPetForm }) => {
       </div>
       <form
         onSubmit={handleSubmit}
-        className="lg:w-full lg:pt-4 w-[20rem] h-[20rem] px-4 overflow-y-auto"
+        className="lg:w-full lg:pt-4 w-[20rem] h-[22rem] px-4 overflow-y-auto"
       >
         <button className="absolute top-4 right-6">
           <IoMdClose

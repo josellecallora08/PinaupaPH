@@ -85,7 +85,7 @@ const EditPet = ({ setIsEditPetForm }) => {
           <div className="flex justify-end mt-8 gap-3">
             <button
               onClick={handleSubmit}
-              className=" bg-dark-blue text-white font-bold py-2 px-4 rounded"
+              className=" bg-primary-color text-white font-bold py-2 px-4 rounded"
             >
               Submit
             </button>

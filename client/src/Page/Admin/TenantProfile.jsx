@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { FaEdit } from 'react-icons/fa'
@@ -36,6 +36,7 @@ const TenantProfile = () => {
   const households = useSelector((state) => state.household.data)
   console.log(households)
   const navigate = useNavigate()
+  const dropdownRef = useRef(null);
   const handleDeleteTenant = () => {
     const isConfirmed = window.confirm(
       'Are you sure you want to delete this tenant?',
@@ -48,6 +49,22 @@ const TenantProfile = () => {
       console.log('Deletion cancelled')
     }
   }
+  const handleClickOutsideDropdown = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsHouseDotOpen(false);
+      setIsPetDotOpen(false);
+    }
+  };
+
+  const toggleDropdown = (menu) => {
+    if (menu === 'household') {
+      setIsHouseDotOpen(!isHousedotOpen);
+      setIsPetDotOpen(false);
+    } else if (menu === 'pet') {
+      setIsPetDotOpen(!isPetdotOpen);
+      setIsHouseDotOpen(false);
+    }
+  };
   const toggleEditTenantDetailForm = () => {
     setIsEditTenantDetailForm(!isEditTenantDetailForm)
   }
@@ -79,6 +96,13 @@ const TenantProfile = () => {
   useEffect(() => {
     dispatch(fetchHouseholds(id))
   }, [])
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutsideDropdown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideDropdown);
+    };
+  }, []);
   
   const birthday = new Date(tenant?.birthday).toLocaleDateString()
   return (
@@ -304,11 +328,11 @@ const TenantProfile = () => {
                       </h1>
                       <RxDotsVertical
                         className="lg:text-2xl text-lg cursor-pointer"
-                        onClick={() => setIsHouseDotOpen(!isHousedotOpen)}
+                        onClick={() => toggleDropdown('household')}
                       />
                     </div>
                     {isHousedotOpen && (
-                      <div className="absolute right-0 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400">
+                      <div ref={dropdownRef} className="absolute right-0 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400">
                         <div
                           className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
                           onClick={() => {
@@ -373,16 +397,16 @@ const TenantProfile = () => {
                   )}
 
                   {/*Pets */}
-                  <div className="lg:overflow-y-auto ">
+                  <div className="lg:overflow-y-auto relative ">
                     <div className="lg:p-3 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <h1 className="lg:text-xl font-bold">Pet Details</h1>
+                      <h1 className="lg:text-xl font-bold ">Pet Details</h1>
                       <RxDotsVertical
-                        className="lg:text-2xl text-lg cursor-pointer"
+                        className="lg:text-2xl text-lg  cursor-pointer"
                         onClick={() => setIsPetDotOpen(!isPetdotOpen)}
                       />
                     </div>
                     {isPetdotOpen && (
-                      <div className=" absolute right-5 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400">
+                      <div ref={dropdownRef} className=" absolute right-0 top-15 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400">
                         <div
                           className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
                           onClick={() => {
@@ -427,7 +451,7 @@ const TenantProfile = () => {
                   )}
                   {isAddPetForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
-                      <div className="lg:w-1/2 bg-white rounded-lg relative">
+                      <div className="lg:w-1/2 h-fit bg-white rounded-lg relative">
                         <AddPet 
                         id={tenant.id}
                         setIsAddPetForm={setIsAddPetForm} 
