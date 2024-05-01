@@ -112,7 +112,7 @@ const Tenant = () => {
               </div>
               <button
                 onClick={toggleAddTenantForm}
-                className="btn w-fit md:btn-wide bg-primary-color font-bold uppercase text-white hover:text-primary-color"
+                className="btn w-fit md:btn-wide bg-primary-color font-semibold uppercase text-white hover:text-primary-color"
               >
                 <FaPlus />
                 Add Tenant
@@ -121,7 +121,7 @@ const Tenant = () => {
           </div>
 
           {/* Body of Tenant Tab */}
-          <div className="lg:grid-cols-3  md:grid-cols-2 grid grid-cols-1 gap-4 ">
+          <div className="lg:grid-cols-3  md:grid-cols-1 grid grid-cols-1 md:mr-10 gap-4 ">
             {loading ?
               <SearchLoading /> : tenant?.map((val, key) => (
                 <TenantCard key={key} data={val} />
