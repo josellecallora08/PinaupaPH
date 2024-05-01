@@ -118,7 +118,7 @@ const Announcement = () => {
           </button>
         </div>
         {/* Body of Announcement Tab */}
-        <div className="xl:h-[35rem] w-full h-80 overflow-x-auto px-8 mb-2 rounded-bl-lg rounded-br-lg bg-white">
+        <div className=" md:h-[25rem] min-[1440px]:h-[45rem] min-[1280px]:h-[45rem] min-[1366px]:h-[19rem] w-full h-80 overflow-x-auto px-8 rounded-bl-lg rounded-br-lg bg-white">
           {/* Announcement Cards */}
           <div className="flex flex-wrap mt-5 ">
             {announcements

@@ -6,10 +6,11 @@ const {
   editAnnouncement,
   deleteAnnouncement,
 } = require('../controllers/announcement_controller')
+const requireAuth = require('../middleware/requireAuth')
 
 const router = Router()
 
-router.post('/', createAnnouncement)
+router.post('/', requireAuth, createAnnouncement)
 router.get('/list', fetchAnnouncements)
 router.get('/list/v1', fetchAnnouncement)
 router.patch('/edit', editAnnouncement)

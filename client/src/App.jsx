@@ -32,6 +32,7 @@ import TermsAndConditions from './Page/TermsAndCondition'
 import ContactUsAdmin from './Page/ContactUs'
 import ErrorPage from './Page/ErrorPage'
 import Announcement from './Page/Admin/Announcement'
+import LeaseView from './Page/Admin/LeaseView'
 
 function App() {
   const user = useSelector((state) => state.auth.isAuthenticated)
@@ -83,7 +84,7 @@ function App() {
             <Layout className="bg-white1">
               <Dashboard />
             </Layout>
-          ) : role?.role === 'Tenant' ? (
+          ) : role?.user_id.role === 'Tenant' ? (
             <Layout className="bg-white1">
               <TenantHome />
             </Layout>
@@ -99,7 +100,7 @@ function App() {
             <Layout className="bg-white1">
               <Dashboard />
             </Layout>
-          ) : role?.role === 'Tenant' ? (
+          ) : role?.user_id.role === 'Tenant' ? (
             <Layout className="bg-white1">
               <TenantHome />
             </Layout>
@@ -168,6 +169,14 @@ function App() {
         element={
           <Layout className="bg-white1">
             <Apartment />
+          </Layout>
+        }
+      />
+          <Route
+        path="/leaseview"
+        element={
+          <Layout className="bg-white1">
+            <LeaseView />
           </Layout>
         }
       />

@@ -1,12 +1,12 @@
 const { Router } = require('express')
 const {
   // checkout,
-  createIntent,
+  createPayment,
 } = require('../controllers/payment_controller')
 
 const router = Router()
 
-router.post('/create_intent', createIntent)
+router.post('/create', createPayment)
 // router.post('/checkout', checkout)
 
 module.exports = router

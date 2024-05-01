@@ -68,7 +68,7 @@ const AddLease = ({ setModal }) => {
                 SUBMIT
               </button>
               <button
-                className="bg-[#F2F2F2] flex flex-row items-center py-2 px-6 rounded-md"
+                className="bg-red text-white flex flex-row items-center py-2 px-6 rounded-md"
                 onClick={() => setModal(false)}
               >
                 CANCEL

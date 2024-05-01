@@ -22,9 +22,27 @@ const INVOICEMODEL = new mongoose.Schema(
         type: String
       }
     },
+    intent: {
+      clientKey: {
+        type: String,
+      },
+      paymentIntent: {
+        type: String,
+      }
+    },
+    payment: {
+      method_id: {
+        type: String,
+        default: null
+      },
+      method: {
+        type: String,
+        default: null
+      }
+    },
     status: {
       type: Boolean,
-      default: 0
+      default: false
     }
   },
   { timestamps: true },

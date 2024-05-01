@@ -144,7 +144,6 @@ module.exports.searchContract = async (req, res) => {
 
 module.exports.createContract = async (req, res) => {
   const { user_id } = req.query
-  // const { from_date, to_date } = req.body
   const current_date = new Date()
   const day = current_date.getDate()
   const month = current_date.getMonth()
@@ -153,7 +152,7 @@ module.exports.createContract = async (req, res) => {
   try {
     const response = await TENANTMODEL.findOne({ user_id })
       .populate('user_id unit_id apartment_id')
-     
+
     console.log('Response', response)
     if (!response) {
       return res
@@ -180,7 +179,13 @@ module.exports.createContract = async (req, res) => {
     }
     console.log(response)
     const pdfBuffer = await new Promise((resolve, reject) => {
-      pdf.create(pdf_template({response}), {}).toBuffer((err, buffer) => {
+      pdf.create(pdf_template({ response }), {
+        childProcessOptions: {
+          env: {
+            OPENSSL_CONF: '/dev/null'
+          }
+        }
+      }).toBuffer((err, buffer) => {
         if (err) reject(err)
         else resolve(buffer)
       })
@@ -193,7 +198,10 @@ module.exports.createContract = async (req, res) => {
             resource_type: 'raw',
             format: 'pdf', // Specify resource type as 'raw' for PDF
             folder: 'PinaupaPH/Contracts', // Folder in Cloudinary where PDF will be stored
-            overwrite: true, // Do not overwrite if file with the same name exists
+            overwrite: true,
+            transformation: [
+              { width: 612, height: 1008, crop: 'fit' }
+            ] // Do not overwrite if file with the same name exists
           },
           (error, result) => {
             if (error) reject(error)
@@ -307,7 +315,13 @@ module.exports.editContract = async (req, res) => {
     console.log(response)
 
     const pdfBuffer = await new Promise((resolve, reject) => {
-      pdf.create(pdf_template({response}), {}).toBuffer((err, buffer) => {
+      pdf.create(pdf_template({ response }), {
+        childProcessOptions: {
+          env: {
+            OPENSSL_CONF: '/dev/null'
+          }
+        }
+      }).toBuffer((err, buffer) => {
         if (err) reject(err)
         else resolve(buffer)
       })
