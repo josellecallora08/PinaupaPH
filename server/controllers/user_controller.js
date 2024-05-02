@@ -95,6 +95,12 @@ module.exports.sign_up = async (req, res) => {
       })
     }
 
+    const unit_status = await UNITMODEL.findById(unit_id)
+    if (unit_status.occupied === true) {
+      return res
+        .status(httpStatusCodes.CONFLICT)
+        .json({ error: `Unit ${unit_id} is already occupied.` })
+    }
 
     // File Upload
     const imageUpload = await cloudinary.uploader.upload(
@@ -112,6 +118,7 @@ module.exports.sign_up = async (req, res) => {
         .json({ error: 'Failed to upload profile image.' })
     }
 
+
     let response = await USERMODEL.create({
       name: name,
       username: username,
@@ -124,20 +131,13 @@ module.exports.sign_up = async (req, res) => {
     })
 
     if (response.role === 'Tenant') {
-      const unit_status = await UNITMODEL.findById(unit_id)
-      if (unit_status.occupied === true) {
-        return res
-          .status(httpStatusCodes.CONFLICT)
-          .json({ error: `Unit ${unit_id} is already occupied.` })
-      }
-
       const tenant = await TENANTMODEL.create({
         user_id: response._id,
         unit_id,
         apartment_id,
         deposit,
         monthly_due: occupancy,
-      }).populate('user_id unit_id apartment_id')
+      })
       if (!tenant) {
         return res
           .status(httpStatusCodes.BAD_REQUEST)
@@ -153,10 +153,15 @@ module.exports.sign_up = async (req, res) => {
         })
       }
     }
-    console.log(response)
+    const userResponse = await TENANTMODEL.findOne({ user_id: response._id }).populate('user_id unit_id apartment_id')
+    if (!userResponse) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({
+        error: 'Failed to fetch user information.',
+      })
+    }
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Tenant account has been created.', response: tenant })
+      .json({ msg: 'Tenant account has been created.', response: userResponse })
   } catch (err) {
     console.error('Error during sign up:', err)
     return res

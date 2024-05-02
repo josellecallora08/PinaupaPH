@@ -18,7 +18,7 @@ const REPORTMODEL = new mongoose.Schema(
   {
     sender_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
+      ref: 'tenant',
       required: true,
     },
     title: {
@@ -42,7 +42,7 @@ const REPORTMODEL = new mongoose.Schema(
       image_url:{
         type: String
       }
-    }
+    },
     comments: [COMMENTMODEL],
   },
   { timestamps: true },

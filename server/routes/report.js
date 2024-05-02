@@ -18,15 +18,15 @@ const storage = multer.memoryStorage()
 const upload = multer({ storage })
 
   
-router.post('/:user_id',upload.single('attached_image'), createReport)
+router.post('/create',upload.single('attached_image'), createReport)
 router.patch('/v1', editReport)
 router.delete('/v1', deleteReport)
-router.get('/', fetchReports)
-router.get('/v1', fetchReport)
+router.get('/list', fetchReports)
+router.get('/list/v1', fetchReport)
 
-router.post('/comments/v1', createComment)
-router.patch('/', editComment)
-router.delete('/', deleteComment)
+router.post('/create/comment', createComment)
+router.patch('/update/comment', editComment)
+router.delete('/delete/comment', deleteComment)
 router.get('/v1', fetchComments)
 router.get('/', fetchComment)
 

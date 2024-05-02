@@ -76,7 +76,7 @@ const ConcernList = () => {
                 <ConcernCard key={key} val={val} num={key} />
               ))
             )
-          ) : user?.role === 'Tenant' ? (
+          ) : user?.user_id.role === 'Tenant' ? (
             loading ? (
               <Loading />
             ) : (

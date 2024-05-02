@@ -110,7 +110,7 @@ const Headbar = () => {
         <div className="flex items-center">
           <button onClick={handleNotif} className="relative">
             <TbBellRinging size={25} color="white" />
-            {notifs && notifs.filter((item) => item.receiver_id._id === user?._id).map((val,key) => (
+            {notifs && notifs.filter((item) => item.receiver_id?._id === user?._id).map((val,key) => (
               <span className='absolute text-white bg-red/80 w-full max-w-[15px] rounded-full text-sm -top-2 -right-1'>{notifs.length}</span>
             ))}
           </button>
