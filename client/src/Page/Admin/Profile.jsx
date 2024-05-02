@@ -47,11 +47,11 @@ const Profile = () => {
             <div className='flex flex-col w-full h-full'>
                 <div className="flex justify-center items-center w-full h-full">
                   <figure className=' border-black border-2 cursor-pointer flex justify-center items-center w-full h-full md:max-w-60 md:max-h-60  max-w-40 max-h-40 rounded-full '>
-                    <img src={user?.image} className='w-full h-full p-1 rounded-full' onClick={() => setchangeModal(prevState => !prevState)}/>
+                    <img src={user?.role === "Admin" ? user?.profile_image.image_url : user?.user_id.profile_image.image_url} className='w-full h-full p-1 rounded-full' onClick={() => setchangeModal(prevState => !prevState)}/>
                   </figure>
                 </div>
               <div className="w-full h-full max-h-10 flex justify-center items-center py-6">
-                <p className='md:text-2xl text-base uppercase font-bold'>{user?.name}</p>
+                <p className='md:text-2xl text-base uppercase font-bold'>{user?.role === "Admin" ? user?.name : user?.user_id.name}</p>
               </div>
             </div>
 
@@ -67,17 +67,17 @@ const Profile = () => {
                 <div className='w-full h-full flex flex-col px-4 py-2'>
                   <div className='w-full flex m-auto'>
                     <p className='w-[170px] pb-2'>Phone No.</p>
-                    <p>{user?.phone}</p>
+                    <p>{user?.role === "Admin" ? user?.mobile_no : user?.user_id.mobile_no}</p>
                   </div>
 
                   <div className='w-full flex m-auto'>
                     <p className='w-[170px] pb-2'>Email Address</p>
-                    <p>{user?.email}</p>
+                    <p>{user?.role === "Admin" ? user?.email :user?.user_id.email}</p>
                   </div>
 
                   <div className='w-full flex m-auto'>
                     <p className='w-[170px]'>Date of Birth</p>
-                    <p>{new Date(user?.birthday).toLocaleDateString()}</p>
+                    <p>{new Date(user?.role === "Admin" ? user?.birthday : user?.user_id.birthday).toLocaleDateString()}</p>
                   </div>
                 </div>
               </div>
@@ -93,7 +93,7 @@ const Profile = () => {
                 <div className='w-full flex flex-col px-4 py-3 '>
                   <div className='w-full flex m-auto pb-2'>
                     <p className='w-[170px]'>Username</p>
-                    <p>{user?.username}</p>
+                    <p>{user?.role === "Admin" ? user?.username : user?.user_id.username}</p>
                   </div>
 
                   <div className='w-full flex m-auto'>
@@ -117,16 +117,16 @@ const Profile = () => {
               <div className='w-full flex flex-col'>
                 <div className='w-full h-full flex px-4 py-2'>
                     <p className='w-[170px]'>Apartment Name</p>
-                    <p>Cavite</p>
+                    <p>{user?.role === "Tenant" && user?.apartment_id.name}</p>
                   </div>
                   <div className='w-full h-full flex px-4 py-2'>
                     <p className='w-[170px]'>Address</p>
-                    <p>Samploc St</p>
+                    <p>{user?.role === "Tenant" && user?.apartment_id.address}</p>
                   </div>
 
                   <div className='w-full h-full flex px-4 py-2'>
                     <p className='w-[170px]'>Total House</p>
-                    <p>20</p>
+                    <p>{ user?.role === "Tenant" && user?.apartment_id.units.length}</p>
                   </div>
               </div>
           </div>

@@ -69,7 +69,7 @@ const Tenant = () => {
 
   useEffect(() => {
     if (searchItem && searchItem !== '') {
-      dispatch(handleSearchUser(searchItem))
+      dispatch(handleSearchUser(searchItem ))
     } else {
       dispatch(fetchUsers())
     }
@@ -92,11 +92,6 @@ const Tenant = () => {
   useEffect(() => {
     dispatch(fetchApartments())
   }, [])
-  const result = tenant?.map((val, key) => {
-    return val;
-  });
-  
-  console.log(result);
   return (
     <>
       {isVisible && <MessageToast message={msg} error={error} isVisible={isVisible} setIsVisible={setIsVisible} />}
