@@ -92,8 +92,11 @@ const Tenant = () => {
   useEffect(() => {
     dispatch(fetchApartments())
   }, [])
-
-
+  const result = tenant?.map((val, key) => {
+    return val;
+  });
+  
+  console.log(result);
   return (
     <>
       {isVisible && <MessageToast message={msg} error={error} isVisible={isVisible} setIsVisible={setIsVisible} />}

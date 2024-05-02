@@ -5,7 +5,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toggleCloseNotif, toggleCloseProfile, toggleNotification, toggleProfile, toggleSidebar } from '../features/menu';
 import menu from '/menu.svg';
 import close from '/close.svg';
-import { isLogout, logout } from '../features/authentication';
+import { isLoggedin, isLogout, logout } from '../features/authentication';
+import { fetchNotifications } from '../features/notification';
 import { useNavigate } from 'react-router-dom';
 import Notification from './Notification';
 
@@ -14,6 +15,7 @@ const Headbar = () => {
   const profile = useSelector((state) => state.toggle.profile);
   const notif = useSelector((state) => state.toggle.notif);
   const user = useSelector((state) => state.auth.user);
+  const notifs = useSelector((state) => state.notif.data);
   const [currentDate, setCurrentDate] = useState(new Date())
   const notifBg = useRef(null);
   const menuBg = useRef(null);
@@ -24,6 +26,13 @@ const Headbar = () => {
     dispatch(isLogout(navigate));
   };
 
+  useEffect(() => {
+    const handleNotification = () => {
+      dispatch(fetchNotifications())
+      console.log(notifs)
+    }
+    handleNotification()
+  }, [])
   const handleSidebar = () => {
     dispatch(toggleSidebar());
   };
@@ -65,6 +74,10 @@ const Headbar = () => {
   }, [])
 
   useEffect(() => {
+    dispatch(isLoggedin())
+  }, [])
+
+  useEffect(() => {
     profile && dispatch(toggleCloseProfile());
     const closeMenu = (e) => {
       if (menuBg.current && !menuBg.current.contains(e.target) && !e.target.classList.contains('profile-img')) {
@@ -82,10 +95,9 @@ const Headbar = () => {
       document.removeEventListener('mousedown', closeMenu);
     };
   }, []);
-
   return (
     <div className="w-full h-full max-h-20 sticky top-0 z-20 bg-primary-color">
-      {notif ? <Notification notifBg={notifBg} /> : ''}
+      {notif ? <Notification user={user} data={notifs} notifBg={notifBg} /> : ''}
       <div className="flex justify-between items-center p-5 w-full relative m-auto">
         <div className="flex items-center gap-5">
           <button onClick={handleSidebar} className="flex items-center">
@@ -98,9 +110,11 @@ const Headbar = () => {
         <div className="flex items-center">
           <button onClick={handleNotif} className="relative">
             <TbBellRinging size={25} color="white" />
-            <span className='absolute text-white bg-red/80 w-full max-w-[15px] rounded-full text-sm -top-2 -right-1'>1</span>
+            {notifs && notifs.filter((item) => item.receiver_id._id === user._id).map((val,key) => (
+              <span className='absolute text-white bg-red/80 w-full max-w-[15px] rounded-full text-sm -top-2 -right-1'>{notifs.length}</span>
+            ))}
           </button>
-          <img src={user.role === "Admin" ? user?.profile_image.image_url : user?.user_id.profile_image.image_url} alt="" className="w-10 h-10 rounded-full ml-2 cursor-pointer profile-img" onClick={handleProfile} />
+          <img src={user?.role === "Admin" ? user?.profile_image.image_url : user?.user_id.profile_image.image_url} alt="" className="w-10 h-10 rounded-full ml-2 cursor-pointer profile-img" onClick={handleProfile} />
           {profile && (
             <div
               ref={menuBg}
@@ -116,8 +130,6 @@ const Headbar = () => {
               </ul>
             </div>
           )}
-
-
         </div>
       </div>
     </div>
