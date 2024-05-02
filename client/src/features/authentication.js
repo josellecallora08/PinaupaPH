@@ -36,10 +36,13 @@ const authSlice = createSlice({
       state.user = null
       state.token = null
     },
+    sample: (state) => {
+      state.msg = null
+    }
   },
 })
 
-export const { loginStart, loginSuccess, loginFailed, logout } =
+export const { loginStart, loginSuccess, loginFailed, logout, sample } =
   authSlice.actions
 
 export const isLoggedin = () => async (dispatch) => {

@@ -6,11 +6,14 @@ import { isLoggedin, isLogin } from '../features/authentication'
 import { useNavigate, Link } from 'react-router-dom'
 import ButtonLoading from '../Component/LoadingComponent/ButtonLoading'
 import { fetchUser } from '../features/user'
+import MessageToast from '../Component/ToastComponent/MessageToast'
 
 const Login = () => {
   const navigate = useNavigate()
   const loading = useSelector((state) => state.auth.loading)
   const error = useSelector((state) => state.auth.error)
+  const msg = useSelector((state) => state.auth.msg)
+  const [isVisible, setIsVisible] = useState(true);
 
   const dispatch = useDispatch()
   const [credentials, setCredentials] = useState({
@@ -37,7 +40,7 @@ const Login = () => {
 
   return (
     <>
-
+  {isVisible && <MessageToast message={msg} error={error} isVisible={isVisible} setIsVisible={setIsVisible} />}
       <div className="w-full h-screen py-5 px-10 ">
         <div className="w-11/12 h-full max-h-40 m-auto flex justify-center lg:justify-start">
           <div className='size-full max-w-40 max-h-40 flex justify-center items-center'>
