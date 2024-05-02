@@ -50,7 +50,7 @@ export const createComment =
       const socket = io(`${import.meta.env.VITE_URL}/`)
       console.log(token)
       const response = await fetch(
-        `${import.meta.env.VITE_URL}/api/report/comments/v1?user_id=${userId}&report_id=${reportId}`,
+        `${import.meta.env.VITE_URL}/api/report/create/comment?user_id=${userId}&report_id=${reportId}`,
         {
           method: 'POST',
           headers: {

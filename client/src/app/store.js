@@ -13,6 +13,7 @@ import householdReducer from '../features/household'
 import invoiceReducer from '../features/invoice'
 import petReducer from '../features/pet'
 import socketReducer from '../features/socket'
+import notifReducer from '../features/notification'
 
 
 export const store = configureStore({
@@ -30,6 +31,7 @@ export const store = configureStore({
     household: householdReducer,
     pet: petReducer,
     invoice: invoiceReducer,
-    socket: socketReducer
+    socket: socketReducer,
+    notif: notifReducer
   },
 })

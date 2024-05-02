@@ -21,7 +21,7 @@ const USERMODEL = new mongoose.Schema(
       required: true,
     },
     mobile_no: {
-      type: Number,
+      type: String,
       unique: true,
     },
     birthday: {

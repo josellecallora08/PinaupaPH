@@ -39,13 +39,12 @@ const ViewConcern = () => {
   useEffect(() => {
     dispatch(isLoggedin())
   }, [])
-
+  console.log(user)
   const handleSubmit = async (e) => {
     e.preventDefault() // Prevent default form submission behavior
-    dispatch(createComment(user.id, id, comment)) // Submit the comment
+    dispatch(createComment(user._id, id, comment)) // Submit the comment
     setComments(null) // Reset the textarea
   }
-
   useEffect(() => {
     const sendMessage = (e) => {
       if (e.key === 'Enter') {
@@ -76,7 +75,7 @@ const ViewConcern = () => {
     if (container && report && report.comments.length > 0) {
       container.scrollTop = container.scrollHeight;
     }
-  }, [report, comment]);
+  }, [report, comment, handleSubmit]);
   return (
     <>
       <div className="w-full h-full flex flex-col pb-5 xl:bg-gray text-primary-color">
@@ -91,18 +90,18 @@ const ViewConcern = () => {
                 <div className="col-span-1 h-full flex items-center gap-5">
                   <figure className="w-full h-full max-w-20 max-h-20 rounded-full shadow-xl  overflow-hidden">
                     <img
-                      src={report?.user_id.profile_image.image_url}
+                      src={report?.sender_id.user_id.profile_image.image_url}
                       className="w-full h-full"
                       alt=""
                     />
                   </figure>
                   <div className="w-full">
                     <p className="text-sm  xl:text-lg font-semibold">
-                      {report?.user_id.name}
+                      {report?.sender_id.user_id.name}
                     </p>
                     <p className="text-xs">
                       <span>UNIT - </span>
-                      {report?.unit_id.unit_no}
+                      {report?.sender_id.unit_id.unit_no}
                     </p>
                   </div>
                 </div>
@@ -189,7 +188,7 @@ const ViewConcern = () => {
                       <div key={key} className="min-h-12 w-full flex gap-2 items-center overflow-hidden">
                         <figure className="w-full h-full max-w-12 max-h-12 overflow-hidden rounded-full">
                           <img
-                            src={val.user_id.profile_image.image_url}
+                            src={val?.user_id?.profile_image.image_url}
                             className="w-full h-full object-contain"
                             alt=""
                           />

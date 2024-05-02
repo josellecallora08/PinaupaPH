@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import { CiImageOn } from 'react-icons/ci'
-
 import { IoMdClose } from 'react-icons/io'
-
+import { useDispatch } from 'react-redux'
 const CreateTicket = ({ setisCreateTicket }) => {
   const [isFormOpen, setIsFormOpen] = useState(false)
   const [selectedType, setSelectedType] = useState('')
   const [description, setDescription] = useState('')
   const [image, setImage] = useState(null)
-
+  const dispatch = useDispatch()
   const handleImageChange = (event) => {
     const file = event.target.files[0]
     setImage(file)

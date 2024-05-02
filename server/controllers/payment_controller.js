@@ -42,7 +42,6 @@ module.exports.createPayment = async (req, res) => {
   }
 }
 
-
 // FOR WITH UI
 // module.exports.checkout = async (req, res) => {
 //   const { user_id } = req.query

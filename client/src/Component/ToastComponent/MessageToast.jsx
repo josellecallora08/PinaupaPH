@@ -1,24 +1,31 @@
 import { useEffect, useState } from 'react';
+import {useDispatch} from 'react-redux'
 import close from '/close.svg'
+import {sample} from '../../features/authentication'
 const MessageToast = ({ message, error, isVisible, setIsVisible }) => {
-
+const dispatch = useDispatch()
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsVisible(false);
+            dispatch(sample())
         }, 5000);
 
         return () => {
             clearTimeout(timer);
         };
-    }, []);
+    }, [isVisible, setIsVisible]);
 
     const handleHover = () => {
         clearTimeout(timer);
         setIsVisible(true);
     };
+    const handleMouseLeave = () => {
+        clearTimeout(timer);
+        setIsVisible(false);
+    };
     return (
         <>
-            <div onMouseEnter={handleHover} className={`z-50 absolute top-24 right-5 bg-white1 ${message ? 'border-[#00ff00]' : error ? 'border-red' : 'border-primary-color'} border-2 size-full max-w-40 md:max-w-60 max-h-12 md:max-h-20 rounded-md shadow-md overflow-hidden`}>
+            <div onMouseEnter={handleHover} onMouseLeave={handleMouseLeave} className={`z-50 absolute top-24 right-5 bg-white1 ${message ? 'border-[#00ff00]' : error ? 'border-red' : 'border-primary-color'} border-2 size-full max-w-40 md:max-w-60 max-h-12 md:max-h-20 rounded-md shadow-md overflow-hidden`}>
                 <div className="size-full p-2 bg-white1 flex items-center justify-center font-regular">
                     <p className='text-xs md:text-base text-center'>{message ? message : error}</p>
                 </div>
