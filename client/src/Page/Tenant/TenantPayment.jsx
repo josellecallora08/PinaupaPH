@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import gcashlogo from '/Gcashlogo.png';
 import paymayalogo from '/Paymayalogo.png';
 import grabpaylogo from '/Grabpaylogo.png';
-
+import {useDispatch} from 'react-redux'
+import {createPayment} from '../../features/payment'
 const TenantPayment = () => {
   const [selectedOption, setSelectedOption] = useState('ewallet'); // Default selected option is 'ewallet'
+  const dispatch = useDispatch()
   const [formData, setFormData] = useState({
     name: '',
     contactNumber: '',
@@ -28,6 +30,9 @@ const TenantPayment = () => {
     });
   };
 
+  const handlePayment = () => {
+    dispatch(createPayment(formData))
+  }
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -37,6 +42,7 @@ const TenantPayment = () => {
 
   return (
     <>
+      
       <div className="w-full h-full bg-white1 px-5 overflow-y-scroll">
         <h1 className="font-bold my-4">PAY INVOICE/DOCUMENTS</h1>
         <div className="lg:flex-row lg:gap-2 w-full flex flex-col">
@@ -45,7 +51,7 @@ const TenantPayment = () => {
               SELECT PAYMENT METHOD
             </h1>
             
-            <div className="flex flex-col pb-3 bg-white rounded-md text-primary-color ">
+            <div className="flex flex-col pb-3 bg-white h-auto rounded-md text-primary-color ">
               <div className="form-control mb-1 ">
                 <div className='flex items-center  p-2'>
                   <input
@@ -249,7 +255,10 @@ const TenantPayment = () => {
             </h1>
             <div className="px-5">
               <h1 className="text-light-blue  text-4xl py-8 border-b-2 border-dark-gray mb-4 pb-4 ">
-                Php 10,000
+              {parseInt("10000").toLocaleString('en-PH', {
+                    style: 'currency',
+                    currency: 'PHP',
+                  })}
               </h1>
               <div>
                 <p className="my-3 text-dark-gray font-bold text-lg">
@@ -261,14 +270,20 @@ const TenantPayment = () => {
                 </div>
                 <div className="flex justify-between text-lg pb-10 border-b-2 border-dark-gray">
                   <p>Rent</p>
-                  <p>Php 10,000</p>
+                  <p>{parseInt("10000").toLocaleString('en-PH', {
+                    style: 'currency',
+                    currency: 'PHP',
+                  })}</p>
                 </div>
                 <div className="text-end my-5 text-3xl text-primary-color">
-                  <span className=" mr-4">Total:</span>Php 10,000
+                  <span className=" mr-4">Total:</span>{parseInt("10000").toLocaleString('en-PH', {
+                    style: 'currency',
+                    currency: 'PHP',
+                  })}
                 </div>
               </div>
             </div>
-            <button className="lg:mt-0  lg:ml-24 lg:mb-8  bg-primary-color text-white w-9/12 ml-12 mb-5 py-3 px-2 rounded-md hover:opacity-80 ">
+            <button onClick={handlePayment} className="lg:mt-0  lg:ml-24 lg:mb-8  bg-primary-color text-white w-9/12 ml-12 mb-5 py-3 px-2 rounded-md hover:opacity-80 ">
               Pay
             </button>
             <div className="lg:p-4 flex flex-col p-10 items-center justify-center gap-2 bg-gray">
