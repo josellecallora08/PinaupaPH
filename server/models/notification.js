@@ -8,7 +8,7 @@ const NOTIFMODEL = new mongoose.Schema({
     },
     receiver_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'tenant',
+        ref: 'user',
         default: null
     },
     type: {

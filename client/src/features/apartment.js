@@ -17,6 +17,11 @@ const apartmentSlice = createSlice({
       state.loading = false
       state.data = action.payload
     },
+    insertApartmentSuccess: (state, action) => {
+      state.loading = false
+      state.data = [...state.data, action.payload.response]
+      state.msg = action.payload.msg
+    },
     fetchSingleApartmentSuccess: (state, action) => {
       state.loading = false
       state.single = action.payload
@@ -43,6 +48,7 @@ export const {
   fetchApartmentSuccess,
   fetchSingleApartmentSuccess,
   editApartmentSuccess,
+  insertApartmentSuccess,
   deleteApartmentSuccess,
   actionApartmentFailed,
 } = apartmentSlice.actions
@@ -74,8 +80,8 @@ export const handleSearchApartment = (filter) => async (dispatch) => {
 }
 
 export const createApartment = (fields) => async (dispatch) => {
-  if(fields.name === '' || fields.address === '' || fields.provice === '' || fields.barangay === ''){
-      dispatch(actionApartmentFailed("Please fill all the inputs."))
+  if (fields.name === '' || fields.address === '' || fields.provice === '' || fields.barangay === '') {
+    dispatch(actionApartmentFailed("Please fill all the inputs."))
   }
   try {
     dispatch(apartmentStart())
@@ -94,7 +100,8 @@ export const createApartment = (fields) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    dispatch(fetchApartments())
+    console.log(json)
+    dispatch(insertApartmentSuccess(json))
   } catch (err) {
     dispatch(actionApartmentFailed(err.message))
   }

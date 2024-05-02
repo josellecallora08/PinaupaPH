@@ -19,7 +19,6 @@ const Dashboard = () => {
   const loading = useSelector((state) => state.auth.loading)
   const user = useSelector((state) => state.auth.user)
   const dispatch = useDispatch()
-
   useEffect(() => {
     dispatch(isLoggedin())
   }, [])

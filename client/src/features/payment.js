@@ -93,6 +93,15 @@ export const { startLoading, paymentSuccess, fetchKeySuccess, actionFailed } =
 //     dispatch(actionFailed(err.message))
 //   }
 // }
+export const cashPayment = () => async (dispatch) => {
+  try {
+    const token = Cookies.get('token')
+    const socket = io(`${import.meta.env.VITE_URL}/`)
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/payment/cash`)
+  } catch (err) {
+    
+  }
+}
 
 export const createPayment =
   (fields) => async (dispatch) => {
@@ -116,8 +125,12 @@ export const createPayment =
                   name: `${fields.name}`,
                   email: `${fields.email}`,
                   phone: `${fields.phone}`,
+                  //   name: `joselle`,
+                  // email: `josellecallora08@gmail.com`,
+                  // phone: `09993541054`,
                 },
                 type: `${fields.payment_method}`,
+                // type: `gcash`,
               },
             },
           }),
@@ -129,6 +142,7 @@ export const createPayment =
         throw new Error(json)
       }
       const json = await response.json()
+      console.log(json)
       // {
       //   "data": {
       //     "id": "pm_hYrUUSfRGEs8ZNmG6fATWs9m",
@@ -144,47 +158,50 @@ export const createPayment =
       //     }
       //   }
       // }
-      const isPayment = await fetch(`${import.meta.env.VITE_URL}/api/payment/create?method=${json.data.attributes.type}&method_id=${json.data.id}`, {
-        method: "POST",
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      if (!isPayment.ok) {
-        const json = await json.isPayment()
-        throw new Error(json.error)
-      }
-
-      const paymentData = await json.isPayment()
-      console.log(paymentData)
-      const post_payment = await fetch(
-        `https://api.paymongo.com/v1/payment_intents/${paymentData.intent.paymentIntent}/attach`,
-        {
-          method: 'POST',
+      if(fields.payment_method === "gcash" || fields.payment_method === "paymaya" || fields.payment_method === "grabpay"){
+        const isPayment = await fetch(`${import.meta.env.VITE_URL}/api/payment/create?method=${json?.data.attributes.type}&method_id=${json?.data.id}`, {
+          method: "POST",
           headers: {
-            accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: `Basic ${import.meta.env.VITE_PAYMONGO_TOKEN}`,
-          },
-          body: JSON.stringify({
-            data: {
-              attributes: {
-                payment_method: `${paymentData.payment.method_id}`,
-                client_key: `${paymentData.intent.clientKey}`,
-                return_url: `${import.meta.env.VITE_RETURN_URL}`,
-              },
+            'Authorization': `Bearer ${token}`
+          }
+        })
+        if (!isPayment.ok) {
+          const json1 = await isPayment.json()
+          console.log(json1)
+          throw new Error(json1.error)
+        }
+  
+        const paymentData = await isPayment.json()
+        console.log(paymentData)
+        const post_payment = await fetch(
+          `https://api.paymongo.com/v1/payment_intents/${paymentData.intent.paymentIntent}/attach`,
+          {
+            method: 'POST',
+            headers: {
+              accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization: `Basic ${import.meta.env.VITE_PAYMONGO_TOKEN}`,
             },
-          }),
-        },
-      )
-      if (!post_payment.ok) {
-        const json = await post_payment.json()
-        throw new Error(json.error)
+            body: JSON.stringify({
+              data: {
+                attributes: {
+                  payment_method: `${paymentData.payment.method_id}`,
+                  client_key: `${paymentData.intent.clientKey}`,
+                  return_url: `${import.meta.env.VITE_RETURN_URL}`,
+                },
+              },
+            }),
+          },
+        )
+        if (!post_payment.ok) {
+          const json = await post_payment.json()
+          throw new Error(json.error)
+        }
+        const data = await post_payment.json()
+        socket.emit('send-payment')
+        console.log(data)
+        window.open(data.data.attributes.next_action.redirect.url)
       }
-      const data = await post_payment.json()
-      socket.emit('send-payment')
-      console.log(data)
-      window.open(data.data.attributes.next_action.redirect.url)
     } catch (err) {
       dispatch(actionFailed())
     }
