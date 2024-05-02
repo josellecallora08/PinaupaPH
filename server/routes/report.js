@@ -13,8 +13,12 @@ const {
 } = require('../controllers/report_controller')
 const { sendMail } = require('../controllers/contact_controller')
 const router = Router()
+const multer = require('multer')
+const storage = multer.memoryStorage()
+const upload = multer({ storage })
 
-router.post('/:user_id', createReport)
+  
+router.post('/:user_id',upload.single('attached_image'), createReport)
 router.patch('/v1', editReport)
 router.delete('/v1', deleteReport)
 router.get('/', fetchReports)

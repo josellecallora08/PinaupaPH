@@ -137,7 +137,7 @@ module.exports.sign_up = async (req, res) => {
         apartment_id,
         deposit,
         monthly_due: occupancy,
-      })
+      }).populate('user_id unit_id apartment_id')
       if (!tenant) {
         return res
           .status(httpStatusCodes.BAD_REQUEST)
@@ -156,7 +156,7 @@ module.exports.sign_up = async (req, res) => {
     console.log(response)
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Tenant account has been created.', response })
+      .json({ msg: 'Tenant account has been created.', response: tenant })
   } catch (err) {
     console.error('Error during sign up:', err)
     return res
@@ -258,16 +258,16 @@ module.exports.search_user = async (req, res) => {
             user_id: '$user',
             unit_id: '$unit',
             apartment_id: '$apartment',
+            deposit: 1,
+            advance: 1,
+            balance: 1,
+            monthly_due: 1,
+            payment: 1,
+            household: 1,
+            pet: 1,
+            createdAt: 1,
+            updatedAt: 1
           },
-          deposit: 1,
-          advance: 1,
-          balance: 1,
-          monthly_due: 1,
-          payment: 1,
-          household: 1,
-          pet: 1,
-          createdAt: 1,
-          updatedAt: 1
         }
       },
       {
@@ -451,10 +451,10 @@ module.exports.update_profile = async (req, res) => {
     }
 
     await response.save()
-
+    const tenant = await TENANTMODEL.findById(response._id).populate('user_id unit_id apartment_id')
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Information Updated Successfully!', response })
+      .json({ msg: 'Information Updated Successfully!', response: tenant })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -559,8 +559,7 @@ module.exports.update_profile_picture = async (req, res) => {
         .json({ error: 'Failed to upload profile.' })
     }
     const url = uploadedImage.secure_url
-    const response = await USERMODEL.findByIdAndUpdate(
-      { _id: user_id },
+    const response = await USERMODEL.findByIdAndUpdate(user_id,
       {
         profile_image: {
           image_url: url,
@@ -573,9 +572,10 @@ module.exports.update_profile_picture = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to change image' })
     }
+    const tenant = await TENANTMODEL.findById(response._id).populate('user_id unit_id apartment_id')
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Profile has been changed' })
+      .json({ msg: 'Profile has been changed', response: tenant })
   } catch (err) {
     console.error({ err })
     return res
@@ -594,7 +594,7 @@ module.exports.delete_tenant = async (req, res) => {
     }
 
     const { user_id } = req.query
-    const response = await USERMODEL.findByIdAndDelete({ _id: user_id })
+    const response = await USERMODEL.findByIdAndDelete(user_id)
     if (!response) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
@@ -604,7 +604,7 @@ module.exports.delete_tenant = async (req, res) => {
     await cloudinary.uploader.destroy(response.profile_image.public_id)
     console.log('deleted successfully!')
     if (response.role === 'Tenant') {
-      const tenant = await TENANTMODEL.findOneAndDelete({ user_id: user_id })
+      const tenant = await TENANTMODEL.findOneAndDelete({ user_id: user_id }).populate('user_id unit_id apartment_id')
       if (!tenant)
         return res
           .status(httpStatusCodes.BAD_REQUEST)
@@ -625,12 +625,12 @@ module.exports.delete_tenant = async (req, res) => {
     console.log(response)
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Tenant removed.', response })
+      .json({ msg: 'Tenant removed.', response: tenant })
   } catch (err) {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message })
   }
 }
 

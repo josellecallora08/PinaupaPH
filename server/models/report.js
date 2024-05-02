@@ -16,7 +16,7 @@ const COMMENTMODEL = new mongoose.Schema(
 
 const REPORTMODEL = new mongoose.Schema(
   {
-    tenant_id: {
+    sender_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
       required: true,
@@ -35,6 +35,14 @@ const REPORTMODEL = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    attached_image: {
+      public_id:{
+        type: String
+      },
+      image_url:{
+        type: String
+      }
+    }
     comments: [COMMENTMODEL],
   },
   { timestamps: true },

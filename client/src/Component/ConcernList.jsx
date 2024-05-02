@@ -52,7 +52,7 @@ const ConcernList = () => {
               <option>Han Solo</option>
               <option>Greedo</option>
             </select>
-            {user && user.role === 'Tenant' ? (
+            {user && user?.user_id?.role === 'Tenant' ? (
               <>
                 <button onClick={() => setisCreateTicket(prevState => !prevState)} className="btn btn-wide bg-primary-color font-bold uppercase text-white hover:text-primary-color">
                   <FaPlus />

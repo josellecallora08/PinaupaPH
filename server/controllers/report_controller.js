@@ -2,6 +2,7 @@ const REPORTMODEL = require('../models/report')
 const httpStatusCodes = require('../constants/constants')
 const USERMODEL = require('../models/user')
 const UNITMODEL = require('../models/unit')
+const cloudinary = require('cloudinary').v2 // Import Cloudinary SDK
 
 module.exports.searchReport = async (req, res) => {
   const { filter } = req.query
@@ -33,22 +34,44 @@ module.exports.searchReport = async (req, res) => {
 
 module.exports.createReport = async (req, res) => {
   try {
+    const attached_image = req.file
     const { user_id } = req.query
     const { title, description, image, type } = req.body
-    const details = {}
+    if(title !== '' || description !== '' || type !== ''){
+      return res.status(httpStatusCodes.BAD_REQUEST).json({error: "Please fill all the blanks."})
+    }
     const tenant = await TENANTMODEL.findOne({ user_id }).populate('user_id').populate('unit_id')
     if (!tenant) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Tenant not found' })
     }
-    details.tenant_id = tenant._id
-    if (title !== '') details.title = title
-    if (description !== '') details.description = description
-    // if(image !== '') details.image = image
-    if (type !== '') details.type = type
+    const b64 = Buffer.from(attached_image.buffer).toString('base64')
+    let dataURI = 'data:' + attached_image.mimetype + ';base64,' + b64
+    console.log(`dataURI: ${dataURI}`)
+    const imageUpload = await cloudinary.uploader.upload(
+      dataURI,
+      {
+        quality: 'auto:low',
+        folder: 'PinaupaPH/Reports',
+        resource_type: 'auto',
+      },
+    )
 
-    const response = await REPORTMODEL.create(details)
+    if (!imageUpload || !imageUpload.secure_url) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Failed to upload profile image.' })
+    }
+
+    const response = await REPORTMODEL.create({
+      sender_id: user_id,
+      title,
+      description,
+      type,
+      'attached_image.public_id': imageUpload.public_id,
+      'attached_image.image_url': imageUpload.secure_url,
+    })
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)

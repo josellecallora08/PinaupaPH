@@ -6,6 +6,7 @@
   font-family: 'Poppins-regular';
   src: url(/fonts/Poppins-Regular.ttf);
 }
+
 @font-face {
   font-family: 'Poppins-semibold';
   src: url(/fonts/Poppins-SemiBold.ttf);
@@ -25,15 +26,16 @@ body {
   font-family: 'Lato', sans-serif;
 }
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   background: #183044;
   width: 5px;
 }
 
-::-webkit-scrollbar-thumb{
+::-webkit-scrollbar-thumb {
   background-color: #183044;
 }
-::-webkit-scrollbar-button{
+
+::-webkit-scrollbar-button {
   background-color: #183044;
   height: 48px;
 }
@@ -45,19 +47,23 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 input[type=number] {
-  -moz-appearance: textfield; /* Firefox */
+  -moz-appearance: textfield;
+  /* Firefox */
 }
 
 
 
 
 @keyframes progress {
- 0% {
-  opacity: 0; transform: translateY(-100%);
- }
- 100%{
-  opacity: 1; transform: translateY(0);
- }
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 

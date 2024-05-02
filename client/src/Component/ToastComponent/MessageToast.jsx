@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
+import {useDispatch} from 'react-redux'
 import close from '/close.svg'
+import {sample} from '../../features/authentication'
 const MessageToast = ({ message, error, isVisible, setIsVisible }) => {
-    const [timer, setTimer] = useState(null);
+const dispatch = useDispatch()
     useEffect(() => {
-        setTimer(
-            setTimeout(() => {
-                setIsVisible(false);
-            }, 5000)
-        );
+        const timer = setTimeout(() => {
+            setIsVisible(false);
+            dispatch(sample())
+        }, 5000);
 
         return () => {
             clearTimeout(timer);

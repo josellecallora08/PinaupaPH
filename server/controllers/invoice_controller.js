@@ -224,6 +224,7 @@ module.exports.createInvoice = async (req, res) => {
   }
 }
 
+
 module.exports.fetchInvoices = async (req, res) => {
   try {
     const response = await INVOICEMODEL.find().populate({
@@ -454,5 +455,66 @@ module.exports.deleteInvoice = async (req, res) => {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: err.message })
+  }
+}
+
+
+module.exports.totalPaid = async(req,res) => {
+  try {
+    const response = await INVOICEMODEL.find().populate('user_id unit_id apartment_id')
+    const totalPayment = response.reduce((acc,sum) => {
+      return acc = acc + sum.amount
+    }, 0)
+    console.log(totalPayment)
+
+    return res
+    .status(httpStatusCodes.OK)
+    .json({ totalPayment })
+  } catch (err) {
+    return res
+    .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+    .json({ error: err.message })
+  }
+}
+
+module.exports.deliquencyRate = async(req,res) => {
+  try {
+    const response = await INVOICEMODEL.find().populate('user_id unit_id apartment_id')
+    const totalDeliquency = response.reduce((acc,sum) => {
+      return acc = acc + sum.amount
+    }, 0)
+    console.log(totalDeliquency)
+  } catch (err) {
+    return res
+    .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+    .json({ error: err.message })
+  }
+}
+
+module.exports.renewalRate = async(req,res) => {
+  try {
+    const response = await INVOICEMODEL.find().populate('user_id unit_id apartment_id')
+    const totalPayment = response.reduce((acc,sum) => {
+      return acc = acc + sum.amount
+    }, 0)
+    console.log(totalPaid)
+  } catch (err) {
+    return res
+    .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+    .json({ error: err.message })
+  }
+}
+
+module.exports.occupancyRate = async(req,res) => {
+  try {
+    const response = await INVOICEMODEL.find().populate('user_id unit_id apartment_id')
+    const totalPayment = response.reduce((acc,sum) => {
+      return acc = acc + sum.amount
+    }, 0)
+    console.log(totalPaid)
+  } catch (err) {
+    return res
+    .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+    .json({ error: err.message })
   }
 }

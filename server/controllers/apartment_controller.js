@@ -119,7 +119,7 @@ module.exports.create_apartment = async (req, res) => {
     await response.save()
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Apartment Building Created...' })
+      .json({ msg: 'Apartment Building Created...', response})
   } catch (err) {
     console.error({ error: err.message })
     return res
