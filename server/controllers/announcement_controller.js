@@ -1,8 +1,25 @@
 const USERMODEL = require('../models/user')
 const TENANTMODEL = require('../models/tenant')
 const NOTIFMODEL = require('../models/notification')
-const ANNOUCEMENTMODELMODEL = require('../models/announcement')
+const ANNOUCEMENTMODEL = require('../models/announcement')
 const httpStatusCodes = require('../constants/constants')
+
+module.exports.searchAnnouncement = async (req, res) => {
+  try {
+    const { filter } = req.query;
+    const response = await ANNOUCEMENTMODEL.find({
+      $or: [
+        { status: { $regex: filter, $options: 'i' } },
+        { title: { $regex: filter, $options: 'i' } },
+        { description: { $regex: filter, $options: 'i' } }
+      ]
+    });
+    return res.status(httpStatusCodes.OK).json({ response })
+  } catch (err) {
+    console.error(err.message);
+    res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).send(err.message);
+  }
+};
 
 module.exports.createAnnouncement = async (req, res) => {
   try {
@@ -11,6 +28,7 @@ module.exports.createAnnouncement = async (req, res) => {
     const { title, type, description } = req.body
     console.log(req.body)
     const details = {}
+    details.user_id = id
     if (title !== '') details.title = title
     if (type !== '') details.type = type
     if (description !== '') details.description = description
@@ -18,7 +36,7 @@ module.exports.createAnnouncement = async (req, res) => {
     if (role !== "Admin") {
       return res.status(httpStatusCodes.UNAUTHORIZED).json({ error: "Only Admin can create announcements..." })
     }
-    const response = await ANNOUCEMENTMODELMODEL.create(details)
+    const response = await ANNOUCEMENTMODEL.create(details)
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -52,7 +70,7 @@ module.exports.createAnnouncement = async (req, res) => {
 
 module.exports.fetchAnnouncements = async (req, res) => {
   try {
-    const response = await ANNOUCEMENTMODELMODEL.find()
+    const response = await ANNOUCEMENTMODEL.find()
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -70,7 +88,7 @@ module.exports.fetchAnnouncements = async (req, res) => {
 module.exports.fetchAnnouncement = async (req, res) => {
   const { announcement_id } = req.query
   try {
-    const response = await ANNOUCEMENTMODELMODEL.findById(announcement_id)
+    const response = await ANNOUCEMENTMODEL.findById(announcement_id)
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -95,7 +113,7 @@ module.exports.editAnnouncement = async (req, res) => {
   details.status = true
 
   try {
-    const response = await ANNOUCEMENTMODELMODEL.findByIdAndUpdate(
+    const response = await ANNOUCEMENTMODEL.findByIdAndUpdate(
       announcement_id,
       details,
     )
@@ -119,7 +137,7 @@ module.exports.deleteAnnouncement = async (req, res) => {
   const { announcement_id } = req.query
   try {
     const response =
-      await ANNOUCEMENTMODELMODEL.findByIdAndDelete(announcement_id)
+      await ANNOUCEMENTMODEL.findByIdAndDelete(announcement_id)
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)

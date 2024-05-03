@@ -287,13 +287,13 @@ module.exports.deleteComment = async (req, res) => {
 module.exports.fetchComments = async (req, res) => {
   const { report_id } = req.query
   try {
-    const report = await REPORTMODEL.findById(report_id)
+    const report = await REPORTMODEL.findById(report_id).populate('comments.user_id')
     if (!report)
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Report not found' })
 
-    return res.status(httpStatusCodes.OK).json(report.comments)
+    return res.status(httpStatusCodes.OK).json({response:report.comments})
   } catch (err) {
     console.log(err.message)
     return res

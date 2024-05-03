@@ -18,6 +18,7 @@ import AddPet from '../../Component/AddPet'
 import EditPetTable from '../../Component/EditPetTable'
 import { deleteUser, fetchUser } from '../../features/user'
 import { fetchHousehold, fetchHouseholds } from '../../features/household'
+import { fetchPets } from '../../features/pet'
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile')
   const [isEditTenantDetailForm, setIsEditTenantDetailForm] = useState(false)
@@ -34,6 +35,7 @@ const TenantProfile = () => {
   const { id } = useParams()
   const tenant = useSelector((state) => state.user.single)
   const households = useSelector((state) => state.household.data)
+  const pets = useSelector((state) => state.pet.data)
   console.log(households)
   const navigate = useNavigate()
   const dropdownRef = useRef(null);
@@ -45,8 +47,6 @@ const TenantProfile = () => {
       dispatch(deleteUser(id))
       navigate('/tenant')
       console.log('Tenant deleted')
-    } else {
-      console.log('Deletion cancelled')
     }
   }
   const handleClickOutsideDropdown = (event) => {
@@ -95,15 +95,16 @@ const TenantProfile = () => {
 
   useEffect(() => {
     dispatch(fetchHouseholds(id))
+    dispatch(fetchPets(id))
   }, [])
-
+  
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutsideDropdown);
     return () => {
       document.removeEventListener('mousedown', handleClickOutsideDropdown);
     };
   }, []);
-  
+
   const birthday = new Date(tenant?.user_id.birthday).toLocaleDateString()
   return (
     <div className="bg-white1  h-full ">
@@ -312,7 +313,7 @@ const TenantProfile = () => {
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
                           <p className="">Unit - {tenant?.unit_id.unit_no}</p>
                           <p className="">{tenant?.deposit}</p>
-                          <p className="">{tenant?.monthly_due}</p>
+                          <p className="">{new Date(tenant?.monthly_due).toLocaleDateString()}</p>
                         </div>
                       </div>
                     </div>
@@ -365,11 +366,11 @@ const TenantProfile = () => {
                           </div>
                           <div className="flex gap-5">
                             <p className="w-1/4">Birthday:</p>
-                            <span className="w-3/4">Joselle</span>
+                            <span className="w-3/4">{new Date(val.birthday).toLocaleDateString()}</span>
                           </div>
                           <div className="flex gap-5">
                             <p className="w-1/4">Relationship:</p>
-                            <span className="w-3/4">Joselle</span>
+                            <span className="w-3/4">{val.relationship}</span>
                           </div>
                         </div>
                       ))}
@@ -397,7 +398,7 @@ const TenantProfile = () => {
                   )}
 
                   {/*Pets */}
-                  <div className="lg:overflow-y-auto relative ">
+                  <div className="lg:overflow-y-auto relative">
                     <div className="lg:p-3 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
                       <h1 className="lg:text-xl font-bold ">Pet Details</h1>
                       <RxDotsVertical
@@ -430,17 +431,20 @@ const TenantProfile = () => {
                       </div>
                     )}
 
-                    <div className="lg:p-3 flex gap-28 ml-2 overflow-y-auto h-[10rem]">
-                      <div className="lg:text-base ">
-                        <p>Name</p>
-                        <p>Species</p>
-                        <p>Birthday</p>
+                    {/* {pets && pets.map((val, key) => ( */}
+                      <div className="lg:p-3 flex gap-28 ml-2 overflow-y-auto h-[10rem]">
+                        <div className="lg:text-base ">
+                          <p>Name</p>
+                          <p>Species</p>
+                          <p>Birthday</p>
+                        </div>
+                        <div>
+                          <p className="">{profile.Pets[0].name}</p>
+                          <p className="">{profile.Pets[0].species}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="">{profile.Pets[0].name}</p>
-                        <p className="">{profile.Pets[0].species}</p>
-                      </div>
-                    </div>
+                    {/* ))} */}
+
                   </div>
                   {isEditPetForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
@@ -452,9 +456,9 @@ const TenantProfile = () => {
                   {isAddPetForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-1/2 h-fit bg-white rounded-lg relative">
-                        <AddPet 
-                        id={tenant.id}
-                        setIsAddPetForm={setIsAddPetForm} 
+                        <AddPet
+                          id={tenant.id}
+                          setIsAddPetForm={setIsAddPetForm}
                         />
                       </div>
                     </div>

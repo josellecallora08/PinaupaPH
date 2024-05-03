@@ -35,6 +35,10 @@ const USERMODEL = new mongoose.Schema(
       type: String,
       default: 'Tenant',
     },
+    isDelete: {
+      type: Boolean,
+      default: false
+    }
   },
   {
     toJSON: {

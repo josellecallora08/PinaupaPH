@@ -38,7 +38,7 @@ const ManualInvoice = ({ setModal }) => {
   }, []);
 
   const options = users
-    ? users.slice(0, 4).map((user) => ({
+    ? users.map((user) => ({
         value: user.user_id._id,
         label: user.user_id.name,
       }))

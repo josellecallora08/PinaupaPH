@@ -53,7 +53,12 @@ const Sidebar = () => {
   };
 
   const handleLogout = () => {
-    dispatch(isLogout(navigate));
+    const isConfirmed = window.confirm(
+      'Continue logging out?',
+    )
+    if (isConfirmed) {
+      dispatch(isLogout(navigate));
+    } 
   };
 
   const isActive = (route) => {

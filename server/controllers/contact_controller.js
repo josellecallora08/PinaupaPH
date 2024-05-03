@@ -18,7 +18,7 @@ module.exports.sendMail = async (req, res) => {
       from: email,
       to: process.env.GOOGLE_EMAIL,
       subject: `Contact Us - ${name} - Concern`,
-      html: emailContent(response.name, pin),
+      text: message
     })
 
     return res

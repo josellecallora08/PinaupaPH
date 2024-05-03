@@ -224,7 +224,6 @@ module.exports.createInvoice = async (req, res) => {
   }
 }
 
-
 module.exports.fetchInvoices = async (req, res) => {
   try {
     const response = await INVOICEMODEL.find().populate({
@@ -334,7 +333,7 @@ module.exports.fetchInvoice = async (req, res) => {
     const response = await INVOICEMODEL.findById(invoice_id).populate({
       path: 'tenant_id',
       populate: {
-        path: 'user_id unit_id apartment_id', // Populate user_id and unit_id fields in TENANTMODEL
+        path: 'user_id unit_id apartment_id', 
       },
     })
     if (!response) {
@@ -365,14 +364,6 @@ module.exports.editInvoice = async (req, res) => {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to update invoice...' })
-    }
-
-    const details = {
-      name: response?.tenant_id.user_id.name,
-      unit_no: response?.tenant_id.unit_id.unit_no,
-      balance: response?.tenant_id.user_id.balance,
-      due: response?.tenant_id.user_id.monthly_due,
-      createdAt: response?.createdAt,
     }
 
     const pdfBuffer = await new Promise((resolve, reject) => {

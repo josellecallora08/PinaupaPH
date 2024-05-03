@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import contactImage from '/ContactUs.png';
 import logo from '/logo.svg'; // Import your logo image
+import { useDispatch } from 'react-redux';
+import { sendEmail } from '../features/email';
 
 const ContactUsAdmin = () => {
+  const dispatch = useDispatch()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,11 +18,7 @@ const ContactUsAdmin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error submitting form:', error);
-    }
+    dispatch(sendEmail(formData))
   };
 
   return (

@@ -25,8 +25,12 @@ const reportSlice = createSlice({
     },
     fetchReportFailed: (state, action) => {
       state.loading = false
-      state.error = action.paylaod
+      state.error = action.payload
     },
+    deleteReportSuccess: (state, action) => {
+      state.loading = false
+      state.data = state.data.map()
+    }
   },
 })
 
@@ -87,6 +91,7 @@ export const fetchReports = () => async (dispatch) => {
 export const fetchReport = (report_id) => async (dispatch) => {
   try {
     dispatch(fetchReportStart())
+    const socket = io(`${import.meta.env.VITE_URL}/`)
 
     const token = Cookies.get('token')
     const response = await fetch(`${import.meta.env.VITE_URL}/api/report/list/v1?report_id=${report_id}`, {
@@ -100,7 +105,16 @@ export const fetchReport = (report_id) => async (dispatch) => {
         throw new Error(json.error)
       }
       const json = await response.json()
-      
+      socket.on('receive-comment', (comment) => {
+        // Handle the received comment
+        console.log('Received comment:', comment);
+      });
+  
+      // Event listener for 'receive-comment-notification' event
+      socket.on('receive-comment-notification', () => {
+        // Handle the received comment notification
+        console.log('Received comment notification');
+      });
       console.log(json.response)
       dispatch(fetchReportSuccess(json.response))
   } catch (err) {
@@ -130,7 +144,7 @@ export const editReport = (report_id, fields) => async (dispatch) => {
     dispatch(fetchReportFailed(err.message))
   }
 }
-export const deleteReport = () => async (dispatch) => {
+export const deleteReport = (report_id) => async (dispatch) => {
   try {
     dispatch(fetchReportStart())
     const token = Cookies.get('token')
@@ -145,7 +159,7 @@ export const deleteReport = () => async (dispatch) => {
         throw new Error(json.error)
       }
       const json = await response.json()
-      dispatch(fetchReports())
+      dispatch(deleteReport())
   } catch (err) {
     console.log(err.message)
     dispatch(fetchReportFailed(err.message))
