@@ -25,8 +25,12 @@ const reportSlice = createSlice({
     },
     fetchReportFailed: (state, action) => {
       state.loading = false
-      state.error = action.paylaod
+      state.error = action.payload
     },
+    deleteReportSuccess: (state, action) => {
+      state.loading = false
+      state.data = state.data.map()
+    }
   },
 })
 
@@ -130,7 +134,7 @@ export const editReport = (report_id, fields) => async (dispatch) => {
     dispatch(fetchReportFailed(err.message))
   }
 }
-export const deleteReport = () => async (dispatch) => {
+export const deleteReport = (report_id) => async (dispatch) => {
   try {
     dispatch(fetchReportStart())
     const token = Cookies.get('token')
@@ -145,7 +149,7 @@ export const deleteReport = () => async (dispatch) => {
         throw new Error(json.error)
       }
       const json = await response.json()
-      dispatch(fetchReports())
+      dispatch(deleteReport())
   } catch (err) {
     console.log(err.message)
     dispatch(fetchReportFailed(err.message))

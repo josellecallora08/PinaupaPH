@@ -119,7 +119,7 @@ module.exports.create_apartment = async (req, res) => {
     await response.save()
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Apartment Building Created...', response})
+      .json({ msg: 'Apartment Building Created...', response })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -427,7 +427,7 @@ module.exports.edit_apartment_unit = async (req, res) => {
 // ? Tested API
 module.exports.delete_apartment_unit = async (req, res) => {
   try {
-    const { apartment_id} = req.params
+    const { apartment_id } = req.params
     const { unit_id } = req.query
 
     const apartment_response = await APARTMENTMODEL.findById(apartment_id)

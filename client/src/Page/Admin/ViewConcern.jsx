@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { IoIosCheckboxOutline } from 'react-icons/io'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { LuTrash2 } from 'react-icons/lu'
-import { fetchReport } from '../../features/report'
+import { deleteReport, fetchReport } from '../../features/report'
 import Loading from '../../Component/LoadingComponent/Loading'
 import { fetchComments } from '../../features/socket'
 import { isLoggedin } from '../../features/authentication'
@@ -32,14 +32,12 @@ const ViewConcern = () => {
       'Are you sure you want to delete this Issue?',
     )
     if (isConfirmed) {
-    } else {
-      console.log('Deletion cancelled')
-    }
+      dispatch(deleteReport(id))
+    } 
   }
   useEffect(() => {
     dispatch(isLoggedin())
   }, [])
-  console.log(user)
   const handleSubmit = async (e) => {
     e.preventDefault() // Prevent default form submission behavior
     dispatch(createComment(user._id, id, comment)) // Submit the comment

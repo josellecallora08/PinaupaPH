@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import SearchBar from '../../Component/SearchBar';
 import AddAnnouncement from '../../Component/AdminComponent/AddAnnouncement';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import { MdOutlineModeEdit, MdOutlineDeleteOutline  } from "react-icons/md";
+import { MdOutlineModeEdit, MdOutlineDeleteOutline } from "react-icons/md";
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteAnnouncement, fetchAnnouncements } from '../../features/announcement';
 
 const Announcement = () => {
+  const dispatch = useDispatch()
+  const announcement = useSelector(state => state.announcement.data)
   const [searchItem, setSearchItem] = useState('');
   const [filter, setFilter] = useState('All');
   const [isAddAnnouncementFormOpen, setisAddAnnouncementFormOpen] = useState(false);
@@ -18,51 +22,21 @@ const Announcement = () => {
   const handleSearch = (e) => {
     setSearchItem(e.target.value);
   };
-
-  // Fake announcement data
-  const announcements = [
-    {
-      id: 1,
-      date: 'April 27, 2024',
-      title: 'Important News',
-      time: '10:00pm',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero.',
-    },
-    {
-      id: 2,
-      date: 'April 26, 2024',
-      title: 'Payment Update',
-      time: '10:00pm',
-      description: 'Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.',
-    },
-    {
-      id: 3,
-      date: 'April 25, 2024',
-      title: 'New Feature Release',
-      time: '10:00pm',
-      description: 'Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta.',
-    },
-    {
-      id: 4,
-      date: 'April 26, 2024',
-      title: 'Payment Update',
-      time: '10:00pm',
-      description: 'Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet.',
-    },
-    {
-      id: 5,
-      date: 'April 25, 2024',
-      title: 'New Feature Release',
-      time: '10:00pm',
-      description: 'Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta.',
-    },
-  ];
-
   // Function to toggle dropdown for a specific card
   const toggleDropdown = (id) => {
     setOpenDropdown(openDropdown === id ? null : id);
   };
 
+  const handleDelete = (id) => {
+    const isConfirmed = confirm("Would you like to delete this announcement?")
+    if (isConfirmed) {
+      dispatch(deleteAnnouncement(id))
+    }
+  }
+  useEffect(() => {
+    dispatch(fetchAnnouncements())
+    console.log(announcement)
+  }, [])
   return (
     <div className="w-full h-screen bg-white1">
       {/* Top of Announcement Tab */}
@@ -121,51 +95,45 @@ const Announcement = () => {
         <div className=" md:h-[25rem] min-[1440px]:h-[45rem] min-[1280px]:h-[45rem] min-[1366px]:h-[19rem] w-full h-80 overflow-x-auto px-8 rounded-bl-lg rounded-br-lg bg-white">
           {/* Announcement Cards */}
           <div className="flex flex-wrap mt-5 ">
-            {announcements
-              .filter((announcement) => {
-                if (filter === 'All') return true
-                return announcement.title
-                  .toLowerCase()
-                  .includes(filter.toLowerCase())
-              })
-              .map((announcement) => (
-                <div
-                  key={announcement.id}
-                  className="relative bg-white p-4 rounded-md shadow-md w-full mb-6"
-                >
-                  <div className="flex ">
-                    <div className="  flex flex-col justify-center md:w-auto  border-r-2 border-gray w-32 pr-1  items-center mr-5">
-                      <p className="text-light-gray md:text-base text-xs ">
-                        {announcement.date}
-                      </p>
-                      <p className="text-light-gray md:text-sm text-xs">
-                        {announcement.time}
-                      </p>
-                    </div>
-
-                    <p className="flex flex-col w-[80%] ">
-                      <p className="font-semibold text-lg">
-                        {announcement.title}
-                      </p>
-
-                      <p className="text-light-gray">
-                        {announcement.description}
-                      </p>
+            {announcement && filter === "All" && announcement?.map((val, key) => (
+              <div
+                key={key}
+                className="relative bg-white p-4 rounded-md shadow-md w-full mb-6"
+              >
+                <div className="flex ">
+                  <div className="  flex flex-col justify-center md:w-auto  border-r-2 border-gray w-32 pr-1  items-center mr-5">
+                    <p className="text-light-gray md:text-base text-xs flex">
+                      <span>{new Date(val.createdAt).toDateString()}</span>
+                    </p>
+                    <p className="text-light-gray md:text-sm text-xs">
+                      <span>{new Date(val.createdAt).toLocaleTimeString()}</span>
                     </p>
                   </div>
-                  <div onClick={() => toggleDropdown(announcement.id)} className="absolute top-3 right-2 text-xl cursor-pointer">
-                    <BsThreeDotsVertical className="relative" />
-                  </div>
-                  {openDropdown === announcement.id && (
-                    <div className=" absolute top-2 right-7">
-                      <ul>
-                        <li className='cursor-pointer p-2 border-2 border-primary-color bg-white hover:transition hover:duration-150 hover:bg-primary-color hover:text-white  text-primary-color flex items-center gap-2 hover: '><MdOutlineModeEdit />Edit</li>
-                        <li className='cursor-pointer p-2 border-2 border-primary-color bg-white hover:transition hover:duration-150 hover:bg-red hover:text-white  text-red flex items-center gap-2 hover: '><MdOutlineDeleteOutline />Delete</li>
-                      </ul>
-                    </div>
-                  )}
+
+                  <p className="flex flex-col w-[80%] ">
+                    <p className="font-semibold text-lg">
+                      {val.title}
+                    </p>
+
+                    <p className="text-light-gray">
+                      {val.description}
+                    </p>
+                  </p>
                 </div>
-              ))}
+                <div onClick={() => toggleDropdown(val._id)} className="absolute top-3 right-2 text-xl cursor-pointer">
+                  <BsThreeDotsVertical className="relative" />
+                </div>
+                {openDropdown === val._id && (
+                  <div className=" absolute top-2 right-7">
+                    <ul>
+                      <li className='cursor-pointer p-2 border-2 border-primary-color bg-white hover:transition hover:duration-150 hover:bg-primary-color hover:text-white  text-primary-color flex items-center gap-2 hover: '><MdOutlineModeEdit />Edit</li>
+                      <li onClick={() => handleDelete(val._id)} className='cursor-pointer p-2 border-2 border-primary-color bg-white hover:transition hover:duration-150 hover:bg-red hover:text-white  text-red flex items-center gap-2 hover: '><MdOutlineDeleteOutline />Delete</li>
+                    </ul>
+                  </div>
+                )}
+              </div>
+            ))}
+
           </div>
         </div>
       </div>

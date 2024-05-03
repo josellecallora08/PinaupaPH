@@ -334,7 +334,7 @@ module.exports.fetchInvoice = async (req, res) => {
     const response = await INVOICEMODEL.findById(invoice_id).populate({
       path: 'tenant_id',
       populate: {
-        path: 'user_id unit_id apartment_id', // Populate user_id and unit_id fields in TENANTMODEL
+        path: 'user_id unit_id apartment_id', 
       },
     })
     if (!response) {
