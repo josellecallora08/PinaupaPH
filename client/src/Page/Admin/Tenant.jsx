@@ -36,7 +36,7 @@ const Tenant = () => {
   const error = useSelector((state) => state.user.error)
   const apartment = useSelector((state) => state.apartment.data)
   const msg = useSelector((state) => state.user.msg)
-  const handleOptionChange = (e) => {
+  const handleDropdown = (e) => {
     setSelectedOption(e.target.value)
   }
   // const [apartmentId, setApartmentId] = useState('')
@@ -69,7 +69,7 @@ const Tenant = () => {
 
   useEffect(() => {
     if (searchItem && searchItem !== '') {
-      dispatch(handleSearchUser(searchItem ))
+      dispatch(handleSearchUser(searchItem))
     } else {
       dispatch(fetchUsers())
     }
@@ -92,6 +92,8 @@ const Tenant = () => {
   useEffect(() => {
     dispatch(fetchApartments())
   }, [])
+
+
   return (
     <>
       {isVisible && <MessageToast message={msg} error={error} isVisible={isVisible} setIsVisible={setIsVisible} />}
@@ -107,7 +109,7 @@ const Tenant = () => {
             </div>
             <div className="w-full lg:w-fit flex items-center gap-5">
               <div className="w-full lg:text-sm flex items-center justify-center">
-                <select className="select font-semibold select-bordered w-full max-w-xs">
+                <select onChange={handleDropdown} className="select font-semibold select-bordered w-full max-w-xs">
                   {apartment?.map((val, key) => (
                     <option key={key} value={val._id} >
                       {val.name}
@@ -128,7 +130,9 @@ const Tenant = () => {
           {/* Body of Tenant Tab */}
           <div className="lg:grid-cols-3  md:grid-cols-1 grid grid-cols-1 md:mr-10 gap-4 ">
             {loading ?
-              <SearchLoading /> : tenant?.map((val, key) => (
+              <SearchLoading /> : selectedOption !== '' ? tenant?.filter((item) => item?.apartment_id._id === selectedOption).map((val, key) => (
+                <TenantCard key={key} data={val} />
+              )) : tenant?.map((val, key) => (
                 <TenantCard key={key} data={val} />
               ))}
           </div>

@@ -25,22 +25,22 @@ module.exports.fetch_cctvs = async (req, res) => {
   }
 }
 // ? Tested API
-module.exports.fetch_cctv_apartment = async(req, res) => {
-  try{
-    const {apartment_id} = req.params
-    const response = await APARTMENTMODEL.findById({_id: apartment_id}).populate({
+module.exports.fetch_cctv_apartment = async (req, res) => {
+  try {
+    const { apartment_id } = req.params
+    const response = await APARTMENTMODEL.findById({ _id: apartment_id }).populate({
       path: 'cctvs',
       model: CCTVMODEL,
       select: 'name username password port ip_address'
     }).select('-address -province -barangay -createdAt -updatedAt -__v -units')
     if (!response)
-    return res
-      .status(httpStatusCodes.BAD_REQUEST)
-      .json({ error: 'Unable to fetch CCTV' })
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unable to fetch CCTV' })
 
     return res.status(httpStatusCodes.OK).json(response)
 
-  }catch(err){
+  } catch (err) {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
@@ -49,23 +49,23 @@ module.exports.fetch_cctv_apartment = async(req, res) => {
 }
 // ? Tested API
 module.exports.fetch_cctv = async (req, res) => {
-  try{
-    const {apartment_id, cctv_id} = req.params
-    const response = await APARTMENTMODEL.findById({_id: apartment_id}).populate({
+  try {
+    const { apartment_id, cctv_id } = req.params
+    const response = await APARTMENTMODEL.findById({ _id: apartment_id }).populate({
       path: 'cctvs',
       model: CCTVMODEL,
       select: 'name username password port ip_address'
     })
     if (!response)
-    return res
-      .status(httpStatusCodes.BAD_REQUEST)
-      .json({ error: 'Unable to fetch CCTV' })
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unable to fetch CCTV' })
 
 
     const cctv = response.cctvs.filter(item => item._id.toString() === cctv_id)
     return res.status(httpStatusCodes.OK).json(cctv)
 
-  }catch(err){
+  } catch (err) {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
@@ -93,17 +93,17 @@ module.exports.create_cctv = async (req, res) => {
     details.ip_address = ip_address
   }
   try {
-    const apartment = await APARTMENTMODEL.findById({_id:apartment_id}).populate('cctvs').select('cctvs')
-    if(!apartment)
+    const apartment = await APARTMENTMODEL.findById({ _id: apartment_id }).populate('cctvs').select('cctvs')
+    if (!apartment)
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to find apartment...' })
 
     const index = apartment.cctvs.some((item) => item.name === name)
-    if(index){
+    if (index) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({error: "CCTV is already exists"})
+        .json({ error: "CCTV is already exists" })
     }
 
     const response = await CCTVMODEL.create(details) // Save CCTV Details on the DATABASE
@@ -147,17 +147,17 @@ module.exports.update_cctv = async (req, res) => {
     details.ip_address = ip_address
   }
   try {
-    const apartment = await APARTMENTMODEL.findById({_id:apartment_id}).populate('cctvs').select('cctvs')
-    if(!apartment)
+    const apartment = await APARTMENTMODEL.findById({ _id: apartment_id }).populate('cctvs').select('cctvs')
+    if (!apartment)
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to find apartment...' })
 
     const index = apartment.cctvs.some((item) => item.name === name)
-    if(index){
+    if (index) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({error: "CCTV is already exists"})
+        .json({ error: "CCTV is already exists" })
     }
 
     let response = await CCTVMODEL.findByIdAndUpdate({ _id: cctv_id }, details)

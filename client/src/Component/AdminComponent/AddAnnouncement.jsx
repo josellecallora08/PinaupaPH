@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
+import { useDispatch } from 'react-redux';
+import { createAnnouncement, deleteAnnouncement } from '../../features/announcement';
 
 const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
+  const dispatch = useDispatch()
   const [formData, setFormData] = useState({
-    announcementTitle: '',
-    announcementType: 'news',
+    title: '',
+    type: '',
     description: '',
-    dateTime: '',
   });
 
   const handleChange = (e) => {
@@ -15,8 +17,11 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch(createAnnouncement(formData))
     console.log('Form submitted:', formData);
   };
+
+
 
   return (
     <>
@@ -38,7 +43,7 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
               <label htmlFor={name} className="block mb-1 text-primary-color capitalize">
                 {name.replace(/([A-Z])/g, ' $1').toLowerCase() === 'datetime' ? 'Date and Time' : name.replace(/([A-Z])/g, ' $1').toLowerCase()}:
               </label>
-              {name === 'announcementType' ? (
+              {name === 'type' ? (
                 <select
                   id={name}
                   name={name}
@@ -47,6 +52,7 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
                   className="w-full border border-gray-300 rounded px-3 py-2"
                   placeholder="Select announcement type"
                 >
+                  <option >Select Type:</option>
                   <option value="news">News</option>
                   <option value="payment">Payment</option>
                 </select>
@@ -63,7 +69,7 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
                 />
               ) : (
                 <input
-                  type={name === 'dateTime' ? 'datetime-local' : 'text'}
+                  type={name === 'title' ? 'text' : 'text'}
                   id={name}
                   name={name}
                   value={value}

@@ -86,11 +86,7 @@ const TENANTMODEL = new mongoose.Schema(
     },
     payment: [PAYMENTMODEL],
     household: [HOUSEHOLDMODEL],
-    pet: [PETMODEL],
-    isDelete: {
-      type: Boolean,
-      default: false
-    }
+    pet: [PETMODEL]
   },
   { timestamps: true },
 )

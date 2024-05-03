@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { io } from 'socket.io-client'
 import Cookies from 'js-cookie'
-import { fetchReports } from './report'
+import { fetchReport } from './report'
 const commentSlice = createSlice({
   name: 'comment',
   initialState: {
@@ -67,17 +67,18 @@ export const createComment =
       }
       const json = await response.json()
       console.log(json)
-      socket.emit('send-comment')
-      dispatch(fetchReports())
+      socket.emit('send-comment', comment)
+      // dispatch(fetchReport(reportId))
     } catch (err) {
       dispatch(actionFailed(err.message))
     }
   }
 export const fetchComments = (reportId) => async (dispatch) => {
   try {
+    dispatch(fetchCommentStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/report/v1?report_id=${reportId}`,
+      `${import.meta.env.VITE_URL}/api/report/list/comments?report_id=${reportId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -89,7 +90,8 @@ export const fetchComments = (reportId) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    dispatch(fetchReports(json))
+    console.log(json)
+    dispatch(fetchCommentsSuccess(json.response))
   } catch (err) {
     dispatch(actionFailed(err.message))
   }

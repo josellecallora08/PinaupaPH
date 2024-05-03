@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 
 const ANNOUCEMENTMODEL = new mongoose.Schema({
+    user_id:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+    },
     title: {
         type: String,
         required: true

@@ -259,20 +259,19 @@ module.exports.search_user = async (req, res) => {
       },
       {
         $project: {
-          tenant_id: {
-            user_id: '$user',
-            unit_id: '$unit',
-            apartment_id: '$apartment',
-            deposit: 1,
-            advance: 1,
-            balance: 1,
-            monthly_due: 1,
-            payment: 1,
-            household: 1,
-            pet: 1,
-            createdAt: 1,
-            updatedAt: 1
-          },
+          _id: 1,
+          user_id: '$user',
+          unit_id: '$unit',
+          apartment_id: '$apartment',
+          deposit: 1,
+          advance: 1,
+          balance: 1,
+          monthly_due: 1,
+          payment: 1,
+          household: 1,
+          pet: 1,
+          createdAt: 1,
+          updatedAt: 1
         }
       },
       {
@@ -286,37 +285,6 @@ module.exports.search_user = async (req, res) => {
         .json({ msg: 'No matching records..' })
     }
 
-    // search = search.map((item) => {
-    //   let userData = {
-    //     _id: item.user_id._id,
-    //     name: item.user.name,
-    //     image: item.user.profile_image.image_url,
-    //     image_id: item.user.profile_image.public_id,
-    //     username: item.user.username,
-    //     email: item.user.email,
-    //     birthday: item.user.birthday,
-    //     phone: item.user.mobile_no,
-    //     role: item.user.role,
-    //     unit_id: '',
-    //     rent: '',
-    //     deposit: item.deposit,
-    //     advance: item.advance,
-    //     balance: item.balance,
-    //     monthly_due:
-    //       item.monthly_due !== null
-    //         ? new Date(item.monthly_due).toDateString()
-    //         : null,
-    //   }
-
-    //   if (item.unit_id) {
-    //     userData.unit_id = item.unit_id._id
-    //     userData.unit_no = item.unit.unit_no
-    //     userData.rent = item.unit.rent
-    //   }
-
-    //   return userData
-    // })
-
     return res.status(httpStatusCodes.OK).json({ response: search })
   } catch (err) {
     console.error({ error: err.message })
@@ -328,7 +296,6 @@ module.exports.search_user = async (req, res) => {
 
 // * Tested API
 module.exports.fetch_users = async (req, res) => {
-  // const generatedToken = req.newToken
   // const role = req.user.role
   // if (role !== 'Admin') {
   //   return res
