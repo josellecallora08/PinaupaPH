@@ -70,8 +70,8 @@ mongoose
         console.log('Disconnected')
       })
 
-      socket.on('send-comment', () => {
-        io.emit('receive-comment')
+      socket.on('send-comment', (comment) => {
+        io.emit('receive-comment', comment)
         io.emit('receive-comment-notification')
       })
 

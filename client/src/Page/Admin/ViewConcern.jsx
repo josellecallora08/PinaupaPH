@@ -12,7 +12,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs'
 import { LuTrash2 } from 'react-icons/lu'
 import { deleteReport, fetchReport } from '../../features/report'
 import Loading from '../../Component/LoadingComponent/Loading'
-import { fetchComments } from '../../features/socket'
+import { fetchComments } from '../../features/comment'
 import { isLoggedin } from '../../features/authentication'
 const ViewConcern = () => {
   const { id } = useParams()
@@ -20,7 +20,7 @@ const ViewConcern = () => {
   const report = useSelector((state) => state.report.single)
   const loading = useSelector((state) => state.report.loading)
   const user = useSelector((state) => state.auth.user)
-  // const comment = useSelector((state) => state.comment.data)
+  const msg = useSelector((state) => state.comment.data)
   const [comment, setComments] = useState('')
   const messageContainerRef = useRef(null)
   const [isDotOpen, setIsDotOpen] = useState(false)
@@ -33,13 +33,14 @@ const ViewConcern = () => {
     )
     if (isConfirmed) {
       dispatch(deleteReport(id))
-    } 
+    }
   }
   useEffect(() => {
     dispatch(isLoggedin())
   }, [])
   const handleSubmit = async (e) => {
     e.preventDefault() // Prevent default form submission behavior
+
     dispatch(createComment(user._id, id, comment)) // Submit the comment
     setComments(null) // Reset the textarea
   }
@@ -60,12 +61,19 @@ const ViewConcern = () => {
   }, [handleSubmit])
 
   useEffect(() => {
+    const socket = io(`${import.meta.env.VITE_URL}/`)
+    socket.on('receive-comment', (comment) => {
+      dispatch(fetchComments(id))
+    });
+    return () => {
+      socket.disconnect();
+    }
+  }, [dispatch])
+
+  useEffect(() => {
     dispatch(fetchReport(id))
   }, [])
 
-  useEffect(() => {
-    dispatch(fetchComments(id))
-  }, [])
 
   useEffect(() => {
     const container = messageContainerRef.current;
@@ -74,6 +82,7 @@ const ViewConcern = () => {
       container.scrollTop = container.scrollHeight;
     }
   }, [report, comment, handleSubmit]);
+  
   return (
     <>
       <div className="w-full h-full flex flex-col pb-5 xl:bg-gray text-primary-color">
@@ -182,7 +191,7 @@ const ViewConcern = () => {
                   <div ref={messageContainerRef}
                     className={`w-full h-auto max-h-[600px] font-regular flex flex-col gap-2 px-5 ${report?.comments.length > 5 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}
                   >
-                    {report?.comments.map((val, key) => (
+                    {msg?.map((val, key) => (
                       <div key={key} className="min-h-12 w-full flex gap-2 items-center overflow-hidden">
                         <figure className="w-full h-full max-w-12 max-h-12 overflow-hidden rounded-full">
                           <img

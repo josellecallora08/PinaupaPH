@@ -27,8 +27,8 @@ router.get('/list/v1', fetchReport)
 router.post('/create/comment', createComment)
 router.patch('/update/comment', editComment)
 router.delete('/delete/comment', deleteComment)
-router.get('/v1', fetchComments)
-router.get('/', fetchComment)
+router.get('/list/comments', fetchComments)
+router.get('/list/v1/comments', fetchComment)
 
 router.post('/send-email', sendMail)
 module.exports = router

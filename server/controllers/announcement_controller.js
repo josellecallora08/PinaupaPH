@@ -28,6 +28,7 @@ module.exports.createAnnouncement = async (req, res) => {
     const { title, type, description } = req.body
     console.log(req.body)
     const details = {}
+    details.user_id = id
     if (title !== '') details.title = title
     if (type !== '') details.type = type
     if (description !== '') details.description = description
