@@ -4,7 +4,6 @@ const httpStatusCodes = require('../constants/constants')
 module.exports.fetchNotifications = async (req, res) => {
     try {
         const response = await NOTIFMODEL.find().populate('sender_id receiver_id announcement_id comment_id payment_id report_id')
-        console.log(response)
         if (!response) {
             return res.status(httpStatusCodes.NOT_FOUND).json({ error: "Notification is empty..." })
         }

@@ -48,7 +48,6 @@ export const createComment =
       dispatch(fetchCommentStart())
       const token = Cookies.get('token')
       const socket = io(`${import.meta.env.VITE_URL}/`)
-      console.log(token)
       const response = await fetch(
         `${import.meta.env.VITE_URL}/api/report/create/comment?user_id=${userId}&report_id=${reportId}`,
         {
@@ -66,7 +65,6 @@ export const createComment =
         throw new Error(json.error)
       }
       const json = await response.json()
-      console.log(json)
       socket.emit('send-comment', comment)
       // dispatch(fetchReport(reportId))
     } catch (err) {
@@ -90,7 +88,6 @@ export const fetchComments = (reportId) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    console.log(json)
     dispatch(fetchCommentsSuccess(json.response))
   } catch (err) {
     dispatch(actionFailed(err.message))

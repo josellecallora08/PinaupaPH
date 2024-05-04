@@ -55,7 +55,6 @@ export const fetchNotifications = () => async (dispatch) => {
             throw new Error(json.error)
         }
         const json = await response.json()
-        console.log(json)
         dispatch(fetchNotifsSuccess(json.response))
     } catch (err) {
         dispatch(fetchNotifFailed(err.message))
@@ -77,7 +76,6 @@ export const fetchNotification = (notif_id) => async (dispatch) => {
             throw new Error(json.error)
         }
         const json = await response.json()
-        console.log(json)
         dispatch(fetchNotifsSuccess(json.response))
     } catch (err) {
         dispatch(fetchNotifFailed(err.message))
@@ -100,7 +98,6 @@ export const deleteNotification = (notif_id) => async (dispatch) => {
             throw new Error(json.error)
         }
         const json = await response.json()
-        console.log(json)
         dispatch(fetchNotifsSuccess(json.response))
     } catch (err) {
         dispatch(fetchNotifFailed(err.message))
