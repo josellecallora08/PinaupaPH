@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { createUnit } from '../../features/unit'
 import { IoMdClose } from 'react-icons/io'
@@ -11,6 +11,21 @@ const AddRoom = ({ apartment_id, setIsAddRoomFormOpen }) => {
     rent: '',
     unit_no: '',
   })
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setIsAddRoomFormOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [setIsAddRoomFormOpen]);
   const handleInput = (e) => {
     const { name, value } = e.target
     setFields((components) => ({
@@ -29,7 +44,7 @@ const AddRoom = ({ apartment_id, setIsAddRoomFormOpen }) => {
   }
   return (
     <>
-      <div className="relative">
+      <div className="relative" ref={modalRef}>
         <div className="relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center ">
           <h1 className="lg:text-xl  ml-5 text-lg font-bold ">
             Add Apartment Unit Details

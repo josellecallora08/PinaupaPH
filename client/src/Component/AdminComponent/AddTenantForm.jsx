@@ -1,7 +1,6 @@
-import React from 'react'
-import { IoMdClose } from 'react-icons/io'
-
-import { useSelector } from 'react-redux'
+import React, { useEffect, useRef } from 'react';
+import { IoMdClose } from 'react-icons/io';
+import { useSelector } from 'react-redux';
 
 const AddTenantForm = ({
   fields,
@@ -12,8 +11,23 @@ const AddTenantForm = ({
 }) => {
   const unit = useSelector((state) => state.unit.data)
   const apartment = useSelector((state) => state.apartment.data)
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setIsAddTenantFormOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [setIsAddTenantFormOpen]);
   return (
-    <div className="relative">
+    <div className="relative" ref={modalRef}>
       <div className="w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center ">
         <h1 className="lg:text-xl relative lg:ml-5 text-2xl font-bold ">
           Add Tenant Details

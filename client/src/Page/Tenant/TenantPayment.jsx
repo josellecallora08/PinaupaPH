@@ -1,44 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import gcashlogo from '/Gcashlogo.png';
-import paymayalogo from '/Paymayalogo.png';
-import grabpaylogo from '/Grabpaylogo.png';
-import { useDispatch } from 'react-redux';
-import { createPayment } from '../../features/payment';
-
+import React, { useState, useEffect } from 'react'
+import gcashlogo from '/Gcashlogo.png'
+import paymayalogo from '/Paymayalogo.png'
+import grabpaylogo from '/Grabpaylogo.png'
+import { useDispatch } from 'react-redux'
+import { createPayment } from '../../features/payment'
+import '../../index.css'
 const TenantPayment = () => {
-  const [selectedOption, setSelectedOption] = useState('ewallet');
-  const dispatch = useDispatch();
+  const [selectedOption, setSelectedOption] = useState('ewallet')
+  const [selectedEwallet, setSelectedEwallet] = useState(null);
+  const dispatch = useDispatch()
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     email: '',
     amount: '',
-  });
+  })
 
   useEffect(() => {
-    setSelectedOption('ewallet');
-  }, []);
+    setSelectedOption('ewallet')
+  }, [])
 
   const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value);
+    setSelectedOption(event.target.value)
+    setSelectedEwallet(null);
     setFormData({
       name: '',
       phone: '',
       email: '',
       amount: '',
-    });
+    })
+  }
+  const handleEwalletChange = (event) => {
+    setSelectedEwallet(event.target.value); // Update selected e-wallet option
   };
-
   const handlePayment = () => {
-    dispatch(createPayment(formData));
-  };
+    dispatch(createPayment(formData))
+  }
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    });
-  };
+    })
+  }
 
   return (
     <>
@@ -87,29 +91,50 @@ const TenantPayment = () => {
                 {selectedOption === 'ewallet' && (
                   <div className=" flex flex-col lg:gap-10">
                     <div className="mb-5 pt-3">
-                      <div className="flex  items-center justify-center gap-5 my-5 ">
-                        <button className="w-32 h-20 flex justify-center items-center focus:outline-none focus:scale-110 rounded-md shadow-md shadow-dark-gray rounded-md focus:ring-2 focus:ring-blue-500">
-                          <img
-                            src={gcashlogo}
-                            alt="GCash"
-                            className="max-w-full max-h-full "
-                          />
-                        </button>
-                        <button className="w-32 h-20 flex justify-center items-center focus:outline-none focus:scale-110 shadow-md shadow-dark-gray rounded-md focus:ring-2 focus:ring-lime">
-                          <img
-                            src={paymayalogo}
-                            alt="Paymaya"
-                            className="max-w-full max-h-full"
-                          />
-                        </button>
-                        <button className="w-32 h-20 flex justify-center items-center focus:outline-none focus:scale-110 shadow-md shadow-dark-gray rounded-md focus:ring-2 focus:ring-primary-color">
-                          <img
-                            src={grabpaylogo}
-                            alt="GrabPay"
-                            className="max-w-full max-h-full"
-                          />
-                        </button>
+                      <div className="form-control flex justify-center items-center">
+                        <div className="flex items-center gap-5 my-5">
+                          <label className="radio-container">
+                            <input
+                              type="radio"
+                              name="ewalletOption"
+                              value="gcash"
+                              className="hidden"
+                            />
+                            <img
+                              src={gcashlogo}
+                              alt="GCash"
+                              className="w-40 h-20 cursor-pointer rounded-md shadow-md shadow-gray "
+                            />
+                          </label>
+                          <label className="radio-container">
+                            <input
+                              type="radio"
+                              name="ewalletOption"
+                              value="paymaya"
+                              className="hidden"
+                            />
+                            <img
+                              src={paymayalogo}
+                              alt="Paymaya"
+                              className="w-40 h-20 cursor-pointer rounded-md "
+                            />
+                          </label>
+                          <label className="radio-container">
+                            <input
+                              type="radio"
+                              name="ewalletOption"
+                              value="grabpay"
+                              className="hidden"
+                            />
+                            <img
+                              src={grabpaylogo}
+                              alt="GrabPay"
+                              className={`h-20 w-40 cursor-pointer rounded-md p-2`}
+                            />
+                          </label>
+                        </div>
                       </div>
+
                       <div className="p-5 bg-white ">
                         <h1 className="mb-3">Personal Information</h1>
 
@@ -149,6 +174,25 @@ const TenantPayment = () => {
                             className="mt-1 px-4 py-3 border text-xl text-primary-color bg-white border-dark-gray rounded-md w-full"
                           />
                         </div>
+                        <div className="mb-4">
+                          <label
+                            htmlFor="amount"
+                            className="block font-medium text-primary-color"
+                          >
+                            Amount
+                          </label>
+                          <input
+                            type="number"
+                            placeholder="Enter amount"
+                            id="amount"
+                            name="amount"
+                            value={formData.amount}
+                            onChange={handleChange}
+                            autoComplete="off"
+                            className="mt-1 p-4 border bg-white text-xl text-primary-color border-dark-gray rounded-md w-full"
+                          />
+                        </div>
+
                         <div className="">
                           <label
                             htmlFor="email"
@@ -319,7 +363,7 @@ const TenantPayment = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default TenantPayment;
+export default TenantPayment

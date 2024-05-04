@@ -563,3 +563,28 @@ input[type=number] {
 .banter-loader__box:nth-child(9) {
   animation: moveBox-9 4s infinite;
 }
+.radio-container {
+  position: relative;
+}
+
+.radio-container input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+
+.radio-container img {
+  max-width: fit-content;
+  max-height: fit-content;
+}
+
+.radio-container input[type="radio"]:checked[value="gcash"] + img {
+  border: 2px solid #3a79ad; /* Blue border for GCash */
+}
+
+.radio-container input[type="radio"]:checked[value="paymaya"] + img {
+  border: 2px solid lightblue; /* Light green border for PayMaya */
+}
+
+.radio-container input[type="radio"]:checked[value="grabpay"] + img {
+  border: 2px solid lime; /* Dark green border for GrabPay */
+}

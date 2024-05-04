@@ -116,11 +116,11 @@ const Headbar = () => {
     }
   }, [])
   const handleLogout = () => {
-    const confirmLogout = window.confirm("Continue Logging out?");
-    if (confirmLogout) {
-      dispatch(logout(navigate));
+    const isConfirmed = window.confirm('Continue Logging out?')
+    if (isConfirmed) {
+      dispatch(isLogout(navigate))
     }
-  };
+  }
   
   const filteredNotif = notifs?.filter(
     (item) => item?.receiver_id?._id === user?._id,

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
 import { createAnnouncement, deleteAnnouncement } from '../../features/announcement';
 
 const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
   const dispatch = useDispatch()
+  const modalRef = useRef(null);
   const [formData, setFormData] = useState({
     title: '',
     type: '',
@@ -14,7 +15,19 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setisAddAnnouncementFormOpen(false);
+      }
+    };
 
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [setisAddAnnouncementFormOpen]);
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(createAnnouncement(formData))
@@ -26,7 +39,7 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="w-full">
+      <form onSubmit={handleSubmit} className="w-full" ref={modalRef}>
         <div className="flex justify-between items-center w-full p-2 bg-primary-color text-white">
           <h1>Create Announcement</h1>
           <IoMdClose
