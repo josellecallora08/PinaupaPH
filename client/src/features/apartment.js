@@ -72,7 +72,6 @@ export const handleSearchApartment = (filter) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    console.log(json)
     dispatch(fetchApartmentSuccess(json))
   } catch (err) {
     dispatch(actionApartmentFailed(err.message))
@@ -100,7 +99,6 @@ export const createApartment = (fields) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    console.log(json)
     dispatch(insertApartmentSuccess(json))
   } catch (err) {
     dispatch(actionApartmentFailed(err.message))
@@ -122,7 +120,6 @@ export const fetchApartments = () => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    console.log(json)
     dispatch(fetchApartmentSuccess(json))
   } catch (err) {
     dispatch(actionApartmentFailed(err.message))

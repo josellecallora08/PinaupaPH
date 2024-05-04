@@ -122,15 +122,15 @@ export const createPayment =
             data: {
               attributes: {
                 billing: {
-                  name: `${fields.name}`,
-                  email: `${fields.email}`,
-                  phone: `${fields.phone}`,
-                  //   name: `joselle`,
-                  // email: `josellecallora08@gmail.com`,
-                  // phone: `09993541054`,
+                  // name: `${fields.name}`,
+                  // email: `${fields.email}`,
+                  // phone: `${fields.phone}`,
+                    name: `joselle`,
+                  email: `josellecallora08@gmail.com`,
+                  phone: `09993541054`,
                 },
-                type: `${fields.payment_method}`,
-                // type: `gcash`,
+                // type: `${fields.payment_method}`,
+                type: `gcash`,
               },
             },
           }),
@@ -158,7 +158,7 @@ export const createPayment =
       //     }
       //   }
       // }
-      if(fields.payment_method === "gcash" || fields.payment_method === "paymaya" || fields.payment_method === "grabpay"){
+      // if(fields.payment_method === "gcash" || fields.payment_method === "paymaya" || fields.payment_method === "grabpay"){
         const isPayment = await fetch(`${import.meta.env.VITE_URL}/api/payment/create?method=${json?.data.attributes.type}&method_id=${json?.data.id}`, {
           method: "POST",
           headers: {
@@ -167,14 +167,14 @@ export const createPayment =
         })
         if (!isPayment.ok) {
           const json1 = await isPayment.json()
-          console.log(json1)
           throw new Error(json1.error)
         }
   
         const paymentData = await isPayment.json()
         console.log(paymentData)
+
         const post_payment = await fetch(
-          `https://api.paymongo.com/v1/payment_intents/${paymentData.intent.paymentIntent}/attach`,
+          `https://api.paymongo.com/v1/payment_intents/${paymentData.response.intent.paymentIntent}/attach`,
           {
             method: 'POST',
             headers: {
@@ -185,8 +185,8 @@ export const createPayment =
             body: JSON.stringify({
               data: {
                 attributes: {
-                  payment_method: `${paymentData.payment.method_id}`,
-                  client_key: `${paymentData.intent.clientKey}`,
+                  payment_method: `${paymentData.response.payment.method_id}`,
+                  client_key: `${paymentData.response.intent.clientKey}`,
                   return_url: `${import.meta.env.VITE_RETURN_URL}`,
                 },
               },
@@ -195,13 +195,14 @@ export const createPayment =
         )
         if (!post_payment.ok) {
           const json = await post_payment.json()
-          throw new Error(json.error)
+          console.log(json)
+          throw new Error(json)
         }
         const data = await post_payment.json()
-        socket.emit('send-payment')
         console.log(data)
+        socket.emit('send-payment')
         window.open(data.data.attributes.next_action.redirect.url)
-      }
+      // }
     } catch (err) {
       dispatch(actionFailed())
     }
