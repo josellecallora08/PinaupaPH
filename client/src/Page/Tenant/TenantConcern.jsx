@@ -33,15 +33,7 @@ const TenantConcern = () => {
               Create Ticket
             </button>
           </div>
-          {isCreateTicket && (
-                    <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
-                      <div className="lg:w-1/2 h-96 bg-white rounded-md relative">
-                        <CreateTicket
-                          setisCreateTicket={setisCreateTicket}
-                        />
-                      </div>
-                    </div>
-                  )}
+          
         </div>
 
         <div className="lg:grid lg:grid-cols-3 lg:gap-y-2 lg:gap-x-3">

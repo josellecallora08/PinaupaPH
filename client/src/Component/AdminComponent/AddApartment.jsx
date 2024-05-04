@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react';
 
 const AddApartment = ({
   setIsAddApartmentFormOpen,
@@ -7,6 +7,21 @@ const AddApartment = ({
   handleSubmit,
   error,
 }) => {
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setIsAddApartmentFormOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [setIsAddApartmentFormOpen]);
   return (
     <>
       <div className="relative w-full flex py-4 rounded-t-md bg-dark-blue text-white items-center ">
@@ -17,6 +32,7 @@ const AddApartment = ({
 
       <form
         onSubmit={handleSubmit}
+        ref={modalRef}
         className="lg:w-[40rem] py-2 w-full h-[25rem] px-3 overflow-y-auto  "
       >
         {error && (

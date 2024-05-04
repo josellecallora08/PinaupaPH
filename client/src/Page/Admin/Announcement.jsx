@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import SearchBar from '../../Component/SearchBar';
 import AddAnnouncement from '../../Component/AdminComponent/AddAnnouncement';
@@ -6,6 +6,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdOutlineModeEdit, MdOutlineDeleteOutline } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteAnnouncement, fetchAnnouncements } from '../../features/announcement';
+import EditAnnouncementForm from '../../Component/AdminComponent/EditAnnouncement';
 
 const Announcement = () => {
   const dispatch = useDispatch()
@@ -14,10 +15,15 @@ const Announcement = () => {
   const [filter, setFilter] = useState('All');
   const [isAddAnnouncementFormOpen, setisAddAnnouncementFormOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null); // State to track which dropdown is open
+  const [isEditAnnouncementFormOpen, setIsEditAnnouncementFormOpen] = useState(false);
+  const dropdownRef = useRef(null); // Ref for dropdown container
 
   const toggleAddAnnouncementForm = () => {
     setisAddAnnouncementFormOpen(!isAddAnnouncementFormOpen);
   };
+  const toggleEditAnnouncementForm = () => {
+    setIsEditAnnouncementFormOpen(!isEditAnnouncementFormOpen);
+  }
 
   const handleSearch = (e) => {
     setSearchItem(e.target.value);
@@ -33,10 +39,25 @@ const Announcement = () => {
       dispatch(deleteAnnouncement(id))
     }
   }
+
   useEffect(() => {
     dispatch(fetchAnnouncements())
     console.log(announcement)
   }, [])
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpenDropdown(null);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="w-full h-screen bg-white1">
       {/* Top of Announcement Tab */}
@@ -124,16 +145,15 @@ const Announcement = () => {
                   <BsThreeDotsVertical className="relative" />
                 </div>
                 {openDropdown === val._id && (
-                  <div className=" absolute top-2 right-7">
+                  <div ref={dropdownRef} className=" absolute top-2 right-7 flex items-center bg-white w- h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray ">
                     <ul>
-                      <li className='cursor-pointer p-2 border-2 border-primary-color bg-white hover:transition hover:duration-150 hover:bg-primary-color hover:text-white  text-primary-color flex items-center gap-2 hover: '><MdOutlineModeEdit />Edit</li>
-                      <li onClick={() => handleDelete(val._id)} className='cursor-pointer p-2 border-2 border-primary-color bg-white hover:transition hover:duration-150 hover:bg-red hover:text-white  text-red flex items-center gap-2 hover: '><MdOutlineDeleteOutline />Delete</li>
+                      <li onClick={() => { toggleEditAnnouncementForm(); setOpenDropdown(null); }}className=' flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white py-2 px-5 text-center'><MdOutlineModeEdit />Edit</li>
+                      <li onClick={() => { handleDelete(val._id); setOpenDropdown(null); }}className='flex items-center justify-center gap-2 py-2 px-5 w-full hover:bg-dark-blue hover:text-white p-2 text-center'><MdOutlineDeleteOutline />Delete</li>
                     </ul>
                   </div>
                 )}
               </div>
             ))}
-
           </div>
         </div>
       </div>
@@ -142,6 +162,15 @@ const Announcement = () => {
           <div className="lg:w-1/2 h-auto lg:mt-2 mt-14 w-10/12 bg-white rounded-md">
             <AddAnnouncement
               setisAddAnnouncementFormOpen={setisAddAnnouncementFormOpen}
+            />
+          </div>
+        </div>
+      )}
+      {isEditAnnouncementFormOpen && (
+        <div className="lg:top-9 fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+          <div className="lg:w-1/2 h-auto lg:mt-2 mt-14 w-10/12 bg-white rounded-md">
+            <EditAnnouncementForm
+              setIsEditAnnouncementFormOpen={setIsEditAnnouncementFormOpen}
             />
           </div>
         </div>

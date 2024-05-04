@@ -5,17 +5,22 @@ import EditOwnerDetails from '../../Component/EditOwnerDetails'
 import ChangePd from '../../Component/ChangePd'
 import { isLoggedin } from '../../features/authentication';
 import { changeProfile } from '../../features/user';
+import ProfileEditAccount from '../../Component/AdminComponent/ProfileEditAccount';
 
 
 const Profile = () => {
   const [modal, setIsModalOpen] = useState(false)
   const [changeModal, setchangeModal] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
+  const [isProfileEditAccount, setIsProfileEditAccount] = useState(false)
   const dispatch = useDispatch()
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0])
   }
-
+  const toggleEditAccount = () => {
+    setIsProfileEditAccount(!isProfileEditAccount)
+  }
+  
   const user = useSelector(state => state.auth.user)
   const toggleModal = () => {
     setIsModalOpen(!modal)
@@ -87,7 +92,7 @@ const Profile = () => {
               <div className='w-full h-full flex-col flex'>
                 <div className='w-full h-full max-h-12 py-2 px-4 text-white bg-[#183044] flex items-center justify-between '>
                   <p className='md:text-xl text-base'>ACCOUNTS</p>
-                  <BiEdit className='h-20 w-7' onClick={() => setIsModalOpen(prevState => !prevState)}/>
+                  <BiEdit className='h-20 w-7' onClick={toggleEditAccount}/>
                 </div>
 
                 <div className='w-full flex flex-col px-4 py-3 '>
@@ -100,7 +105,20 @@ const Profile = () => {
                     <p className='w-[170px]'>Password</p>
                     <p>***********</p>
                   </div>
-                </div>  
+                </div>
+                {isProfileEditAccount && (
+                    <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50">
+                      <div className="lg:w-1/2 bg-white rounded-lg">
+                        <ProfileEditAccount
+                          setIsProfileEditAccount={
+                            setIsProfileEditAccount
+                          }
+                          tenant={tenant}
+                        />
+                      </div>
+                    </div>
+                  )}
+  
               </div>
             </div>
         </div>

@@ -83,7 +83,7 @@ const Dashboard = () => {
               </Link>
             </div>
             <div className="w-11/12 xl:max-h-[800px] bg-white1 flex flex-col m-auto xl:grid grid-cols-3 gap-5 grid-rows-7">
-              <div className="lg:pt-4 flex justify-between items-center col-span-3 row-span-1  rounded-md overflow-hidden shadow-md bg-white1 ">
+              <div className="lg:pt-4 flex justify-between items-center col-span-3 row-span-1  rounded-md overflow-hidden shadow-md bg-white pr-5 ">
                 <figure className="w-full h-full max-w-max md:max-w-fit">
                   <img
                     src={City}
@@ -91,7 +91,7 @@ const Dashboard = () => {
                     alt=""
                   />
                 </figure>
-                <div className="pr-5">
+                <div className="pr-">
                   <span className="text-base xl:text-2xl font-semibold">
                     Hey, <span className="capitalize">{user?.name}!</span>
                   </span>
@@ -294,7 +294,7 @@ const Dashboard = () => {
                     <div className="w-full h-full flex items-center bg-white">
                       {/* <BarChart data={data} width="90%" height="80%"/> */}
                       <CircularProgressbar
-                        className="mx-auto lg:w-40 md:mx-auto md:w-40 w-32 mt-4 "
+                        className="mx-auto lg:w-28 md:mx-auto md:w-40 w-32 mt-4 "
                         value={percentage}
                         minValue={0}
                         maxValue={maxValue}

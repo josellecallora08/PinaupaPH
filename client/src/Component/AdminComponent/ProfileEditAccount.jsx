@@ -1,8 +1,8 @@
 import React,  { useState } from 'react'
 import { IoMdClose } from "react-icons/io";
 import { useSelector, useDispatch } from 'react-redux';
-import { editUser } from '../features/user';
-const EditTenantAccount = ({setIsEditTenantAccountForm, tenant}) => {
+import { editUser } from '../../features/user';
+const ProfileEditAccount = ({setIsProfileEditAccount, tenant}) => {
   const user = useSelector((state) => state.user.single)
   const dispatch = useDispatch()
   const [fields, setFields] = useState({
@@ -41,7 +41,7 @@ toggleForm();
             <h1 className="lg:text-xl  ml-5 text-lg font-bold ">Edit Tenant Detail</h1>
       </div>
         <form action="" onSubmit={handleSubmit} className="lg:w-full w-[20rem] h-auto px-3 py-4 ">
-        <button className='absolute top-4 right-6'><IoMdClose onClick={() => setIsEditTenantAccountForm(prevState => !prevState)} size={25} color='white' /></button>
+        <button className='absolute top-4 right-6'><IoMdClose onClick={() => setIsProfileEditAccount(prevState => !prevState)} size={25} color='white' /></button>
         {error && (
             <div className=" hidden w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
               {error}
@@ -115,7 +115,7 @@ toggleForm();
                     Submit
                   </button>
 
-                  <button onClick={() => setIsEditTenantAccountForm(prevState => !prevState)} className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded'>
+                  <button onClick={() => setIsProfileEditAccount(prevState => !prevState)} className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded'>
                     Close
                   </button>
                 
@@ -127,4 +127,4 @@ toggleForm();
   )
 }
 
-export default EditTenantAccount
+export default ProfileEditAccount

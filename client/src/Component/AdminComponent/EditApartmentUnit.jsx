@@ -1,40 +1,57 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { createUnit } from '../../features/unit'
-import { IoMdClose } from 'react-icons/io'
+import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { createUnit } from '../../features/unit';
+import { IoMdClose } from 'react-icons/io';
+
 const EditApartmentUnit = ({ apartment_id, setIsEditApartmentUnit }) => {
-  const [isFormOpen, setIsFormOpen] = useState(false)
-  const [selectedApartmentOption, setSelectedApartmentOption] = useState('')
-  const [error, setError] = useState(null)
-  const handleApartmentOptionChange = (e) => {
-    setSelectedApartmentOption(e.target.value)
-  }
-  const dispatch = useDispatch()
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedApartmentOption, setSelectedApartmentOption] = useState('');
+  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
   const [fields, setFields] = useState({
     name: '',
     rent: '',
     unit_no: '',
-  })
-  const toggleForm = () => {
-    setIsFormOpen(!isFormOpen)
-  }
+  });
 
+  // Ref for the modal wrapper
+  const modalRef = useRef(null);
+
+  // Function to toggle the form visibility
+  const toggleForm = () => {
+    setIsFormOpen(!isFormOpen);
+  };
+
+  // Function to handle form submission
   const handleSubmit = (e) => {
-    dispatch(createUnit(fields, apartment_id))
+    dispatch(createUnit(fields, apartment_id));
     setError(
-      'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
-        )
-    
-    console.log('Form submitted')
-    toggleForm()
-  }
+      'An error occurred while submitting the form. An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form '
+    );
+    console.log('Form submitted');
+    toggleForm();
+  };
+
+  // Function to handle clicks outside the modal
+  const handleClickOutside = (event) => {
+    if (modalRef.current && !modalRef.current.contains(event.target)) {
+      setIsEditApartmentUnit(false);
+    }
+  };
+
+  // Effect to listen for clicks outside the modal and close it
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
-      <div className="relative">
-        <div className="relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center ">
-          <h1 className="lg:text-xl  ml-5 text-lg font-bold ">
-            Edit Apartment Unit
-          </h1>
+      <div className="relative" ref={modalRef}>
+        <div className="relative w-full flex py-4 rounded-tl-lg rounded-tr-lg bg-dark-blue text-white items-center ">
+          <h1 className="lg:text-xl ml-5 text-lg font-bold ">Edit Apartment Unit</h1>
         </div>
         <form className="lg:w-[30rem] w-[22rem] h-auto pt-5 px-4 overflow-y-auto ">
           <button className="absolute top-4 right-6">
@@ -44,7 +61,6 @@ const EditApartmentUnit = ({ apartment_id, setIsEditApartmentUnit }) => {
               color="white"
             />
           </button>
-
 
           {error && (
             <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
@@ -84,7 +100,7 @@ const EditApartmentUnit = ({ apartment_id, setIsEditApartmentUnit }) => {
               className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
-          <div className=" lg:mb-3 flex justify-end mt-5 gap-3">
+          <div className="lg:mb-3 flex justify-end mt-5 gap-3">
             <button
               onClick={handleSubmit}
               className=" bg-dark-blue text-white font-bold py-2 px-4 rounded"
@@ -102,7 +118,7 @@ const EditApartmentUnit = ({ apartment_id, setIsEditApartmentUnit }) => {
         </form>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default EditApartmentUnit
+export default EditApartmentUnit;

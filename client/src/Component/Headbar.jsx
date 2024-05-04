@@ -28,9 +28,7 @@ const Headbar = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const handleLogout = () => {
-    dispatch(isLogout(navigate))
-  }
+
 
   useEffect(() => {
     const handleNotification = () => {
@@ -117,7 +115,13 @@ const Headbar = () => {
       document.removeEventListener('mousedown', closeMenu)
     }
   }, [])
-
+  const handleLogout = () => {
+    const isConfirmed = window.confirm('Continue Logging out?')
+    if (isConfirmed) {
+      dispatch(isLogout(navigate))
+    }
+  }
+  
   const filteredNotif = notifs?.filter(
     (item) => item?.receiver_id?._id === user?._id,
   )
