@@ -2,17 +2,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUsers } from '../../features/user';
 import Select from 'react-select';
+import { createDocument } from '../../features/documents';
 
 const AddLease = ({ setModal }) => {
   const dispatch = useDispatch();
   const [selectedUser, setSelectedUser] = useState(null);
   const modal = useRef(null);
-  const loading = useSelector((state) => state.invoice.loading);
+  const loading = useSelector((state) => state.docs.loading);
   const users = useSelector((state) => state.user.data);
 
   const handleLease = (e) => {
     e.preventDefault();
-    dispatch(createInvoice(selectedUser.value));
+    dispatch(createDocument(selectedUser.value));
+    console.log(loading)
     if (loading) {
       setModal((state) => !state);
     }

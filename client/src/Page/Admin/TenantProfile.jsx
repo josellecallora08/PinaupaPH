@@ -36,7 +36,6 @@ const TenantProfile = () => {
   const tenant = useSelector((state) => state.user.single)
   const households = useSelector((state) => state.household.data)
   const pets = useSelector((state) => state.pet.data)
-  console.log(households)
   const navigate = useNavigate()
   const dropdownRef = useRef(null)
   const handleDeleteTenant = () => {
@@ -46,7 +45,6 @@ const TenantProfile = () => {
     if (isConfirmed) {
       dispatch(deleteUser(id))
       navigate('/tenant')
-      console.log('Tenant deleted')
     }
   }
   const handleClickOutsideDropdown = (event) => {
@@ -85,12 +83,9 @@ const TenantProfile = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log('Form submitted')
   }
-  console.log(id)
   useEffect(() => {
     dispatch(fetchUser(id))
-    console.log(tenant)
   }, [])
 
   useEffect(() => {

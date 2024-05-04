@@ -207,7 +207,7 @@ module.exports.fetchReport = async (req, res) => {
 
 module.exports.createComment = async (req, res) => {
   const { user_id, report_id } = req.query
-  const { comment } = req.body
+  const { comment, url } = req.body
   try {
     const response = await REPORTMODEL.findById(report_id)
     if (!response)

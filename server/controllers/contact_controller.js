@@ -20,7 +20,7 @@ module.exports.sendMail = async (req, res) => {
       subject: `Contact Us - ${name} - Concern`,
       text: message
     })
-
+    
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: `Concern has been sent...` })

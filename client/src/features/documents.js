@@ -21,7 +21,7 @@ const documentSlice = createSlice({
     },
     fetchDocumentSuccess: (state, action) => {
       state.loading = false
-      state.data = action.payload
+      state.data = action.payload.response
     },
     insertDocumentSuccess: (state, action) => {
       state.loading= false
@@ -35,7 +35,7 @@ const documentSlice = createSlice({
     deleteDocumentSuccess: (state, action) => {
       state.loading = false
       state.data = state.data.map((docs) =>
-        docs._id === action.payload ? { ...docs, ...actions.payload } : docs,
+        docs._id === action.payload ? { ...docs, ...action.payload } : docs,
       )
     },
     actionDocumentFailed: (state, action) => {
@@ -89,16 +89,17 @@ export const createDocument = (user_id) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${import.meta.env.VITE_URL}api/documents/create?user_id=${user_id}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/document/create?user_id=${user_id}`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(fields),
+      }
     })
+
     if (!response.ok) {
       const json = await response.json()
+      console.log(json)
       throw new Error(json.error)
     }
     const json = await response.json()
@@ -114,7 +115,7 @@ export const searchContract = (filter) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${import.meta.env.VITE_URL}api/documents/search?filter=${filter}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}api/document/search?filter=${filter}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -134,7 +135,7 @@ export const fetchDocuments = () => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${import.meta.env.VITE_URL}api/documents/list`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/document/list`, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -144,6 +145,7 @@ export const fetchDocuments = () => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
+    console.log(json)
     dispatch(fetchDocumentSuccess(json))
   } catch (err) {
     dispatch(actionDocumentFailed(err.message))
@@ -154,7 +156,7 @@ export const fetchDocument = (contract_id) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${import.meta.env.VITE_URL}api/documents/list/v1?contract_id=${contract_id}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/documents/list/v1?contract_id=${contract_id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -174,7 +176,7 @@ export const editDocument = (contract_id) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${import.meta.env.VITE_URL}api/documents/update?contract_id=${contract_id}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/documents/update?contract_id=${contract_id}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -195,7 +197,7 @@ export const deleteDocument = (contract_id) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${import.meta.env.VITE_URL}api/documents/delete?contract_id=${contract_id}`, {
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/document/delete?contract_id=${contract_id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,

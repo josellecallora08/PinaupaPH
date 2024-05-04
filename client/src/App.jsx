@@ -173,7 +173,7 @@ function App() {
         }
       />
           <Route
-        path="/leaseview"
+        path="/agreement/:contract_id/:reference"
         element={
           <Layout className="bg-white1">
             <LeaseView />
@@ -272,7 +272,7 @@ function App() {
       />
 
       <Route
-        path="/tenant/payment"
+        path="/tenant/payment/:intentId/:clientKey"
         element={
           <Layout className="bg-white1">
             <TenantPayment />

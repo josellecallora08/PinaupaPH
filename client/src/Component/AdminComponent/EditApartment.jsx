@@ -11,7 +11,7 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
   const unit = useSelector(state => state.unit.data)
   const [error, setError] = useState(null)
   const [fields, setFields] = useState({
-    unit_no: tenant?.unit_no || '',
+    unit_no: tenant?.unit_id.unit_no || '',
     deposit: tenant?.deposit !== null && tenant?.deposit !== undefined ? String(tenant?.deposit) : '',
     occupancy: new Date(tenant?.monthly_due).toISOString().split('T')[0] || ''
   })
@@ -32,7 +32,6 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
     setError(
       'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
         )
-    console.log(fields)
     dispatch(editUserApartment(tenant.id, fields))
     console.log('Form submitted');
   }
@@ -63,8 +62,8 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
               onChange={handleInput}
               className="w-full py-2 px-3 border-2 border-[#9e9e9e] rounded"
             >
-              <option className="rounded-none" value={tenant?.unit_id}>
-                {tenant?.unit_no}
+              <option className="rounded-none" value={fields.unit_no}>
+                {fields.unit_no}
               </option>
               {unit?.filter(item => item.occupied === false).map((val, key) => (
                 <option key={key} className="rounded-none" value={val._id}>

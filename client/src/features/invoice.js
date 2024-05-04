@@ -38,7 +38,7 @@ const invoiceSlice = createSlice({
       state.data = state.data.filter(
         (item) => item?.pdf?.reference !== action.payload.pdf.reference,
       )
-      state.msg = action.payload.msg
+      state.msg = action.payload?.msg
     },
     fetchFailed: (state, action) => {
       state.loading = false
@@ -55,6 +55,30 @@ export const {
   fetchFailed,
   deleteInvoiceSuccess,
 } = invoiceSlice.actions
+
+export const tenantInvoice = () => async (dispatch) => {
+  try {
+    dispatch(fetchStart())
+    const token = Cookies.get('token')
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/invoice/`,{
+      method: "GET",
+      headers:{
+        Authorization: `Bearer ${token}`
+      }
+    })
+    if(!response.ok){
+      const json = await response.json()
+      console.log(json)
+      throw new Error(json.error)
+    }
+
+    const json = await response.json()
+    dispatch(fetchInvoiceSuccess(json))
+  } catch (err) {
+    dispatch(fetchFailed(err.message))
+  }
+}
+
 export const generateInvoice = (invoice_id) => async (dispatch) => {
   try {
     const token = Cookies.get('token')

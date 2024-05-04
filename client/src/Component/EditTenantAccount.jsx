@@ -6,7 +6,7 @@ const EditTenantAccount = ({setIsEditTenantAccountForm, tenant}) => {
   const user = useSelector((state) => state.user.single)
   const dispatch = useDispatch()
   const [fields, setFields] = useState({
-    username: tenant?.username || '',
+    username: tenant?.user_id.username || '',
     password: '',
     newpassword: '',
     confirmpassword: ''
