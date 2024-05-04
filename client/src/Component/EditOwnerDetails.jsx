@@ -31,7 +31,7 @@ function EditOwnerDetails({setIsModalOpen}) {
   return (
     <div  className='fixed w-full h-full flex items-center justify-center '>
       <div className='absolute w-full h-full flex items-center justify-center bg-black/20 backdrop-blur-sm' onClick={() => setIsModalOpen(prevState => !prevState)}></div>
-      <div  className='md:w-4/12 w-4/5 h-fit bg-white z-10 rounded-md shadow-md flex flex-col overflow-hidden'>
+      <div  className='md:w-4/12 w-4/5 h-fit mt-20 bg-white z-10 rounded-md shadow-md flex flex-col overflow-hidden'>
         <h1 className='bg-[#183044] uppercase font-bold tracking-wider text-white p-3'>EDIT LANDLORD DETAILS</h1>
         <div className='w-full flex justify-between py-5 h-full'>
           
@@ -65,8 +65,8 @@ function EditOwnerDetails({setIsModalOpen}) {
             </div>
 
             <div className='w-full h-full flex  justify-end mt-6'>
-              <button type="submit" className='w-[120px] border border-primary text-white bg-[#183044] rounded-md bg-primary p-2 mr-2'>Submit</button>
-              <button type='button' className='w-[120px] border border-primary text-[#183044] bg-white rounded-md p-2' onClick={() => setIsModalOpen(prevState => !prevState)}>Cancel</button>
+              <button type="submit" className='w-[120px] border border-primary-color text-white  rounded-md bg-primary-color p-2 mr-2'>Submit</button>
+              <button type='button' className='w-[120px] border border-primary-color text-[#183044] bg-white rounded-md p-2' onClick={() => setIsModalOpen(prevState => !prevState)}>Cancel</button>
             </div>
             
           </form>

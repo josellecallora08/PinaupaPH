@@ -62,8 +62,8 @@ toggleForm(!isFormOpen);
      <div className='relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center '>
             <h1 className="lg:text-xl  ml-5 text-lg font-bold ">Edit Apartment Details</h1>
       </div>
-        <form action="" onSubmit={handleSubmit} className="lg:w-[40rem] w-[20rem] h-[27rem] px-3 py-5 overflow-y-auto ">
-        <button  className='absolute top-4 right-6'><IoMdClose onClick={() => setIsEditApartmentFormOpen(prevState => !prevState)}  color='white' /></button>
+        <form action="" onSubmit={handleSubmit} className="lg:w-[40rem] w-[20rem] h-[25rem] px-3 py-5 overflow-y-auto ">
+        <button  className='absolute top-4 right-6 text-lg'><IoMdClose onClick={() => setIsEditApartmentFormOpen(prevState => !prevState)}  color='white' /></button>
         {error && (
             <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
               {error}

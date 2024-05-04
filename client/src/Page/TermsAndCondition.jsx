@@ -3,9 +3,9 @@ import React from 'react';
 const TermsAndConditions = () => {
   return (
     <div className='w-full h-full overflow-y-auto bg-white1'>
-      <div className='w-11/12 h-full m-auto '>
-      <div className="mx-auto py-8 px-4 text-primary-color h-full p-5">
-          <h1 className="text-3xl font-bold mb-4">Terms and Conditions for PinaupaPH <span className=''></span></h1>
+      <div className='w-11/12  h-full m-auto'>
+        <div className="mx-auto py-8 px-4 text-primary-color p-5 pb-10 mb-10">
+          <h1 className="text-3xl font-bold mb-4">Terms and Conditions for Apartment Management System</h1>
           <div className="prose">
             <h2 className="text-base font-semibold mb-2">1. Introduction</h2>
             <p className="mb-4">Welcome to our Apartment Management System. If you continue to use this system, you are agreeing to comply with and be bound by the following terms and conditions of use, which govern our relationship with you in relation to this system. The use of this system is subject to the following terms of use:</p>
@@ -37,7 +37,7 @@ const TermsAndConditions = () => {
             <p className="mb-4">We reserve the right to modify these terms and conditions at any time. Your continued use of the system following any changes constitutes acceptance of those changes.</p>
 
             <h2 className="text-base font-semibold mb-2">9. Governing Law</h2>
-            <p className="mb-4">These terms and conditions are governed by and construed in accordance with the laws of [Your Country/State], and you irrevocably submit to the exclusive jurisdiction of the courts in that location.</p>
+            <p className="mb-10">These terms and conditions are governed by and construed in accordance with the laws of [Your Country/State], and you irrevocably submit to the exclusive jurisdiction of the courts in that location.</p>
           </div>
         </div>
       </div>

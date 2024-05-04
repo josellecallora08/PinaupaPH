@@ -86,9 +86,9 @@ const Invoice = () => {
               </button>}
             </div>
           </div>
-          <div className="w-full h-80 ">
+          <div className="w-full h-full mb-5 ">
             <div className="relative w-full h-full max-h-[660px] bg-white overflow-y-scroll border-primary-color border-l-4 border-b-4">
-              <table className="w-full h-fit  overflow-y-auto  ">
+              <table className="w-full h-96  overflow-y-auto  ">
                 <thead className="sticky top-0 bg-primary-color z-10">
                   <tr className="text-center text-xs md:text-base">
                     <th className="text-white p-3 w-1/5">Reference Number</th>

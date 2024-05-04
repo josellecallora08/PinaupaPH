@@ -11,7 +11,7 @@ const LeaseCard = () => {
   };
 
   return (
-    <div className="flex flex-row shadow-sm shadow-light-gray rounded-md items-center">
+    <div className="flex flex-row shadow-sm shadow-light-gray rounded-md items-center bg-white">
       <div className='w-[95%] flex gap-2 items-center m-auto'>
         <figure className="w-[70px] items-center">
           <img src="/pfp.svg" alt="Profile" />
