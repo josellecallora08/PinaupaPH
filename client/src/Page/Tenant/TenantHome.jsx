@@ -7,13 +7,16 @@ import { useSelector, useDispatch } from 'react-redux'
 import { isLoggedin } from '../../features/authentication'
 import Calendar from '../../Component/Tenant Component/Calendar'
 import issue from '/Issue.svg'
+import { tenantInvoice } from '../../features/invoice'
 const TenantHome = () => {
   const loading = useSelector((state) => state.auth.loading)
   const user = useSelector((state) => state.auth.user)
+  const invoice = useSelector((state) => state.invoice.single)
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(isLoggedin())
+    dispatch(tenantInvoice())
   }, [])
 
   return (
@@ -51,8 +54,10 @@ const TenantHome = () => {
             {/* Issue Card */}
             <div className="md:order-none col-span-2 row-span-4 bg-white order-3 ">
               <div className="w-full h-fit py-4 flex items-center gap-3 text-black p-2 ">
-                <div><img src={issue} alt="" className='w-10 h-10' /></div>
-               <div>CONCERN AND ISSUE STATUS</div>
+                <div>
+                  <img src={issue} alt="" className="w-10 h-10" />
+                </div>
+                <div>CONCERN AND ISSUE STATUS</div>
               </div>
               <div className=" overflow-y-auto h-40">
                 <table className="w-full">
@@ -118,31 +123,45 @@ const TenantHome = () => {
               </div>
               <div className="text-primary-color mt-5 px-2">
                 <h1 className="text-lg">Invoice Number</h1>
-                <p className="text-xl font-semibold my-5">INV-123456789</p>
+                <p className="text-xl font-semibold my-5">
+                  {invoice?.pdf.reference}
+                </p>
                 <div className="flex justify-between my-8 font-thin">
                   <div>Rent</div>
-                  <div>10,000php</div>
+                  <div>
+                    {invoice?.amount?.toLocaleString('en-PH', {
+                      style: 'currency',
+                      currency: 'PHP',
+                    })}
+                  </div>
                 </div>
                 <div className="flex justify-between my-8 font-thin">
                   <div>Date</div>
-                  <div>March 31, 2024</div>
+                  <div>{new Date(invoice?.createdAt)?.toDateString()}</div>
                 </div>
               </div>
 
               {/* buttons */}
               <div className="flex flex-col mt-auto">
-                <div className="flex justify-around bg-light-gray p-5 text-white">
+                {/* <div className="flex justify-around bg-light-gray p-5 text-white">
                   <h1>Invoice Payable:</h1>
                   <p>10,000php</p>
-                </div>
+                </div> */}
                 <Link to="/tenant/payment">
-                <div className="flex justify-center w-full hover:opacity-80">
-                  
-                  <button className="bg-primary-color w-full text-white p-5">
-                    Pay Now
-                  </button>
-                 
-                </div>
+                  <div className="flex justify-center w-full hover:opacity-80">
+                    {invoice?.status === true ? (
+                      <div className="bg-primary-color w-full text-white p-5">
+                        Paid
+                      </div>
+                    ) : (
+                      <Link
+                        to={`/tenant/payment/${invoice?.intent?.paymentIntent}/${invoice?.intent?.clientKey}`}
+                        className="bg-primary-color w-full text-white p-5"
+                      >
+                        Pay Now
+                      </Link>
+                    )}
+                  </div>
                 </Link>
               </div>
             </div>
@@ -174,15 +193,15 @@ const TenantHome = () => {
                   <div>Today</div>
                 </div>
                 <div className="text-primary-color  px-5">
-                  <h1 className="text-center mb-2 text-xl">Electric Power Outage</h1>
+                  <h1 className="text-center mb-2 text-xl">
+                    Electric Power Outage
+                  </h1>
 
                   <p className="text-sm overflow-y-auto h-[200px] ">
                     Lorem ipsum dolor sit, amet consectetur adipisicing elit.
                     Fugit, eos! Nesciunt tempore rerum magni corporis a velit
                     provident facilis, adipisci magnam quaerat aperiam, quia
                     odit sapiente. At ipsam dolore qui!
-                 
-                    
                   </p>
                 </div>
               </div>

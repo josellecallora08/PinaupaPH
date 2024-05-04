@@ -1,41 +1,35 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { IoMdClose } from 'react-icons/io';
-import { useDispatch } from 'react-redux';
-import { createAnnouncement, deleteAnnouncement } from '../../features/announcement';
+import React, { useState, useEffect, useRef } from 'react'
+import { IoMdClose } from 'react-icons/io'
+import { useDispatch } from 'react-redux'
+import { createAnnouncement } from '../../features/announcement'
 
 const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
   const dispatch = useDispatch()
-  const modalRef = useRef(null);
+  const modalRef = useRef(null)
   const [formData, setFormData] = useState({
     title: '',
     type: '',
     description: '',
-  });
-
+  })
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setisAddAnnouncementFormOpen(false);
+        setisAddAnnouncementFormOpen(false)
       }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
+    }
+    document.addEventListener('mousedown', handleClickOutside)
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [setisAddAnnouncementFormOpen]);
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [setisAddAnnouncementFormOpen])
   const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(createAnnouncement(formData))
-    console.log('Form submitted:', formData);
+    e.preventDefault()
+    dispatch(createAnnouncement(formData, url))
     setisAddAnnouncementFormOpen((prevState) => !prevState)
-  };
-
-
+  }
 
   return (
     <>
@@ -51,11 +45,17 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
             className="cursor-pointer"
           />
         </div>
-        <div className='w-full py-2'>
+        <div className="w-full py-2">
           {Object.entries(formData).map(([name, value]) => (
             <div key={name} className="mb-1 px-2">
-              <label htmlFor={name} className="block mb-1 text-primary-color capitalize">
-                {name.replace(/([A-Z])/g, ' $1').toLowerCase() === 'datetime' ? 'Date and Time' : name.replace(/([A-Z])/g, ' $1').toLowerCase()}:
+              <label
+                htmlFor={name}
+                className="block mb-1 text-primary-color capitalize"
+              >
+                {name.replace(/([A-Z])/g, ' $1').toLowerCase() === 'datetime'
+                  ? 'Date and Time'
+                  : name.replace(/([A-Z])/g, ' $1').toLowerCase()}
+                :
               </label>
               {name === 'type' ? (
                 <select
@@ -66,9 +66,9 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
                   className="w-full border border-black text-dark-gray rounded p-2 cursor-pointer"
                   placeholder="Select announcement type"
                 >
-                  <option hidden >Select Type:</option>
-                  <option value="news" >News</option>
-                  <option value="payment" >Payment</option>
+                  <option hidden>Select Type:</option>
+                  <option value="news">News</option>
+                  <option value="payment">Payment</option>
                 </select>
               ) : name === 'description' ? (
                 <textarea
@@ -104,11 +104,16 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
           >
             Submit
           </button>
-          <button onClick={() => setisAddAnnouncementFormOpen(false)} className='bg-red text-white py-2 px-4 rounded hover:bg-red/50'>Cancel</button>
+          <button
+            onClick={() => setisAddAnnouncementFormOpen(false)}
+            className="bg-red text-white py-2 px-4 rounded hover:bg-red/50"
+          >
+            Cancel
+          </button>
         </div>
       </form>
     </>
-  );
-};
+  )
+}
 
-export default AnnouncementForm;
+export default AnnouncementForm

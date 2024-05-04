@@ -4,6 +4,74 @@ const INVOICEMODEL = require('../models/invoice')
 const httpStatusCodes = require('../constants/constants')
 const NOTIFMODEL = require('../models/notification')
 
+module.exports.madePayment = async (req, res) => {
+  const { invoice_id, status } = req.query
+  try {
+    const response = await INVOICEMODEL.findByIdAndUpdate(invoice_id, {
+      status,
+      isPaid: true
+    }).populate({
+      path: 'tenant_id',
+      populate: {
+        path: 'user_id unit_id apartment_id',
+      },
+    })
+    if (!response) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unable to update invoice...' })
+    }
+
+    const pdfBuffer = await new Promise((resolve, reject) => {
+      pdf
+        .create(pdf_template(response), {
+          childProcessOptions: {
+            env: {
+              OPENSSL_CONF: '/dev/null',
+            },
+          },
+        })
+        .toBuffer((err, buffer) => {
+          if (err) reject(err)
+          else resolve(buffer)
+        })
+    })
+    console.log(response.pdf.public_id)
+    const cloudinaryResponse = await new Promise((resolve, reject) => {
+      cloudinary.uploader
+        .upload_stream(
+          {
+            public_id: response.pdf.public_id,
+            resource_type: 'raw',
+            format: 'pdf', // Specify resource type as 'raw' for PDF
+            // folder: 'PinaupaPH/Invoices', // Folder in Cloudinary where PDF will be stored
+            overwrite: true, // Do not overwrite if file with the same name exists
+          },
+          (error, result) => {
+            if (error) reject(error)
+            else resolve(result)
+          },
+        )
+        .end(pdfBuffer)
+    })
+    console.log(cloudinaryResponse)
+    console.log(cloudinaryResponse.public_id)
+    if (!cloudinaryResponse || !cloudinaryResponse.public_id) {
+      return res
+        .status(httpStatusCodes.CONFLICT)
+        .json({ error: 'Failed to upload PDF to Cloudinary...' })
+    }
+
+    return res
+      .status(httpStatusCodes.OK)
+      .json({ msg: 'Invoice has been updated.', response })
+  } catch (err) {
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
+  }
+}
+
 module.exports.createPayment = async (req, res) => {
   try {
     const { method, method_id } = req.query
@@ -13,29 +81,34 @@ module.exports.createPayment = async (req, res) => {
     if (!user) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: "Tenant not found." })
+        .json({ error: 'Tenant not found.' })
     }
-    const response = await INVOICEMODEL.findOneAndUpdate({tenant_id:user._id}, {
-      'payment.method_id': method_id,
-      'payment.method': method
-    })
+    const response = await INVOICEMODEL.findOneAndUpdate(
+      { tenant_id: user._id },
+      {
+        'payment.method_id': method_id,
+        'payment.method': method,
+      },
+    )
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: "Invoice cannot be updated." })
+        .json({ error: 'Invoice cannot be updated.' })
     }
 
     const sendNotif = await NOTIFMODEL.create({
       sender_id: user_id,
-      type: "Payment",
-      payment_id: response._id
+      type: 'Payment',
+      payment_id: response._id,
     })
     if (!sendNotif) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: "Cannot send Notification" })
+        .json({ error: 'Cannot send Notification' })
     }
-    return res.status(httpStatusCodes.OK).json({ msg: "Payment Method and ID are saved.", response })
+    return res
+      .status(httpStatusCodes.OK)
+      .json({ msg: 'Payment Method and ID are saved.', response })
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)

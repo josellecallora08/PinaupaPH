@@ -3,12 +3,12 @@ import { IoMdClose } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
 import { createAnnouncement, deleteAnnouncement } from '../../features/announcement';
 
-const EditAnnouncementForm = ({ setIsEditAnnouncementFormOpen }) => {
+const EditAnnouncementForm = ({ val, setIsEditAnnouncementFormOpen }) => {
   const dispatch = useDispatch()
   const [formData, setFormData] = useState({
-    title: '',
-    type: '',
-    description: '',
+    title: val?.title || '',
+    type: val?.type || '',
+    description: val?.description || '',
   });
 
   const handleChange = (e) => {

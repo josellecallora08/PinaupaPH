@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import angle from '/angle.svg'
 import send from '/send.svg'
 import { io } from 'socket.io-client'
@@ -16,6 +16,7 @@ import { fetchComments } from '../../features/comment'
 import { isLoggedin } from '../../features/authentication'
 const ViewConcern = () => {
   const { id } = useParams()
+  const location = useLocation()
   const dispatch = useDispatch()
   const report = useSelector((state) => state.report.single)
   const loading = useSelector((state) => state.report.loading)
@@ -41,7 +42,7 @@ const ViewConcern = () => {
   const handleSubmit = async (e) => {
     e.preventDefault() // Prevent default form submission behavior
 
-    dispatch(createComment(user._id, id, comment)) // Submit the comment
+    dispatch(createComment(user._id, id, comment, location.pathname)) // Submit the comment
     setComments(null) // Reset the textarea
   }
   useEffect(() => {
@@ -72,6 +73,7 @@ const ViewConcern = () => {
 
   useEffect(() => {
     dispatch(fetchReport(id))
+    dispatch(fetchComments(id))
   }, [])
 
 

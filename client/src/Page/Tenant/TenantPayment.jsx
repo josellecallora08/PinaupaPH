@@ -4,9 +4,11 @@ import paymayalogo from '/Paymayalogo.png'
 import grabpaylogo from '/Grabpaylogo.png'
 import { useDispatch } from 'react-redux'
 import { createPayment } from '../../features/payment'
+import { useParams } from 'react-router-dom'
 import '../../index.css'
 const TenantPayment = () => {
-  const [selectedOption, setSelectedOption] = useState('ewallet')
+  const { intentId, clientKey } = useParams
+  const [selectedOption, setSelectedOption] = useState('ewallet') // Default selected option is 'ewallet'
   const [selectedEwallet, setSelectedEwallet] = useState(null);
   const dispatch = useDispatch()
   const [formData, setFormData] = useState({
@@ -34,7 +36,7 @@ const TenantPayment = () => {
     setSelectedEwallet(event.target.value); // Update selected e-wallet option
   };
   const handlePayment = () => {
-    dispatch(createPayment(formData))
+    dispatch(createPayment(formData, intentId, clientKey))
   }
 
   const handleChange = (e) => {

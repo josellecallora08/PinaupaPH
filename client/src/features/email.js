@@ -48,6 +48,7 @@ export const sendEmail = (fields) => async (dispatch) => {
             throw new Error(json.error)
         }
         const json = await response.json()
+        console.log(json)
         dispatch(sendEmailSuccess(json.msg))
     } catch (err) {
         dispatch(sendEmailFailed(err.message))
