@@ -17,13 +17,11 @@ module.exports.generateInvoice = async (req, res) => {
 
     // Retrieve the public ID of the invoice PDF from the invoice details
     const { public_id } = invoice.pdf
-    console.log(public_id)
 
     // Fetch the file from Cloudinary
     const cloudinaryUrl = cloudinary.url(public_id, {
       resource_type: 'raw',
     })
-    console.log(cloudinaryUrl)
     // Fetch the PDF content from Cloudinary
     const response = await fetch(cloudinaryUrl)
     if (!response.ok) {
@@ -160,9 +158,6 @@ module.exports.createInvoice = async (req, res) => {
         .status(httpStatusCodes.CONFLICT)
         .json({ error: 'Failed to upload PDF to Cloudinary...' })
     }
-    console.log(cloudinaryResponse)
-    console.log(cloudinaryResponse.public_id)
-
     const intent = await fetch(`${process.env.PAYMONGO_CREATE_INTENT}`, {
       method: "POST",
       headers: {
@@ -188,7 +183,7 @@ module.exports.createInvoice = async (req, res) => {
         },
       })
     })
-    if (!intent) {
+    if (!intent.ok) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Failed to create payment intent.' })

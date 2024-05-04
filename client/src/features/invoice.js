@@ -106,7 +106,6 @@ export const searchInvoice = (filter) => async (dispatch) => {
     }
 
     const json = await response.json()
-    console.log(json.response)
     dispatch(fetchInvoicesSuccess(json.response))
   } catch (err) {
     dispatch(fetchFailed(err.message))
@@ -128,7 +127,6 @@ export const createInvoice = (user_id) => async (dispatch) => {
     )
     if (!response.ok) {
       const json = await response.json()
-      console.log(json.error)
       throw new Error(json.error)
     }
 
@@ -157,7 +155,6 @@ export const fetchInvoices = () => async (dispatch) => {
     }
 
     const json = await response.json()
-    console.log(json.response)
     dispatch(fetchInvoicesSuccess(json.response))
   } catch (err) {
     dispatch(fetchFailed(err.message))
@@ -181,7 +178,6 @@ export const fetchInvoice = (invoice_id) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    console.log(json.response)
     dispatch(fetchInvoiceSuccess(json))
   } catch (err) {
     dispatch(fetchFailed(err.message))
@@ -205,7 +201,6 @@ export const editInvoices = (id, status) => async (dispatch) => {
       throw new Error(error)
     }
     const json = await response.json()
-    console.log(json)
     dispatch(editInvoicesSuccess(json))
   } catch (err) {
     dispatch(fetchFailed(err.message))

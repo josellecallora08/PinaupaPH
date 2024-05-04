@@ -9,7 +9,7 @@ const TenantPayment = () => {
   const dispatch = useDispatch()
   const [formData, setFormData] = useState({
     name: '',
-    contactNumber: '',
+    phone: '',
     email: '',
     amount: '',
   });
@@ -24,7 +24,7 @@ const TenantPayment = () => {
     // Reset form data when changing payment method
     setFormData({
       name: '',
-      contactNumber: '',
+      phone: '',
       email: '',
       amount: '',
     });

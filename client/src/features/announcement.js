@@ -69,7 +69,6 @@ export const searchAnnouncement = (filter) => async (dispatch) => {
         }
 
         const json = await response.json()
-        console.log(json)
         dispatch(fetchAnnouncementsSuccess(json.response))
     } catch (err) {
         dispatch(fetchAnnouncementFailed(err.message))
@@ -118,7 +117,6 @@ export const fetchAnnouncements = () => async (dispatch) => {
             throw new Error(json.error)
         }
         const json = await response.json()
-        console.log(json)
         dispatch(fetchAnnouncementsSuccess(json.response))
     } catch (err) {
         dispatch(fetchAnnouncementFailed(err.message))

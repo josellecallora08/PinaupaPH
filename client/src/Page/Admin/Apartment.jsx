@@ -29,7 +29,6 @@ const Apartment = () => {
   useEffect(() => {
     if (searchItem && searchItem !== '') {
       dispatch(handleSearchApartment(searchItem))
-      console.log(apartment)
     } else {
       dispatch(fetchApartments())
     }

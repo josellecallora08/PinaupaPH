@@ -26,7 +26,7 @@ const NOTIFMODEL = new mongoose.Schema({
     },
     payment_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'payments'
+        ref: 'invoice'
     },
     report_id: {
         type: mongoose.Schema.Types.ObjectId,

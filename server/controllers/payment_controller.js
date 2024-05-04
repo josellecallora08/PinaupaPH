@@ -8,13 +8,14 @@ module.exports.createPayment = async (req, res) => {
   try {
     const { method, method_id } = req.query
     const user_id = req.user.id
+    console.log(user_id)
     const user = await TENANTMODEL.findOne({ user_id })
     if (!user) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: "Tenant not found." })
     }
-    const response = await INVOICEMODEL.findByIdAndUpdate(user._id, {
+    const response = await INVOICEMODEL.findOneAndUpdate({tenant_id:user._id}, {
       'payment.method_id': method_id,
       'payment.method': method
     })
