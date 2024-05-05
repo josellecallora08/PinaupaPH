@@ -51,7 +51,7 @@ const CreateTicket = ({ setisCreateTicket }) => {
         <div className="relative w-full flex py-4 rounded-tl-lg rounded-tr-lg bg-dark-blue text-white items-center">
           <h1 className="lg:text-xl ml-5 text-lg font-bold">Create Ticket</h1>
         </div>
-        <form onSubmit={handleSubmit} className="lg:w-full lg:pt-4 w-[20rem] bg-white h-fit px-4 overflow-y-auto">
+        <form onSubmit={handleSubmit} className="lg:w-full lg:pt-4 w-[20rem] bg-white h-[30rem] px-4 overflow-y-auto">
           <button className="absolute top-4 right-6" onClick={toggleForm}>
             <IoMdClose size={25} color="white" />
           </button>
@@ -63,7 +63,7 @@ const CreateTicket = ({ setisCreateTicket }) => {
               type="text"
               id="name"
               name="name"
-              placeholder="Enter your name"
+              placeholder="Enter Title"
               className="text-sm bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
@@ -122,8 +122,8 @@ const CreateTicket = ({ setisCreateTicket }) => {
             </div>
           </div>
           {image && (
-            <div className="mt-2">
-              <img src={URL.createObjectURL(image)} alt="Attached Image" className="max-w-full h-auto" />
+            <div className="flex justify-center mt-2">
+              <img src={URL.createObjectURL(image)} alt="Attached Image" className="w-[10rem] h-auto" />
             </div>
           )}
           <div className="flex justify-end mt-5 mb-3 gap-3">

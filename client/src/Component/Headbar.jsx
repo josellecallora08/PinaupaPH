@@ -28,8 +28,6 @@ const Headbar = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-
-
   useEffect(() => {
     const handleNotification = () => {
       dispatch(fetchNotifications())
@@ -121,7 +119,7 @@ const Headbar = () => {
       dispatch(isLogout(navigate))
     }
   }
-  
+
   const filteredNotif = notifs?.filter(
     (item) => item?.receiver_id?._id === user?._id,
   )
@@ -172,6 +170,18 @@ const Headbar = () => {
                   onClick={handleProfile}
                 >
                   <Link to={'/profile'}>Profile</Link>
+                </li>
+                <li
+                  className="px-5 py-2 text-sm font-regular hover:bg-primary-color cursor-pointer hover:text-white"
+                  onClick={handleProfile}
+                >
+                  <Link to={'/terms&condition'}>Terms and Conditions</Link>
+                </li>
+                <li
+                  className="px-5 py-2 text-base font-regular hover:bg-primary-color cursor-pointer hover:text-white"
+                  onClick={handleProfile}
+                >
+                  <Link to={'/contact'}>Contact Us</Link>
                 </li>
                 <li className="px-5 py-2 text-base font-regular  hover:bg-primary-color cursor-pointer hover:text-white">
                   <button
