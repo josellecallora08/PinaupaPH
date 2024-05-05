@@ -17,10 +17,7 @@ import document_ from '/document_white.svg'
 import report from '/concern.svg'
 import report_ from '/concern_white.svg'
 import down from '/down.svg'
-import contact from '/contact.svg'
-import contact_ from '/contact_white.svg'
-import term from '/terms.svg'
-import term_ from '/terms_white.svg'
+
 import logout from '/logout.svg'
 import announcement from '/announcement.svg'
 import announcement_ from '/announcement_.svg'
@@ -333,66 +330,13 @@ const Sidebar = () => {
                 )}
               </Link>
             </li>
-            <li className="w-full h-fit">
-              <Link
-                to={`/terms&condition`}
-                className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5 mx-auto h-full hover:bg-primary-color/40 rounded-md ${
-                  menu ? 'p-3 md:p-5' : 'p-3'
-                } ${isActive('/terms&condition') && 'bg-primary-color'}`}
-              >
-                <figure
-                  className={`${menu ? '' : 'flex justify-center'} max-w-5 max-h-5 w-full h-full`}
-                >
-                  <img
-                    src={isActive('/terms&condition') ? term_ : term}
-                    alt=""
-                    className="size-full object-contain"
-                  />
-                </figure>
-                {menu ? (
-                  <span
-                    className={`font-semibold text-primary-color ${isActive('/terms&condition') && 'text-white'}`}
-                  >
-                    Terms & Condition
-                  </span>
-                ) : (
-                  ''
-                )}
-              </Link>
-            </li>
-            <li className="w-full h-fit">
-              <Link
-                to={`/contact`}
-                className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5 mx-auto h-full hover:bg-primary-color/40 rounded-md ${
-                  menu ? 'p-3 md:p-5' : 'p-3'
-                } ${isActive('/contact') && 'bg-primary-color'}`}
-              >
-                <figure
-                  className={`${menu ? '' : 'flex justify-center'} max-w-5 max-h-5 w-full h-full`}
-                >
-                  <img
-                    src={isActive('/contact') ? contact_ : contact}
-                    alt=""
-                    className="size-full object-contain"
-                  />
-                </figure>
-                {menu ? (
-                  <span
-                    className={`font-semibold text-primary-color ${isActive('/contact') && 'text-white'}`}
-                  >
-                    Contact Us
-                  </span>
-                ) : (
-                  ''
-                )}
-              </Link>
-            </li>
+  
 
             <li className="w-full h-fit">
               <button
                 onClick={handleLogout}
                 className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5 mx-auto h-full hover:bg-primary-color/40 rounded-md ${
-                  menu ? 'mt-2 p-3 md:p-5' : ' mt-5 p-3'
+                  menu ? 'mt-2 p-3 md:p-5' : ' mt-14 p-3'
                 }`}
               >
                 <figure
