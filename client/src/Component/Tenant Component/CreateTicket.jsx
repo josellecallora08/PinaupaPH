@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect  } from 'react';
 import { CiImageOn } from 'react-icons/ci';
 import { IoMdClose } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
+import { createReport } from '../../features/report';
 
-const CreateTicket = ({ setisCreateTicket }) => {
-  const [selectedType, setSelectedType] = useState('');
+const CreateTicket = ({id, setisCreateTicket }) => {
+  const [type, setSelectedType] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const CreateTicket = ({ setisCreateTicket }) => {
 
   const handleSubmit = () => {
     console.log('Form submitted');
+    dispatch(createReport(id,))
     // Add form submission logic here
     toggleForm();
   };
@@ -56,13 +58,14 @@ const CreateTicket = ({ setisCreateTicket }) => {
             <IoMdClose size={25} color="white" />
           </button>
           <div className="mb-4">
-            <label htmlFor="name" className="block text-sm font-bold mb-2 text-dark-gray">
+            <label htmlFor="title" className="block text-sm font-bold mb-2 text-dark-gray">
               Title
             </label>
             <input
               type="text"
-              id="name"
-              name="name"
+              id="title"
+              name="title"
+              onChange={setTitle}
               placeholder="Enter Title"
               className="text-sm bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
@@ -74,9 +77,9 @@ const CreateTicket = ({ setisCreateTicket }) => {
             <select
               id="maintenanceType"
               name="type"
-              value={selectedType}
+              value={type}
               onChange={handleTypeChange}
-              style={{ color: selectedType ? 'black' : 'gray', borderColor: 'black' }}
+              style={{ color: type ? 'black' : 'gray', borderColor: 'black' }}
               className="mt-1 block w-full p-2 bg-white border text-sm rounded-md focus:outline-none focus:ring focus:ring-blue-200"
             >
               <option value="" disabled selected hidden>
@@ -112,8 +115,8 @@ const CreateTicket = ({ setisCreateTicket }) => {
                 </span>
                 <input
                   type="file"
-                  id="image"
-                  name="image"
+                  id="attached_image"
+                  name="attached_image"
                   accept="image/*"
                   onChange={handleImageChange}
                   className="hidden"

@@ -8,15 +8,18 @@ import { isLoggedin } from '../../features/authentication'
 import Calendar from '../../Component/Tenant Component/Calendar'
 import issue from '/Issue.svg'
 import { tenantInvoice } from '../../features/invoice'
+import { recentAnnouncement } from '../../features/announcement'
 const TenantHome = () => {
   const loading = useSelector((state) => state.auth.loading)
   const user = useSelector((state) => state.auth.user)
   const invoice = useSelector((state) => state.invoice.single)
+  const announcement = useSelector((state) => state.announcement.single)
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(isLoggedin())
     dispatch(tenantInvoice())
+    dispatch(recentAnnouncement())
   }, [])
 
   return (
@@ -46,7 +49,10 @@ const TenantHome = () => {
               </figure>
               <div className="md:pt-0 pr-5 pt-5">
                 <span className="text-base xl:text-2xl  font-semibold">
-                  Hey, <span className="capitalize">{user?.name}!</span>
+                  Hey,{' '}
+                  <span className="capitalize">
+                    {user?.user_id.name?.split(' ')[0]}!
+                  </span>
                 </span>
               </div>
             </div>
@@ -149,7 +155,7 @@ const TenantHome = () => {
                 </div> */}
                 <Link to="/tenant/payment">
                   <div className="flex justify-center w-full hover:opacity-80">
-                    {invoice?.status === true ? (
+                    {invoice?.isPaid === true ? (
                       <div className="bg-primary-color w-full text-white p-5">
                         Paid
                       </div>
@@ -184,24 +190,25 @@ const TenantHome = () => {
               <div className="w-full h-fit py-4">
                 <div className="md:mt-2 flex p-3 justify-between text-primary-color mr-5  ">
                   <div className="flex items-center gap-4">
-                    <img src={pfp} alt="" className="w-10 h-10" />
+                    <img
+                      src={announcement?.user_id?.profile_image?.image_url}
+                      alt=""
+                      className="w-10 h-10"
+                    />
                     <div>
-                      <p>Michelle Marquez</p>
+                      <p>{announcement?.user_id?.name}</p>
                       <p className="text-dark-gray">Landlord</p>
                     </div>
                   </div>
-                  <div>Today</div>
+                  <div>{new Date(announcement?.createdAt).toDateString()}</div>
                 </div>
                 <div className="text-primary-color  px-5">
                   <h1 className="text-center mb-2 text-xl">
-                    Electric Power Outage
+                    {announcement?.title}
                   </h1>
 
                   <p className="text-sm overflow-y-auto h-[200px] ">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    Fugit, eos! Nesciunt tempore rerum magni corporis a velit
-                    provident facilis, adipisci magnam quaerat aperiam, quia
-                    odit sapiente. At ipsam dolore qui!
+                    {announcement?.description}
                   </p>
                 </div>
               </div>

@@ -12,13 +12,13 @@ module.exports.searchReport = async (req, res) => {
     const response = REPORTMODEL.find({
       $or: [
         { 'tenant_id.user_id.name': { $regex: filter, $options: 'i' } },
-        { 'tenant_id.unit_id.unit_no': { $regex: filter, $options: 'i' } }
-      ]
+        { 'tenant_id.unit_id.unit_no': { $regex: filter, $options: 'i' } },
+      ],
     }).populate({
       path: 'tenant_id',
       populate: {
-        path: 'user_id unit_id'
-      }
+        path: 'user_id unit_id',
+      },
     })
     if (!response) {
       return res
@@ -38,11 +38,16 @@ module.exports.createReport = async (req, res) => {
   try {
     const attached_image = req.file
     const { user_id } = req.query
-    const { title, description, image, type } = req.body
+    const { title, description, type } = req.body
+    let imageUpload
     if (title === '' || description === '' || type === '') {
-      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: "Please fill all the blanks." })
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Please fill all the blanks.' })
     }
-    const tenant = await TENANTMODEL.findOne({ user_id: user_id }).populate('user_id unit_id apartment_id')
+    const tenant = await TENANTMODEL.findOne({ user_id: user_id }).populate(
+      'user_id unit_id apartment_id',
+    )
     if (!tenant) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -52,48 +57,34 @@ module.exports.createReport = async (req, res) => {
     if (attached_image) {
       const b64 = Buffer.from(attached_image.buffer).toString('base64')
       let dataURI = 'data:' + attached_image.mimetype + ';base64,' + b64
-      console.log(`dataURI: ${dataURI}`)
-      const imageUpload = await cloudinary.uploader.upload(
-        dataURI,
-        {
-          quality: 'auto:low',
-          folder: 'PinaupaPH/Reports',
-          resource_type: 'auto',
-        },
-      )
+      imageUpload = await cloudinary.uploader.upload(dataURI, {
+        quality: 'auto:low',
+        folder: 'PinaupaPH/Reports',
+        resource_type: 'auto',
+      })
 
       if (!imageUpload || !imageUpload.secure_url) {
         return res
           .status(httpStatusCodes.BAD_REQUEST)
           .json({ error: 'Failed to upload profile image.' })
       }
-
-      const response = await REPORTMODEL.create({
-        sender_id: tenant._id,
-        title,
-        description,
-        type,
-        'attached_image.public_id': imageUpload.public_id,
-        'attached_image.image_url': imageUpload.secure_url,
-      })
-      if (!response) {
-        return res
-          .status(httpStatusCodes.BAD_REQUEST)
-          .json({ error: 'Failed to report an issue' })
-      }
     }
+
     const response = await REPORTMODEL.create({
       sender_id: tenant._id,
       title,
       description,
-      type
+      type,
+      'attached_image.public_id': imageUpload?.public_id,
+      'attached_image.image_url': imageUpload?.secure_url,
     })
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to report an issue' })
     }
-    const isAdmin = await USERMODEL.findOne({ role: "Admin" })
+
+    const isAdmin = await USERMODEL.findOne({ role: 'Admin' })
     if (!isAdmin) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -102,8 +93,8 @@ module.exports.createReport = async (req, res) => {
     const sendNotif = await NOTIFMODEL.create({
       sender_id: user_id,
       receiver_id: isAdmin._id,
-      type: "Report",
-      report_id: response._id
+      type: 'Report',
+      report_id: response._id,
     })
     if (!sendNotif) {
       return res
@@ -152,7 +143,9 @@ module.exports.deleteReport = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Report not found' })
 
-    return res.status(httpStatusCodes.OK).json({ msg: 'Report has been deleted.' })
+    return res
+      .status(httpStatusCodes.OK)
+      .json({ msg: 'Report has been deleted.' })
   } catch (err) {
     console.log(err.message)
     return res
@@ -162,12 +155,14 @@ module.exports.deleteReport = async (req, res) => {
 }
 module.exports.fetchReports = async (req, res) => {
   try {
-    const response = await REPORTMODEL.find().populate('comments.user_id').populate({
-      path: 'sender_id',
-      populate: {
-        path: 'user_id unit_id'
-      }
-    })
+    const response = await REPORTMODEL.find()
+      .populate('comments.user_id')
+      .populate({
+        path: 'sender_id',
+        populate: {
+          path: 'user_id unit_id',
+        },
+      })
     if (!response)
       return res
         .status(httpStatusCodes.NOT_FOUND)
@@ -185,12 +180,14 @@ module.exports.fetchReports = async (req, res) => {
 module.exports.fetchReport = async (req, res) => {
   const { report_id } = req.query
   try {
-    const response = await REPORTMODEL.findById(report_id).populate('comments.user_id').populate({
-      path: 'sender_id',
-      populate: {
-        path: 'user_id unit_id'
-      }
-    })
+    const response = await REPORTMODEL.findById(report_id)
+      .populate('comments.user_id')
+      .populate({
+        path: 'sender_id',
+        populate: {
+          path: 'user_id unit_id',
+        },
+      })
     if (!response)
       return res
         .status(httpStatusCodes.NOT_FOUND)
@@ -221,7 +218,9 @@ module.exports.createComment = async (req, res) => {
     return res.status(httpStatusCodes.OK).json({ msg: 'Comment sent.' })
   } catch (err) {
     console.log(err.message)
-    return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: err.message })
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
   }
 }
 
@@ -287,13 +286,14 @@ module.exports.deleteComment = async (req, res) => {
 module.exports.fetchComments = async (req, res) => {
   const { report_id } = req.query
   try {
-    const report = await REPORTMODEL.findById(report_id).populate('comments.user_id')
+    const report =
+      await REPORTMODEL.findById(report_id).populate('comments.user_id')
     if (!report)
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Report not found' })
 
-    return res.status(httpStatusCodes.OK).json({response:report.comments})
+    return res.status(httpStatusCodes.OK).json({ response: report.comments })
   } catch (err) {
     console.log(err.message)
     return res

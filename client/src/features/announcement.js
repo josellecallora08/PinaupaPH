@@ -101,6 +101,28 @@ export const createAnnouncement = (fields) => async (dispatch) => {
     }
 }
 
+export const recentAnnouncement = () => async (dispatch) => {
+    try {
+        dispatch(fetchAnnouncementStart())
+        const token = Cookies.get('token')
+        const response = await fetch(`${import.meta.env.VITE_URL}/api/announcement/recent`, {
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+        if (!response.ok) {
+            const json = await response.json()
+            console.log(json)
+            throw new Error(json.error)
+        }
+        const json = await response.json()
+        console.log(json)
+        dispatch(fetchAnnouncementSuccess(json))
+    } catch (err) {
+        dispatch(fetchAnnouncementFailed(err.message))
+    }
+}
 export const fetchAnnouncements = () => async (dispatch) => {
     try {
         dispatch(fetchAnnouncementStart())

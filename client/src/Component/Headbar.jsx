@@ -29,10 +29,8 @@ const Headbar = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    const handleNotification = () => {
-      dispatch(fetchNotifications())
-    }
-    handleNotification()
+    dispatch(fetchNotifications())
+    console.log(notifs)
   }, [])
   const handleSidebar = () => {
     dispatch(toggleSidebar())
@@ -121,7 +119,7 @@ const Headbar = () => {
   }
 
   const filteredNotif = notifs?.filter(
-    (item) => item?.receiver_id?._id === user?._id,
+    (item) => item?.receiver_id?._id === user?.user_id?._id,
   )
   return (
     <div className="w-full h-full max-h-20 sticky top-0 z-20 bg-primary-color">
@@ -142,13 +140,15 @@ const Headbar = () => {
           </div>
         </div>
         <div className="flex items-center">
-         {user?.role !== "Admin" && <button onClick={handleNotif} className="relative">
-            <TbBellRinging size={25} color="white" />
+          {user?.role !== 'Admin' && (
+            <button onClick={handleNotif} className="relative">
+              <TbBellRinging size={25} color="white" />
 
-            <span className="absolute text-white bg-red/80 w-full max-w-[15px] rounded-full text-sm -top-2 -right-1">
-              {filteredNotif?.length}
-            </span>
-          </button>}
+              <span className="absolute text-white bg-red/80 w-full max-w-[15px] rounded-full text-sm -top-2 -right-1">
+                {filteredNotif?.length}
+              </span>
+            </button>
+          )}
           <img
             src={
               user?.role === 'Admin'
