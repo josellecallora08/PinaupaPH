@@ -8,13 +8,13 @@ const EditTenantDetails = ({setIsEditTenantDetailForm, tenant}) => {
   const [error, setError] = useState(null)
   const dispatch = useDispatch()
   const [fields, setFields] = useState({
-    name: tenant?.name || '',
-    birthday: tenant?.birthday || '',
-    mobile_no: tenant?.phone || '',
-    email: tenant?.email || '',
+    name: tenant?.user_id.name || '',
+    birthday: tenant?.user_id.birthday || '',
+    mobile_no: tenant?.user_id.mobile_no || '',
+    email: tenant?.user_id.email || '',
     
   })
-
+  console.log(tenant)
   const [isFormOpen, setIsFormOpen] = useState(false)
 
   const toggleForm = (e) => {
@@ -29,14 +29,11 @@ const EditTenantDetails = ({setIsEditTenantDetailForm, tenant}) => {
     })
 
   }
+
+  console.log(tenant?.user_id._id)
   const handleSubmit = (e) => {
   e.preventDefault()
-  setError(
-    'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
-      )
-  
-  
-  dispatch(editUser(tenant.id,fields))
+  dispatch(editUser(tenant?.user_id._id,fields))
   console.log('Form submitted');
   setIsEditTenantDetailForm(prevState => !prevState)
   }
@@ -81,7 +78,7 @@ const EditTenantDetails = ({setIsEditTenantDetailForm, tenant}) => {
                 name="birthday"
                 required
                 onChange={handleInput}
-                value={new Date(fields.birthday).toISOString().split('T')[0]}
+                value={new Date(fields?.birthday).toISOString().split('T')[0]}
                 placeholder="Enter your birthday"
                 className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />

@@ -43,7 +43,7 @@ export const {
 } = commentSlice.actions
 
 export const createComment =
-  (userId, reportId, comment) => async (dispatch) => {
+  (userId, reportId, comment, url) => async (dispatch) => {
     try {
       dispatch(fetchCommentStart())
       const token = Cookies.get('token')
@@ -56,7 +56,7 @@ export const createComment =
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ comment }),
+          body: JSON.stringify({ comment, url }),
         },
       )
       if (!response.ok) {

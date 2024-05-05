@@ -1,37 +1,43 @@
-import React, { useState } from 'react';
-import contactImage from '/ContactUs.png';
-import logo from '/logo.svg'; // Import your logo image
-import { useDispatch } from 'react-redux';
-import { sendEmail } from '../features/email';
+import React, { useState } from 'react'
+import contactImage from '/ContactUs.png'
+import logo from '/logo.svg' // Import your logo image
+import { useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom'
+import { sendEmail } from '../features/email'
 
 const ContactUsAdmin = () => {
   const dispatch = useDispatch()
+  const location = useLocation()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     message: '',
-  });
+  })
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     dispatch(sendEmail(formData))
-  };
+  }
 
   return (
     <div className="flex justify-center items-center mt-10">
       <div className="max-w-md w-full">
         <div className="bg-white shadow-md rounded px-8 pt-6 pb-2 mb-1">
           <div className="flex justify-center mb-6">
-            <img src={logo} alt="Logo" className="w-36" /> {/* Place your logo here */}
+            <img src={logo} alt="Logo" className="w-36" />{' '}
+            {/* Place your logo here */}
           </div>
           <h2 className="text-2xl mb-6 text-center">Contact Us</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="block text-primary-color text-sm font-bold mb-2" htmlFor="name">
+              <label
+                className="block text-primary-color text-sm font-bold mb-2"
+                htmlFor="name"
+              >
                 Name:
               </label>
               <input
@@ -45,7 +51,10 @@ const ContactUsAdmin = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-primary-color text-sm font-bold mb-2" htmlFor="email">
+              <label
+                className="block text-primary-color text-sm font-bold mb-2"
+                htmlFor="email"
+              >
                 Email:
               </label>
               <input
@@ -59,7 +68,10 @@ const ContactUsAdmin = () => {
               />
             </div>
             <div className="mb-6">
-              <label className="block text-primary-color text-sm font-bold mb-2" htmlFor="message">
+              <label
+                className="block text-primary-color text-sm font-bold mb-2"
+                htmlFor="message"
+              >
                 Message:
               </label>
               <textarea
@@ -86,7 +98,7 @@ const ContactUsAdmin = () => {
         <img src={contactImage} alt="Contact Us" className="w-[450px]" />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ContactUsAdmin;
+export default ContactUsAdmin

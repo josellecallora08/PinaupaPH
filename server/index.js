@@ -18,6 +18,7 @@ const invoice_route = require('./routes/invoice')
 const payment_route = require('./routes/payment')
 const announcement_route = require('./routes/announcement')
 const notification_route = require('./routes/notification')
+const dashboard_route = require('./routes/dashboard')
 
 const { scheduledInvoice, deleteOTP } = require('./controllers/cron_controller')
 
@@ -109,6 +110,7 @@ app.use('/api/invoice', invoice_route)
 app.use('/api/payment', payment_route)
 app.use('/api/announcement', announcement_route)
 app.use('/api/notification', notification_route)
+app.use('/api/dashboard', dashboard_route)
 
 // Default route
 app.get('/', (req, res) => {

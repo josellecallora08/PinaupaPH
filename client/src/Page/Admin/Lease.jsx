@@ -1,23 +1,38 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SearchBar from '../../Component/SearchBar'
 import LeaseCard from '../../Component/LeaseCard'
 import { FaPlus } from 'react-icons/fa6'
 import AddLease from '../../Component/AdminComponent/AddLease'
 import { Link } from 'react-router-dom'
-
 import 'react-datepicker/dist/react-datepicker.css'
-const Least = () => {
-  const [modal, setModal] = useState(false)
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchDocuments, searchContract } from '../../features/documents'
 
+const Least = () => {
+  const dispatch = useDispatch()
+  const contracts = useSelector((state) => state.docs.data)
+  const [modal, setModal] = useState(false)
+  const [searchItem, setSearchItem] = useState('')
   const toggleModal = () => {
     setModal(!modal)
   }
 
+  const handleSearch = (e) => {
+    setSearchItem(e.target.value)
+  }
+  
+  useEffect(() => {
+    if (searchItem && searchItem !== '') {
+      dispatch(searchContract(searchItem))
+    } else {
+      dispatch(fetchDocuments())
+    }
+  }, [searchItem])
   return (
     <>
       {modal && <AddLease setModal={setModal} />}
       <div className="w-full m-auto h-full flex flex-col bg-white1  ">
-        <div className='w-11/12 h-full m-auto'>
+        <div className="w-11/12 h-full m-auto">
           <div className="lg:text-base pt-5 font-bold">
             <Link to={'/dashboard'} className="hover:underline">
               DOCUMENTS
@@ -28,8 +43,8 @@ const Least = () => {
             </Link>
           </div>
           <div className="flex flex-col py-5 gap-2 md:flex-row justify-between items-center">
-            <div className='w-full md:w-auto'>
-              <SearchBar />
+            <div className="w-full md:w-auto">
+              <SearchBar onSearch={handleSearch} />
             </div>
             <button
               onClick={toggleModal}
@@ -41,14 +56,8 @@ const Least = () => {
           </div>
 
           <div className=" md:grid-cols-2  grid grid-cols-1 gap-5 mt-3">
-            <LeaseCard />
-            <LeaseCard />
-            <LeaseCard />
-            <LeaseCard />
-            <LeaseCard />
-            <LeaseCard />
-            <LeaseCard />
-            <LeaseCard />
+            {contracts &&
+              contracts?.map((val, key) => <LeaseCard key={key} val={val} />)}
           </div>
         </div>
       </div>

@@ -21,7 +21,6 @@ const ConcernList = () => {
   const handleConcernOptionChange = (e) => {
     setConcernselectedOption(e.target.value)
   }
-
   useEffect(() => {
     dispatch(fetchReports())
   }, [])
@@ -54,12 +53,21 @@ const ConcernList = () => {
             </select>
             {user && user?.user_id?.role === 'Tenant' ? (
               <>
-                <button onClick={() => setisCreateTicket(prevState => !prevState)} className="btn btn-wide bg-primary-color font-bold uppercase text-white hover:text-primary-color">
+                <button
+                  onClick={() => setisCreateTicket((prevState) => !prevState)}
+                  className="btn btn-wide bg-primary-color font-bold uppercase text-white hover:text-primary-color"
+                >
                   <FaPlus />
                   Add Report
                 </button>
 
-               {isCreateTicket &&  <CreateTicket setisCreateTicket={setisCreateTicket} />}
+                {isCreateTicket && (
+                  <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50">
+                    <div className="lg:w-9/12 bg-white rounded-lg relative">
+                      <CreateTicket id={user?.user_id._id} setisCreateTicket={setisCreateTicket} />
+                    </div>
+                  </div>
+                )}
               </>
             ) : (
               ''

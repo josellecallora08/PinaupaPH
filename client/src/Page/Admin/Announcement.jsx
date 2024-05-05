@@ -1,42 +1,70 @@
-import React, { useEffect, useState } from 'react';
-import { FaPlus } from 'react-icons/fa';
-import SearchBar from '../../Component/SearchBar';
-import AddAnnouncement from '../../Component/AdminComponent/AddAnnouncement';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import { MdOutlineModeEdit, MdOutlineDeleteOutline } from "react-icons/md";
+import React, { useEffect, useState, useRef } from 'react'
+import { FaPlus } from 'react-icons/fa'
+import SearchBar from '../../Component/SearchBar'
+import AddAnnouncement from '../../Component/AdminComponent/AddAnnouncement'
+import { BsThreeDotsVertical } from 'react-icons/bs'
+import { MdOutlineModeEdit, MdOutlineDeleteOutline } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteAnnouncement, fetchAnnouncements } from '../../features/announcement';
+import {
+  deleteAnnouncement,
+  fetchAnnouncements,
+} from '../../features/announcement'
+import EditAnnouncementForm from '../../Component/AdminComponent/EditAnnouncement'
 
 const Announcement = () => {
   const dispatch = useDispatch()
-  const announcement = useSelector(state => state.announcement.data)
-  const [searchItem, setSearchItem] = useState('');
-  const [filter, setFilter] = useState('All');
-  const [isAddAnnouncementFormOpen, setisAddAnnouncementFormOpen] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState(null); // State to track which dropdown is open
+  const announcement = useSelector((state) => state.announcement.data)
+  const [searchItem, setSearchItem] = useState('')
+  const [value, setValue] = useState('')
+  const [filter, setFilter] = useState('All')
+  const [isAddAnnouncementFormOpen, setisAddAnnouncementFormOpen] =
+    useState(false)
+  const [openDropdown, setOpenDropdown] = useState(null) // State to track which dropdown is open
+  const [isEditAnnouncementFormOpen, setIsEditAnnouncementFormOpen] =
+    useState(false)
+  const dropdownRef = useRef(null) // Ref for dropdown container
 
   const toggleAddAnnouncementForm = () => {
-    setisAddAnnouncementFormOpen(!isAddAnnouncementFormOpen);
-  };
+    setisAddAnnouncementFormOpen(!isAddAnnouncementFormOpen)
+  }
+  const toggleEditAnnouncementForm = (val) => {
+    setValue(val)
+    setIsEditAnnouncementFormOpen(!isEditAnnouncementFormOpen)
+  }
 
   const handleSearch = (e) => {
-    setSearchItem(e.target.value);
-  };
+    setSearchItem(e.target.value)
+  }
   // Function to toggle dropdown for a specific card
   const toggleDropdown = (id) => {
-    setOpenDropdown(openDropdown === id ? null : id);
-  };
+    setOpenDropdown(openDropdown === id ? null : id)
+  }
 
   const handleDelete = (id) => {
-    const isConfirmed = confirm("Would you like to delete this announcement?")
+    const isConfirmed = confirm('Would you like to delete this announcement?')
     if (isConfirmed) {
       dispatch(deleteAnnouncement(id))
     }
   }
+
   useEffect(() => {
     dispatch(fetchAnnouncements())
     console.log(announcement)
   }, [])
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpenDropdown(null)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   return (
     <div className="w-full h-screen bg-white1">
       {/* Top of Announcement Tab */}
@@ -95,45 +123,68 @@ const Announcement = () => {
         <div className=" md:h-[25rem] min-[1440px]:h-[45rem] min-[1280px]:h-[45rem] min-[1366px]:h-[19rem] w-full h-80 overflow-x-auto px-8 rounded-bl-lg rounded-br-lg bg-white">
           {/* Announcement Cards */}
           <div className="flex flex-wrap mt-5 ">
-            {announcement && filter === "All" && announcement?.map((val, key) => (
-              <div
-                key={key}
-                className="relative bg-white p-4 rounded-md shadow-md w-full mb-6"
-              >
-                <div className="flex ">
-                  <div className="  flex flex-col justify-center md:w-auto  border-r-2 border-gray w-32 pr-1  items-center mr-5">
-                    <p className="text-light-gray md:text-base text-xs flex">
-                      <span>{new Date(val.createdAt).toDateString()}</span>
-                    </p>
-                    <p className="text-light-gray md:text-sm text-xs">
-                      <span>{new Date(val.createdAt).toLocaleTimeString()}</span>
-                    </p>
+            {announcement &&
+              filter === 'All' &&
+              announcement?.map((val, key) => (
+                <div
+                  key={key}
+                  className="relative bg-white p-4 rounded-md shadow-md w-full mb-6"
+                >
+                  <div className="flex ">
+                    <div className="  flex flex-col justify-center md:w-auto  border-r-2 border-gray w-32 pr-1  items-center mr-5">
+                      <p className="text-light-gray md:text-base text-xs flex">
+                        <span>{new Date(val.createdAt).toDateString()}</span>
+                      </p>
+                      <p className="text-light-gray md:text-sm text-xs">
+                        <span>
+                          {new Date(val.createdAt).toLocaleTimeString()}
+                        </span>
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col w-[80%] ">
+                      <p className="font-semibold text-lg">{val.title}</p>
+
+                      <p className="text-light-gray">{val.description}</p>
+                    </div>
                   </div>
-
-                  <p className="flex flex-col w-[80%] ">
-                    <p className="font-semibold text-lg">
-                      {val.title}
-                    </p>
-
-                    <p className="text-light-gray">
-                      {val.description}
-                    </p>
-                  </p>
-                </div>
-                <div onClick={() => toggleDropdown(val._id)} className="absolute top-3 right-2 text-xl cursor-pointer">
-                  <BsThreeDotsVertical className="relative" />
-                </div>
-                {openDropdown === val._id && (
-                  <div className=" absolute top-2 right-7">
-                    <ul>
-                      <li className='cursor-pointer p-2 border-2 border-primary-color bg-white hover:transition hover:duration-150 hover:bg-primary-color hover:text-white  text-primary-color flex items-center gap-2 hover: '><MdOutlineModeEdit />Edit</li>
-                      <li onClick={() => handleDelete(val._id)} className='cursor-pointer p-2 border-2 border-primary-color bg-white hover:transition hover:duration-150 hover:bg-red hover:text-white  text-red flex items-center gap-2 hover: '><MdOutlineDeleteOutline />Delete</li>
-                    </ul>
+                  <div
+                    onClick={() => toggleDropdown(val._id)}
+                    className="absolute top-3 right-2 text-xl cursor-pointer"
+                  >
+                    <BsThreeDotsVertical className="relative" />
                   </div>
-                )}
-              </div>
-            ))}
-
+                  {openDropdown === val._id && (
+                    <div
+                      ref={dropdownRef}
+                      className=" absolute top-2 right-7 flex items-center bg-white w- h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray "
+                    >
+                      <ul>
+                        <li
+                          onClick={() => {
+                            toggleEditAnnouncementForm(val)
+                            setOpenDropdown(null)
+                          }}
+                          className=" flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white py-2 px-5 text-center"
+                        >
+                          <MdOutlineModeEdit />
+                          Edit
+                        </li>
+                        <li
+                          onClick={() => {
+                            handleDelete(val._id)
+                            setOpenDropdown(null)
+                          }}
+                          className="flex items-center justify-center gap-2 py-2 px-5 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
+                        >
+                          <MdOutlineDeleteOutline />
+                          Delete
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              ))}
           </div>
         </div>
       </div>
@@ -146,8 +197,18 @@ const Announcement = () => {
           </div>
         </div>
       )}
+      {isEditAnnouncementFormOpen && (
+        <div className="lg:top-9 fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+          <div className="lg:w-1/2 h-auto lg:mt-2 mt-14 w-10/12 bg-white rounded-md">
+            <EditAnnouncementForm
+              val={value}
+              setIsEditAnnouncementFormOpen={setIsEditAnnouncementFormOpen}
+            />
+          </div>
+        </div>
+      )}
     </div>
-  );
-};
+  )
+}
 
-export default Announcement;
+export default Announcement

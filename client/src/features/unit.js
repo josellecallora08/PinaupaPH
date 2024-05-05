@@ -69,7 +69,7 @@ export const createUnit = (fields, apartmentId) => async (dispatch) => {
       throw new Error(error.error)
     }
     const json = await response.json()
-    dispatch(fetchUnits())
+    dispatch(fetchUnitsApartment(apartmentId))
   } catch (err) {
     dispatch(actionUnitFailed(err.message))
   }
@@ -80,11 +80,14 @@ export const fetchUnits = () => async (dispatch) => {
     dispatch(startUnit())
     const token = Cookies.get('token')
 
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/apartment/units`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/apartment/units`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    })
+    )
     if (!response.ok) {
       const error = await response.json()
       throw new Error(error.error)
@@ -185,7 +188,7 @@ export const deleteUnit = (apartmentId, unitId) => async (dispatch) => {
       const error = await response.json()
       throw new Error(error.error)
     }
-    dispatch(fetchUnits())
+    dispatch(fetchUnitsApartment(apartmentId))
   } catch (err) {
     dispatch(actionUnitFailed(err.message))
   }

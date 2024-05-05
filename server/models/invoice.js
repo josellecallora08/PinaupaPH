@@ -41,8 +41,16 @@ const INVOICEMODEL = new mongoose.Schema(
       }
     },
     status: {
+      type: String,
+      default: "Pending"
+    },
+    isPaid: {
       type: Boolean,
       default: false
+    },
+    datePaid: {
+      type: Date,
+      default: null
     }
   },
   { timestamps: true },

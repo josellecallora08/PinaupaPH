@@ -1,5 +1,7 @@
 const TENANTMODEL = require('../models/tenant')
 const INVOICEMODEL = require('../models/invoice')
+const APARTMENTMODEL = require('../models/apartment')
+const UNITMODEL = require('../models/unit')
 const httpStatusCodes = require('../constants/constants')
 const pdf_template = require('../template/invoice')
 const pdf = require('html-pdf')
@@ -57,8 +59,9 @@ module.exports.createInvoice = async (req, res) => {
   const month = current_date.getMonth()
   const year = current_date.getFullYear()
   try {
-    const tenant = await TENANTMODEL.findOne({ user_id })
-      .populate('user_id unit_id apartment_id')
+    const tenant = await TENANTMODEL.findOne({ user_id }).populate(
+      'user_id unit_id apartment_id',
+    )
 
     if (!tenant) {
       return res
@@ -99,11 +102,11 @@ module.exports.createInvoice = async (req, res) => {
           username: tenant?.user_id.username,
           name: tenant?.user_id.name,
           email: tenant?.user_id.email,
-          mobile_no: tenant?.user_id.mobile_no
+          mobile_no: tenant?.user_id.mobile_no,
         },
         unit_id: {
           unit_no: tenant?.unit_id.unit_no,
-          rent: tenant?.unit_id.rent
+          rent: tenant?.unit_id.rent,
         },
         apartment_id: {
           name: tenant?.apartment_id.name,
@@ -112,27 +115,29 @@ module.exports.createInvoice = async (req, res) => {
           province: tenant?.apartment_id.province,
           image: {
             apartment_image_url: tenant?.apartment_id.image.apartment_image_url,
-            apartment_public_id: tenant?.apartment_id.image.apartment_public_id
-          }
+            apartment_public_id: tenant?.apartment_id.image.apartment_public_id,
+          },
         },
         balance: tenant?.balance,
-        monthly_due: tenant?.monthly_due
+        monthly_due: tenant?.monthly_due,
       },
-      createdAt: Date.now()
+      createdAt: Date.now(),
     }
 
     // Generate PDF in memory
     const pdfBuffer = await new Promise((resolve, reject) => {
-      pdf.create(pdf_template({ response: details }), {
-        childProcessOptions: {
-          env: {
-            OPENSSL_CONF: '/dev/null'
-          }
-        }
-      }).toBuffer((err, buffer) => {
-        if (err) reject(err)
-        else resolve(buffer)
-      })
+      pdf
+        .create(pdf_template({ response: details }), {
+          childProcessOptions: {
+            env: {
+              OPENSSL_CONF: '/dev/null',
+            },
+          },
+        })
+        .toBuffer((err, buffer) => {
+          if (err) reject(err)
+          else resolve(buffer)
+        })
     })
 
     // Upload PDF to Cloudinary
@@ -159,7 +164,7 @@ module.exports.createInvoice = async (req, res) => {
         .json({ error: 'Failed to upload PDF to Cloudinary...' })
     }
     const intent = await fetch(`${process.env.PAYMONGO_CREATE_INTENT}`, {
-      method: "POST",
+      method: 'POST',
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
@@ -169,11 +174,7 @@ module.exports.createInvoice = async (req, res) => {
         data: {
           attributes: {
             amount: tenant.unit_id.rent,
-            payment_method_allowed: [
-              'paymaya',
-              'gcash',
-              'grab_pay',
-            ],
+            payment_method_allowed: ['paymaya', 'gcash', 'grab_pay'],
             payment_method_options: { card: { request_three_d_secure: 'any' } },
             currency: 'PHP',
             capture_type: 'automatic',
@@ -181,7 +182,7 @@ module.exports.createInvoice = async (req, res) => {
             description: 'Monthly Rent',
           },
         },
-      })
+      }),
     })
     if (!intent.ok) {
       return res
@@ -328,7 +329,7 @@ module.exports.fetchInvoice = async (req, res) => {
     const response = await INVOICEMODEL.findById(invoice_id).populate({
       path: 'tenant_id',
       populate: {
-        path: 'user_id unit_id apartment_id', 
+        path: 'user_id unit_id apartment_id',
       },
     })
     if (!response) {
@@ -349,11 +350,12 @@ module.exports.editInvoice = async (req, res) => {
   try {
     const response = await INVOICEMODEL.findByIdAndUpdate(invoice_id, {
       status,
+      isPaid: true,
     }).populate({
       path: 'tenant_id',
       populate: {
-        path: 'user_id unit_id apartment_id'
-      }
+        path: 'user_id unit_id apartment_id',
+      },
     })
     if (!response) {
       return res
@@ -362,16 +364,18 @@ module.exports.editInvoice = async (req, res) => {
     }
 
     const pdfBuffer = await new Promise((resolve, reject) => {
-      pdf.create(pdf_template(response), {
-        childProcessOptions: {
-          env: {
-            OPENSSL_CONF: '/dev/null'
-          }
-        }
-      }).toBuffer((err, buffer) => {
-        if (err) reject(err)
-        else resolve(buffer)
-      })
+      pdf
+        .create(pdf_template(response), {
+          childProcessOptions: {
+            env: {
+              OPENSSL_CONF: '/dev/null',
+            },
+          },
+        })
+        .toBuffer((err, buffer) => {
+          if (err) reject(err)
+          else resolve(buffer)
+        })
     })
     console.log(response.pdf.public_id)
     const cloudinaryResponse = await new Promise((resolve, reject) => {
@@ -444,63 +448,29 @@ module.exports.deleteInvoice = async (req, res) => {
   }
 }
 
-
-module.exports.totalPaid = async(req,res) => {
+module.exports.tenantInvoice = async (req, res) => {
   try {
-    const response = await INVOICEMODEL.find().populate('user_id unit_id apartment_id')
-    const totalPayment = response.reduce((acc,sum) => {
-      return acc = acc + sum.amount
-    }, 0)
-    console.log(totalPayment)
+    const user_id = req.user.id
+    const findUser = await TENANTMODEL.findOne({ user_id })
+    if (!findUser) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Tenant not found.' })
+    }
+    const response = await INVOICEMODEL.findOne({ tenant_id: findUser._id })
+      .populate('tenant_id')
+      .sort({ createdAt: -1 }) // Sort by createdAt field in descending order
+      .limit(1)
+    if (!response) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Tenant not found.' })
+    }
 
-    return res
-    .status(httpStatusCodes.OK)
-    .json({ totalPayment })
+    return res.status(httpStatusCodes.OK).json({ response })
   } catch (err) {
     return res
-    .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-    .json({ error: err.message })
-  }
-}
-
-module.exports.deliquencyRate = async(req,res) => {
-  try {
-    const response = await INVOICEMODEL.find().populate('user_id unit_id apartment_id')
-    const totalDeliquency = response.reduce((acc,sum) => {
-      return acc = acc + sum.amount
-    }, 0)
-    console.log(totalDeliquency)
-  } catch (err) {
-    return res
-    .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-    .json({ error: err.message })
-  }
-}
-
-module.exports.renewalRate = async(req,res) => {
-  try {
-    const response = await INVOICEMODEL.find().populate('user_id unit_id apartment_id')
-    const totalPayment = response.reduce((acc,sum) => {
-      return acc = acc + sum.amount
-    }, 0)
-    console.log(totalPaid)
-  } catch (err) {
-    return res
-    .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-    .json({ error: err.message })
-  }
-}
-
-module.exports.occupancyRate = async(req,res) => {
-  try {
-    const response = await INVOICEMODEL.find().populate('user_id unit_id apartment_id')
-    const totalPayment = response.reduce((acc,sum) => {
-      return acc = acc + sum.amount
-    }, 0)
-    console.log(totalPaid)
-  } catch (err) {
-    return res
-    .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-    .json({ error: err.message })
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
   }
 }

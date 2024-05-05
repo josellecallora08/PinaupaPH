@@ -36,9 +36,8 @@ const TenantProfile = () => {
   const tenant = useSelector((state) => state.user.single)
   const households = useSelector((state) => state.household.data)
   const pets = useSelector((state) => state.pet.data)
-  console.log(households)
   const navigate = useNavigate()
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef(null)
   const handleDeleteTenant = () => {
     const isConfirmed = window.confirm(
       'Are you sure you want to delete this tenant?',
@@ -46,25 +45,24 @@ const TenantProfile = () => {
     if (isConfirmed) {
       dispatch(deleteUser(id))
       navigate('/tenant')
-      console.log('Tenant deleted')
     }
   }
   const handleClickOutsideDropdown = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setIsHouseDotOpen(false);
-      setIsPetDotOpen(false);
+      setIsHouseDotOpen(false)
+      setIsPetDotOpen(false)
     }
-  };
+  }
 
   const toggleDropdown = (menu) => {
     if (menu === 'household') {
-      setIsHouseDotOpen(!isHousedotOpen);
-      setIsPetDotOpen(false);
+      setIsHouseDotOpen(!isHousedotOpen)
+      setIsPetDotOpen(false)
     } else if (menu === 'pet') {
-      setIsPetDotOpen(!isPetdotOpen);
-      setIsHouseDotOpen(false);
+      setIsPetDotOpen(!isPetdotOpen)
+      setIsHouseDotOpen(false)
     }
-  };
+  }
   const toggleEditTenantDetailForm = () => {
     setIsEditTenantDetailForm(!isEditTenantDetailForm)
   }
@@ -85,25 +83,22 @@ const TenantProfile = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log('Form submitted')
   }
-  console.log(id)
   useEffect(() => {
     dispatch(fetchUser(id))
-    console.log(tenant)
   }, [])
 
   useEffect(() => {
     dispatch(fetchHouseholds(id))
     dispatch(fetchPets(id))
   }, [])
-  
+
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutsideDropdown);
+    document.addEventListener('mousedown', handleClickOutsideDropdown)
     return () => {
-      document.removeEventListener('mousedown', handleClickOutsideDropdown);
-    };
-  }, []);
+      document.removeEventListener('mousedown', handleClickOutsideDropdown)
+    }
+  }, [])
 
   const birthday = new Date(tenant?.user_id.birthday).toLocaleDateString()
   return (
@@ -167,7 +162,9 @@ const TenantProfile = () => {
                       <h2 className="lg:text-2xl text-xl font-bold mb-2">
                         {tenant?.name}
                       </h2>
-                      <h2 className="lg:text-2xl">Unit - {tenant?.unit_id.unit_no}</h2>
+                      <h2 className="lg:text-2xl">
+                        Unit - {tenant?.unit_id.unit_no}
+                      </h2>
                     </div>
                     <button
                       onClick={handleDeleteTenant}
@@ -313,7 +310,9 @@ const TenantProfile = () => {
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
                           <p className="">Unit - {tenant?.unit_id.unit_no}</p>
                           <p className="">{tenant?.deposit}</p>
-                          <p className="">{new Date(tenant?.monthly_due).toLocaleDateString()}</p>
+                          <p className="">
+                            {new Date(tenant?.monthly_due).toLocaleDateString()}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -333,7 +332,10 @@ const TenantProfile = () => {
                       />
                     </div>
                     {isHousedotOpen && (
-                      <div ref={dropdownRef} className="absolute right-0 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400">
+                      <div
+                        ref={dropdownRef}
+                        className="absolute right-0 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400"
+                      >
                         <div
                           className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
                           onClick={() => {
@@ -359,14 +361,19 @@ const TenantProfile = () => {
 
                     <div className="text-sm md:text-base p-3 flex flex-col gap-5 overflow-y-auto h-[20rem] ">
                       {households?.map((val, key) => (
-                        <div key={key} className="w-full flex flex-col md:gap-2">
+                        <div
+                          key={key}
+                          className="w-full flex flex-col md:gap-2"
+                        >
                           <div className="flex gap-5">
                             <p className="w-1/4">Name:</p>
                             <span className="w-3/4">{val.name}</span>
                           </div>
                           <div className="flex gap-5">
                             <p className="w-1/4">Birthday:</p>
-                            <span className="w-3/4">{new Date(val.birthday).toLocaleDateString()}</span>
+                            <span className="w-3/4">
+                              {new Date(val.birthday).toLocaleDateString()}
+                            </span>
                           </div>
                           <div className="flex gap-5">
                             <p className="w-1/4">Relationship:</p>
@@ -386,6 +393,8 @@ const TenantProfile = () => {
                       </div>
                     </div>
                   )}
+
+                  
                   {isAddHouseholdForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-1/2 h-auto bg-white rounded-md relative">
@@ -407,7 +416,10 @@ const TenantProfile = () => {
                       />
                     </div>
                     {isPetdotOpen && (
-                      <div ref={dropdownRef} className=" absolute right-0 top-15 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400">
+                      <div
+                        ref={dropdownRef}
+                        className=" absolute right-0 top-15 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray"
+                      >
                         <div
                           className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
                           onClick={() => {
@@ -431,20 +443,31 @@ const TenantProfile = () => {
                       </div>
                     )}
 
-                    {/* {pets && pets.map((val, key) => ( */}
-                      <div className="lg:p-3 flex gap-28 ml-2 overflow-y-auto h-[10rem]">
-                        <div className="lg:text-base ">
-                          <p>Name</p>
-                          <p>Species</p>
-                          <p>Birthday</p>
-                        </div>
-                        <div>
-                          <p className="">{profile.Pets[0].name}</p>
-                          <p className="">{profile.Pets[0].species}</p>
-                        </div>
-                      </div>
-                    {/* ))} */}
-
+                    <div className="text-sm md:text-base p-3 flex flex-col gap-5 overflow-y-auto h-[14rem] ">
+                      {pets &&
+                        pets.length > 0 &&
+                        pets.map((pet, index) => (
+                          <div
+                            key={index}
+                            className="w-full flex flex-col md:gap-2"
+                          >
+                            <div className="flex gap-5">
+                              <p className="w-1/4">Name:</p>
+                              <span className="w-3/4">{pet.name}</span>
+                            </div>
+                            <div className="flex gap-5">
+                              <p className="w-1/4">Species:</p>
+                              <span className="w-3/4">{pet.species}</span>
+                            </div>
+                            <div className="flex gap-5">
+                              <p className="w-1/4">Birthday:</p>
+                              <span className="w-3/4">
+                                {new Date(pet.birthday).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                    </div>
                   </div>
                   {isEditPetForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">

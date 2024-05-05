@@ -92,7 +92,7 @@ const EditPet = ({ setIsEditPetForm }) => {
 
             <button
               onClick={() => setIsEditPetForm((prevState) => !prevState)}
-              className="bg-red-500 bg-red text-white font-bold py-2 px-4 rounded"
+              className=" bg-red text-white font-bold py-2 px-4 rounded"
             >
               Close
             </button>

@@ -30,7 +30,7 @@ const reportSlice = createSlice({
     deleteReportSuccess: (state, action) => {
       state.loading = false
       state.data = state.data.map()
-    }
+    },
   },
 })
 
@@ -45,13 +45,21 @@ export const createReport = (user_id, fields) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchReportStart())
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/report/${user_id}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/report/${user_id}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          attached_image,
+          type,
+        }),
       },
-      body: JSON.stringify(fields),
-    })
+    )
 
     if (!response.ok) {
       const json = await response.json()
@@ -70,12 +78,15 @@ export const fetchReports = () => async (dispatch) => {
     const token = Cookies.get('token')
     dispatch(fetchReportStart())
 
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/report/list`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/report/list`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    })
+    )
     if (!response.ok) {
       const json = await response.json()
       throw new Error(json.error)
@@ -94,29 +105,32 @@ export const fetchReport = (report_id) => async (dispatch) => {
     const socket = io(`${import.meta.env.VITE_URL}/`)
 
     const token = Cookies.get('token')
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/report/list/v1?report_id=${report_id}`, {
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/report/list/v1?report_id=${report_id}`,
+      {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      if (!response.ok) {
-        const json = await response.json()
-        throw new Error(json.error)
-      }
+      },
+    )
+    if (!response.ok) {
       const json = await response.json()
-      socket.on('receive-comment', (comment) => {
-        // Handle the received comment
-        console.log('Received comment:', comment);
-      });
-  
-      // Event listener for 'receive-comment-notification' event
-      socket.on('receive-comment-notification', () => {
-        // Handle the received comment notification
-        console.log('Received comment notification');
-      });
-      console.log(json.response)
-      dispatch(fetchReportSuccess(json.response))
+      throw new Error(json.error)
+    }
+    const json = await response.json()
+    socket.on('receive-comment', (comment) => {
+      // Handle the received comment
+      console.log('Received comment:', comment)
+    })
+
+    // Event listener for 'receive-comment-notification' event
+    socket.on('receive-comment-notification', () => {
+      // Handle the received comment notification
+      console.log('Received comment notification')
+    })
+    console.log(json.response)
+    dispatch(fetchReportSuccess(json.response))
   } catch (err) {
     console.log(err.message)
     dispatch(fetchReportFailed(err.message))
@@ -127,18 +141,21 @@ export const editReport = (report_id, fields) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchReportStart())
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/report/v1?report_id=${report_id}`, {
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/report/v1?report_id=${report_id}`,
+      {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      if (!response.ok) {
-        const json = await response.json()
-        throw new Error(json.error)
-      }
+      },
+    )
+    if (!response.ok) {
       const json = await response.json()
-      dispatch(fetchReports())
+      throw new Error(json.error)
+    }
+    const json = await response.json()
+    dispatch(fetchReports())
   } catch (err) {
     console.log(err.message)
     dispatch(fetchReportFailed(err.message))
@@ -148,18 +165,21 @@ export const deleteReport = (report_id) => async (dispatch) => {
   try {
     dispatch(fetchReportStart())
     const token = Cookies.get('token')
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/report/v1?report_id=${report_id}`, {
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/report/v1?report_id=${report_id}`,
+      {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      if (!response.ok) {
-        const json = await response.json()
-        throw new Error(json.error)
-      }
+      },
+    )
+    if (!response.ok) {
       const json = await response.json()
-      dispatch(deleteReport())
+      throw new Error(json.error)
+    }
+    const json = await response.json()
+    dispatch(deleteReport())
   } catch (err) {
     console.log(err.message)
     dispatch(fetchReportFailed(err.message))

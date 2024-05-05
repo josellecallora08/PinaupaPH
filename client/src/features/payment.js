@@ -98,13 +98,11 @@ export const cashPayment = () => async (dispatch) => {
     const token = Cookies.get('token')
     const socket = io(`${import.meta.env.VITE_URL}/`)
     const response = await fetch(`${import.meta.env.VITE_URL}/api/payment/cash`)
-  } catch (err) {
-    
-  }
+  } catch (err) {}
 }
 
 export const createPayment =
-  (fields) => async (dispatch) => {
+  (fields, intentId, clientKey) => async (dispatch) => {
     try {
       const token = Cookies.get('token')
       const socket = io(`${import.meta.env.VITE_URL}/`)
@@ -125,7 +123,7 @@ export const createPayment =
                   // name: `${fields.name}`,
                   // email: `${fields.email}`,
                   // phone: `${fields.phone}`,
-                    name: `joselle`,
+                  name: `joselle`,
                   email: `josellecallora08@gmail.com`,
                   phone: `09993541054`,
                 },
@@ -159,49 +157,76 @@ export const createPayment =
       //   }
       // }
       // if(fields.payment_method === "gcash" || fields.payment_method === "paymaya" || fields.payment_method === "grabpay"){
-        const isPayment = await fetch(`${import.meta.env.VITE_URL}/api/payment/create?method=${json?.data.attributes.type}&method_id=${json?.data.id}`, {
-          method: "POST",
+      const isPayment = await fetch(
+        `${import.meta.env.VITE_URL}/api/payment/create?method=${json?.data.attributes.type}&method_id=${json?.data.id}`,
+        {
+          method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        })
-        if (!isPayment.ok) {
-          const json1 = await isPayment.json()
-          throw new Error(json1.error)
-        }
-  
-        const paymentData = await isPayment.json()
-        console.log(paymentData)
-
-        const post_payment = await fetch(
-          `https://api.paymongo.com/v1/payment_intents/${paymentData.response.intent.paymentIntent}/attach`,
-          {
-            method: 'POST',
-            headers: {
-              accept: 'application/json',
-              'Content-Type': 'application/json',
-              Authorization: `Basic ${import.meta.env.VITE_PAYMONGO_TOKEN}`,
-            },
-            body: JSON.stringify({
-              data: {
-                attributes: {
-                  payment_method: `${paymentData.response.payment.method_id}`,
-                  client_key: `${paymentData.response.intent.clientKey}`,
-                  return_url: `${import.meta.env.VITE_RETURN_URL}`,
-                },
-              },
-            }),
+            Authorization: `Bearer ${token}`,
           },
-        )
-        if (!post_payment.ok) {
-          const json = await post_payment.json()
-          console.log(json)
-          throw new Error(json)
+        },
+      )
+      if (!isPayment.ok) {
+        const json1 = await isPayment.json()
+        throw new Error(json1.error)
+      }
+
+      const paymentData = await isPayment.json()
+      console.log(paymentData)
+
+      const post_payment = await fetch(
+        `https://api.paymongo.com/v1/payment_intents/${intentId}/attach`,
+        {
+          method: 'POST',
+          headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Basic ${import.meta.env.VITE_PAYMONGO_TOKEN}`,
+          },
+          body: JSON.stringify({
+            data: {
+              attributes: {
+                payment_method: `${paymentData.response.payment.method_id}`,
+                client_key: `${clientKey}`,
+                return_url: `${import.meta.env.VITE_RETURN_URL}`,
+              },
+            },
+          }),
+        },
+      )
+      if (!post_payment.ok) {
+        const json = await post_payment.json()
+        console.log(json)
+        throw new Error(json)
+      }
+      const data = await post_payment.json()
+      console.log(data)
+      socket.emit('send-payment')
+      window.open(data.data.attributes.next_action.redirect.url)
+      // }
+
+      const statusPayment = await fetch(`https://api.paymongo.com/v1/payment_intents/${intentId}?client_key=${clientKey}`,{
+        headers: {
+          accept: 'application/json',
+          authorization: `Basic ${import.meta.env.VITE_PAYMONGO_TOKEN}`
         }
-        const data = await post_payment.json()
-        console.log(data)
-        socket.emit('send-payment')
-        window.open(data.data.attributes.next_action.redirect.url)
+      })
+      if(!statusPayment.ok){
+        const json = await statusPayment.json()
+        throw new Error(json)
+      }
+
+      const statusJson = await statusPayment.json()
+      console.log(statusJson)
+      // const updateStatus = await fetch(`${import.meta.env.VITE_URL}/api/invoice/update?invoice_id=${paymentData.response._id}&status=${statusJson.}`, {
+      //   method: "PATCH",
+      //   headers:{
+      //     Authorization: `Bearer ${token}`
+      //   }
+      // })
+      // if(!statusJson.ok){
+      //   const json = await statusPayment.json()
+      //   throw new Error(json)
       // }
     } catch (err) {
       dispatch(actionFailed())
