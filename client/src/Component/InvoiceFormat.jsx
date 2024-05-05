@@ -2,13 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './Invoice.css'
 import Logo from '/logo.svg'
 import { Link } from 'react-router-dom'
-import {
-  MdOutlineFileDownload,
-  MdOutlineKeyboardArrowLeft,
-} from 'react-icons/md'
-import { FiPrinter } from 'react-icons/fi'
-import { FiEdit } from 'react-icons/fi'
-import { IoIosArrowDown } from 'react-icons/io'
+import { MdOutlineKeyboardArrowLeft } from 'react-icons/md'
 
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -62,15 +56,13 @@ const InvoiceFormat = () => {
         <div className="relative">
           <div className="flex justify-between items-center mb-5 ">
             <h1 className="lg:ml-24  font-bold flex  lg:mb-10  tracking-wider uppercase">
-              
-                <Link
-                  to="/document/invoice"
-                  className="hover:underline flex items-center mr-1 text-primary-color"
-                >
-                  <MdOutlineKeyboardArrowLeft size={25} />
-                  Invoice
-                </Link>
-          
+              <Link
+                to="/document/invoice"
+                className="hover:underline flex items-center mr-1 text-primary-color"
+              >
+                <MdOutlineKeyboardArrowLeft size={25} />
+                Invoice
+              </Link>
               / View Invoice
             </h1>
             <button

@@ -10,7 +10,6 @@ const NOTIFMODEL = new mongoose.Schema(
     receiver_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
-      default: null,
     },
     type: {
       type: String,
@@ -19,6 +18,12 @@ const NOTIFMODEL = new mongoose.Schema(
     },
     url: {
       type: String,
+    },
+    title:{
+      type: String
+    },
+    description: {
+      type:String
     },
     announcement_id: {
       type: mongoose.Schema.Types.ObjectId,

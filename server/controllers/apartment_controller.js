@@ -50,7 +50,7 @@ module.exports.fetch_apartments = async (req, res) => {
 // ? Tested API
 module.exports.fetch_apartment = async (req, res) => {
   try {
-    const { apartment_id } = req.params
+    const { apartment_id } = req.query
     const response = await APARTMENTMODEL.findById(apartment_id)
     if (!response) {
       return res
@@ -181,7 +181,7 @@ module.exports.change_apartment_image = async (req, res) => {
 // ? Tested API
 module.exports.edit_apartment = async (req, res) => {
   try {
-    const { apartment_id } = req.params
+    const { apartment_id } = req.query
     const { name, address, province, barangay } = req.body
     const details = {}
     if (name !== '') {
@@ -202,7 +202,7 @@ module.exports.edit_apartment = async (req, res) => {
       details.barangay = barangay
     }
     const response = await APARTMENTMODEL.findByIdAndUpdate(
-      { _id: apartment_id },
+      apartment_id,
       details,
     )
     if (!response) {
@@ -211,7 +211,9 @@ module.exports.edit_apartment = async (req, res) => {
         .json({ error: 'Apartment Not Found' })
     }
     await response.save()
-    return res.status(httpStatusCodes.CREATED).json({ msg: `Edited ${name}` })
+    return res
+      .status(httpStatusCodes.CREATED)
+      .json({ msg: `Edited ${name}`, response })
   } catch (err) {
     console.error({ error: err.message })
     return res

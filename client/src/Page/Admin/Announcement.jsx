@@ -142,11 +142,11 @@ const Announcement = () => {
                       </p>
                     </div>
 
-                    <p className="flex flex-col w-[80%] ">
+                    <div className="flex flex-col w-[80%] ">
                       <p className="font-semibold text-lg">{val.title}</p>
 
                       <p className="text-light-gray">{val.description}</p>
-                    </p>
+                    </div>
                   </div>
                   <div
                     onClick={() => toggleDropdown(val._id)}

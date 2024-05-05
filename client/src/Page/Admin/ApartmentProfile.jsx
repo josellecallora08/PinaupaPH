@@ -10,22 +10,24 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import EditApartmentDetails from '../../Component/AdminComponent/EditApartmentDetails'
 import { fetchUnitsApartment } from '../../features/unit'
-import { deleteApartment, fetchApartment } from '../../features/apartment'
+import { deleteApartment, editApartment, fetchApartment } from '../../features/apartment'
 const ApartmentProfile = () => {
+  const [update, setUpdate] = useState(false)
   const [searchItem, setSearchItem] = useState('')
   const [isAddRoomFormOpen, setIsAddRoomFormOpen] = useState(false)
-  const [dropdownOpen, setdropdownOpen] = useState(false)
   const [isEditApartmentFormOpen, setIsEditApartmentFormOpen] = useState(false)
-  const [selectedOption, setSelectedOption] = useState('')
+  const apartment = useSelector((state) => state.apartment.single)
+  const [fields, setFields] = useState({
+    name: apartment?.name || '',
+    address: apartment?.address || '',
+    province: apartment?.province || '',
+    barangay: apartment?.barangay || '',
+  })
   const { id } = useParams()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const units = useSelector((state) => state.unit.data)
-  const apartment = useSelector((state) => state.apartment.single)
 
-  const handleOptionChange = (e) => {
-    setSelectedOption(e.target.value)
-  }
   const handleSearch = (e) => {
     setSearchItem(e.target.value)
   }
@@ -36,7 +38,21 @@ const ApartmentProfile = () => {
   const toggleEditApartmentForm = () => {
     setIsEditApartmentFormOpen(!isEditApartmentFormOpen)
   }
+  const handleInput = (e) => {
+    const { name, value } = e.target
+    setFields((components) => ({
+      ...components,
+      [name]: value,
+    }))
+  }
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    dispatch(editApartment(fields, id))
+    setIsEditApartmentFormOpen(false)
+    setUpdate(true)
+    console.log('Form submitted')
+  }
   useEffect(() => {
     dispatch(fetchUnitsApartment(id))
     console.log(units)
@@ -45,7 +61,8 @@ const ApartmentProfile = () => {
   useEffect(() => {
     dispatch(fetchApartment(id))
     console.log(apartment)
-  }, [])
+    setUpdate(false)
+  }, [update, setUpdate])
 
   const handleDelete = async () => {
     const isConfirmed = window.confirm(
@@ -64,7 +81,7 @@ const ApartmentProfile = () => {
   return (
     <>
       <div className="w-full h-full pb-10  bg-white1">
-        <div className='w-[95%] m-auto'>
+        <div className="w-[95%] m-auto">
           {/* Upper part of Apartment Profile */}
           <h1 className="uppercase font-bold py-5">View Apartment</h1>
           <div className=" flex gap-10  py-4 rounded-md md:shadow-md md:shadow-gray ">
@@ -137,7 +154,10 @@ const ApartmentProfile = () => {
       {isAddRoomFormOpen && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="lg:w-auto lg:h-auto lg:mt-16 pb-5 bg-white  rounded-md">
-            <AddRoom apartment_id={apartment._id} setIsAddRoomFormOpen={setIsAddRoomFormOpen} />
+            <AddRoom
+              apartment_id={apartment._id}
+              setIsAddRoomFormOpen={setIsAddRoomFormOpen}
+            />
           </div>
         </div>
       )}
@@ -145,6 +165,11 @@ const ApartmentProfile = () => {
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="lg:w-auto lg:h-auto mt-14 bg-white rounded-lg">
             <EditApartmentDetails
+              fields={fields}
+              setFields={setFields}
+              handleInput={handleInput}
+              handleSubmit={handleSubmit}
+              apartmentId={apartment._id}
               setIsEditApartmentFormOpen={setIsEditApartmentFormOpen}
             />
           </div>

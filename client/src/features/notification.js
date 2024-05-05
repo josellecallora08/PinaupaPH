@@ -61,11 +61,11 @@ export const fetchNotifications = () => async (dispatch) => {
     }
 }
 
-export const fetchNotification = (notif_id) => async (dispatch) => {
+export const fetchNotification = () => async (dispatch) => {
     try {
         const token = Cookies.get('token')
         dispatch(fetchNotifStart())
-        const response = await fetch(`${import.meta.env.VITE_URL}/api/notification/list/v1?notif_id=${notif_id}`, {
+        const response = await fetch(`${import.meta.env.VITE_URL}/api/notification/list/v1`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

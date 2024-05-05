@@ -8,7 +8,7 @@ const documentSlice = createSlice({
     loading: false,
     error: null,
     data: null,
-    msg: null
+    msg: null,
   },
   reducers: {
     startLoading: (state) => {
@@ -24,18 +24,27 @@ const documentSlice = createSlice({
       state.data = action.payload.response
     },
     insertDocumentSuccess: (state, action) => {
-      state.loading= false
-      state.data = [...state.data, ...action.payload.response]
-      state.msg = action.payload.msg
+      return {
+        ...state,
+        loading: false,
+        data: [...state.data, action.payload.response],
+        msg: action.payload.msg,
+      }
     },
     editDocumentSuccess: (state, action) => {
       state.loading = false
-      state.data = state.data.filter((docs) => docs._id !== action.payload)
+      state.msg = action.payload.msg
+      state.data = state.data.map((docs) =>
+        docs._id === action.payload.response._id
+          ? { ...docs, ...action.payload.response }
+          : docs,
+      )
     },
     deleteDocumentSuccess: (state, action) => {
       state.loading = false
-      state.data = state.data.map((docs) =>
-        docs._id === action.payload ? { ...docs, ...action.payload } : docs,
+      state.msg = action.payload.msg
+      state.data = state.data.filter(
+        (user) => user._id !== action.payload.response._id,
       )
     },
     actionDocumentFailed: (state, action) => {
@@ -52,25 +61,27 @@ export const {
   insertDocumentSuccess,
   deleteDocumentSuccess,
   actionDocumentFailed,
-  generateSuccess
+  generateSuccess,
 } = documentSlice.actions
 
-// ? Tested 
-export const generateDocument =
-  (contract_id) => async (dispatch) => {
-    try {
-      const token = Cookies.get('token')
-      const response = await fetch(`${import.meta.env.VITE_URL}/api/documents/generate?contract_id=${contract_id}`, {
+// ? Tested
+export const generateDocument = (contract_id) => async (dispatch) => {
+  try {
+    const token = Cookies.get('token')
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/documents/generate?contract_id=${contract_id}`,
+      {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      if (!response.ok) {
-        const json = await response.json()
-        dispatch(fetchFailed(json.error))
-        throw new Error('Failed to download the invoice')
-      }
-      const blob = await response.blob()
+      },
+    )
+    if (!response.ok) {
+      const json = await response.json()
+      dispatch(fetchFailed(json.error))
+      throw new Error('Failed to download the invoice')
+    }
+    const blob = await response.blob()
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
@@ -78,24 +89,27 @@ export const generateDocument =
     document.body.appendChild(link)
     link.click()
     link.remove()
-    dispatch(generateSuccess("Contract Generated"))
-    } catch (err) {
-      dispatch(actionDocumentFailed(err.message))
-    }
+    dispatch(generateSuccess('Contract Generated'))
+  } catch (err) {
+    dispatch(actionDocumentFailed(err.message))
   }
-  
-// ? Tested 
+}
+
+// ? Tested
 export const createDocument = (user_id) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/document/create?user_id=${user_id}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      }
-    })
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/document/create?user_id=${user_id}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    )
 
     if (!response.ok) {
       const json = await response.json()
@@ -103,7 +117,7 @@ export const createDocument = (user_id) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-
+    console.log(json)
     // dispatch(generateDocument(fields.unit_id, json.unit_no, json.name))
     dispatch(insertDocumentSuccess(json))
   } catch (err) {
@@ -115,11 +129,14 @@ export const searchContract = (filter) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${import.meta.env.VITE_URL}api/document/search?filter=${filter}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    })
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/document/search?filter=${filter}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
     if (!response.ok) {
       const json = await response.json()
       throw new Error(json.error)
@@ -135,11 +152,14 @@ export const fetchDocuments = () => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/document/list`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    })
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/document/list`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
     if (!response.ok) {
       const json = await response.json()
       throw new Error(json.error)
@@ -156,11 +176,14 @@ export const fetchDocument = (contract_id) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/documents/list/v1?contract_id=${contract_id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    })
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/documents/list/v1?contract_id=${contract_id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
     if (!response.ok) {
       const json = await response.json()
       throw new Error(json.error)
@@ -176,12 +199,15 @@ export const editDocument = (contract_id) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/documents/update?contract_id=${contract_id}`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    })
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/documents/update?contract_id=${contract_id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
     if (!response.ok) {
       const json = await response.json()
       throw new Error(json.error)
@@ -197,12 +223,15 @@ export const deleteDocument = (contract_id) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/document/delete?contract_id=${contract_id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    })
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/document/delete?contract_id=${contract_id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
     if (!response.ok) {
       const json = await response.json()
       throw new Error(json.error)

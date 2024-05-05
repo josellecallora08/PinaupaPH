@@ -123,6 +123,7 @@ module.exports.searchContract = async (req, res) => {
             createdAt: '$tenant.createdAt',
             updatedAt: '$tenant.updatedAt',
           },
+          pdf:1,
           witnesses: 1,
         },
       },
@@ -150,8 +151,9 @@ module.exports.createContract = async (req, res) => {
   const year = current_date.getFullYear()
 
   try {
-    const response = await TENANTMODEL.findOne({ user_id })
-      .populate('user_id unit_id apartment_id')
+    const response = await TENANTMODEL.findOne({ user_id }).populate(
+      'user_id unit_id apartment_id',
+    )
 
     console.log('Response', response)
     if (!response) {
@@ -179,16 +181,18 @@ module.exports.createContract = async (req, res) => {
     }
     console.log(response)
     const pdfBuffer = await new Promise((resolve, reject) => {
-      pdf.create(pdf_template({ response }), {
-        childProcessOptions: {
-          env: {
-            OPENSSL_CONF: '/dev/null'
-          }
-        }
-      }).toBuffer((err, buffer) => {
-        if (err) reject(err)
-        else resolve(buffer)
-      })
+      pdf
+        .create(pdf_template({ response }), {
+          childProcessOptions: {
+            env: {
+              OPENSSL_CONF: '/dev/null',
+            },
+          },
+        })
+        .toBuffer((err, buffer) => {
+          if (err) reject(err)
+          else resolve(buffer)
+        })
     })
 
     const cloudinaryResponse = await new Promise((resolve, reject) => {
@@ -199,9 +203,7 @@ module.exports.createContract = async (req, res) => {
             format: 'pdf', // Specify resource type as 'raw' for PDF
             folder: 'PinaupaPH/Contracts', // Folder in Cloudinary where PDF will be stored
             overwrite: true,
-            transformation: [
-              { width: 612, height: 1008, crop: 'fit' }
-            ] // Do not overwrite if file with the same name exists
+            transformation: [{ width: 612, height: 1008, crop: 'fit' }], // Do not overwrite if file with the same name exists
           },
           (error, result) => {
             if (error) reject(error)
@@ -223,7 +225,6 @@ module.exports.createContract = async (req, res) => {
       'pdf.pdf_url': cloudinaryResponse.secure_url,
       'pdf.reference': reference,
     })
-
     // To Follow up the Push for Witnesses
 
     if (!contractResponse)
@@ -231,8 +232,14 @@ module.exports.createContract = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Contract Not found' })
 
+    const contract = await CONTRACTMODEL.findById(contractResponse._id).populate({
+      path: 'tenant_id',
+      populate: 'user_id unit_id apartment_id',
+    })
+
     return res.status(httpStatusCodes.CREATED).json({
       msg: 'Successfully Created Contract!',
+      response: contract,
     })
   } catch (err) {
     console.error({ error: err.message })
@@ -315,16 +322,18 @@ module.exports.editContract = async (req, res) => {
     console.log(response)
 
     const pdfBuffer = await new Promise((resolve, reject) => {
-      pdf.create(pdf_template({ response }), {
-        childProcessOptions: {
-          env: {
-            OPENSSL_CONF: '/dev/null'
-          }
-        }
-      }).toBuffer((err, buffer) => {
-        if (err) reject(err)
-        else resolve(buffer)
-      })
+      pdf
+        .create(pdf_template({ response }), {
+          childProcessOptions: {
+            env: {
+              OPENSSL_CONF: '/dev/null',
+            },
+          },
+        })
+        .toBuffer((err, buffer) => {
+          if (err) reject(err)
+          else resolve(buffer)
+        })
     })
 
     const cloudinaryResponse = await new Promise((resolve, reject) => {

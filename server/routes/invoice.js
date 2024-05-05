@@ -18,6 +18,7 @@ router.get('/', requireAuth, tenantInvoice)
 router.get('/list', fetchInvoices)
 router.get('/search', searchInvoice)
 router.get('/list/v1', fetchInvoice)
-router.delete('/delete',requireAuth, deleteInvoice)
-router.patch('/update',  editInvoice)
+router.delete('/delete', requireAuth, deleteInvoice)
+router.patch('/update', editInvoice)
+
 module.exports = router

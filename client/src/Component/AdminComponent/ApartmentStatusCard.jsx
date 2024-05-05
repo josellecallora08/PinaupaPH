@@ -16,7 +16,14 @@ const ApartmentStatusCard = ({apartmentId, val}) => {
   const loading = useSelector(state => state.unit.loading)
 
   const handleDelete = (unitId) => {
-    dispatch(deleteUnit(apartmentId, unitId))
+    const isConfirmed = window.confirm(
+      'Are you sure you want to delete this apartment?',
+    )
+    if (isConfirmed) {
+      dispatch(deleteUnit(apartmentId, unitId))
+    } else {
+      console.log('Deletion cancelled')
+    }
   }
   return (
     <>

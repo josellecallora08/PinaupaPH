@@ -1,5 +1,7 @@
 const TENANTMODEL = require('../models/tenant')
 const INVOICEMODEL = require('../models/invoice')
+const APARTMENTMODEL = require('../models/apartment')
+const UNITMODEL = require('../models/unit')
 const httpStatusCodes = require('../constants/constants')
 const pdf_template = require('../template/invoice')
 const pdf = require('html-pdf')
@@ -348,7 +350,7 @@ module.exports.editInvoice = async (req, res) => {
   try {
     const response = await INVOICEMODEL.findByIdAndUpdate(invoice_id, {
       status,
-      isPaid: true
+      isPaid: true,
     }).populate({
       path: 'tenant_id',
       populate: {
@@ -455,7 +457,8 @@ module.exports.tenantInvoice = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Tenant not found.' })
     }
-    const response = await INVOICEMODEL.findOne({ tenant_id: findUser._id }).populate('tenant_id')
+    const response = await INVOICEMODEL.findOne({ tenant_id: findUser._id })
+      .populate('tenant_id')
       .sort({ createdAt: -1 }) // Sort by createdAt field in descending order
       .limit(1)
     if (!response) {
@@ -465,71 +468,6 @@ module.exports.tenantInvoice = async (req, res) => {
     }
 
     return res.status(httpStatusCodes.OK).json({ response })
-  } catch (err) {
-    return res
-      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: err.message })
-  }
-}
-module.exports.totalPaid = async (req, res) => {
-  try {
-    const response = await INVOICEMODEL.find().populate(
-      'user_id unit_id apartment_id',
-    )
-    const totalPayment = response.reduce((acc, sum) => {
-      return (acc = acc + sum.amount)
-    }, 0)
-    console.log(totalPayment)
-
-    return res.status(httpStatusCodes.OK).json({ totalPayment })
-  } catch (err) {
-    return res
-      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: err.message })
-  }
-}
-
-module.exports.deliquencyRate = async (req, res) => {
-  try {
-    const response = await INVOICEMODEL.find().populate(
-      'user_id unit_id apartment_id',
-    )
-    const totalDeliquency = response.reduce((acc, sum) => {
-      return (acc = acc + sum.amount)
-    }, 0)
-    console.log(totalDeliquency)
-  } catch (err) {
-    return res
-      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: err.message })
-  }
-}
-
-module.exports.renewalRate = async (req, res) => {
-  try {
-    const response = await INVOICEMODEL.find().populate(
-      'user_id unit_id apartment_id',
-    )
-    const totalPayment = response.reduce((acc, sum) => {
-      return (acc = acc + sum.amount)
-    }, 0)
-    console.log(totalPaid)
-  } catch (err) {
-    return res
-      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: err.message })
-  }
-}
-
-module.exports.occupancyRate = async (req, res) => {
-  try {
-    const response = await INVOICEMODEL.find().populate(
-      'user_id unit_id apartment_id',
-    )
-    const totalPayment = response.reduce((acc, sum) => {
-      return (acc = acc + sum.amount)
-    }, 0)
-    console.log(totalPaid)
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)

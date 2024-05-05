@@ -6,7 +6,6 @@ import { deleteDocument } from '../features/documents'
 
 const LeaseCard = ({ val }) => {
   const dispatch = useDispatch()
-  console.log(val._id)
   const handleDelete = () => {
     if (window.confirm('Are you sure you want to delete this item?')) {
       dispatch(deleteDocument(val._id))
@@ -18,10 +17,10 @@ const LeaseCard = ({ val }) => {
     <div className="flex flex-row shadow-sm shadow-light-gray rounded-md items-center bg-white">
       <div className="w-[95%] flex gap-2 items-center m-auto">
         <figure className="w-[70px] items-center">
-          <img src="/pfp.svg" alt="Profile" />
+          <img src={val?.tenant_id?.user_id?.profile_image?.image_url} alt="Profile" />
         </figure>
         <div className="py-6 align-middle">
-          <h1 className="text-nowrap">{val?.tenant_id?.user_id.name}</h1>
+          <h1 className="text-nowrap">{val?.tenant_id?.user_id?.name}</h1>
           <p className="bg-primary-color rounded-md w-[70px] content-center text-white text-center">
             {val?.tenant_id?.unit_id?.unit_no}
           </p>

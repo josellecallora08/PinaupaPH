@@ -1,55 +1,55 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchUsers } from '../../features/user';
-import Select from 'react-select';
-import { createDocument } from '../../features/documents';
+import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchUsers } from '../../features/user'
+import Select from 'react-select'
+import { createDocument } from '../../features/documents'
 
 const AddLease = ({ setModal }) => {
-  const dispatch = useDispatch();
-  const [selectedUser, setSelectedUser] = useState(null);
-  const modal = useRef(null);
-  const loading = useSelector((state) => state.docs.loading);
-  const users = useSelector((state) => state.user.data);
+  const dispatch = useDispatch()
+  const [selectedUser, setSelectedUser] = useState(null)
+  const modal = useRef(null)
+  const loading = useSelector((state) => state.docs.loading)
+  const users = useSelector((state) => state.user.data)
 
   const handleLease = (e) => {
-    e.preventDefault();
-    dispatch(createDocument(selectedUser.value));
+    e.preventDefault()
+    dispatch(createDocument(selectedUser.value))
     console.log(loading)
     if (loading) {
-      setModal((state) => !state);
+      setModal((state) => !state)
     }
-  };
+  }
 
   useEffect(() => {
     const closeModal = (e) => {
       if (e.key === 'Escape') {
-        setModal((state) => !state);
+        setModal((state) => !state)
       }
-    };
+    }
 
-    document.addEventListener('keydown', closeModal);
+    document.addEventListener('keydown', closeModal)
 
     return () => {
-      document.removeEventListener('keydown', closeModal);
-    };
-  }, []);
+      document.removeEventListener('keydown', closeModal)
+    }
+  }, [])
 
   useEffect(() => {
-    dispatch(fetchUsers());
-  }, []);
+    dispatch(fetchUsers())
+  }, [])
 
   const options = users
     ? users.map((user) => ({
         value: user.user_id._id,
         label: user.user_id.name,
       }))
-    : [];
+    : []
 
   // Custom styles for the Select component
   const customStyles = {
     control: (provided) => ({
       ...provided,
-      width: '100%', 
+      width: '100%',
     }),
     menu: (provided) => ({
       ...provided,
@@ -57,7 +57,7 @@ const AddLease = ({ setModal }) => {
       maxHeight: '8.5rem',
       overflowY: 'auto',
     }),
-  };
+  }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-10">
@@ -77,7 +77,10 @@ const AddLease = ({ setModal }) => {
               options={options}
               isClearable
               className="font-semibold"
-              styles={{ ...customStyles, menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+              styles={{
+                ...customStyles,
+                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+              }}
               placeholder="Select Tenant"
             />
             <div className="flex mt-5 gap-2">
@@ -99,7 +102,7 @@ const AddLease = ({ setModal }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AddLease;
+export default AddLease

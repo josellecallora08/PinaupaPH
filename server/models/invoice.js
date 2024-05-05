@@ -47,6 +47,10 @@ const INVOICEMODEL = new mongoose.Schema(
     isPaid: {
       type: Boolean,
       default: false
+    },
+    datePaid: {
+      type: Date,
+      default: null
     }
   },
   { timestamps: true },
