@@ -15,6 +15,7 @@ import petReducer from '../features/pet'
 import socketReducer from '../features/socket'
 import notifReducer from '../features/notification'
 import announcementReducer from '../features/announcement'
+import dashboardReducer from '../features/dashboard'
 
 
 export const store = configureStore({
@@ -34,6 +35,7 @@ export const store = configureStore({
     invoice: invoiceReducer,
     socket: socketReducer,
     notif: notifReducer,
-    announcement: announcementReducer
+    announcement: announcementReducer,
+    dash: dashboardReducer
   },
 })

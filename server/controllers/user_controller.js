@@ -444,7 +444,7 @@ module.exports.update_unit_info = async (req, res) => {
       })
     }
 
-    const { user_id } = req.params
+    const { user_id } = req.query
     const { unit_id, deposit, occupancy } = req.body
 
     // Find the current tenant

@@ -6,21 +6,28 @@ import AddLease from '../../Component/AdminComponent/AddLease'
 import { Link } from 'react-router-dom'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchDocuments } from '../../features/documents'
+import { fetchDocuments, searchContract } from '../../features/documents'
 
 const Least = () => {
   const dispatch = useDispatch()
   const contracts = useSelector((state) => state.docs.data)
   const [modal, setModal] = useState(false)
-
+  const [searchItem, setSearchItem] = useState('')
   const toggleModal = () => {
     setModal(!modal)
   }
-  console.log(contracts)
-  useEffect(() => {
-    dispatch(fetchDocuments())
-  }, [])
 
+  const handleSearch = (e) => {
+    setSearchItem(e.target.value)
+  }
+  
+  useEffect(() => {
+    if (searchItem && searchItem !== '') {
+      dispatch(searchContract(searchItem))
+    } else {
+      dispatch(fetchDocuments())
+    }
+  }, [searchItem])
   return (
     <>
       {modal && <AddLease setModal={setModal} />}
@@ -37,7 +44,7 @@ const Least = () => {
           </div>
           <div className="flex flex-col py-5 gap-2 md:flex-row justify-between items-center">
             <div className="w-full md:w-auto">
-              <SearchBar />
+              <SearchBar onSearch={handleSearch} />
             </div>
             <button
               onClick={toggleModal}

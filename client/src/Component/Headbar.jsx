@@ -142,13 +142,13 @@ const Headbar = () => {
           </div>
         </div>
         <div className="flex items-center">
-          <button onClick={handleNotif} className="relative">
+         {user?.role !== "Admin" && <button onClick={handleNotif} className="relative">
             <TbBellRinging size={25} color="white" />
 
             <span className="absolute text-white bg-red/80 w-full max-w-[15px] rounded-full text-sm -top-2 -right-1">
               {filteredNotif?.length}
             </span>
-          </button>
+          </button>}
           <img
             src={
               user?.role === 'Admin'

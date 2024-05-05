@@ -64,11 +64,11 @@ router.patch(
   requireAuth,
   update_profile_picture,
 )
-router.patch('/:user_id/update_profile', requireAuth, update_profile)
+router.patch('/account/update', requireAuth, update_profile)
 router.patch('/:user_id/update_household', requireAuth, update_household)
 router.patch('/:user_id/update_pet', requireAuth, update_pet)
 router.patch(
-  '/:user_id/update-apartment-details',
+  '/apartment/unit/update',
   requireAuth,
   update_unit_info,
 )

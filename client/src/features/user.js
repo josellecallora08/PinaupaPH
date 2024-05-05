@@ -18,7 +18,7 @@ const userSlice = createSlice({
       state.loading = false
       state.data = action.payload
     },
-    insertUserSuccess: (state,action) => {
+    insertUserSuccess: (state, action) => {
       state.loading = false
       state.data = [...state.data, action.payload.response]
       state.msg = action.payload.msg
@@ -30,15 +30,16 @@ const userSlice = createSlice({
     deleteUserSuccess: (state, action) => {
       state.loading = false
       state.msg = action.payload.msg
-      console.log(state.data)
-      state.data = state.data.filter((user) => user._id !== action.payload.response._id)
-    },
-    editUserSuccess: (state, action) => {
-      state.loading = false
       state.data = state.data.map((user) =>
         user._id === action.payload.response._id
           ? { ...user, ...action.payload.response }
           : user,
+      )
+    },
+    editUserSuccess: (state, action) => {
+      state.loading = false
+      state.data = state.data.filter(
+        (user) => user._id !== action.payload.response._id,
       )
       state.msg = action.payload.msg
     },
@@ -164,8 +165,9 @@ export const editUser = (userId, credentials) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchUserStart())
+    console.log(userId)
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/user/${userId}/update_profile`,
+      `${import.meta.env.VITE_URL}/api/user/account/update?user_id=${userId}`,
       {
         method: 'PATCH',
         headers: {
@@ -182,6 +184,7 @@ export const editUser = (userId, credentials) => async (dispatch) => {
     }
 
     const json = await response.json()
+    console.log('success')
     dispatch(fetchUser(userId))
   } catch (err) {
     dispatch(actionUserFailed(err.message))
@@ -193,7 +196,7 @@ export const editUserApartment = (userId, credentials) => async (dispatch) => {
     const token = Cookies.get('token')
     dispatch(fetchUserStart())
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/user/${userId}/update-apartment-details`,
+      `${import.meta.env.VITE_URL}/api/user/apartment/unit/update?user_id=${userId}`,
       {
         method: 'PATCH',
         headers: {
@@ -217,42 +220,43 @@ export const editUserApartment = (userId, credentials) => async (dispatch) => {
   }
 }
 
-export const changeProfile = (userId, public_id, imageFile) => async (dispatch) => {
-  try {
-    dispatch(fetchUserStart())
-    const token = Cookies.get('token')
+export const changeProfile =
+  (userId, public_id, imageFile) => async (dispatch) => {
+    try {
+      dispatch(fetchUserStart())
+      const token = Cookies.get('token')
 
-    // Create a new FormData object
-    const formData = new FormData()
-    formData.append('profile_image', imageFile) // Append the image file
-    console.log("aosidjoa2isjd")
+      // Create a new FormData object
+      const formData = new FormData()
+      formData.append('profile_image', imageFile) // Append the image file
+      console.log('aosidjoa2isjd')
 
-    // Make the fetch request
-    const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/user/profile?public_id=${public_id}`,
-      {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${token}`,
+      // Make the fetch request
+      const response = await fetch(
+        `${import.meta.env.VITE_URL}/api/user/profile?public_id=${public_id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData, // Set the body of the request to the FormData object
         },
-        body: formData, // Set the body of the request to the FormData object
-      },
-    )
-    console.log("aosidjoaisjd")
+      )
+      console.log('aosidjoaisjd')
 
-    if (!response.ok) {
+      if (!response.ok) {
+        const json = await response.json()
+        throw new Error(json)
+        // Handle error response
+      }
+
       const json = await response.json()
-      throw new Error(json)
-      // Handle error response
+      console.log(json)
+      dispatch(isLoggedin())
+    } catch (err) {
+      dispatch(actionUserFailed(err.message))
     }
-    
-    const json = await response.json()
-    console.log(json)
-    dispatch(isLoggedin())
-  } catch (err) {
-    dispatch(actionUserFailed(err.message))
   }
-}
 
 export const deleteUser = (userId) => async (dispatch) => {
   try {

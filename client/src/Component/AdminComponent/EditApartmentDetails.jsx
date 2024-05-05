@@ -3,19 +3,15 @@ import { IoMdClose } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
 import { editApartment, fetchApartment } from '../../features/apartment';
 
-const EditApartmentDetails = ({ apartmentId, setIsEditApartmentFormOpen }) => {
+const EditApartmentDetails = ({ fields, setFields, handleInput, handleSubmit, apartmentId, setIsEditApartmentFormOpen }) => {
   const dispatch = useDispatch();
   const [error, setError] = useState(null);
-  const apartment = useSelector((state) => state.apartment.data);
-  const [fields, setFields] = useState({
-    name: apartment?.name || '',
-    address: apartment?.address || '',
-    location: apartment?.location || '',
-    barangay: apartment?.barangay || '',
-  });
+  const apartment = useSelector((state) => state.apartment.single);
+  console.log(apartment)
+
   const [isFormOpen, setIsFormOpen] = useState(false);
   const modalRef = useRef(null);
-
+console.log(apartmentId)
   useEffect(() => {
     dispatch(fetchApartment(apartmentId));
   }, [dispatch]);
@@ -36,24 +32,7 @@ const EditApartmentDetails = ({ apartmentId, setIsEditApartmentFormOpen }) => {
     };
   }, [setIsEditApartmentFormOpen]);
 
-  const handleInput = (e) => {
-    const { name, value } = e.target;
-    setFields((components) => ({
-      ...components,
-      [name]: value,
-    }));
-  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError(
-      'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form '
-    );
-
-    dispatch(editApartment(fields));
-    setIsEditApartmentFormOpen(false);
-    console.log('Form submitted');
-  };
 
   return (
     <>
@@ -131,11 +110,11 @@ const EditApartmentDetails = ({ apartmentId, setIsEditApartmentFormOpen }) => {
               </label>
               <input
                 type="text"
-                id="location"
+                id="province"
                 onChange={handleInput}
-                value={fields.location}
+                value={fields.province}
                 required
-                name="location"
+                name="province"
                 placeholder="Enter your Province/City"
                 className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />

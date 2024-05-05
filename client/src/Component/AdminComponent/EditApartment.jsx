@@ -1,49 +1,60 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
-import { IoMdClose } from "react-icons/io";
-import { useDispatch, useSelector } from 'react-redux';
-import { editApartment, fetchApartment } from '../../features/apartment';
-import { fetchUnits } from '../../features/unit';
-import { editUser, editUserApartment } from '../../features/user';
+import { IoMdClose } from 'react-icons/io'
+import { useDispatch, useSelector } from 'react-redux'
+import { editApartment, fetchApartment } from '../../features/apartment'
+import { fetchUnits } from '../../features/unit'
+import { editUser, editUserApartment } from '../../features/user'
 
 const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
   const dispatch = useDispatch()
-  const unit = useSelector(state => state.unit.data)
-  const [error, setError] = useState(null)
+  const unit = useSelector((state) => state.unit.data)
+  const error = useSelector((state) => state.user.error)
   const [fields, setFields] = useState({
     unit_no: tenant?.unit_id.unit_no || '',
-    deposit: tenant?.deposit !== null && tenant?.deposit !== undefined ? String(tenant?.deposit) : '',
-    occupancy: new Date(tenant?.monthly_due).toISOString().split('T')[0] || ''
+    deposit:
+      tenant?.deposit !== null && tenant?.deposit !== undefined
+        ? String(tenant?.deposit)
+        : '',
+    occupancy: new Date(tenant?.monthly_due).toISOString().split('T')[0] || '',
   })
   useEffect(() => {
-    dispatch(fetchUnits(tenant.unit_id))
+    dispatch(fetchUnits(tenant.unit_id._id))
   }, [])
 
   const handleInput = (e) => {
     const { name, value } = e.target
     setFields((components) => ({
       ...components,
-      [name]: value
+      [name]: value,
     }))
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    setError(
-      'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
-        )
-    dispatch(editUserApartment(tenant.id, fields))
-    console.log('Form submitted');
+    dispatch(editUserApartment(tenant?.user_id?._id, fields))
+    console.log('Form submitted')
   }
 
   return (
     <>
-      <div className='relative'>
-        <div className='relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center '>
-          <h1 className="lg:text-xl  ml-5 text-lg font-bold ">Edit Apartment Details</h1>
+      <div className="relative">
+        <div className="relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center ">
+          <h1 className="lg:text-xl  ml-5 text-lg font-bold ">
+            Edit Apartment Details
+          </h1>
         </div>
-        <form onSubmit={handleSubmit} className="lg:w-full w-[20rem] h-auto px-3 py-5 ">
-          <button type='button' className='absolute top-4 right-6'><IoMdClose onClick={() => setIsEditApartmentForm(prevState => !prevState)} size={25} color='white' /></button>
+        <form
+          onSubmit={handleSubmit}
+          className="lg:w-full w-[20rem] h-auto px-3 py-5 "
+        >
+          <button type="button" className="absolute top-4 right-6">
+            <IoMdClose
+              onClick={() => setIsEditApartmentForm((prevState) => !prevState)}
+              size={25}
+              color="white"
+            />
+          </button>
           {error && (
             <div className=" hidden w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
               {error}
@@ -65,12 +76,13 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
               <option className="rounded-none" value={fields.unit_no}>
                 {fields.unit_no}
               </option>
-              {unit?.filter(item => item.occupied === false).map((val, key) => (
-                <option key={key} className="rounded-none" value={val._id}>
-                  {val.unit_no}
-                </option>
-              ))}
-
+              {unit
+                ?.filter((item) => item.occupied === false)
+                .map((val, key) => (
+                  <option key={key} className="rounded-none" value={val._id}>
+                    {val.unit_no}
+                  </option>
+                ))}
             </select>
           </div>
 
@@ -110,11 +122,14 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
               className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
-          <div className='flex justify-end mt-5 gap-3'>
-            <button className=' bg-dark-blue text-white font-bold py-2 px-4 rounded'>
+          <div className="flex justify-end mt-5 gap-3">
+            <button className=" bg-dark-blue text-white font-bold py-2 px-4 rounded">
               Submit
             </button>
-            <button onClick={() => setIsEditApartmentForm(prevState => !prevState)} className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded'>
+            <button
+              onClick={() => setIsEditApartmentForm((prevState) => !prevState)}
+              className="bg-red-500 bg-red text-white font-bold py-2 px-4 rounded"
+            >
               Close
             </button>
           </div>

@@ -14,7 +14,7 @@ const EditTenantDetails = ({setIsEditTenantDetailForm, tenant}) => {
     email: tenant?.user_id.email || '',
     
   })
-
+  console.log(tenant)
   const [isFormOpen, setIsFormOpen] = useState(false)
 
   const toggleForm = (e) => {
@@ -29,14 +29,11 @@ const EditTenantDetails = ({setIsEditTenantDetailForm, tenant}) => {
     })
 
   }
+
+  console.log(tenant?.user_id._id)
   const handleSubmit = (e) => {
   e.preventDefault()
-  setError(
-    'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
-      )
-  
-  
-  dispatch(editUser(tenant.id,fields))
+  dispatch(editUser(tenant?.user_id._id,fields))
   console.log('Form submitted');
   setIsEditTenantDetailForm(prevState => !prevState)
   }
