@@ -7,17 +7,19 @@ const httpStatusCodes = require('../constants/constants')
 module.exports.searchAnnouncement = async (req, res) => {
   try {
     const { filter } = req.query
+
     const response = await ANNOUNCEMENTMODEL.find({
       $or: [
-        { status: { $regex: filter, $options: 'i' } },
+        { type: { $regex: filter, $options: 'i' } },
         { title: { $regex: filter, $options: 'i' } },
         { description: { $regex: filter, $options: 'i' } },
       ],
     })
+
     return res.status(httpStatusCodes.OK).json({ response })
   } catch (err) {
     console.error(err.message)
-    res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).send(err.message)
+    res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json(err.message)
   }
 }
 

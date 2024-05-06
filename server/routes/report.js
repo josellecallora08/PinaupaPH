@@ -11,6 +11,7 @@ const {
   fetchComments,
   fetchComment,
   searchReport,
+  resolveReport,
 } = require('../controllers/report_controller')
 const { sendMail } = require('../controllers/contact_controller')
 const router = Router()
@@ -21,7 +22,7 @@ const upload = multer({ storage })
   
 router.post('/create',upload.single('attached_image'), createReport)
 router.patch('/update', editReport)
-router.patch('/update/v1', editReport)
+router.patch('/update/v1', resolveReport)
 router.delete('/v1', deleteReport)
 router.get('/list', fetchReports)
 router.get('/list/v1', fetchReport)
