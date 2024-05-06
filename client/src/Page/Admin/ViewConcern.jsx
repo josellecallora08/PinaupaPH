@@ -36,11 +36,19 @@ const ViewConcern = () => {
     }
   }
   const handleComplete = async () => {
+    alert(id)
     dispatch(resolveReport(id))
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
-    dispatch(createComment(user.role === "Admin" ? user?._id : user?.user_id?._id, id, comment, location.pathname)) // Submit the comment
+    dispatch(
+      createComment(
+        user.role === 'Admin' ? user?._id : user?.user_id?._id,
+        id,
+        comment,
+        location.pathname,
+      ),
+    ) // Submit the comment
     setComments(null)
   }
 
@@ -64,9 +72,9 @@ const ViewConcern = () => {
     const socket = io(`${import.meta.env.VITE_URL}/`)
     socket.on('receive-comment', (comment) => {
       dispatch(fetchComments(id))
-    });
+    })
     return () => {
-      socket.disconnect();
+      socket.disconnect()
     }
   }, [dispatch])
 
@@ -76,14 +84,13 @@ const ViewConcern = () => {
     dispatch(fetchComments(id))
   }, [])
 
-
   useEffect(() => {
-    const container = messageContainerRef.current;
+    const container = messageContainerRef.current
 
     if (container && report && report.comments.length > 0) {
-      container.scrollTop = container.scrollHeight;
+      container.scrollTop = container.scrollHeight
     }
-  }, [report, comment, handleSubmit]);
+  }, [report, comment, handleSubmit])
 
   return (
     <>
@@ -128,15 +135,19 @@ const ViewConcern = () => {
 
                 {isDotOpen && (
                   <div className="absolute top-16 right-6 shadow-sm shadow-dark-gray bg-white  ">
-                    <div
-                      onClick={handleComplete} className="py-2 px-10 flex items-center gap-3 cursor-pointer hover:bg-dark-gray/20">
-                      <IoIosCheckboxOutline size={20} color="green" /> Resolve
-                    </div>
+                    {report?.status === false && (
+                      <div
+                        onClick={handleComplete}
+                        className="py-2 px-10 flex items-center gap-3 cursor-pointer hover:bg-dark-gray/20"
+                      >
+                        <IoIosCheckboxOutline size={20} color="green" /> Resolve
+                      </div>
+                    )}
                     <div
                       onClick={handleDelete}
                       className="py-2 px-10 flex items-center gap-3 cursor-pointer hover:bg-dark-gray/20"
                     >
-                      <LuTrash2 size={20} color="red" /> Cancel
+                      <LuTrash2 size={20} color="red" /> Delete
                     </div>
                   </div>
                 )}
@@ -158,7 +169,11 @@ const ViewConcern = () => {
               <div className="row-span-4 w-full h-full bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="relative w-full h-full min-h-60">
                   <figure className="w-full h-full ">
-                    <img src={report?.attached_image?.image_url} className="w-full h-full object-contain" alt="" />
+                    <img
+                      src={report?.attached_image?.image_url}
+                      className="w-full h-full object-contain"
+                      alt=""
+                    />
                   </figure>
                   <div className="absolute top-0 left-5 w-fit h-full flex items-center">
                     <button className="w-full h-full max-w-10 max-h-14 rounded-md hover:bg-gray/40">
@@ -190,12 +205,16 @@ const ViewConcern = () => {
                     </p>
                   </div>
                 </div>
-                <div className="w-full h-full " >
-                  <div ref={messageContainerRef}
+                <div className="w-full h-full ">
+                  <div
+                    ref={messageContainerRef}
                     className={`w-full h-auto max-h-[300px] lg:max-h-[600px] font-regular flex flex-col gap-2 px-5 ${report?.comments.length > 5 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}
                   >
                     {msg?.map((val, key) => (
-                      <div key={key} className="min-h-12 w-full flex gap-2 items-center overflow-hidden">
+                      <div
+                        key={key}
+                        className="min-h-12 w-full flex gap-2 items-center overflow-hidden"
+                      >
                         <figure className=" w-12 h-12 overflow-hidden border shadow-xl rounded-full">
                           <img
                             src={val?.user_id?.profile_image?.image_url}
@@ -222,11 +241,13 @@ const ViewConcern = () => {
                         value={comment || ''}
                         onChange={(e) => setComments(e.target.value)}
                         placeholder="Send Message"
+                        disabled={report?.status === true}
                         className="w-full h-full bg-white rounded-md outline-none border-2 border-gray lg:p-2"
                       ></textarea>
                       <div className="w-full max-w-fit flex items-center">
                         <button
                           type="submit"
+                          disabled={report?.status === true}
                           className="w-full h-full p-3 flex items-center justify-center  rounded-full hover:bg-white/10"
                         >
                           <figure className="w-full h-full max-w-5 max-h-5 md:max-w-10 md:max-h-10 flex justify-center items-center">

@@ -60,6 +60,7 @@ export const searchReport = (filter) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
+    console.log(json)
     dispatch(fetchReportsSuccess(json.response))
   } catch (err) {
     console.log(err.message)
