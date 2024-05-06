@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import SearchBar from '../Component/SearchBar'
 import ConcernCard from './ConcernCard'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchReports } from '../features/report'
+import { fetchReports, searchReport } from '../features/report'
 import Loading from './LoadingComponent/Loading'
 import { FaPlus } from 'react-icons/fa6'
 import CreateTicket from './Tenant Component/CreateTicket'
@@ -10,11 +10,23 @@ const ConcernList = () => {
   const [StatselectedOption, setStatSelectedOption] = useState('')
   const [isCreateTicket, setisCreateTicket] = useState(false)
   const [ConcernselectedOption, setConcernselectedOption] = useState('')
+  const [searchItem, setSearchItem] = useState('')
   const user = useSelector((state) => state.auth.user)
   const loading = useSelector((state) => state.report.loading)
   const dispatch = useDispatch()
   const reports = useSelector((state) => state.report.data)
-  const handleSearch = (e) => {}
+  const handleSearch = (e) => {
+    setSearchItem(e.target.value)
+  }
+
+  useEffect(() => {
+    if (searchItem && searchItem !== '') {
+      dispatch(searchReport(searchItem))
+    } else {
+      dispatch(fetchReports())
+    }
+  }, [searchItem])
+
   const handleStatOptionChange = (e) => {
     setStatSelectedOption(e.target.value)
   }
@@ -36,7 +48,7 @@ const ConcernList = () => {
             <SearchBar onSearch={handleSearch} />
           </div>
           <div className="lg:gap-9 flex justify-center gap-3">
-            <select className="select select-bordered w-full max-w-xs">
+            {/* <select className="select select-bordered w-full max-w-xs">
               <option disabled selected>
                 Who shot first?
               </option>
@@ -50,7 +62,7 @@ const ConcernList = () => {
               </option>
               <option>Han Solo</option>
               <option>Greedo</option>
-            </select>
+            </select> */}
             {user && user?.user_id?.role === 'Tenant' ? (
               <>
                 <button

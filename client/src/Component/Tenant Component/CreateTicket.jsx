@@ -1,17 +1,18 @@
-import React, { useState, useRef, useEffect  } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { CiImageOn } from 'react-icons/ci';
 import { IoMdClose } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
 import { createReport } from '../../features/report';
 
-const CreateTicket = ({id, setisCreateTicket }) => {
+const CreateTicket = ({ id, setisCreateTicket }) => {
   const [type, setSelectedType] = useState('');
   const [description, setDescription] = useState('');
-  const [image, setImage] = useState(null);
+  const [attached_image, setImage] = useState(null);
   const dispatch = useDispatch();
   const modalRef = useRef(null);
-
+  const [title, setTitle] = useState('')
   const handleImageChange = (event) => {
+    console.log("asd")
     const file = event.target.files[0];
     setImage(file);
   };
@@ -26,7 +27,7 @@ const CreateTicket = ({id, setisCreateTicket }) => {
 
   const handleSubmit = () => {
     console.log('Form submitted');
-    dispatch(createReport(id,))
+    dispatch(createReport(id, title, description, attached_image, type))
     // Add form submission logic here
     toggleForm();
   };
@@ -65,7 +66,7 @@ const CreateTicket = ({id, setisCreateTicket }) => {
               type="text"
               id="title"
               name="title"
-              onChange={setTitle}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter Title"
               className="text-sm bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
@@ -108,7 +109,7 @@ const CreateTicket = ({id, setisCreateTicket }) => {
               Attachment
             </label>
             <div className="mt-1 flex justify-center items-center">
-              <label htmlFor="image" className="cursor-pointer bg-white border border-gray-300 p-2 rounded-md w-full">
+              <label htmlFor="attached_image" className="cursor-pointer bg-white border border-gray-300 p-2 rounded-md w-full">
                 <span className="text-dark-gray flex items-center gap-2">
                   <CiImageOn color="black" size={25} />
                   Attach your photo here.
@@ -124,9 +125,9 @@ const CreateTicket = ({id, setisCreateTicket }) => {
               </label>
             </div>
           </div>
-          {image && (
+          {attached_image && (
             <div className="flex justify-center mt-2">
-              <img src={URL.createObjectURL(image)} alt="Attached Image" className="w-[10rem] h-auto" />
+              <img src={URL.createObjectURL(attached_image)} alt="Attached Image" className="w-[10rem] h-auto" />
             </div>
           )}
           <div className="flex justify-end mt-5 mb-3 gap-3">

@@ -9,17 +9,19 @@ import Calendar from '../../Component/Tenant Component/Calendar'
 import issue from '/Issue.svg'
 import { tenantInvoice } from '../../features/invoice'
 import { recentAnnouncement } from '../../features/announcement'
+import { fetchReports } from '../../features/report'
 const TenantHome = () => {
   const loading = useSelector((state) => state.auth.loading)
   const user = useSelector((state) => state.auth.user)
   const invoice = useSelector((state) => state.invoice.single)
   const announcement = useSelector((state) => state.announcement.single)
+  const report = useSelector((state) => state.report.data)
   const dispatch = useDispatch()
-
   useEffect(() => {
     dispatch(isLoggedin())
     dispatch(tenantInvoice())
     dispatch(recentAnnouncement())
+    dispatch(fetchReports())
   }, [])
 
   return (
@@ -68,56 +70,33 @@ const TenantHome = () => {
               <div className=" overflow-y-auto h-40">
                 <table className="w-full">
                   <tbody className="text-primary-color">
-                    <tr className="border-b border-dark-gray">
-                      <td className=" px-4 py-2   ">
-                        <div className="flex items-center gap-3 w-fit">
-                          <div className="md:w-2 md:h-2 w-2 h-2 rounded-full bg-red "></div>
-                          <div className="md:text-sm text-xs">
-                            Water Leaking
+                    {report && report?.map((val, key) => (
+                      <tr className="border-b border-dark-gray">
+                        <td className=" px-4 py-2   ">
+                          <div className="flex items-center gap-3 w-fit">
+                            <div className={`md:w-2 md:h-2 w-2 h-2 rounded-full ${val?.status ? 'bg-blue' : 'bg-red'}`}></div>
+                            <div className="md:text-sm text-xs">
+                              {val?.title}
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-2 md:text-sm text-xs">
-                        12/12/2022
-                      </td>
-                      <td className="px-4 py-2 flex items-center gap-3">
-                        <div className=" flex items-center gap-3 bg-gray rounded-full w-fit md:pr-20  p-2">
-                          <img
-                            src={pfp}
-                            alt="tenantlogo"
-                            className="w-6 h-6 rounded-full "
-                          />
-                          <div className="md:text-sm text-xs">
-                            Landlord Message You
+                        </td>
+                        <td className="px-4 py-2 md:text-sm text-xs">
+                          {new Date(val?.createdAt).toDateString()}
+                        </td>
+                        <td className="px-4 py-2 flex items-center gap-3">
+                          <div className=" flex items-center gap-3 bg-gray rounded-full w-fit md:pr-20  p-2">
+                            <img
+                              src={val?.sender_id?.user_id.profile_image?.image_url}
+                              alt="tenantlogo"
+                              className="w-6 h-6 rounded-full "
+                            />
+                            <div className="md:text-sm text-xs text-ellipsis text-nowrap max-w-[300px] overflow-hidden">
+                              {val?.description}
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b border-dark-gray">
-                      <td className=" px-4 py-2   ">
-                        <div className="flex items-center gap-3 w-fit">
-                          <div className="md:w-2 md:h-2 w-2 h-2 rounded-full bg-red "></div>
-                          <div className="md:text-sm text-xs">
-                            Water Leaking
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-2 md:text-sm text-xs">
-                        12/12/2022
-                      </td>
-                      <td className="px-4 py-2 flex items-center gap-3">
-                        <div className=" flex items-center gap-3 bg-gray rounded-full w-fit md:pr-20  p-2">
-                          <img
-                            src={pfp}
-                            alt="tenantlogo"
-                            className="w-6 h-6 rounded-full "
-                          />
-                          <div className="md:text-sm text-xs">
-                            Landlord Message You
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -177,7 +156,7 @@ const TenantHome = () => {
               <div className="w-full h-10 bg-primary-color text-white p-2">
                 Calendar
               </div>
-              <div className="w-full h-fit">
+              <div className="w-full h-full">
                 <Calendar />
               </div>
             </div>

@@ -40,36 +40,12 @@ const Calendars = () => {
   };
 
   return (
-    <div style={{ width: '100%' }}>
+    <div className='w-11/12 m-auto'>
       <Calendar
+        className={`w-full h-full`}
         tileClassName={tileClassName} // Pass the tileClassName function to the Calendar component
         tileContent={tileContent} // Pass the tileContent function to the Calendar component
       />
-      <style>
-        {`
-          .react-calendar__tile {
-            color: black; /* Set the color of all dates to black */
-          }
-          .sunday {
-            color: red; /* Set the color of Sundays to red */
-          }
-          .highlighted-day {
-           /* Highlighted day background color */
-            color: black; /* Highlighted day text color */
-             /* Optional: Round the corners of highlighted days */
-          }
-          
-    
-          .react-calendar__tile--now {
-            color: white;
-            background-color: #183044; /* Set text color of today's date to white */
-          }
-          .react-calendar__tile--active {
-            background-color: #007bff; /* Set background color of active date */
-            color: white; /* Set text color of active date to white */
-          }
-        `}
-      </style>
     </div>
   );
 };

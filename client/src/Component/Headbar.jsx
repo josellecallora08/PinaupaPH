@@ -30,7 +30,6 @@ const Headbar = () => {
 
   useEffect(() => {
     dispatch(fetchNotifications())
-    console.log(notifs)
   }, [])
   const handleSidebar = () => {
     dispatch(toggleSidebar())
@@ -119,8 +118,9 @@ const Headbar = () => {
   }
 
   const filteredNotif = notifs?.filter(
-    (item) => item?.receiver_id?._id === user?.user_id?._id,
+    (item) => item?.receiver_id?._id === user?.user_id?._id && !item?.isRead,
   )
+
   return (
     <div className="w-full h-full max-h-20 sticky top-0 z-20 bg-primary-color">
       {notif ? (

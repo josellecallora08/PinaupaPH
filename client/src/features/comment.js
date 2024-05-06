@@ -45,6 +45,7 @@ export const {
 export const createComment =
   (userId, reportId, comment, url) => async (dispatch) => {
     try {
+      console.log(userId)
       dispatch(fetchCommentStart())
       const token = Cookies.get('token')
       const socket = io(`${import.meta.env.VITE_URL}/`)
@@ -65,6 +66,7 @@ export const createComment =
         throw new Error(json.error)
       }
       const json = await response.json()
+      console.log(json)
       socket.emit('send-comment', comment)
       // dispatch(fetchReport(reportId))
     } catch (err) {

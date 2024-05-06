@@ -6,6 +6,26 @@ const NOTIFMODEL = require('../models/notification')
 const TENANTMODEL = require('../models/tenant')
 const cloudinary = require('cloudinary').v2 // Import Cloudinary SDK
 
+module.exports.resolveReport = async (req, res) => {
+  const { report_id, status } = req.query
+  try {
+    const report = await REPORTMODEL.findByIdAndUpdate(report_id, {
+      status,
+    })
+    if (!report)
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unable to edit report' })
+
+    return res.status(httpStatusCodes.OK).json({ msg: 'Report updated' })
+  } catch (err) {
+    console.log(err.message)
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Unable to update report due to server error' })
+  }
+}
+
 module.exports.searchReport = async (req, res) => {
   const { filter } = req.query
   try {
@@ -215,7 +235,7 @@ module.exports.createComment = async (req, res) => {
     const details = { user_id, comment }
     response.comments.push(details)
     await response.save()
-    return res.status(httpStatusCodes.OK).json({ msg: 'Comment sent.' })
+    return res.status(httpStatusCodes.OK).json({ msg: 'Comment sent.', response })
   } catch (err) {
     console.log(err.message)
     return res

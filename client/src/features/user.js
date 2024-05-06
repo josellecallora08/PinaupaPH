@@ -229,8 +229,6 @@ export const changeProfile =
       // Create a new FormData object
       const formData = new FormData()
       formData.append('profile_image', imageFile) // Append the image file
-      console.log('aosidjoa2isjd')
-
       // Make the fetch request
       const response = await fetch(
         `${import.meta.env.VITE_URL}/api/user/profile?public_id=${public_id}`,
@@ -242,7 +240,6 @@ export const changeProfile =
           body: formData, // Set the body of the request to the FormData object
         },
       )
-      console.log('aosidjoaisjd')
 
       if (!response.ok) {
         const json = await response.json()

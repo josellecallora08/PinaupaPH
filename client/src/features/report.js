@@ -41,23 +41,48 @@ export const {
   fetchReportFailed,
 } = reportSlice.actions
 
-export const createReport = (user_id, fields) => async (dispatch) => {
+export const searchReport = (filter) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchReportStart())
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/report/${user_id}`,
+      `${import.meta.env.VITE_URL}/api/report/search?filter=${filter}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      },
+    )
+
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
+    }
+    const json = await response.json()
+    dispatch(fetchReportsSuccess(json.response))
+  } catch (err) {
+    console.log(err.message)
+    dispatch(fetchReportFailed(err.message))
+  }
+}
+export const createReport = (user_id, title, description, attached_image, type) => async (dispatch) => {
+  try {
+    const token = Cookies.get('token')
+    dispatch(fetchReportStart())
+    const formData = new FormData()
+    formData.append('attached_image', attached_image)
+    formData.append('title', title)
+    formData.append('description', description)
+    formData.append('type', type)
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/report/create?user_id=${user_id}`,
       {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          title,
-          description,
-          attached_image,
-          type,
-        }),
+        body: formData
       },
     )
 
@@ -136,13 +161,37 @@ export const fetchReport = (report_id) => async (dispatch) => {
     dispatch(fetchReportFailed(err.message))
   }
 }
+export const resolveReport = (report_id) => async (dispatch) => {
+  try {
+    const token = Cookies.get('token')
+    dispatch(fetchReportStart())
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/report/update/v1?report_id=${report_id}&status=true`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
+    }
+    const json = await response.json()
+    dispatch(fetchReports())
+  } catch (err) {
+    console.log(err.message)
+    dispatch(fetchReportFailed(err.message))
+  }
+}
 
 export const editReport = (report_id, fields) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchReportStart())
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/report/v1?report_id=${report_id}`,
+      `${import.meta.env.VITE_URL}/api/report/update?report_id=${report_id}`,
       {
         method: 'PATCH',
         headers: {

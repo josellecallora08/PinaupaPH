@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   deleteAnnouncement,
   fetchAnnouncements,
+  searchAnnouncement,
 } from '../../features/announcement'
 import EditAnnouncementForm from '../../Component/AdminComponent/EditAnnouncement'
 
@@ -46,11 +47,14 @@ const Announcement = () => {
       dispatch(deleteAnnouncement(id))
     }
   }
-
   useEffect(() => {
-    dispatch(fetchAnnouncements())
-    console.log(announcement)
-  }, [])
+    if (searchItem && searchItem !== '') {
+      dispatch(searchAnnouncement(searchItem))
+    } else {
+      dispatch(fetchAnnouncements())
+    }
+  }, [searchItem])
+
 
   // Close dropdown when clicking outside
   useEffect(() => {
