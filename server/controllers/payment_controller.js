@@ -95,11 +95,18 @@ module.exports.createPayment = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Invoice cannot be updated.' })
     }
-
+    const admin = await USERMODEL.findOne({ role: "Admin" })
+    if (!admin) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Invoice cannot be updated.' })
+    }
+    
     const sendNotif = await NOTIFMODEL.create({
-      sender_id: user_id,
-      type: 'Payment',
-      payment_id: response._id,
+      receiver_id: admin._id,
+      title: 'Rental has been paid',
+      description: '',
+      type: 'Payment'
     })
     if (!sendNotif) {
       return res

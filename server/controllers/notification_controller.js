@@ -30,7 +30,6 @@ module.exports.fetchNotification = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Notification is empty...' })
     }
-
     return res.status(httpStatusCodes.OK).json({ response })
   } catch (err) {
     console.log(err.message)
@@ -43,18 +42,37 @@ module.exports.fetchNotification = async (req, res) => {
 module.exports.deleteNotification = async (req, res) => {
   try {
     const { notif_id } = req.query
-    const response = await NOTIFMODEL.findByIdAndDelete(notif_id).populate(
-      'announcement_id comment_id payment_id report_id',
-    )
+    const response = await NOTIFMODEL.findByIdAndDelete(notif_id).populate('sender_id receiver_id')
     if (!response) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Notification is empty...' })
     }
-
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: 'Notification has been deleted.', response })
+  } catch (err) {
+    console.log(err.message)
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
+  }
+}
+
+module.exports.readNotification = async (req, res) => {
+  try {
+    const { notif_id } = req.query
+    const response = await NOTIFMODEL.findByIdAndUpdate(notif_id, {
+      isRead: true
+    }).populate('sender_id receiver_id')
+    if (!response) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Notification is empty...' })
+    }
+    return res
+      .status(httpStatusCodes.OK)
+      .json({ msg: 'Notification has been read.', response })
   } catch (err) {
     console.log(err.message)
     return res

@@ -10,8 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { IoIosCheckboxOutline } from 'react-icons/io'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { LuTrash2 } from 'react-icons/lu'
-import { deleteReport, fetchReport } from '../../features/report'
-import Loading from '../../Component/LoadingComponent/Loading'
+import { deleteReport, fetchReport, resolveReport } from '../../features/report'
 import { fetchComments } from '../../features/comment'
 import { isLoggedin } from '../../features/authentication'
 const ViewConcern = () => {
@@ -36,15 +35,23 @@ const ViewConcern = () => {
       dispatch(deleteReport(id))
     }
   }
-  useEffect(() => {
-    dispatch(isLoggedin())
-  }, [])
-  const handleSubmit = async (e) => {
-    e.preventDefault() // Prevent default form submission behavior
-
-    dispatch(createComment(user._id, id, comment, location.pathname)) // Submit the comment
-    setComments(null) // Reset the textarea
+  const handleComplete = async () => {
+    alert(id)
+    dispatch(resolveReport(id))
   }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    dispatch(
+      createComment(
+        user.role === 'Admin' ? user?._id : user?.user_id?._id,
+        id,
+        comment,
+        location.pathname,
+      ),
+    ) // Submit the comment
+    setComments(null)
+  }
+
   useEffect(() => {
     const sendMessage = (e) => {
       if (e.key === 'Enter') {
@@ -65,35 +72,35 @@ const ViewConcern = () => {
     const socket = io(`${import.meta.env.VITE_URL}/`)
     socket.on('receive-comment', (comment) => {
       dispatch(fetchComments(id))
-    });
+    })
     return () => {
-      socket.disconnect();
+      socket.disconnect()
     }
   }, [dispatch])
 
   useEffect(() => {
+    dispatch(isLoggedin())
     dispatch(fetchReport(id))
     dispatch(fetchComments(id))
   }, [])
 
-
   useEffect(() => {
-    const container = messageContainerRef.current;
+    const container = messageContainerRef.current
 
     if (container && report && report.comments.length > 0) {
-      container.scrollTop = container.scrollHeight;
+      container.scrollTop = container.scrollHeight
     }
-  }, [report, comment, handleSubmit]);
-  
+  }, [report, comment, handleSubmit])
+
   return (
     <>
       <div className="w-full h-full flex flex-col pb-5 xl:bg-gray text-primary-color">
         <div className="w-11/12 m-auto h-fit py-2">
           <h1 className="uppercase font-bold">Concern and Issue</h1>
         </div>
-        <div className="md:w-11/12 h-full m-auto grid grid-cols-2 grid-flow-row rounded-lg bg-white">
+        <div className="md:w-11/12 h-full  m-auto grid grid-cols-2 grid-flow-row rounded-lg bg-white">
           <div className="col-span-2 xl:col-span-1 xl:row-span-1  p-5  ">
-            <div className="w-full h-full grid grid-flow-row gap-5 ">
+            <div className="w-full h-full grid grid-flow-4 gap-5 ">
               {/*  */}
               <div className=" relative row-span-1 grid grid-cols-2 items-center">
                 <div className="col-span-1 h-full flex items-center gap-5">
@@ -128,14 +135,19 @@ const ViewConcern = () => {
 
                 {isDotOpen && (
                   <div className="absolute top-16 right-6 shadow-sm shadow-dark-gray bg-white  ">
-                    <div className="py-2 px-10 flex items-center gap-3 cursor-pointer hover:bg-dark-gray/20">
-                      <IoIosCheckboxOutline size={20} color="green" /> Resolve
-                    </div>
+                    {report?.status === false && (
+                      <div
+                        onClick={handleComplete}
+                        className="py-2 px-10 flex items-center gap-3 cursor-pointer hover:bg-dark-gray/20"
+                      >
+                        <IoIosCheckboxOutline size={20} color="green" /> Resolve
+                      </div>
+                    )}
                     <div
                       onClick={handleDelete}
                       className="py-2 px-10 flex items-center gap-3 cursor-pointer hover:bg-dark-gray/20"
                     >
-                      <LuTrash2 size={20} color="red" /> Cancel
+                      <LuTrash2 size={20} color="red" /> Delete
                     </div>
                   </div>
                 )}
@@ -156,8 +168,12 @@ const ViewConcern = () => {
               {/*  */}
               <div className="row-span-4 w-full h-full bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="relative w-full h-full min-h-60">
-                  <figure className="w-full h-full">
-                    <img src={sample} className="w-full h-full" alt="" />
+                  <figure className="w-full h-full ">
+                    <img
+                      src={report?.attached_image?.image_url}
+                      className="w-full h-full object-contain"
+                      alt=""
+                    />
                   </figure>
                   <div className="absolute top-0 left-5 w-fit h-full flex items-center">
                     <button className="w-full h-full max-w-10 max-h-14 rounded-md hover:bg-gray/40">
@@ -178,8 +194,8 @@ const ViewConcern = () => {
           <div className="col-span-2 xl:col-span-1 xl:row-span-1 p-5">
             <div className="w-full h-full flex flex-col">
               <div className="w-full xl:w-11/12 h-full m-auto flex flex-col rounded-xl border-2 border-primary-color overflow-hidden">
-                <div className="h-full max-h-20 flex items-center justify-center py-5 bg-primary-color rounded-t-md">
-                  <div className="flex items-center  gap-2 ">
+                <div className="h-full max-h-10 lg:max-h-20 flex items-center justify-center py-5 bg-primary-color rounded-t-md">
+                  <div className="flex items-center gap-2 ">
                     <figure className="w-full h-full max-w-7">
                       <img src={comments} alt="" />
                     </figure>
@@ -189,16 +205,20 @@ const ViewConcern = () => {
                     </p>
                   </div>
                 </div>
-                <div className="w-full h-full " >
-                  <div ref={messageContainerRef}
-                    className={`w-full h-auto max-h-[600px] font-regular flex flex-col gap-2 px-5 ${report?.comments.length > 5 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}
+                <div className="w-full h-full ">
+                  <div
+                    ref={messageContainerRef}
+                    className={`w-full h-auto max-h-[300px] lg:max-h-[600px] font-regular flex flex-col gap-2 px-5 ${report?.comments.length > 5 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}
                   >
                     {msg?.map((val, key) => (
-                      <div key={key} className="min-h-12 w-full flex gap-2 items-center overflow-hidden">
-                        <figure className="w-full h-full max-w-12 max-h-12 overflow-hidden rounded-full">
+                      <div
+                        key={key}
+                        className="min-h-12 w-full flex gap-2 items-center overflow-hidden"
+                      >
+                        <figure className=" w-12 h-12 overflow-hidden border shadow-xl rounded-full">
                           <img
-                            src={val?.user_id?.profile_image.image_url}
-                            className="w-full h-full object-contain"
+                            src={val?.user_id?.profile_image?.image_url}
+                            className="w-full h-full  object-contain"
                             alt=""
                           />
                         </figure>
@@ -209,7 +229,7 @@ const ViewConcern = () => {
                     ))}
                   </div>
                 </div>
-                <div className="w-full h-full flex items-center max-h-32 bg-primary-color">
+                <div className="w-full h-full flex items-center max-h-32 bg-primary-color py-2">
                   <div className="w-11/12 m-auto h-4/5">
                     <form
                       onSubmit={handleSubmit}
@@ -221,14 +241,16 @@ const ViewConcern = () => {
                         value={comment || ''}
                         onChange={(e) => setComments(e.target.value)}
                         placeholder="Send Message"
-                        className="w-full h-full bg-white  rounded-md outline-none border-2 border-gray p-5"
+                        disabled={report?.status === true}
+                        className="w-full h-full bg-white rounded-md outline-none border-2 border-gray lg:p-2"
                       ></textarea>
                       <div className="w-full max-w-fit flex items-center">
                         <button
                           type="submit"
+                          disabled={report?.status === true}
                           className="w-full h-full p-3 flex items-center justify-center  rounded-full hover:bg-white/10"
                         >
-                          <figure className="w-full h-full max-w-10 max-h-10 flex justify-center items-center">
+                          <figure className="w-full h-full max-w-5 max-h-5 md:max-w-10 md:max-h-10 flex justify-center items-center">
                             <img src={send} className="w-full h-full" alt="" />
                           </figure>
                         </button>

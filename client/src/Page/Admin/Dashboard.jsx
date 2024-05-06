@@ -82,7 +82,6 @@ const Dashboard = () => {
     dispatch(fetchReports())
   }, [])
 
-  console.log(notifications)
   return (
     <>
       {loading ? (

@@ -114,8 +114,6 @@ export const createPet = (user_id, fields) => async (dispatch) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(fields),
-
-      
     })
 
     console.log('Create Pet: ', response)
@@ -126,6 +124,7 @@ export const createPet = (user_id, fields) => async (dispatch) => {
     }
 
     const json = await response.json()
+    console.log(json)
     dispatch(fetchPets(user_id))
   } catch (err) {
     console.log('Unable to create pet')

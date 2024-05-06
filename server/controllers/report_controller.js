@@ -6,20 +6,94 @@ const NOTIFMODEL = require('../models/notification')
 const TENANTMODEL = require('../models/tenant')
 const cloudinary = require('cloudinary').v2 // Import Cloudinary SDK
 
+module.exports.resolveReport = async (req, res) => {
+  const { report_id, status } = req.query
+  try {
+    const report = await REPORTMODEL.findByIdAndUpdate(report_id, {
+      status,
+    })
+    if (!report)
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unable to edit report' })
+
+    return res.status(httpStatusCodes.OK).json({ msg: 'Report updated' })
+  } catch (err) {
+    console.log(err.message)
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: 'Unable to update report due to server error' })
+  }
+}
+
 module.exports.searchReport = async (req, res) => {
   const { filter } = req.query
   try {
-    const response = REPORTMODEL.find({
-      $or: [
-        { 'tenant_id.user_id.name': { $regex: filter, $options: 'i' } },
-        { 'tenant_id.unit_id.unit_no': { $regex: filter, $options: 'i' } },
-      ],
-    }).populate({
-      path: 'tenant_id',
-      populate: {
-        path: 'user_id unit_id',
+    const response = await REPORTMODEL.aggregate([
+      {
+        $lookup: {
+          from: 'tenants',
+          localField: 'sender_id',
+          foreignField: '_id',
+          as: 'tenant',
+        },
       },
-    })
+      {
+        $unwind: '$tenant',
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'tenant.user_id',
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+      {
+        $unwind: '$user',
+      },
+      {
+        $lookup: {
+          from: 'units',
+          localField: 'tenant.unit_id',
+          foreignField: '_id',
+          as: 'unit',
+        },
+      },
+      {
+        $unwind: '$unit',
+      },
+      {
+        $match: {
+          $or: [
+            { 'user.name': { $regex: filter, $options: 'i' } },
+            { 'unit.unit_no': { $regex: filter, $options: 'i' } },
+          ],
+        },
+      },
+      {
+        $project: {
+          sender_id: {
+            user_id: '$user',
+            unit_id: '$unit',
+            deposit: '$tenant.deposit',
+            advance: '$tenant.advance',
+            balance: '$tenant.balance',
+            monthly_due: '$tenant.monthly_due',
+            payment: '$tenant.payment',
+            household: '$tenant.household',
+            pet: '$tenant.pet',
+            createdAt: '$tenant.createdAt',
+            updatedAt: '$tenant.updatedAt',
+          },
+          title: 1,
+          description: 1,
+          type: 1,
+          status: 1,
+          attached_image: 1,
+        },
+      },
+    ])
     if (!response) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
@@ -215,7 +289,9 @@ module.exports.createComment = async (req, res) => {
     const details = { user_id, comment }
     response.comments.push(details)
     await response.save()
-    return res.status(httpStatusCodes.OK).json({ msg: 'Comment sent.' })
+    return res
+      .status(httpStatusCodes.OK)
+      .json({ msg: 'Comment sent.', response })
   } catch (err) {
     console.log(err.message)
     return res
