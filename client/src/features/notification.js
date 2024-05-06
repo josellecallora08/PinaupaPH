@@ -40,6 +40,28 @@ const notifSlice = createSlice({
 
 export const { fetchNotifStart, fetchNotifsSuccess, fetchNotifSuccess, editNotifSuccess, deleteNotifSuccess, fetchNotifFailed } = notifSlice.actions
 
+export const readNotification = (notif_id) => async (dispatch) => {
+    try {
+        const token = Cookies.get('token')
+        dispatch(fetchNotifStart())
+        const response = await fetch(`${import.meta.env.VITE_URL}/api/notification/update?notif_id=${notif_id}`, {
+            method: "PATCH",
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        if (!response.ok) {
+            const json = await response.json()
+            console.log(json.error)
+            throw new Error(json.error)
+        }
+        const json = await response.json()
+        dispatch(fetchNotifSuccess(json.response))
+    } catch (err) {
+        dispatch(fetchNotifFailed(err.message))
+
+    }
+}
 export const fetchNotifications = () => async (dispatch) => {
     try {
         const token = Cookies.get('token')

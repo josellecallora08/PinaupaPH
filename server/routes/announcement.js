@@ -15,6 +15,7 @@ router.post('/', requireAuth, createAnnouncement)
 router.get('/list', fetchAnnouncements)
 router.get('/list/v1', fetchAnnouncement)
 router.get('/recent', recentAnnouncement)
+router.get('/search', recentAnnouncement)
 router.patch('/edit', editAnnouncement)
 router.delete('/delete', deleteAnnouncement)
 

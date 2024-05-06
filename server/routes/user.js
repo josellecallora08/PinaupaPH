@@ -64,6 +64,7 @@ router.patch(
   requireAuth,
   update_profile_picture,
 )
+
 router.patch('/account/update', requireAuth, update_profile)
 router.patch('/:user_id/update_household', requireAuth, update_household)
 router.patch('/:user_id/update_pet', requireAuth, update_pet)

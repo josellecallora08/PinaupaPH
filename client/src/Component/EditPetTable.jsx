@@ -4,7 +4,7 @@ import PetEditableRow from './PetEditableRow'
 import PetReadRow from './PetReadRow'
 import { IoMdClose } from 'react-icons/io'
 
-const EditPetTable = ({setIsEditPetForm}) => {
+const EditPetTable = ({ setIsEditPetForm }) => {
   const [contacts, setContacts] = useState(petdata)
   const [error, setError] = useState(null)
   const [editContactId, setEditContactId] = useState(null)
@@ -42,8 +42,8 @@ const EditPetTable = ({setIsEditPetForm}) => {
     event.preventDefault()
     setError(
       'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
-        )
-    
+    )
+
     const editedContact = {
       id: editContactId,
       petfullName: editFormData.petfullName,
@@ -74,6 +74,8 @@ const EditPetTable = ({setIsEditPetForm}) => {
 
     setContacts(newContacts)
   }
+
+
   return (
     <div>
       <div className="relative w-full flex  rounded-tl-lg rounded-tr-lg  text-black items-center ">
@@ -82,15 +84,15 @@ const EditPetTable = ({setIsEditPetForm}) => {
         </h1>
       </div>
       <form action="" onSubmit={handleEditFormSubmit} className='flex flex-col overflow-y-auto h-96 flex-shrink-0'>
-      <div className="lg:justify-between lg:flex lg:items-center lg:-mb-1 mb-3">
-            <button className="absolute top-4 right-6">
-              <IoMdClose
-                onClick={() => setIsEditPetForm((prevState) => !prevState)}
-                size={25}
-                color="dark-blue"
-              />
-            </button>
-          </div>
+        <div className="lg:justify-between lg:flex lg:items-center lg:-mb-1 mb-3">
+          <button className="absolute top-4 right-6">
+            <IoMdClose
+              onClick={() => setIsEditPetForm((prevState) => !prevState)}
+              size={25}
+              color="dark-blue"
+            />
+          </button>
+        </div>
         <table className=" table-fixed min-w-full border-collapse w-full  ">
           <thead className='  bg-dark-blue  text-white sticky top-0 '>
             <tr className='text-center text-sm font-semibold  ' >
@@ -109,7 +111,7 @@ const EditPetTable = ({setIsEditPetForm}) => {
                     handleEditFormChange={handleEditFormChange}
                     handleCancelClick={handleCancelClick}
                   />
-                ) : (
+                ) : ( 
                   <PetReadRow
                     contact={contact}
                     handleEditClick={handleEditClick}
@@ -121,35 +123,30 @@ const EditPetTable = ({setIsEditPetForm}) => {
           </tbody>
         </table>
         {error && (
-            <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
-              {error}
-            </div>
-          )}
-
-
+          <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
+            {error}
+          </div>
+        )}
         {contacts.length <= 4 && (
-  <div className="flex justify-end absolute bottom-0 right-0 mb-10 mr-10 gap-3">
-    <button
-      type="submit"
-      className="bg-primary-color text-white font-bold py-2 px-4 rounded"
-    >
-      Submit
-    </button>
-  </div>
-)}
-
-{contacts.length > 4 && (
-  <div className="flex justify-end mb-10 mt-2 mr-10">
-      <button
-      type="submit"
-      className=" bg-primary-color text-white font-semibold py-2 px-4  rounded"
-    >
-      Submit
-    </button>
-  </div>
-)}
-
-        
+          <div className="flex justify-end absolute bottom-0 right-0 mb-10 mr-10 gap-3">
+            <button
+              type="submit"
+              className="bg-primary-color text-white font-bold py-2 px-4 rounded"
+            >
+              Submit
+            </button>
+          </div>
+        )}
+        {contacts.length > 4 && (
+          <div className="flex justify-end mb-10 mt-2 mr-10">
+            <button
+              type="submit"
+              className=" bg-primary-color text-white font-semibold py-2 px-4  rounded"
+            >
+              Submit
+            </button>
+          </div>
+        )}
       </form>
     </div>
   )
