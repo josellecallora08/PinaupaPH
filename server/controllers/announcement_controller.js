@@ -14,7 +14,7 @@ module.exports.searchAnnouncement = async (req, res) => {
         { title: { $regex: filter, $options: 'i' } },
         { description: { $regex: filter, $options: 'i' } },
       ],
-    })
+    }).sort({ createdAt: -1 })
 
     return res.status(httpStatusCodes.OK).json({ response })
   } catch (err) {
@@ -78,7 +78,7 @@ module.exports.createAnnouncement = async (req, res) => {
 
 module.exports.fetchAnnouncements = async (req, res) => {
   try {
-    const response = await ANNOUNCEMENTMODEL.find()
+    const response = await ANNOUNCEMENTMODEL.find().sort({ createdAt: -1 })
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -96,7 +96,7 @@ module.exports.fetchAnnouncements = async (req, res) => {
 module.exports.fetchAnnouncement = async (req, res) => {
   const { announcement_id } = req.query
   try {
-    const response = await ANNOUNCEMENTMODEL.findById(announcement_id)
+    const response = await ANNOUNCEMENTMODEL.findById(announcement_id).sort({ createdAt: -1 })
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)

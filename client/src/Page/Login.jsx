@@ -40,7 +40,7 @@ const Login = () => {
 
   return (
     <>
-  {isVisible && <MessageToast message={msg} error={error} isVisible={isVisible} setIsVisible={setIsVisible} />}
+  {/* {isVisible && <MessageToast message={msg} error={error} isVisible={isVisible} setIsVisible={setIsVisible} />} */}
       <div className="w-full h-screen py-5 px-10 ">
         <div className="w-11/12 h-full max-h-40 m-auto flex justify-center lg:justify-start">
           <div className='size-full max-w-40 max-h-40 flex justify-center items-center'>

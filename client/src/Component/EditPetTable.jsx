@@ -1,18 +1,26 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import petdata from './pet-mock-data.json'
 import PetEditableRow from './PetEditableRow'
 import PetReadRow from './PetReadRow'
 import { IoMdClose } from 'react-icons/io'
+import { useDispatch, useSelector } from 'react-redux'
+import { deletePet, fetchPets } from '../features/pet'
 
-const EditPetTable = ({ setIsEditPetForm }) => {
+const EditPetTable = ({ id, setIsEditPetForm }) => {
   const [contacts, setContacts] = useState(petdata)
   const [error, setError] = useState(null)
+  const dispatch = useDispatch()
   const [editContactId, setEditContactId] = useState(null)
+  const pets = useSelector(state => state.pet.data)
   const [editFormData, setEditFormData] = useState({
-    fullName: '',
+    name: '',
     species: '',
     birthday: '',
   })
+  useEffect(() => {
+    dispatch(fetchPets(id))
+  }, [])
+  console.log(pets)
   const handleEditFormChange = (event) => {
     event.preventDefault()
 
@@ -25,14 +33,14 @@ const EditPetTable = ({ setIsEditPetForm }) => {
     setEditFormData(newFormData)
   }
 
-  const handleEditClick = (event, contact) => {
+  const handleEditClick = (event, pets) => {
     event.preventDefault()
-    setEditContactId(contact.id)
+    setEditContactId(pets._id)
 
     const formValues = {
-      petfullName: contact.petfullName,
-      species: contact.species,
-      birthday: contact.birthday,
+      petfullName: pets.name,
+      species: pets.species,
+      birthday: new Date(pets.birthday).toLocaleDateString(),
     }
 
     setEditFormData(formValues)
@@ -65,14 +73,13 @@ const EditPetTable = ({ setIsEditPetForm }) => {
     setEditContactId(null)
   }
 
-  const handleDeleteClick = (contactId) => {
-    const newContacts = [...contacts]
-
-    const index = contacts.findIndex((contact) => contact.id === contactId)
-
-    newContacts.splice(index, 1)
-
-    setContacts(newContacts)
+  const handleDeleteClick = (id, contactId) => {
+    if (window.confirm(
+      'Are you sure you want to delete this tenant?',
+    )) {
+      dispatch(deletePet(id, contactId))
+      console.log('Tenant deleted')
+    }
   }
 
 
@@ -103,17 +110,18 @@ const EditPetTable = ({ setIsEditPetForm }) => {
             </tr>
           </thead>
           <tbody className="pt-10">
-            {contacts.map((contact) => (
+            {pets && pets.map((val) => (
               <Fragment>
-                {editContactId === contact.id ? (
+                {editContactId === val._id ? (
                   <PetEditableRow
                     editFormData={editFormData}
                     handleEditFormChange={handleEditFormChange}
                     handleCancelClick={handleCancelClick}
                   />
-                ) : ( 
+                ) : (
                   <PetReadRow
-                    contact={contact}
+                    id={id}
+                    pets={val}
                     handleEditClick={handleEditClick}
                     handleDeleteClick={handleDeleteClick}
                   />

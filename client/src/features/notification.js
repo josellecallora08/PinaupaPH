@@ -25,7 +25,7 @@ const notifSlice = createSlice({
         },
         editNotifSuccess: (state, action) => {
             state.loading = true
-            state.data = state.data.map((notif) => notif._id === action.payload._id ? { ...notif, ...action.payload } : notif)
+            state.data = state.data.map((notif) => notif._id === action.payload._id ? action.payload  : notif)
         },
         deleteNotifSuccess: (state, action) => {
             state.loading = true
@@ -33,7 +33,7 @@ const notifSlice = createSlice({
         },
         fetchNotifFailed: (state, action) => {
             state.loading = true
-            state.data = action.payload
+            state.error = action.payload
         }
     }
 })
@@ -56,7 +56,7 @@ export const readNotification = (notif_id) => async (dispatch) => {
             throw new Error(json.error)
         }
         const json = await response.json()
-        dispatch(fetchNotifSuccess(json.response))
+        dispatch(editNotifSuccess(json.response))
     } catch (err) {
         dispatch(fetchNotifFailed(err.message))
 

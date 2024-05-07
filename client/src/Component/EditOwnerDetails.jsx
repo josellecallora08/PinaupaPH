@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isLoggedin } from '../features/authentication'
+import { editUser } from '../features/user'
 
-function EditOwnerDetails({ setIsModalOpen }) {
-  const user = useSelector((state) => state.auth.user)
+function EditOwnerDetails({ user, setIsModalOpen }) {
+  // const user = useSelector((state) => state.auth.user)
   const dispatch = useDispatch()
   const [fields, setFields] = useState({
-    name: user?.name || '',
+    username: user?.username || '',
     birthday: user?.birthday || '',
     mobile_no: user?.mobile_no || '',
     email: user?.email || '',
-    unit_id: user?.unit_id || '',
-    deposit: user?.deposit || '',
-    occupancy: user?.occupancy || '',
   })
 
   const [isFormOpen, setIsFormOpen] = useState(false)
@@ -26,7 +24,9 @@ function EditOwnerDetails({ setIsModalOpen }) {
       [name]: value,
     })
   }
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    dispatch(editUser(user?._id, fields))
     console.log('Form submitted')
     toggleForm()
   }
@@ -48,6 +48,7 @@ function EditOwnerDetails({ setIsModalOpen }) {
         </h1>
         <div className="w-full flex justify-between py-5 h-full">
           <form
+            onSubmit={handleSubmit}
             method="POST"
             className="w-11/12 h-full m-auto flex flex-col gap-3 z-10"
           >
@@ -56,8 +57,8 @@ function EditOwnerDetails({ setIsModalOpen }) {
               <div className="w-full h-full max-h-12 border-2 border-[#183044] rounded-md overflow-hidden">
                 <input
                   type="text"
-                  name='name'
-                  value={fields.name}
+                  name='username'
+                  value={fields.username}
                   onChange={handleInput}
                   placeholder="Name"
                   className="w-full h-full p-3 outline-none"
