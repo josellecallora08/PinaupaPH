@@ -4,6 +4,35 @@ const APARTMENTMODEL = require('../models/apartment')
 const UNITMODEL = require('../models/unit')
 const REPORTMODEL = require('../models/report')
 const httpStatusCodes = require('../constants/constants')
+
+module.exports.revenueDashboard = async (req, res) => {
+  try {
+    const response = await INVOICEMODEL.find().populate({
+      path: 'tenant_id',
+      populate: 'user_id unit_id apartment_id'
+    })
+    const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    if (!response) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: "No payment" })
+    }
+
+    // const data = await response.reduce((acc, curr) => {
+    //   return acc = acc + ((new Date(curr.datePaid).getMonth === ))
+    // }, 0)
+    const monthlyTotal = month.forEach(async (month) => {
+      await response.filter((item) => {
+      const paidMonth = new Date(item.isPaid).getMonth()
+        (month[paidMonth]) === month
+      }
+      )
+        
+    })
+    // const result = )
+  } catch (err) {
+
+  }
+}
+
 module.exports.totalPaid = async (req, res) => {
   try {
     const response = await INVOICEMODEL.find().populate({

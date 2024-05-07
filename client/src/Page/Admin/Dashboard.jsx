@@ -62,15 +62,10 @@ const Dashboard = () => {
     ],
     datasets: [
       {
-        label: 'Sales for 2020',
+        label: `Rental Paid for 2024`,
         data: [40000, 50000, 20000, 10000, 25000],
         backgroundColor: '#183044',
         borderWidth: 1,
-      },
-      {
-        label: 'Sales for 2021',
-        data: [60000, 70000, 30000, 40000, 55000],
-        backgroundColor: 'gray',
       },
     ],
   }
@@ -197,7 +192,13 @@ const Dashboard = () => {
                               Total Paid
                             </p>
                             <p className="font-bold text-center text-lg xl:text-4xl">
-                              {totalPaid?.totalPayment?.toLocaleString(
+                              {totalPaid && totalPaid?.totalPayment?.toLocaleString(
+                                'en-PH',
+                                {
+                                  style: 'currency',
+                                  currency: 'PHP',
+                                },
+                              ) || (0).toLocaleString(
                                 'en-PH',
                                 {
                                   style: 'currency',
@@ -274,7 +275,7 @@ const Dashboard = () => {
                         <div className=" w-full xl:flex flex-col gap-5 py-2">
                           <div className="xl:flex justify-between">
                             <p className="text-[#9e9e9e] text-xs text-center xl:text-base font-semibold">
-                              Occupancy Rate
+                              Vacancy Rate
                             </p>
                             <p className="font-bold text-center text-xl xl:text-4xl">
                               {totalOccupancy?.percentage?.toFixed(2)}%

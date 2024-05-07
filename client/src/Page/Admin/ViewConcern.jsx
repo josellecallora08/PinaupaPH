@@ -168,7 +168,7 @@ const ViewConcern = () => {
               {/*  */}
               <div className="row-span-4 w-full h-full bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="relative w-full h-full min-h-60">
-                  <figure className="w-full h-full ">
+                  <figure className="w-full h-full max-h-[550px]">
                     <img
                       src={report?.attached_image?.image_url}
                       className="w-full h-full object-contain"

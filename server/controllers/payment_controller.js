@@ -103,9 +103,10 @@ module.exports.createPayment = async (req, res) => {
     }
     
     const sendNotif = await NOTIFMODEL.create({
+      sender_id: user_id,
       receiver_id: admin._id,
-      title: 'Rental has been paid',
-      description: '',
+      title: 'Rental Fee',
+      description: 'Rental Payment has been paid.',
       type: 'Payment'
     })
     if (!sendNotif) {

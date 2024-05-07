@@ -160,7 +160,7 @@ const TenantProfile = () => {
                     </figure>
                     <div>
                       <h2 className="lg:text-2xl text-xl font-bold mb-2">
-                        {tenant?.name}
+                        {tenant?.user_id.name}
                       </h2>
                       <h2 className="lg:text-2xl">
                         Unit - {tenant?.unit_id.unit_no}
@@ -259,7 +259,7 @@ const TenantProfile = () => {
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
                           <p className="">{tenant?.user_id.name}</p>
                           <p className="">{birthday}</p>
-                          <p className="">{tenant?.user_id.mobile_no}</p>
+                          <p className="">+63{tenant?.user_id.mobile_no}</p>
                           <p className="">{tenant?.user_id.email}</p>
                         </div>
                       </div>
@@ -309,7 +309,7 @@ const TenantProfile = () => {
                         </div>
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
                           <p className="">Unit - {tenant?.unit_id.unit_no}</p>
-                          <p className="">{tenant?.deposit}</p>
+                          <p className="">{(tenant?.deposit).toLocaleString('en-PH',{style: 'currency', currency: 'PHP'})}</p>
                           <p className="">
                             {new Date(tenant?.monthly_due).toLocaleDateString()}
                           </p>
@@ -506,7 +506,6 @@ const TenantProfile = () => {
               <TransactionTable />
             </div>
             <div className="lg:hidden">
-              <TransactionMobile />
               <TransactionMobile />
             </div>
           </div>

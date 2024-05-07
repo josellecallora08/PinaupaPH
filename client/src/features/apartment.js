@@ -34,12 +34,13 @@ const apartmentSlice = createSlice({
           ? { ...item, ...action.payload.response }
           : item,
       )
-      state.single = state.single._id === action.payload.response._id ? { ...state.single, ...action.payload.response } : state.single
+      state.single = state.single._id === action.payload.response._id ? action.payload.response : state.single
       state.msg = action.payload.msg
     },
     deleteApartmentSuccess: (state, action) => {
       state.loading = false
       state.data = state.data.filter((item) => item._id !== action.payload._id)
+      state.msg = action.payload.msg
     },
     actionApartmentFailed: (state, action) => {
       state.loading = false
@@ -90,10 +91,9 @@ export const createApartment = (fields) => async (dispatch) => {
     fields.provice === '' ||
     fields.barangay === ''
   ) {
-    dispatch(actionApartmentFailed('Please fill all the inputs.'))
+    throw new Error('Please fill all the inputs.')
   }
   try {
-    dispatch(apartmentStart())
     const token = Cookies.get('token')
     const response = await fetch(
       `${import.meta.env.VITE_URL}/api/apartment/create_apartment`,
@@ -112,6 +112,7 @@ export const createApartment = (fields) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
+    console.log(json)
     dispatch(insertApartmentSuccess(json))
   } catch (err) {
     dispatch(actionApartmentFailed(err.message))
@@ -160,7 +161,6 @@ export const fetchApartment = (apartmentId) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    console.log(json)
     dispatch(fetchSingleApartmentSuccess(json))
   } catch (err) {
     dispatch(actionApartmentFailed(err.message))
@@ -198,7 +198,6 @@ export const editApartment = (fields, apartmentId) => async (dispatch) => {
 
 export const deleteApartment = (apartment_id) => async (dispatch) => {
   try {
-    dispatch(apartmentStart())
     const token = Cookies.get('token')
     const response = await fetch(
       `${import.meta.env.VITE_URL}/api/apartment/${apartment_id}`,
@@ -213,7 +212,8 @@ export const deleteApartment = (apartment_id) => async (dispatch) => {
       const json = await response.json()
       throw new Error(json.error)
     }
-    dispatch(fetchApartments())
+    const json = await response.json()
+    dispatch(deleteApartmentSuccess(json))
   } catch (err) {
     dispatch(actionApartmentFailed(err.message))
   }

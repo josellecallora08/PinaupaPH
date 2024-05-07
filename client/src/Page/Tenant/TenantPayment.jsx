@@ -13,9 +13,10 @@ const TenantPayment = () => {
   const dispatch = useDispatch()
   const [formData, setFormData] = useState({
     name: '',
-    phone: '',
+    mobile_no: '',
     email: '',
     amount: '',
+    method: ''
   })
 
   useEffect(() => {
@@ -27,11 +28,13 @@ const TenantPayment = () => {
     setSelectedEwallet(null);
     setFormData({
       name: '',
-      phone: '',
+      mobile_no: '',
       email: '',
       amount: '',
+      method: ''
     })
   }
+  console.log(formData)
   const handleEwalletChange = (event) => {
     setSelectedEwallet(event.target.value); // Update selected e-wallet option
   };
@@ -61,7 +64,6 @@ const TenantPayment = () => {
                 <div className="flex items-center  p-2">
                   <input
                     type="radio"
-                    name="paymentMethod"
                     id="ewallet"
                     value="ewallet"
                     checked={selectedOption === 'ewallet'}
@@ -77,11 +79,11 @@ const TenantPayment = () => {
                 <div className="flex items-center  p-2">
                   <input
                     type="radio"
-                    name="paymentMethod"
+                    name="method"
                     id="cash"
                     value="cash"
                     checked={selectedOption === 'cash'}
-                    onChange={handleOptionChange}
+                    onChange={handleChange}
                     className="mr-2 cursor-pointer"
                   />
                   <label htmlFor="cash" className="cursor-pointer text-lg">
@@ -98,8 +100,10 @@ const TenantPayment = () => {
                           <label className="radio-container">
                             <input
                               type="radio"
-                              name="ewalletOption"
+                              name="method"
+                              id="method"
                               value="gcash"
+                              onChange={handleChange}
                               className="hidden"
                             />
                             <img
@@ -111,8 +115,10 @@ const TenantPayment = () => {
                           <label className="radio-container">
                             <input
                               type="radio"
-                              name="ewalletOption"
+                              name="method"
+                              id="method"
                               value="paymaya"
+                              onChange={handleChange}
                               className="hidden"
                             />
                             <img
@@ -124,7 +130,8 @@ const TenantPayment = () => {
                           <label className="radio-container">
                             <input
                               type="radio"
-                              name="ewalletOption"
+                              name="method"
+                              onChange={handleChange}
                               value="grabpay"
                               className="hidden"
                             />
@@ -168,9 +175,9 @@ const TenantPayment = () => {
                           <input
                             type="text"
                             placeholder="Enter Contact Number"
-                            id="contactNumber"
-                            name="contactNumber"
-                            value={formData.contactNumber}
+                            id="mobile_no"
+                            name="mobile_no"
+                            value={formData.mobile_no}
                             onChange={handleChange}
                             autoComplete="off"
                             className="mt-1 px-4 py-3 border text-xl text-primary-color bg-white border-dark-gray rounded-md w-full"

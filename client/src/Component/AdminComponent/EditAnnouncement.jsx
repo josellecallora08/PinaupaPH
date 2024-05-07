@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { useDispatch } from 'react-redux';
-import { createAnnouncement, deleteAnnouncement } from '../../features/announcement';
+import { createAnnouncement, deleteAnnouncement, editAnnouncement } from '../../features/announcement';
 
-const EditAnnouncementForm = ({ val, setIsEditAnnouncementFormOpen }) => {
+const EditAnnouncementForm = ({ setUpdate, val, setIsEditAnnouncementFormOpen }) => {
   const dispatch = useDispatch()
   const [formData, setFormData] = useState({
     title: val?.title || '',
@@ -15,10 +15,12 @@ const EditAnnouncementForm = ({ val, setIsEditAnnouncementFormOpen }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createAnnouncement(formData))
+    dispatch(editAnnouncement(formData,val._id))
     console.log('Form submitted:', formData);
+    setUpdate(true)
     setIsEditAnnouncementFormOpen((prevState) => !prevState)
   };
 

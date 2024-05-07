@@ -17,33 +17,33 @@ const announcementSlice = createSlice({
             state.msg = null
         },
         fetchAnnouncementsSuccess: (state, action) => {
-            state.loading = true
+            state.loading = false
             state.data = action.payload
         },
         fetchAnnouncementSuccess: (state, action) => {
-            state.loading = true
+            state.loading = false
             state.single = action.payload.response
             state.msg = action.payload.msg
         },
         insertAnnouncementSuccess: (state, action) => {
-            state.loading = true
+            state.loading = false
             state.data = [...state.data, action.payload.response]
             state.msg = action.payload.msg
         },
         editAnnouncementSuccess: (state, action) => {
-            state.loading = true
+            state.loading = false
             state.data = state.data.map((val, key) =>
-                val._id === action.payload.response._id ? { ...state.data, ...action.payload.response } : val
+                val._id === action.payload.response._id ? action.payload.response : val
             )
             state.msg = action.payload.msg
         },
         deleteAnnouncementSuccess: (state, action) => {
-            state.loading = true
+            state.loading = false
             state.data = state.data.filter((item) => item._id !== action.payload.response._id)
             state.msg = action.payload.msg
         },
         fetchAnnouncementFailed: (state, action) => {
-            state.loading = true
+            state.loading = false
             state.msg = null
             state.error = action.payload
         }
@@ -184,7 +184,8 @@ export const editAnnouncement = (fields, announcement_id) => async (dispatch) =>
         }
 
         const json = await response.json()
-        dispatch(editAnnouncementSuccess(json.response))
+        console.log(json)
+        dispatch(editAnnouncementSuccess(json))
     } catch (err) {
         dispatch(fetchAnnouncementFailed(err.message))
     }

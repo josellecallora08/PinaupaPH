@@ -108,7 +108,7 @@ const Invoice = () => {
                     ? invoices
                         ?.filter(
                           (item) =>
-                            item.status.toString() === status.toString(),
+                            item.isPaid.toString() === status.toString(),
                         )
                         .map((val, index) => (
                           <tr

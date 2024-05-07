@@ -2,16 +2,35 @@ import React, { useEffect, useRef, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
 import { editApartment, fetchApartment } from '../../features/apartment';
+import { useParams } from 'react-router-dom';
 
-const EditApartmentDetails = ({ fields, setFields, handleInput, handleSubmit, apartmentId, setIsEditApartmentFormOpen }) => {
+const EditApartmentDetails = ({ setUpdate, apartmentId, setIsEditApartmentFormOpen }) => {
   const dispatch = useDispatch();
   const [error, setError] = useState(null);
-  const apartment = useSelector((state) => state.apartment.single);
-  console.log(apartment)
-
+  const apartment = useSelector((state) => state.apartment.single)
+  const [fields, setFields] = useState({
+    name: apartment?.name || '',
+    address: apartment?.address || '',
+    province: apartment?.province || '',
+    barangay: apartment?.barangay || '',
+  })
+  const { id } = useParams()
   const [isFormOpen, setIsFormOpen] = useState(false);
   const modalRef = useRef(null);
-console.log(apartmentId)
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    dispatch(editApartment(fields, id))
+    setIsEditApartmentFormOpen(false)
+    setUpdate(true)
+  }
+  const handleInput = (e) => {
+    const { name, value } = e.target
+    setFields((components) => ({
+      ...components,
+      [name]: value,
+    }))
+  }
   useEffect(() => {
     dispatch(fetchApartment(apartmentId));
   }, [dispatch]);

@@ -30,16 +30,16 @@ const userSlice = createSlice({
     deleteUserSuccess: (state, action) => {
       state.loading = false
       state.msg = action.payload.msg
-      state.data = state.data.map((user) =>
-        user._id === action.payload.response._id
-          ? { ...user, ...action.payload.response }
-          : user,
+      state.data = state.data.filter(
+        (user) => user._id !== action.payload.response._id,
       )
     },
     editUserSuccess: (state, action) => {
       state.loading = false
-      state.data = state.data.filter(
-        (user) => user._id !== action.payload.response._id,
+      state.data = state.data.map((user) =>
+        user._id === action.payload.response._id
+          ? action.payload.response
+          : user,
       )
       state.msg = action.payload.msg
     },
@@ -274,7 +274,7 @@ export const deleteUser = (userId) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-
+    console.log(json)
     dispatch(deleteUserSuccess(json))
   } catch (err) {
     dispatch(actionUserFailed(err.message))

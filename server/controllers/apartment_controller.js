@@ -364,7 +364,7 @@ module.exports.create_apartment_unit = async (req, res) => {
     await apartment.save()
     return res
       .status(httpStatusCodes.CREATED)
-      .json({ msg: 'Created Apartment Unit' })
+      .json({ msg: 'Created Apartment Unit', response: apartment.units})
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -394,7 +394,6 @@ module.exports.edit_apartment_unit = async (req, res) => {
     }
 
     details.unit_no = unit_no
-
     const is_unit_exist = apartment.units.some(
       (item) => item.unit_no === unit_no,
     )
@@ -417,7 +416,7 @@ module.exports.edit_apartment_unit = async (req, res) => {
     }
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: `Updated ${details.unit_no}` })
+      .json({ msg: `Updated ${details.unit_no}`, response: response.unit})
   } catch (err) {
     console.error({ error: err.message })
     return res

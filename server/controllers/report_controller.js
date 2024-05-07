@@ -91,6 +91,8 @@ module.exports.searchReport = async (req, res) => {
           type: 1,
           status: 1,
           attached_image: 1,
+          createdAt: 1,
+          updatedAt: 1,
         },
       },
     ])
