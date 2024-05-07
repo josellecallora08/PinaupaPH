@@ -275,7 +275,7 @@ const Dashboard = () => {
                         <div className=" w-full xl:flex flex-col gap-5 py-2">
                           <div className="xl:flex justify-between">
                             <p className="text-[#9e9e9e] text-xs text-center xl:text-base font-semibold">
-                              Vacancy Rate
+                              Occupancy Rate
                             </p>
                             <p className="font-bold text-center text-xl xl:text-4xl">
                               {totalOccupancy?.percentage?.toFixed(2)}%

@@ -7,6 +7,7 @@ const httpStatusCodes = require('../constants/constants')
 
 module.exports.revenueDashboard = async (req, res) => {
   try {
+    let monthlyTotal = []
     const response = await INVOICEMODEL.find().populate({
       path: 'tenant_id',
       populate: 'user_id unit_id apartment_id'
@@ -19,17 +20,26 @@ module.exports.revenueDashboard = async (req, res) => {
     // const data = await response.reduce((acc, curr) => {
     //   return acc = acc + ((new Date(curr.datePaid).getMonth === ))
     // }, 0)
-    const monthlyTotal = month.forEach(async (month) => {
-      await response.filter((item) => {
-      const paidMonth = new Date(item.isPaid).getMonth()
-        (month[paidMonth]) === month
-      }
-      )
-        
-    })
-    // const result = )
-  } catch (err) {
+    for (const monthName of month) {
+      let totalAmount = 0;
 
+      for (const item of data) {
+          if (item.isPaid) {
+              const paidMonth = new Date(item.datePaid).getMonth();
+              if (month[paidMonth] === monthName) {
+                  totalAmount += item.amount;
+              }
+          }
+      }
+
+      monthlyTotal.push(totalAmount);
+  }
+
+  return res.status(httpStatusCodes.OK).json({response:monthlyTotal})
+  } catch (err) {
+    return res
+    .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+    .json({ error: err.message })
   }
 }
 
