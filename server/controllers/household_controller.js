@@ -79,7 +79,7 @@ module.exports.create_household = async (req, res) => {
     }
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Created household successfully!' })
+      .json({ msg: 'Created household successfully!', response:details  })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -134,7 +134,7 @@ module.exports.update_household = async (req, res) => {
     await response.save()
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Information Updated...' })
+      .json({ msg: 'Information Updated...', response:response.household[index]})
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -163,7 +163,7 @@ module.exports.delete_household = async (req, res) => {
     }
     response.household.splice(index, 1)
     await response.save()
-    return res.status(httpStatusCodes.OK).json({ msg: 'Removed household' })
+    return res.status(httpStatusCodes.OK).json({ msg: 'Removed household', response: response.household[index]})
   } catch (err) {
     console.error({ error: err.message })
     return res

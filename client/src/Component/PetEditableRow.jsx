@@ -9,7 +9,7 @@ const PetEditableRow = ({
   
       <tr className=''>
         <td>
-          <input className='lg:w-auto w-24 ml-2 p-1 rounded-md border-2 border-primary'
+          <input className='lg:w-auto w-24 ml-2 p-1 rounded-md border-2 border-primary-color'
             type="text"
             required="required"
             placeholder="Enter Pet Name"
@@ -19,7 +19,7 @@ const PetEditableRow = ({
           />
         </td>
         <td>
-          <input className='lg:w-auto ml-1 p-1 border-2 w-24 rounded-md border-primary' 
+          <input className='lg:w-auto ml-1 p-1 border-2 w-24 rounded-md border-primary-color' 
             type="text"
             required="required"
             placeholder="Enter Species"
@@ -29,7 +29,7 @@ const PetEditableRow = ({
           />
         </td>
         <td>
-          <input className='lg:w-auto ml-1 w-24 p-1 border-2 rounded-md border-primary'
+          <input className='lg:w-auto ml-1 w-24 p-1 border-2 rounded-md border-primary-color'
             type="text"
             required="required"
             placeholder="Enter Birthday"
@@ -41,7 +41,7 @@ const PetEditableRow = ({
         <td className='flex text-center text-sm mr-2'>
           <button
             type="submit"
-            className="lg:mr-2 lg:ml-20 ml-2 bg-primary hover:opacity-80 text-white font-bold p-2 rounded "
+            className="lg:mr-2 lg:ml-20 ml-2 bg-primary-color hover:opacity-80 text-white font-bold p-2 rounded "
           >
             Save
           </button>

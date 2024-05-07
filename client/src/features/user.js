@@ -134,7 +134,7 @@ export const fetchUser = (userId) => async (dispatch) => {
     console.log(json)
     dispatch(fetchSingleUser(json.response))
   } catch (err) {
-    dispatch(actionUserFailed())
+    dispatch(actionUserFailed(err.message))
   }
 }
 
@@ -185,7 +185,7 @@ export const editUser = (userId, credentials) => async (dispatch) => {
 
     const json = await response.json()
     console.log('success')
-    dispatch(fetchUser(userId))
+    dispatch(editUserSuccess(json))
   } catch (err) {
     dispatch(actionUserFailed(err.message))
   }

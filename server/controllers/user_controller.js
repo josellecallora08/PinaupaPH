@@ -423,7 +423,11 @@ module.exports.update_profile = async (req, res) => {
     }
 
     await response.save()
-    const tenant = await TENANTMODEL.findById(response._id).populate('user_id unit_id apartment_id')
+    let tenant = await TENANTMODEL.findById(response._id).populate('user_id unit_id apartment_id')
+    if(!tenant){
+      tenant = await USERMODEL.findById(response._id)
+    }
+
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: 'Information Updated Successfully!', response: tenant })

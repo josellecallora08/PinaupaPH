@@ -83,11 +83,11 @@ const Dashboard = () => {
         <Loading />
       ) : (
         <>
-          <NotificationToast
+          {/* <NotificationToast
             message={
               'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident dolores cum quam itaque a sunt.'
             }
-          />
+          /> */}
           <div className="w-full h-full md:h-auto xl:h-full xl:max-h-auto flex flex-col items-start bg-white1">
             <div className="w-11/12 h-fit m-auto py-5 lg:py-0">
               <Link
@@ -151,12 +151,12 @@ const Dashboard = () => {
                                       alt=""
                                     />
                                   </figure>
-                                  <div className="">
+                                  <div className="flex flex-col">
                                     <p className="font-semibold">
                                       {val?.sender_id?.name}
                                     </p>
-                                    <p className="text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap">
-                                      {val?.announcement_id?.description || val?.report_id?.description}
+                                    <p className="text-xs overflow-hidden text-ellipsis text-nowrap">
+                                      {val?.description}
                                     </p>
                                   </div>
                                 </article>

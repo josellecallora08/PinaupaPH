@@ -5,6 +5,7 @@ import EditOwnerDetails from '../../Component/EditOwnerDetails'
 import ChangePd from '../../Component/ChangePd'
 import { isLoggedin } from '../../features/authentication'
 import { changeProfile } from '../../features/user'
+import { fetchApartments } from '../../features/apartment'
 import ProfileEditAccount from '../../Component/AdminComponent/ProfileEditAccount'
 
 const Profile = () => {
@@ -12,6 +13,7 @@ const Profile = () => {
   const [changeModal, setchangeModal] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
   const user = useSelector((state) => state.auth.user)
+  const apartment = useSelector((state) => state.apartment.data)
   const [isProfileEditAccount, setIsProfileEditAccount] = useState(false)
   const dispatch = useDispatch()
   const handleFileChange = (e) => {
@@ -32,11 +34,12 @@ const Profile = () => {
 
   useEffect(() => {
     dispatch(isLoggedin())
+    dispatch(fetchApartments())
   }, [])
 
   return (
     <>
-      {modal ? <EditOwnerDetails setIsModalOpen={setIsModalOpen} /> : ''}
+      {modal ? <EditOwnerDetails user={user} setIsModalOpen={setIsModalOpen} /> : ''}
       {changeModal ? (
         <ChangePd
           userImage={user?.image}
@@ -149,7 +152,7 @@ const Profile = () => {
                     <div className="lg:w-1/2 bg-white rounded-lg">
                       <ProfileEditAccount
                         setIsProfileEditAccount={setIsProfileEditAccount}
-                        tenant={tenant}
+                        user={user}
                       />
                     </div>
                   </div>
@@ -164,28 +167,32 @@ const Profile = () => {
             APARTMENT DETAILS
           </p>
 
-          <div className="w-11/12 md:h-full md:max-w-[500px] md:max-h-[300px] bg-white rounded-md shadow-md md:mx-[52px] mx-4">
-            <div className="w-full h-full max-h-12 px-4 py-2 text-white bg-[#183044] flex items-center">
-              <p>LANDLORD APARTMENT</p>
-            </div>
+          <div className='flex flex-wrap gap-2'>
+            {apartment && apartment.map((val, key) => (
+              <div key={key} className="w-11/12 md:h-full md:max-w-[500px] md:max-h-[300px] overflow-hidden bg-white rounded-md shadow-md md:mx-[52px] mx-4">
+                <div className="w-full h-full max-h-12 px-4 py-2 text-white bg-[#183044] flex items-center">
+                  <p>LANDLORD APARTMENT</p>
+                </div>
 
-            <div className="w-full flex flex-col">
-              <div className="w-full h-full flex px-4 py-2">
-                <p className="w-[170px]">Apartment Name</p>
-                <p>{user?.role === 'Tenant' && user?.apartment_id.name}</p>
-              </div>
-              <div className="w-full h-full flex px-4 py-2">
-                <p className="w-[170px]">Address</p>
-                <p>{user?.role === 'Tenant' && user?.apartment_id.address}</p>
-              </div>
+                <div className="w-full flex flex-col">
+                  <div className="w-full h-full flex px-4 py-2">
+                    <p className="w-[170px]">Apartment Name:</p>
+                    <p>{val?.name}</p>
+                  </div>
+                  <div className="w-full h-full flex px-4 py-2">
+                    <p className="w-[170px]">Address:</p>
+                    <p>{val?.address}</p>
+                  </div>
 
-              <div className="w-full h-full flex px-4 py-2">
-                <p className="w-[170px]">Total House</p>
-                <p>
-                  {user?.role === 'Tenant' && user?.apartment_id.units.length}
-                </p>
+                  <div className="w-full h-full flex px-4 py-2">
+                    <p className="w-[170px]">Total House:</p>
+                    <p>
+                      {(val?.units)?.length}
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

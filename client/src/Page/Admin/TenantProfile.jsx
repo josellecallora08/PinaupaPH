@@ -309,9 +309,9 @@ const TenantProfile = () => {
                         </div>
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
                           <p className="">Unit - {tenant?.unit_id.unit_no}</p>
-                          <p className="">{(tenant?.deposit).toLocaleString('en-PH',{style: 'currency', currency: 'PHP'})}</p>
+                          <p className="">{(tenant?.deposit)?.toLocaleString('en-PH',{style: 'currency', currency: 'PHP'})}</p>
                           <p className="">
-                            {new Date(tenant?.monthly_due).toLocaleDateString()}
+                            {new Date(tenant?.monthly_due)?.toLocaleDateString()}
                           </p>
                         </div>
                       </div>
@@ -387,7 +387,7 @@ const TenantProfile = () => {
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-9/12 bg-white  rounded-lg relative">
                         <EditFamMemTable
-                          id={tenant.id}
+                          id={tenant.user_id._id}
                           setIsEditFamilyMemForm={setIsEditFamilyMemForm}
                         />
                       </div>
@@ -472,7 +472,9 @@ const TenantProfile = () => {
                   {isEditPetForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-9/12 bg-white rounded-lg relative">
-                        <EditPetTable setIsEditPetForm={setIsEditPetForm} />
+                        <EditPetTable 
+                         id={tenant?.user_id._id}
+                         setIsEditPetForm={setIsEditPetForm} />
                       </div>
                     </div>
                   )}

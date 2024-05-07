@@ -30,7 +30,7 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
 
   const handleEditClick = (event, contact) => {
     event.preventDefault()
-    setEditContactId(contact.id)
+    setEditContactId(contact)
 
     const formValues = {
       name: contact.name,
@@ -53,7 +53,7 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
 
     const newContacts = [...contacts]
 
-    const index = contacts.findIndex((contact) => contact.id === editContactId)
+    const index = contacts.findIndex((contact) => contact._id === editContactId)
 
     newContacts[index] = editedContact
     setError(
@@ -68,14 +68,11 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
   }
 
   const handleDeleteClick = async (id, contactId) => {
-    const isConfirmed = window.confirm(
+    if (window.confirm(
       'Are you sure you want to delete this tenant?',
-    )
-    if (isConfirmed) {
+    )) {
       dispatch(deleteHousehold(id, contactId))
       console.log('Tenant deleted')
-    } else {
-      console.log('Deletion cancelled')
     }
   }
 
