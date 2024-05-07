@@ -210,14 +210,7 @@ function App() {
         }
       />
 
-      <Route
-        path="/profile"
-        element={
-          <Layout className="bg-white1">
-            <Profile />
-          </Layout>
-        }
-      />
+   
       <Route
         path="/document/lease-agreement"
         element={
@@ -243,7 +236,7 @@ function App() {
       {/* Tenant Side */}
 
       <Route
-        path="/tenant/profile"
+        path="/profile"
         element={
           <Layout className="bg-white1">
             <ProfileTenant />

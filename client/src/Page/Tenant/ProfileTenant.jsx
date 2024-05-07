@@ -1,25 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
-import EditTenantDetails from '../../Component/EditTenantDetails'
 import { RxDotsVertical } from 'react-icons/rx'
 import TenantProfileInfo from '../../Data/TenantProfileInfo'
-import EditTenantAccount from '../../Component/EditTenantAccount'
-import EditFamMemTable from '../../Component/EditFamMemTable'
-//import { payment_url } from '../../utils/constants'
+
+import EditTenantAccount1 from '../../Component/Tenant Component/EditTenantAccount1'
+import EditFamMemTable1 from '../../Component/Tenant Component/EditFamMemTable1'
 import DocumentCard from '../../Component/DocumentCard'
-import AddHousehold from '../../Component/AddHousehold'
-import EditApartment from '../../Component/AdminComponent/EditApartment'
+import AddHousehold1 from '../../Component/Tenant Component/AddHousehold1'
+
 import TransactionTable from '../../Component/TransactionTable'
 import TransactionMobile from '../../Component/TransactionMobile'
 import { GrFormView, GrFormAdd } from 'react-icons/gr'
-import AddPet from '../../Component/AddPet'
+import Addpet1 from '../../Component/Tenant Component/Addpet1'
 import EditPetTable from '../../Component/EditPetTable'
 import { deleteUser, fetchUser } from '../../features/user'
 import { fetchHousehold, fetchHouseholds } from '../../features/household'
-const ProfileTenant = () => {
+import { fetchPets } from '../../features/pet'
+import EditTenantDetails1 from '../../Component/Tenant Component/EditTenantDetails1'
+const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile')
   const [isEditTenantDetailForm, setIsEditTenantDetailForm] = useState(false)
   const [isEditTenantAccountForm, setIsEditTenantAccountForm] = useState(false)
@@ -35,8 +36,9 @@ const ProfileTenant = () => {
   const { id } = useParams()
   const tenant = useSelector((state) => state.user.single)
   const households = useSelector((state) => state.household.data)
-  console.log(households)
+  const pets = useSelector((state) => state.pet.data)
   const navigate = useNavigate()
+  const dropdownRef = useRef(null)
   const handleDeleteTenant = () => {
     const isConfirmed = window.confirm(
       'Are you sure you want to delete this tenant?',
@@ -44,9 +46,22 @@ const ProfileTenant = () => {
     if (isConfirmed) {
       dispatch(deleteUser(id))
       navigate('/tenant')
-      console.log('Tenant deleted')
-    } else {
-      console.log('Deletion cancelled')
+    }
+  }
+  const handleClickOutsideDropdown = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsHouseDotOpen(false)
+      setIsPetDotOpen(false)
+    }
+  }
+
+  const toggleDropdown = (menu) => {
+    if (menu === 'household') {
+      setIsHouseDotOpen(!isHousedotOpen)
+      setIsPetDotOpen(false)
+    } else if (menu === 'pet') {
+      setIsPetDotOpen(!isPetdotOpen)
+      setIsHouseDotOpen(false)
     }
   }
   const toggleEditTenantDetailForm = () => {
@@ -69,21 +84,26 @@ const ProfileTenant = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log('Form submitted')
   }
-
   useEffect(() => {
     dispatch(fetchUser(id))
-    console.log(tenant)
   }, [])
 
   useEffect(() => {
     dispatch(fetchHouseholds(id))
+    dispatch(fetchPets(id))
   }, [])
-  
-  const birthday = new Date(tenant?.birthday).toLocaleDateString()
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutsideDropdown)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideDropdown)
+    }
+  }, [])
+
+  const birthday = new Date(tenant?.user_id.birthday).toLocaleDateString()
   return (
-    <div className="bg-white1 h-full w-full text-primary-color  ">
+    <div className="bg-white1  h-full ">
       {/* Tenant Profile Header */}
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="lg:mt-2 lg:ml-10 uppercase font-bold  p-5 mx-4">
@@ -125,53 +145,29 @@ const ProfileTenant = () => {
         </div>
       </div>
 
-      <div className=" rounded-md">
-        {/* Content based on Active Tab */}
+      <div className="w-11/12 m-auto  rounded-md">
         {activeTab === 'profile' && (
           <div className=" lg:mt-5 mt-10   ">
             {TenantProfileInfo.map((profile, index) => (
               <div className="lg:flex lg:gap-5 p-5 lg:pb-2" key={index}>
-                {/* Upper section */}
-                {/* Left profile */}
                 <div className="lg:w-1/2  lg:rounded-lg lg:origin-left  ">
                   <div className="lg:items-center flex gap-3 relative mb-7 ">
                     <figure>
                       <img
-                        src={tenant?.image}
+                        src={tenant?.user_id.profile_image.image_url}
                         alt="Profile"
                         className="lg:w-24 rounded-full object-fill lg:h-24 w-14 h-14"
                       />
                     </figure>
                     <div>
                       <h2 className="lg:text-2xl text-xl font-bold mb-2">
-                        {tenant?.name}
+                        {tenant?.user_id.name}
                       </h2>
-                      <h2 className="lg:text-2xl">Unit - {tenant?.unit_no}</h2>
+                      <h2 className="lg:text-2xl">
+                        Unit - 
+                      </h2>
                     </div>
-                    <button
-                      onClick={handleDeleteTenant}
-                      className="hidden lg:flex lg:py-2 lg:px-3 absolute top-0 right-3  items-center gap-2 bg-red text-white py-1 px-2 rounded-md hover:opacity-80"
-                    >
-                      <MdDelete />
-                      Delete
-                    </button>
-                    <div className="lg:hidden absolute top-1 right-2">
-                      <button
-                        className="relative text-xl rotate-90"
-                        onClick={toggleRemoveDot}
-                      >
-                        <RxDotsVertical />
-                      </button>
-
-                      {isRemovedot && (
-                        <button
-                          onClick={handleDeleteTenant}
-                          className="flex items-center gap-2 absolute  rounded-md -right-1 bg-red text-white p-2 hover:opacity-80 "
-                        >
-                          <MdDelete /> Delete
-                        </button>
-                      )}
-                    </div>
+    
                   </div>
 
                   {/*Profile Content */}
@@ -193,7 +189,7 @@ const ProfileTenant = () => {
                       <p className="lg:text-lg flex gap-[4.8rem] items-center">
                         Username
                         <span className="lg:text-base lg:ml-7 ml-6">
-                          {tenant?.username}
+                       
                         </span>
                       </p>
                       <p className="lg:text-lg flex gap-20 items-center">
@@ -207,7 +203,7 @@ const ProfileTenant = () => {
                   {isEditTenantAccountForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50">
                       <div className="lg:w-1/2 bg-white rounded-lg">
-                        <EditTenantAccount
+                        <EditTenantAccount1
                           setIsEditTenantAccountForm={
                             setIsEditTenantAccountForm
                           }
@@ -239,10 +235,10 @@ const ProfileTenant = () => {
                           <p>Email</p>
                         </div>
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
-                          <p className="">{tenant?.name}</p>
-                          <p className="">{birthday}</p>
-                          <p className="">{tenant?.phone}</p>
-                          <p className="">{tenant?.email}</p>
+                          <p className=""></p>
+                          <p className=""></p>
+                          <p className=""></p>
+                          <p className=""></p>
                         </div>
                       </div>
                     </div>
@@ -250,7 +246,7 @@ const ProfileTenant = () => {
                   {isEditTenantDetailForm && (
                     <div className="fixed top-0 left-0 w-full z-50 h-full flex items-center justify-center bg-black bg-opacity-50">
                       <div className="lg:w-1/2 lg:h-[30rem] h-auto bg-white  rounded-lg">
-                        <EditTenantDetails
+                        <EditTenantDetails1
                           setIsEditTenantDetailForm={setIsEditTenantDetailForm}
                           tenant={tenant}
                         />
@@ -260,13 +256,13 @@ const ProfileTenant = () => {
 
                   {/*Apartment Details */}
                   <div>
-                    <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
+                    <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center  w-full justify-between  py-1 bg-dark-blue text-white">
                       <h1 className="lg:text-xl font-bold ">
                         Apartment Details
                       </h1>
-      
+                     
+                    
                     </div>
-       
 
                     <div className=" mb-4 text-sm mt-3 ml-2 ">
                       <div className="flex gap-14">
@@ -276,9 +272,11 @@ const ProfileTenant = () => {
                           <p>Date of Move-in</p>
                         </div>
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
-                          <p className="">Unit - {tenant?.unit_no}</p>
-                          <p className="">{tenant?.deposit}</p>
-                          <p className="">{tenant?.monthly_due}</p>
+                          <p className="">Unit</p>
+                          <p className=""></p>
+                          <p className="">
+                            
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -287,18 +285,21 @@ const ProfileTenant = () => {
                 {/* Right profile */}
                 <div className="lg:w-1/2  lg:overflow-y-auto lg:origin-left lg:border-l-4 lg:border-dark-blue ">
                   {/*Family Members */}
-                  <div className="relative lg:mb-24">
+                  <div className="relative lg:mb-3">
                     <div className="lg:p-3 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
                       <h1 className="lg:text-xl font-bold">
                         Household Details
                       </h1>
                       <RxDotsVertical
                         className="lg:text-2xl text-lg cursor-pointer"
-                        onClick={() => setIsHouseDotOpen(!isHousedotOpen)}
+                        onClick={() => toggleDropdown('household')}
                       />
                     </div>
                     {isHousedotOpen && (
-                      <div className="absolute right-0 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400">
+                      <div
+                        ref={dropdownRef}
+                        className="absolute right-0 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400"
+                      >
                         <div
                           className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
                           onClick={() => {
@@ -322,38 +323,47 @@ const ProfileTenant = () => {
                       </div>
                     )}
 
-                    <div className="text-sm md:text-base p-3 flex flex-col gap-5 ">
-                      {households?.map((val, key) => (
-                        <div className="w-full flex flex-col md:gap-2">
+                    <div className="text-sm md:text-base p-3 flex flex-col gap-5 overflow-y-auto h-[20rem] ">
+                     
+                        <div
+                      
+                          className="w-full flex flex-col md:gap-2"
+                        >
                           <div className="flex gap-5">
                             <p className="w-1/4">Name:</p>
-                            <span className="w-3/4">{val.name}</span>
+                            <span className="w-3/4"></span>
                           </div>
                           <div className="flex gap-5">
                             <p className="w-1/4">Birthday:</p>
-                            <span className="w-3/4">Joselle</span>
+                            <span className="w-3/4">
+                             
+                            </span>
                           </div>
                           <div className="flex gap-5">
                             <p className="w-1/4">Relationship:</p>
-                            <span className="w-3/4">Joselle</span>
+                            <span className="w-3/4"></span>
                           </div>
                         </div>
-                      ))}
+               
                     </div>
                   </div>
                   {isEditFamilyMemForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-9/12 bg-white  rounded-lg relative">
-                        <EditFamMemTable
+                        <EditFamMemTable1
+                        
                           setIsEditFamilyMemForm={setIsEditFamilyMemForm}
                         />
                       </div>
                     </div>
                   )}
+
+                  
                   {isAddHouseholdForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-1/2 h-auto bg-white rounded-md relative">
-                        <AddHousehold
+                        <AddHousehold1
+                      
                           setIsAddHouseholdForm={setIsAddHouseholdForm}
                         />
                       </div>
@@ -361,16 +371,19 @@ const ProfileTenant = () => {
                   )}
 
                   {/*Pets */}
-                  <div className="lg:overflow-y-auto ">
+                  <div className="lg:overflow-y-auto relative">
                     <div className="lg:p-3 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <h1 className="lg:text-xl font-bold">Pet Details</h1>
+                      <h1 className="lg:text-xl font-bold ">Pet Details</h1>
                       <RxDotsVertical
-                        className="lg:text-2xl text-lg cursor-pointer"
+                        className="lg:text-2xl text-lg  cursor-pointer"
                         onClick={() => setIsPetDotOpen(!isPetdotOpen)}
                       />
                     </div>
                     {isPetdotOpen && (
-                      <div className=" absolute right-5 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400">
+                      <div
+                        ref={dropdownRef}
+                        className=" absolute right-0 top-15 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray"
+                      >
                         <div
                           className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
                           onClick={() => {
@@ -394,29 +407,48 @@ const ProfileTenant = () => {
                       </div>
                     )}
 
-                    <div className="lg:p-3 flex gap-28 ml-2">
-                      <div className="lg:text-base ">
-                        <p>Name</p>
-                        <p>Species</p>
-                        <p>Birthday</p>
-                      </div>
-                      <div>
-                        <p className="">{profile.Pets[0].name}</p>
-                        <p className="">{profile.Pets[0].species}</p>
-                      </div>
+                    <div className="text-sm md:text-base p-3 flex flex-col gap-5 overflow-y-auto h-[14rem] ">
+                      {pets &&
+                        pets.length > 0 &&
+                        pets.map((pet, index) => (
+                          <div
+                            key={index}
+                            className="w-full flex flex-col md:gap-2"
+                          >
+                            <div className="flex gap-5">
+                              <p className="w-1/4">Name:</p>
+                              <span className="w-3/4">{pet.name}</span>
+                            </div>
+                            <div className="flex gap-5">
+                              <p className="w-1/4">Species:</p>
+                              <span className="w-3/4">{pet.species}</span>
+                            </div>
+                            <div className="flex gap-5">
+                              <p className="w-1/4">Birthday:</p>
+                              <span className="w-3/4">
+                                {new Date(pet.birthday).toLocaleDateString()}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
                     </div>
                   </div>
                   {isEditPetForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-9/12 bg-white rounded-lg relative">
-                        <EditPetTable setIsEditPetForm={setIsEditPetForm} />
+                        <EditPetTable 
+                         id={tenant?.user_id._id}
+                         setIsEditPetForm={setIsEditPetForm} />
                       </div>
                     </div>
                   )}
                   {isAddPetForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
-                      <div className="lg:w-1/2 bg-white rounded-lg relative">
-                        <AddPet setIsAddPetForm={setIsAddPetForm} />
+                      <div className="lg:w-1/2 h-fit bg-white rounded-lg relative">
+                        <Addpet1
+                        
+                          setIsAddPetForm={setIsAddPetForm}
+                        />
                       </div>
                     </div>
                   )}
@@ -428,8 +460,6 @@ const ProfileTenant = () => {
 
         {activeTab === 'documents' && (
           <div className="px-5 grid grid-cols-1 lg:grid-cols-2 gap-2">
-            {/* Documents content goes here */}
-            {/* ... display documents */}
             <DocumentCard />
             <DocumentCard />
             <DocumentCard />
@@ -443,7 +473,6 @@ const ProfileTenant = () => {
             </div>
             <div className="lg:hidden">
               <TransactionMobile />
-              <TransactionMobile />
             </div>
           </div>
         )}
@@ -452,4 +481,4 @@ const ProfileTenant = () => {
   )
 }
 
-export default ProfileTenant
+export default TenantProfile
