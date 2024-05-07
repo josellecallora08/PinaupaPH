@@ -17,6 +17,7 @@ import Loading from '../../Component/LoadingComponent/Loading'
 import NotificationToast from '../../Component/ToastComponent/NotificationToast'
 import {
   fetchReports,
+  fetchRevenue,
   fetchTotalOccupancy,
   fetchTotalPaid,
   fetchTotalPayer,
@@ -30,6 +31,7 @@ const Dashboard = () => {
   const totalPayer = useSelector((state) => state.dash.goodpayer)
   const totalReports = useSelector((state) => state.dash.reports)
   const notifications = useSelector((state) => state.notif.data)
+  const revenue = useSelector((state) => state.dash.chart)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(isLoggedin())
@@ -63,18 +65,19 @@ const Dashboard = () => {
     datasets: [
       {
         label: `Rental Paid for 2024`,
-        data: [40000, 50000, 20000, 10000, 25000],
+        data: revenue,
         backgroundColor: '#183044',
         borderWidth: 1,
       },
     ],
   }
-
+  console.log(revenue)
   useEffect(() => {
     dispatch(fetchTotalOccupancy())
     dispatch(fetchTotalPaid())
     dispatch(fetchTotalPayer())
     dispatch(fetchReports())
+    dispatch(fetchRevenue())
   }, [])
 
   return (

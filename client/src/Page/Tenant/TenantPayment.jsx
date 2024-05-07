@@ -7,7 +7,7 @@ import { createPayment } from '../../features/payment'
 import { useParams } from 'react-router-dom'
 import '../../index.css'
 const TenantPayment = () => {
-  const { intentId, clientKey } = useParams
+  const { intentId, clientKey } = useParams()
   const [selectedOption, setSelectedOption] = useState('ewallet') // Default selected option is 'ewallet'
   const [selectedEwallet, setSelectedEwallet] = useState(null);
   const dispatch = useDispatch()
