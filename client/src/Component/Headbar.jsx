@@ -116,7 +116,6 @@ const Headbar = () => {
       dispatch(isLogout(navigate))
     }
   }
-
   const filteredNotif = notifs?.filter(
     (item) => item?.receiver_id?._id === user?.user_id?._id && !item?.isRead,
   )

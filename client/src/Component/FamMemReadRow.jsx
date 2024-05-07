@@ -2,6 +2,7 @@ import React from 'react'
 import { RiEditBoxFill } from "react-icons/ri";
 import { AiFillCloseSquare } from 'react-icons/ai'
 const ReadRow = ({id, contact, handleEditClick,handleDeleteClick }) => {
+  console.log(contact)
   return (
     
       <tr className='text-center'>

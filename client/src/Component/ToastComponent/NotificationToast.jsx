@@ -3,7 +3,7 @@ import pfp from '/pfp.svg'
 const NotificationToast = ({ message }) => {
     return (
         <>
-            <div className="fixed right-0 size-full max-w-[350px] flex flex-col items-end justify-end gap-2 py-5">
+            <div className="fixed right-0 z-[2px] size-full max-w-[350px] flex flex-col items-end justify-end gap-2 py-5">
                 <div className="relative w-4/5 h-full p-1 z-50 bg-gray/50 max-h-28 rounded-xl mx-auto text-sm overflow-hidden">
                     <button className='absolute rounded-full  right-1 top-1'>
                         <figure className='size-full max-w-7 '>

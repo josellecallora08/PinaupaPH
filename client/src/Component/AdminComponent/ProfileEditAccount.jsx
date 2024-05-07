@@ -2,17 +2,16 @@ import React,  { useState } from 'react'
 import { IoMdClose } from "react-icons/io";
 import { useSelector, useDispatch } from 'react-redux';
 import { editUser } from '../../features/user';
-const ProfileEditAccount = ({setIsProfileEditAccount, tenant}) => {
-  const user = useSelector((state) => state.user.single)
+const ProfileEditAccount = ({setIsProfileEditAccount, user}) => {
+  const error = useSelector((state) => state.user.error)
   const dispatch = useDispatch()
   const [fields, setFields] = useState({
-    username: tenant?.username || '',
+    username: user?.username || '',
     password: '',
     newpassword: '',
     confirmpassword: ''
   })
 const [isFormOpen, setIsFormOpen] = useState(false)
-const [error, setError] = useState(null)
 const toggleForm = () => {
 
   setIsFormOpen(!isFormOpen);
@@ -27,10 +26,8 @@ const handleInput = (e) => {
 }
 const handleSubmit = (e) => {
 e.preventDefault()
-setError(
-  'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
-    )
-dispatch(editUser(tenant?.id, fields))
+
+dispatch(editUser(user?._id, fields))
 console.log('Form submitted');
 toggleForm();
  

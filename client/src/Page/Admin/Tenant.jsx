@@ -96,7 +96,7 @@ const Tenant = () => {
 
   return (
     <>
-      {isVisible && <MessageToast message={msg} error={error} isVisible={isVisible} setIsVisible={setIsVisible} />}
+      {/* {isVisible && <MessageToast message={msg} error={error} isVisible={isVisible} setIsVisible={setIsVisible} />} */}
       {/* Add condition if unread it wont show as well */}
       {/* <NotificationToast/> */}
       <div className="w-full h-full bg-white1">

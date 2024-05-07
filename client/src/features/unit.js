@@ -145,7 +145,7 @@ export const fetchUnitsApartment = (apartment_id) => async (dispatch) => {
   }
 }
 
-export const editUnit = (apartmentId, unitId) => async (dispatch) => {
+export const editUnit = (fields, apartmentId, unitId) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startUnit())
@@ -164,8 +164,9 @@ export const editUnit = (apartmentId, unitId) => async (dispatch) => {
       const error = await response.json()
       throw new Error(error.error)
     }
-    // const json = await response.json()
-    dispatch(fetchUnits())
+    const json = await response.json()
+    console.log(json)
+    dispatch(fetchUnitsApartment(apartmentId))
   } catch (err) {
     dispatch(actionUnitFailed(err.message))
   }
