@@ -2,10 +2,11 @@ const TENANTMODEL = require('../models/tenant')
 const INVOICEMODEL = require('../models/invoice')
 const APARTMENTMODEL = require('../models/apartment')
 const UNITMODEL = require('../models/unit')
+const nodemailer = require('nodemailer')
 const httpStatusCodes = require('../constants/constants')
 const pdf_template = require('../template/invoice')
 const pdf = require('html-pdf')
-const fs = require('fs').promises
+const axios = require('axios')
 const cloudinary = require('cloudinary').v2 // Import Cloudinary SDK
 module.exports.generateInvoice = async (req, res) => {
   const { invoice_id } = req.query
@@ -205,7 +206,66 @@ module.exports.createInvoice = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Failed to create invoice...' })
     }
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: `${process.env.GOOGLE_EMAIL}`,
+        pass: `${process.env.GOOGLE_PASSWORD}`,
+      },
+    })
 
+    // Function to download the PDF from Cloudinary
+    const downloadPdfFromCloudinary = async () => {
+      const response = await axios.get(`${cloudinaryResponse.secure_url}`, {
+        responseType: 'stream',
+      })
+      return response.data
+    }
+
+    // Define the email options
+    const mailOptions = {
+      from: 'pinaupaph@gmail.com',
+      to: `${tenant?.user_id.email}`,
+      subject: `Urgent: Your Invoice for ${tenant?.unit_id.unit_no} is Due Soon!`,
+      html: `
+        <html>
+        <body>
+          <p>Dear ${tenant?.user_id.name},</p>
+          <p>I hope this email finds you well.</p>
+          <p>This is to inform you that an invoice has been sent your way for your <strong>Unit ${tenant?.unit_id.unit_no}</strong>.</p>
+          <p>Here's what you need to know:</p>
+          <ul>
+            <li>Invoice Number: <strong>${reference} </strong></li>
+            <li>Invoice Date: <strong>${new Date(response.createdAt).toDateString()}</strong></li>
+            <li>Due Date: <strong>${new Date(tenant?.monthly_due).toDateString()}</strong></li>
+            <li>Total Amount: <strong>${(response?.amount).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
+            <li>Previous Balance: <strong>${(tenant?.balance - response.amount).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
+          </ul>
+          <p>Attached to this email, you will find the invoice file for your reference and records.</p>
+          <p>If you have any questions or concerns regarding this invoice, please feel free to reach out to me.</p>
+          <p>Thank you for your prompt attention to this matter.</p>
+          <p>Best regards,</p>
+          <strong>Wendell C. Ibias</strong>
+          <strong>Apartment Owner</strong>
+          <strong>09993541054</strong>
+        </body>
+        </html>`,
+      attachments: [
+        {
+          filename: 'invoice.pdf',
+          content: await downloadPdfFromCloudinary(),
+        },
+      ],
+    }
+
+    // Send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log('Error:', error)
+      } else {
+        console.log('Email sent:', info.response)
+      }
+    })
     // Update tenant's balance
     tenant.balance += tenant.unit_id.rent
     await tenant.save()

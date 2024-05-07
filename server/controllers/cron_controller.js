@@ -3,6 +3,8 @@ const UNITMODEL = require('../models/unit')
 const TENANTMODEL = require('../models/tenant')
 const OTPMODEL = require('../models/otp')
 const INVOICEMODEL = require('../models/invoice')
+const nodemailer = require('nodemailer')
+const axios = require('axios')
 const cron = require('node-cron')
 const httpStatusCodes = require('../constants/constants')
 const pdf_template = require('../template/invoice')
@@ -24,7 +26,9 @@ module.exports.scheduledInvoice = () => {
       const year = current_date.getFullYear() // Use getFullYear() instead of getYear()
 
       try {
-        const response1 = await TENANTMODEL.find().populate('user_id unit_id apartment_id')
+        const response1 = await TENANTMODEL.find().populate(
+          'user_id unit_id apartment_id',
+        )
 
         for (const item of response1) {
           if (!item.unit_id._id) {
@@ -75,9 +79,11 @@ module.exports.scheduledInvoice = () => {
                   barangay: item?.apartment_id.barangay,
                   province: item?.apartment_id.province,
                   image: {
-                    apartment_image_url: item?.apartment_id.image.apartment_image_url,
-                    apartment_public_id: item?.apartment_id.image.apartment_public_id
-                  }
+                    apartment_image_url:
+                      item?.apartment_id.image.apartment_image_url,
+                    apartment_public_id:
+                      item?.apartment_id.image.apartment_public_id,
+                  },
                 },
                 balance: item?.balance,
                 monthly_due: item?.monthly_due,
@@ -91,9 +97,9 @@ module.exports.scheduledInvoice = () => {
                 .create(pdf_template({ response: details }), {
                   childProcessOptions: {
                     env: {
-                      OPENSSL_CONF: '/dev/null'
-                    }
-                  }
+                      OPENSSL_CONF: '/dev/null',
+                    },
+                  },
                 })
                 .toBuffer((err, buffer) => {
                   if (err) reject(err)
@@ -118,33 +124,34 @@ module.exports.scheduledInvoice = () => {
                 )
                 .end(pdfBuffer)
             })
-            const intent = await fetch(`${process.env.PAYMONGO_CREATE_INTENT}`, {
-              method: "POST",
-              headers: {
-                accept: 'application/json',
-                'content-type': 'application/json',
-                authorization: `Basic ${Buffer.from(process.env.PAYMONGO_SECRET_KEY).toString('base64')}`,
-              },
-              body: JSON.stringify({
-                data: {
-                  attributes: {
-                    amount: item.unit_id.rent,
-                    payment_method_allowed: [
-                      'paymaya',
-                      'gcash',
-                      'grab_pay',
-                    ],
-                    payment_method_options: { card: { request_three_d_secure: 'any' } },
-                    currency: 'PHP',
-                    capture_type: 'automatic',
-                    statement_descriptor: 'Rental Fee',
-                    description: 'Monthly Rent',
-                  },
+            const intent = await fetch(
+              `${process.env.PAYMONGO_CREATE_INTENT}`,
+              {
+                method: 'POST',
+                headers: {
+                  accept: 'application/json',
+                  'content-type': 'application/json',
+                  authorization: `Basic ${Buffer.from(process.env.PAYMONGO_SECRET_KEY).toString('base64')}`,
                 },
-              })
-            })
+                body: JSON.stringify({
+                  data: {
+                    attributes: {
+                      amount: item.unit_id.rent,
+                      payment_method_allowed: ['paymaya', 'gcash', 'grab_pay'],
+                      payment_method_options: {
+                        card: { request_three_d_secure: 'any' },
+                      },
+                      currency: 'PHP',
+                      capture_type: 'automatic',
+                      statement_descriptor: 'Rental Fee',
+                      description: 'Monthly Rent',
+                    },
+                  },
+                }),
+              },
+            )
             if (!intent) {
-              console.log("Error in Creating Paymnt Intent...")
+              console.log('Error in Creating Paymnt Intent...')
               continue
             }
             const json = await intent.json()
@@ -157,6 +164,48 @@ module.exports.scheduledInvoice = () => {
               'intent.paymentIntent': json.data.id,
               'pdf.reference': reference,
               amount,
+            })
+
+            const transporter = nodemailer.createTransport({
+              service: 'gmail',
+              auth: {
+                user: `${process.env.GOOGLE_EMAIL}`,
+                pass: `${process.env.GOOGLE_PASSWORD}`,
+              },
+            })
+
+            // Function to download the PDF from Cloudinary
+            const downloadPdfFromCloudinary = async () => {
+              const response = await axios.get(
+                `${cloudinaryResponse.secure_url}`,
+                {
+                  responseType: 'stream',
+                },
+              )
+              return response.data
+            }
+
+            // Define the email options
+            const mailOptions = {
+              from: 'pinaupaph@gmail.com',
+              to: `${item?.user_id.email}`,
+              subject: 'Invoice',
+              text: 'Email Body',
+              attachments: [
+                {
+                  filename: 'invoice.pdf',
+                  content: await downloadPdfFromCloudinary(),
+                },
+              ],
+            }
+
+            // Send the email
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                console.log('Error:', error)
+              } else {
+                console.log('Email sent:', info.response)
+              }
             })
             await item.save()
 
