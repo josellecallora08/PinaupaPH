@@ -1,39 +1,26 @@
-import logo from '/logo.svg'
+import React from 'react';
+import error from '/Error.jpg';
+
 const ErrorPage = () => {
     return (
-        <>
-            <div className="size-full min-h-screen bg-white1">
-                <div className="w-11/12 h-full m-auto flex flex-col justify-center items-center">
-                    <div className='w-full h-20 flex justify-center items-center'>
-                        <figure className='size-full max-w-40'>
-                            <img src={logo} className="size-full " alt="" />
-                        </figure>
-                    </div>
-                    <div className='size-full grid grid-cols-2 gap-5'>
-                        <div className="justify-self-center self-center h-full col-span-1 border">
-                            <h1 className='text-6xl font-bold'>So Sorry!</h1>
-                            <p className='text-2xl font-semibold'>The page you are looking for</p>
-                            <p className='text-2xl font-semibold'>cannot be found</p>
-                            <br/>
-                            <div>
-                                <p className='font-bold'>Possible Reasons:</p>
-                                <ul className='list-disc pl-5 font-regular'>
-                                    <li>The address may have been typed incorrectly;</li>
-                                    <li>It may be a broken or outdated link.</li>
-                                </ul>
-                            </div>
-                            <div className='mt-9'>
-                                <button className='border bg-primary-color rounded-md text-white font-regular px-5 py-2'>
-                                    Go to home
-                                </button>
-                            </div>
-                        </div>
-                        <div className="h-full col-span-1 border"></div>
-                    </div>
+        <div className="error-page bg-white w-full h-full flex flex-col md:flex-row items-center justify-center min-h-screen overflow-hidden">
+            <div className="error-content bg-white rounded-lg shadow-md p-8 text-center md:w-1/2 md:order-1">
+                <h1 className="text-4xl font-bold text-primary-color mb-4">Oops! Page Not Found</h1>
+                <p className="text-lg text-primary-color mb-6">The page you are looking for cannot be found.</p>
+                <div className="text-left mb-6">
+                    <p className="font-semibold text-center">Possible Reasons:</p>
+                    <ul className="pl-5 text-primary-color text-center">
+                        <li>The address may have been typed incorrectly.</li>
+                        <li>It may be a broken or outdated link.</li>
+                    </ul>
                 </div>
+                <button className="bg-primary-color text-white rounded-md px-6 py-3 font-semibold hover:bg-primary-color-dark transition-colors duration-300">
+                    Go to Home
+                </button>
             </div>
-        </>
-    )
+            <img src={error} className="w-full md:w-1/2 md:order-2 max-h-screen md:max-h-full object-contain" alt="Error" />
+        </div>
+    );
 }
 
-export default ErrorPage
+export default ErrorPage;

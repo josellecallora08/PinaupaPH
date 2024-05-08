@@ -118,16 +118,7 @@ const TenantProfile = () => {
                 : ''
             }
           >
-            Profile
-          </button>
-          <button
-            onClick={() => handleTabClick('documents')}
-            className={
-              activeTab === 'documents'
-                ? 'text-white py-2 px-5 bg-primary-color rounded-full'
-                : ''
-            }
-          >
+        
             Documents
           </button>
           <button
@@ -460,13 +451,7 @@ const TenantProfile = () => {
           </div>
         )}
 
-        {activeTab === 'documents' && (
-          <div className="px-5 grid grid-cols-1 lg:grid-cols-2 gap-2">
-            <DocumentCard />
-            <DocumentCard />
-            <DocumentCard />
-          </div>
-        )}
+    
 
         {activeTab === 'transaction' && (
           <div className="h-full w-full">
