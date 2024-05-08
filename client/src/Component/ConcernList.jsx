@@ -18,7 +18,7 @@ const ConcernList = () => {
   const handleSearch = (e) => {
     setSearchItem(e.target.value)
   }
-
+  console.log(reports)
   useEffect(() => {
     if (searchItem && searchItem !== '') {
       dispatch(searchReport(searchItem))

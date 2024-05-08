@@ -4,6 +4,45 @@ const APARTMENTMODEL = require('../models/apartment')
 const UNITMODEL = require('../models/unit')
 const REPORTMODEL = require('../models/report')
 const httpStatusCodes = require('../constants/constants')
+
+module.exports.revenueDashboard = async (req, res) => {
+  try {
+    let monthlyTotal = []
+    const response = await INVOICEMODEL.find().populate({
+      path: 'tenant_id',
+      populate: 'user_id unit_id apartment_id'
+    })
+    const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    if (!response) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: "No payment" })
+    }
+
+    // const data = await response.reduce((acc, curr) => {
+    //   return acc = acc + ((new Date(curr.datePaid).getMonth === ))
+    // }, 0)
+    for (const monthName of month) {
+      let totalAmount = 0;
+
+      for (const item of response) {
+          if (item.isPaid) {
+              const paidMonth = new Date(item.datePaid).getMonth();
+              if (month[paidMonth] === monthName) {
+                  totalAmount += item.amount;
+              }
+          }
+      }
+
+      monthlyTotal.push(totalAmount);
+  }
+
+  return res.status(httpStatusCodes.OK).json({response:monthlyTotal})
+  } catch (err) {
+    return res
+    .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+    .json({ error: err.message })
+  }
+}
+
 module.exports.totalPaid = async (req, res) => {
   try {
     const response = await INVOICEMODEL.find().populate({

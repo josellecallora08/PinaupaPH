@@ -25,7 +25,7 @@ const notifSlice = createSlice({
         },
         editNotifSuccess: (state, action) => {
             state.loading = true
-            state.data = state.data.map((notif) => notif._id === action.payload._id ? { ...notif, ...action.payload } : notif)
+            state.data = state.data.map((notif) => notif._id === action.payload._id ? action.payload  : notif)
         },
         deleteNotifSuccess: (state, action) => {
             state.loading = true
@@ -33,14 +33,14 @@ const notifSlice = createSlice({
         },
         fetchNotifFailed: (state, action) => {
             state.loading = true
-            state.data = action.payload
+            state.error = action.payload
         }
     }
 })
 
 export const { fetchNotifStart, fetchNotifsSuccess, fetchNotifSuccess, editNotifSuccess, deleteNotifSuccess, fetchNotifFailed } = notifSlice.actions
 
-export const readNotification = (notif_id) => async (dispatch) => {
+export const readNotification = (notif_id, navigate) => async (dispatch) => {
     try {
         const token = Cookies.get('token')
         dispatch(fetchNotifStart())
@@ -56,7 +56,8 @@ export const readNotification = (notif_id) => async (dispatch) => {
             throw new Error(json.error)
         }
         const json = await response.json()
-        dispatch(fetchNotifSuccess(json.response))
+        dispatch(editNotifSuccess(json.response))
+        navigate(`${json.response.url}`)
     } catch (err) {
         dispatch(fetchNotifFailed(err.message))
 

@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import SearchBar from '../../Component/SearchBar'
 import { FaPlus } from 'react-icons/fa6'
-import { IoIosArrowDown } from 'react-icons/io'
 import ApartmentStatusCard from '../../Component/AdminComponent/ApartmentStatusCard'
 import AddRoom from '../../Component/AdminComponent/AddRoom'
-import EditApartment from '../../Component/AdminComponent/EditApartment'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -13,24 +10,14 @@ import { fetchUnitsApartment } from '../../features/unit'
 import { deleteApartment, editApartment, fetchApartment } from '../../features/apartment'
 const ApartmentProfile = () => {
   const [update, setUpdate] = useState(false)
-  const [searchItem, setSearchItem] = useState('')
   const [isAddRoomFormOpen, setIsAddRoomFormOpen] = useState(false)
   const [isEditApartmentFormOpen, setIsEditApartmentFormOpen] = useState(false)
   const apartment = useSelector((state) => state.apartment.single)
-  const [fields, setFields] = useState({
-    name: apartment?.name || '',
-    address: apartment?.address || '',
-    province: apartment?.province || '',
-    barangay: apartment?.barangay || '',
-  })
   const { id } = useParams()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const units = useSelector((state) => state.unit.data)
 
-  const handleSearch = (e) => {
-    setSearchItem(e.target.value)
-  }
 
   const toggleAddRoomForm = () => {
     setIsAddRoomFormOpen(!isAddRoomFormOpen)
@@ -38,45 +25,27 @@ const ApartmentProfile = () => {
   const toggleEditApartmentForm = () => {
     setIsEditApartmentFormOpen(!isEditApartmentFormOpen)
   }
-  const handleInput = (e) => {
-    const { name, value } = e.target
-    setFields((components) => ({
-      ...components,
-      [name]: value,
-    }))
-  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    dispatch(editApartment(fields, id))
-    setIsEditApartmentFormOpen(false)
-    setUpdate(true)
-    console.log('Form submitted')
-  }
+
+
   useEffect(() => {
     dispatch(fetchUnitsApartment(id))
-    console.log(units)
   }, [])
 
   useEffect(() => {
     dispatch(fetchApartment(id))
-    console.log(apartment)
     setUpdate(false)
   }, [update, setUpdate])
 
   const handleDelete = async () => {
-    const isConfirmed = window.confirm(
+    if (window.confirm(
       'Are you sure you want to delete this apartment?',
-    )
-    if (isConfirmed) {
+    )) {
       dispatch(deleteApartment(id))
       navigate('/apartment')
-    } else {
-      console.log('Deletion cancelled')
     }
   }
 
-  const dropdownItems = ['Available Units', 'Occupied Units']
 
   return (
     <>
@@ -134,11 +103,10 @@ const ApartmentProfile = () => {
               </div>
             </div>
           </div>
-          <div className="lg:justify-between pl-5  md:justify-between flex gap-2 w-full mb-5 mt-5">
-            <SearchBar onSearch={handleSearch} className="lg:w-1/2  flex-1  " />
+          <div className="flex justify-end gap-2 w-full">
             <button
               onClick={toggleAddRoomForm}
-              className="lg:w-64 lg:mr-20 lg:text-base md:text-base md:w-56 md:mr-10 uppercase w-36 ml-14 px-2 mr-10   text-sm text-white rounded-lg bg-dark-blue flex items-center justify-center gap-2 "
+              className="w-full flex gap-2 items-center justify-center bg-primary-color text-white font-semibold uppercase py-2 rounded-md lg:px-2 mt-5 lg:w-fit"
             >
               <FaPlus />
               Add Unit
@@ -165,10 +133,7 @@ const ApartmentProfile = () => {
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="lg:w-auto lg:h-auto mt-14 bg-white rounded-lg">
             <EditApartmentDetails
-              fields={fields}
-              setFields={setFields}
-              handleInput={handleInput}
-              handleSubmit={handleSubmit}
+              setUpdate={setUpdate}
               apartmentId={apartment._id}
               setIsEditApartmentFormOpen={setIsEditApartmentFormOpen}
             />

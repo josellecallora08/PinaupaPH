@@ -9,6 +9,7 @@ const dashboardSlice = createSlice({
     occupancy: null,
     reports: null,
     error: null,
+    chart: null,
   },
   reducers: {
     fetchRateStart: (state) => {
@@ -21,6 +22,10 @@ const dashboardSlice = createSlice({
     fetchTotalPayerSuccess: (state, action) => {
       state.loading = false
       state.goodpayer = action.payload
+    },
+    fetchRevenueSuccess: (state,action) => {
+      state.loading = false
+      state.chart = action.payload
     },
     fetchTotalOReportsSuccess:(state, action) => {
         state.loading = false
@@ -42,6 +47,7 @@ export const {
   fetchTotalPayerSuccess,
   fetchTotalPaymentSuccess,
   fetchTotalOReportsSuccess,
+  fetchRevenueSuccess,
   fetchFailed,
 } = dashboardSlice.actions
 
@@ -63,6 +69,29 @@ export const fetchTotalPaid = () => async (dispatch) => {
     }
     const json = await response.json()
     dispatch(fetchTotalPaymentSuccess(json))
+  } catch (err) {
+    dispatch(fetchFailed())
+  }
+}
+export const fetchRevenue = () => async (dispatch) => {
+  try {
+    dispatch(fetchRateStart())
+    const token = Cookies.get('token')
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/dashboard/chart`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
+    }
+    const json = await response.json()
+    console.log(json.response)
+    dispatch(fetchRevenueSuccess(json.response))
   } catch (err) {
     dispatch(fetchFailed())
   }

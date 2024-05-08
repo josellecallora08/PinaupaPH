@@ -17,6 +17,7 @@ import Loading from '../../Component/LoadingComponent/Loading'
 import NotificationToast from '../../Component/ToastComponent/NotificationToast'
 import {
   fetchReports,
+  fetchRevenue,
   fetchTotalOccupancy,
   fetchTotalPaid,
   fetchTotalPayer,
@@ -30,6 +31,7 @@ const Dashboard = () => {
   const totalPayer = useSelector((state) => state.dash.goodpayer)
   const totalReports = useSelector((state) => state.dash.reports)
   const notifications = useSelector((state) => state.notif.data)
+  const revenue = useSelector((state) => state.dash.chart)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(isLoggedin())
@@ -62,24 +64,20 @@ const Dashboard = () => {
     ],
     datasets: [
       {
-        label: 'Sales for 2020',
-        data: [40000, 50000, 20000, 10000, 25000],
+        label: `Rental Paid for 2024`,
+        data: revenue,
         backgroundColor: '#183044',
         borderWidth: 1,
       },
-      {
-        label: 'Sales for 2021',
-        data: [60000, 70000, 30000, 40000, 55000],
-        backgroundColor: 'gray',
-      },
     ],
   }
-
+  console.log(revenue)
   useEffect(() => {
     dispatch(fetchTotalOccupancy())
     dispatch(fetchTotalPaid())
     dispatch(fetchTotalPayer())
     dispatch(fetchReports())
+    dispatch(fetchRevenue())
   }, [])
 
   return (
@@ -88,11 +86,11 @@ const Dashboard = () => {
         <Loading />
       ) : (
         <>
-          <NotificationToast
+          {/* <NotificationToast
             message={
               'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident dolores cum quam itaque a sunt.'
             }
-          />
+          /> */}
           <div className="w-full h-full md:h-auto xl:h-full xl:max-h-auto flex flex-col items-start bg-white1">
             <div className="w-11/12 h-fit m-auto py-5 lg:py-0">
               <Link
@@ -156,12 +154,12 @@ const Dashboard = () => {
                                       alt=""
                                     />
                                   </figure>
-                                  <div className="">
+                                  <div className="flex flex-col">
                                     <p className="font-semibold">
                                       {val?.sender_id?.name}
                                     </p>
-                                    <p className="text-xs overflow-hidden text-ellipsis max-w-40 text-nowrap">
-                                      {val?.announcement_id?.description || val?.report_id?.description}
+                                    <p className="text-xs overflow-hidden text-ellipsis text-nowrap">
+                                      {val?.description}
                                     </p>
                                   </div>
                                 </article>
@@ -197,7 +195,13 @@ const Dashboard = () => {
                               Total Paid
                             </p>
                             <p className="font-bold text-center text-lg xl:text-4xl">
-                              {totalPaid?.totalPayment?.toLocaleString(
+                              {totalPaid && totalPaid?.totalPayment?.toLocaleString(
+                                'en-PH',
+                                {
+                                  style: 'currency',
+                                  currency: 'PHP',
+                                },
+                              ) || (0).toLocaleString(
                                 'en-PH',
                                 {
                                   style: 'currency',

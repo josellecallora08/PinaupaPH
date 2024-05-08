@@ -15,6 +15,7 @@ import EditAnnouncementForm from '../../Component/AdminComponent/EditAnnouncemen
 const Announcement = () => {
   const dispatch = useDispatch()
   const announcement = useSelector((state) => state.announcement.data)
+  const [update, setUpdate] = useState(false)
   const [searchItem, setSearchItem] = useState('')
   const [value, setValue] = useState('')
   const [filter, setFilter] = useState('All')
@@ -53,7 +54,9 @@ const Announcement = () => {
     } else {
       dispatch(fetchAnnouncements())
     }
-  }, [searchItem])
+
+    setUpdate(false)
+  }, [searchItem, update])
 
 
   // Close dropdown when clicking outside
@@ -205,6 +208,7 @@ const Announcement = () => {
         <div className="lg:top-9 fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="lg:w-1/2 h-auto lg:mt-2 mt-14 w-10/12 bg-white rounded-md">
             <EditAnnouncementForm
+              setUpdate={setUpdate}
               val={value}
               setIsEditAnnouncementFormOpen={setIsEditAnnouncementFormOpen}
             />

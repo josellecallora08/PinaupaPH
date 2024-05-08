@@ -1,11 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import FamMemEditableRow from './FamMemEditableRow'
-import FamMemReadRow from './FamMemReadRow'
+import FamMemEditableRow1 from './FamMemEditableRow1'
+import FamMemReadRow1 from './FamMemReadRow1'
 import { IoMdClose } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteHousehold, fetchHouseholds } from '../features/household'
 
-const Table = ({ id, setIsEditFamilyMemForm }) => {
+const EditFamMemTable1 = ({ id, setIsEditFamilyMemForm }) => {
   const dispatch = useDispatch()
   const household = useSelector((state) => state.household.data)
   const [contacts, setContacts] = useState()
@@ -68,17 +67,13 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
   }
 
   const handleDeleteClick = async (id, contactId) => {
-    if (window.confirm(
-      'Are you sure you want to delete this tenant?',
-    )) {
+    if (window.confirm('Are you sure you want to delete this tenant?')) {
       dispatch(deleteHousehold(id, contactId))
       console.log('Tenant deleted')
     }
   }
 
-  useEffect(() => {
-    dispatch(fetchHouseholds(id))
-  }, [])
+
 
   return (
     <div>
@@ -112,24 +107,25 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
             </tr>
           </thead>
           <tbody className="pt-10">
-            {household.map((contact, key) => (
-              <Fragment key={key}>
-                {editContactId === contact._id ? (
-                  <FamMemEditableRow1
-                    editFormData={editFormData}
-                    handleEditFormChange={handleEditFormChange}
-                    handleCancelClick={handleCancelClick}
-                  />
-                ) : (
-                  <FamMemReadRow1
-                    id={id}
-                    contact={contact}
-                    handleEditClick={handleEditClick}
-                    handleDeleteClick={handleDeleteClick}
-                  />
-                )}
-              </Fragment>
-            ))}
+            {household &&
+              household.map((contact, key) => (
+                <Fragment key={key}>
+                  {editContactId === contact._id ? (
+                    <FamMemEditableRow1
+                      editFormData={editFormData}
+                      handleEditFormChange={handleEditFormChange}
+                      handleCancelClick={handleCancelClick}
+                    />
+                  ) : (
+                    <FamMemReadRow1
+                      id={id}
+                      contact={contact}
+                      handleEditClick={handleEditClick}
+                      handleDeleteClick={handleDeleteClick}
+                    />
+                  )}
+                </Fragment>
+              ))}
           </tbody>
         </table>
         {error && (
@@ -137,29 +133,11 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
             {error}
           </div>
         )}
-        {household.length <= 4 && (
-          <div className="flex justify-end absolute bottom-4 right-0 mb-5 mr-10 gap-3">
-            <button
-              type="submit"
-              className="bg-primary-color text-white font-bold py-2 px-4 rounded"
-            >
-              Submit
-            </button>
-          </div>
-        )}
-        {household.length > 4 && (
-          <div className="flex justify-end mb-8 mt-3 mr-10">
-            <button
-              type="submit"
-              className=" bg-primary-color text-white font-semibold py-2 px-4 rounded"
-            >
-              Submit
-            </button>
-          </div>
-        )}
+      
+   
       </form>
     </div>
   )
 }
 
-export default Table
+export default EditFamMemTable1

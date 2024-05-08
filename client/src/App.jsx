@@ -172,7 +172,7 @@ function App() {
           </Layout>
         }
       />
-          <Route
+      <Route
         path="/agreement/:contract_id/:reference"
         element={
           <Layout className="bg-white1">
@@ -200,13 +200,9 @@ function App() {
       <Route
         path="/security"
         element={
-          role?.role === 'Admin' ? (
+          user ? (
             <Layout className="bg-white1">
               <Security />
-            </Layout>
-          ) : role?.role === 'Tenant' ? (
-            <Layout className="bg-white1">
-              <TenantSecurity />
             </Layout>
           ) : (
             <Navigate to="/" />
@@ -214,14 +210,7 @@ function App() {
         }
       />
 
-      <Route
-        path="/profile"
-        element={
-          <Layout className="bg-white1">
-            <Profile />
-          </Layout>
-        }
-      />
+   
       <Route
         path="/document/lease-agreement"
         element={
@@ -247,29 +236,21 @@ function App() {
       {/* Tenant Side */}
 
       <Route
-        path="/tenant/profile"
+        path="/profile"
         element={
           <Layout className="bg-white1">
             <ProfileTenant />
           </Layout>
         }
       />
-      {/*      <Route
-        path="/tenant/security"
-        element={
-          <TenantLayout className="bg-white1">
-            <TenantSecurity />
-          </TenantLayout>
-        }
-      />*/}
-      <Route
+      {/* <Route
         path="/tenant/document/lease"
         element={
           <Layout className="bg-white1">
             <TenantLease />
           </Layout>
         }
-      />
+      /> */}
 
       <Route
         path="/tenant/payment/:intentId/:clientKey"
@@ -280,15 +261,6 @@ function App() {
         }
       />
 
-      {/*   <Route
-        path="/tenant/viewconcern"
-        element={
-          <TenantLayout className="bg-white1">
-            <TenantViewConcern />
-          </TenantLayout>
-        }
-      />
-      */}
     </Routes>
   )
 }

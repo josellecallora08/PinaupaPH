@@ -1,6 +1,12 @@
+import {useDispatch} from 'react-redux'
+import { readNotification } from '../features/notification'
+import { useNavigate } from 'react-router-dom'
 const Notification = ({ user, data, notifBg }) => {
-  const handleNotif = async (val) => {
-    alert("will fix the controller of notification still -soj")
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const handleNotif = async (id) => {
+    console.log(id)
+    dispatch(readNotification(id, navigate))
   }
   return (
     <>
@@ -13,7 +19,7 @@ const Notification = ({ user, data, notifBg }) => {
             ?.filter((item) => item?.receiver_id?._id === user?.user_id._id)
             .map((val, key) => (
               <button
-                onClick={() => handleNotif(val)}
+                onClick={() => handleNotif(val._id)}
                 key={key}
                 className={`p-2 hover:bg-gray/50 size-full md:max-w-[300px] max-h-[50px] rounded-md overflow-hidden shadow-md m-auto my-2 flex gap-2 items-center ${!(val?.isRead) ? 'bg-primary-color/20 hover:border-primary-color hover:border' : ''}`}
               >

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const FamMemEditableRow = ({
+const FamMemEditableRow1 = ({
   editFormData,
   handleEditFormChange,
   handleCancelClick,
@@ -58,6 +58,4 @@ const FamMemEditableRow = ({
   )
 }
 
-export default FamMemEditableRow
-
-
+export default FamMemEditableRow1
