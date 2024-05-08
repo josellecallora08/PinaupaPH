@@ -7,9 +7,7 @@ import Loading from './LoadingComponent/Loading'
 import { FaPlus } from 'react-icons/fa6'
 import CreateTicket from './Tenant Component/CreateTicket'
 const ConcernList = () => {
-  const [StatselectedOption, setStatSelectedOption] = useState('')
   const [isCreateTicket, setisCreateTicket] = useState(false)
-  const [ConcernselectedOption, setConcernselectedOption] = useState('')
   const [searchItem, setSearchItem] = useState('')
   const user = useSelector((state) => state.auth.user)
   const loading = useSelector((state) => state.report.loading)
@@ -18,7 +16,6 @@ const ConcernList = () => {
   const handleSearch = (e) => {
     setSearchItem(e.target.value)
   }
-  console.log(reports)
   useEffect(() => {
     if (searchItem && searchItem !== '') {
       dispatch(searchReport(searchItem))
@@ -27,12 +24,7 @@ const ConcernList = () => {
     }
   }, [searchItem])
 
-  const handleStatOptionChange = (e) => {
-    setStatSelectedOption(e.target.value)
-  }
-  const handleConcernOptionChange = (e) => {
-    setConcernselectedOption(e.target.value)
-  }
+
   useEffect(() => {
     dispatch(fetchReports())
   }, [])

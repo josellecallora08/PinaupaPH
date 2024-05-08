@@ -8,7 +8,7 @@ import { deletePet, fetchPets } from '../features/pet'
 
 const EditPetTable = ({ id, setIsEditPetForm }) => {
   const [contacts, setContacts] = useState(petdata)
-  const [error, setError] = useState(null)
+  const error = useSelector((state) => state.pet.error)
   const dispatch = useDispatch()
   const [editContactId, setEditContactId] = useState(null)
   const pets = useSelector(state => state.pet.data)
@@ -20,7 +20,6 @@ const EditPetTable = ({ id, setIsEditPetForm }) => {
   useEffect(() => {
     dispatch(fetchPets(id))
   }, [])
-  console.log(pets)
   const handleEditFormChange = (event) => {
     event.preventDefault()
 
@@ -110,8 +109,8 @@ const EditPetTable = ({ id, setIsEditPetForm }) => {
             </tr>
           </thead>
           <tbody className="pt-10">
-            {pets && pets.map((val) => (
-              <Fragment>
+            {pets && pets.map((val, key) => (
+              <Fragment key={key}>
                 {editContactId === val._id ? (
                   <PetEditableRow
                     editFormData={editFormData}
@@ -135,7 +134,7 @@ const EditPetTable = ({ id, setIsEditPetForm }) => {
             {error}
           </div>
         )}
-        {contacts.length <= 4 && (
+        {/* {contacts.length <= 4 && (
           <div className="flex justify-end absolute bottom-0 right-0 mb-10 mr-10 gap-3">
             <button
               type="submit"
@@ -154,7 +153,7 @@ const EditPetTable = ({ id, setIsEditPetForm }) => {
               Submit
             </button>
           </div>
-        )}
+        )} */}
       </form>
     </div>
   )

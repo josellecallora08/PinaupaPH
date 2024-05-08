@@ -153,7 +153,7 @@ module.exports = ({response}) => {
           <td colspan="2">
             House Number: Unit ${response?.tenant_id.unit_id.unit_no}<br />
             House Type: PentHouse<br />
-            Status: <span class="text-lime font-bold">${response?.status === false ? 'Unpaid' : 'Paid'}</span>
+            Status: <span class="text-lime font-bold">${response?.isPaid  ? 'Paid' : 'Unpaid'}</span>
           </td>
         </tr>
 

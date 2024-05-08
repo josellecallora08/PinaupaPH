@@ -210,7 +210,7 @@ function App() {
         }
       />
 
-   
+
       <Route
         path="/document/lease-agreement"
         element={
@@ -237,10 +237,13 @@ function App() {
 
       <Route
         path="/profile"
-        element={
+        element={role?.role === "Admin" ?
           <Layout className="bg-white1">
-            <ProfileTenant />
+            <Profile />
           </Layout>
+          : role?.user_id?.role === "Tenant" ? <Layout className="bg-white1">
+            <ProfileTenant />
+          </Layout> : <Navigate to="/" />
         }
       />
       {/* <Route
