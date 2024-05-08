@@ -47,6 +47,7 @@ export const {
   fetchTotalPayerSuccess,
   fetchTotalPaymentSuccess,
   fetchTotalOReportsSuccess,
+  fetchRevenueSuccess,
   fetchFailed,
 } = dashboardSlice.actions
 
@@ -89,6 +90,7 @@ export const fetchRevenue = () => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
+    console.log(json.response)
     dispatch(fetchRevenueSuccess(json.response))
   } catch (err) {
     dispatch(fetchFailed())

@@ -40,7 +40,7 @@ const notifSlice = createSlice({
 
 export const { fetchNotifStart, fetchNotifsSuccess, fetchNotifSuccess, editNotifSuccess, deleteNotifSuccess, fetchNotifFailed } = notifSlice.actions
 
-export const readNotification = (notif_id) => async (dispatch) => {
+export const readNotification = (notif_id, navigate) => async (dispatch) => {
     try {
         const token = Cookies.get('token')
         dispatch(fetchNotifStart())
@@ -57,6 +57,7 @@ export const readNotification = (notif_id) => async (dispatch) => {
         }
         const json = await response.json()
         dispatch(editNotifSuccess(json.response))
+        navigate(`${json.response.url}`)
     } catch (err) {
         dispatch(fetchNotifFailed(err.message))
 

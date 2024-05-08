@@ -23,7 +23,7 @@ module.exports.revenueDashboard = async (req, res) => {
     for (const monthName of month) {
       let totalAmount = 0;
 
-      for (const item of data) {
+      for (const item of response) {
           if (item.isPaid) {
               const paidMonth = new Date(item.datePaid).getMonth();
               if (month[paidMonth] === monthName) {
