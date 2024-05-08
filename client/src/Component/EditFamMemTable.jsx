@@ -3,7 +3,7 @@ import FamMemEditableRow from './FamMemEditableRow'
 import FamMemReadRow from './FamMemReadRow'
 import { IoMdClose } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteHousehold, fetchHouseholds } from '../features/household'
+import { deleteHousehold, editHousehold, fetchHouseholds } from '../features/household'
 
 const Table = ({ id, setIsEditFamilyMemForm }) => {
   const dispatch = useDispatch()
@@ -12,7 +12,7 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
   const [editContactId, setEditContactId] = useState(null)
   const [editFormData, setEditFormData] = useState({
     name: '',
-    // mobile: '',
+    mobile: '',
     relationship: '',
     birthday: '',
   })
@@ -30,10 +30,11 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
 
   const handleEditClick = (event, contact) => {
     event.preventDefault()
-    setEditContactId(contact)
+    setEditContactId(contact._id)
 
     const formValues = {
       name: contact.name,
+      mobile: contact.mobile,
       relationship: contact.relationship,
       birthday: contact.birthday,
     }
@@ -43,9 +44,8 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
 
   const handleEditFormSubmit = (event) => {
     event.preventDefault()
-    setError(
-      'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
-    )
+    console.log(editFormData)
+    dispatch(editHousehold(id, editContactId, editFormData))
     setEditContactId(null)
   }
 
@@ -73,7 +73,7 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
           Edit Family Member Details
         </h1>
       </div>
-      <div
+      <form onSubmit={handleEditFormSubmit}
         className="flex flex-col overflow-y-auto h-96 "
       >
         <div className="lg:justify-between lg:flex lg:items-center lg:-mb-1 mb-3">
@@ -102,8 +102,8 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
                 {editContactId === contact._id ? (
                   <FamMemEditableRow
                     user_id={id}
-                    household_id={contact._id}
-                    // handleEditFormChange={handleEditFormChange}
+                    editFormData={editFormData}
+                    handleEditFormChange={handleEditFormChange}
                     handleCancelClick={handleCancelClick}
                   />
                 ) : (
@@ -139,7 +139,7 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
             </button>
           </div>
         )} */}
-      </div>
+      </form>
     </div>
   )
 }

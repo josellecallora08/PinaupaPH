@@ -256,7 +256,7 @@ function App() {
       /> */}
 
       <Route
-        path="/tenant/payment/:intentId/:clientKey"
+        path="/tenant/payment/:id"
         element={
           <Layout className="bg-white1">
             <TenantPayment />

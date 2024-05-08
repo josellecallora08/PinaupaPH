@@ -35,9 +35,9 @@ module.exports.fetch_household = async (req, res) => {
       (item) => item.id.toString() === household_id,
     )
     if (!household)
-      return res.status(httpStatusCodes).json({ error: 'Household not found' })
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Household not found' })
 
-    return res.status(httpStatusCodes.OK).json({response:household})
+    return res.status(httpStatusCodes.OK).json({response:household[0]})
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -77,6 +77,8 @@ module.exports.create_household = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to save household information' })
     }
+
+
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: 'Created household successfully!', response:details  })
@@ -131,10 +133,14 @@ module.exports.update_household = async (req, res) => {
         response.household[index][detail] = details[detail]
       }
     })
+    const household = response.household.filter(
+      (item) => item.id.toString() === household_id,
+    )
+    console.log(household)
     await response.save()
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Information Updated...', response:response.household[index]})
+      .json({ msg: 'Information Updated...', response:household})
   } catch (err) {
     console.error({ error: err.message })
     return res
