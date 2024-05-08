@@ -3,10 +3,7 @@ import { IoMdClose } from 'react-icons/io'
 import { useSelector, useDispatch } from 'react-redux'
 import { editUser } from '../features/user'
 const EditTenantAccount = ({ setIsEditTenantAccountForm, tenant }) => {
-  const user = useSelector((state) => state.user.single)
   const error = useSelector((state) => state.user.error)
-  const id = user.user_id._id
-  console.log(user)
   const dispatch = useDispatch()
   const [fields, setFields] = useState({
     username: tenant?.user_id.username || '',
@@ -27,7 +24,7 @@ const EditTenantAccount = ({ setIsEditTenantAccountForm, tenant }) => {
   }
   const handleSubmit = (e) => {
     e.preventDefault()
-    dispatch(editUser(id, fields))
+    dispatch(editUser(tenant?.user_id._id, fields))
     toggleForm()
   }
   return (

@@ -309,7 +309,7 @@ const TenantProfile = () => {
                         </div>
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
                           <p className="">Unit - {tenant?.unit_id.unit_no}</p>
-                          <p className="">{(tenant?.deposit)?.toLocaleString('en-PH',{style: 'currency', currency: 'PHP'})}</p>
+                          <p className="">{(tenant?.deposit)?.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</p>
                           <p className="">
                             {new Date(tenant?.monthly_due)?.toLocaleDateString()}
                           </p>
@@ -394,7 +394,7 @@ const TenantProfile = () => {
                     </div>
                   )}
 
-                  
+
                   {isAddHouseholdForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-1/2 h-auto bg-white rounded-md relative">
@@ -472,9 +472,9 @@ const TenantProfile = () => {
                   {isEditPetForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-9/12 bg-white rounded-lg relative">
-                        <EditPetTable 
-                         id={tenant?.user_id._id}
-                         setIsEditPetForm={setIsEditPetForm} />
+                        <EditPetTable
+                          id={tenant?.user_id._id}
+                          setIsEditPetForm={setIsEditPetForm} />
                       </div>
                     </div>
                   )}
@@ -505,10 +505,12 @@ const TenantProfile = () => {
         {activeTab === 'transaction' && (
           <div className="h-full w-full">
             <div className="lg:block hidden">
-              <TransactionTable />
+              <TransactionTable
+                tenant={tenant} />
             </div>
             <div className="lg:hidden">
-              <TransactionMobile />
+              <TransactionMobile
+              tenant={tenant} />
             </div>
           </div>
         )}

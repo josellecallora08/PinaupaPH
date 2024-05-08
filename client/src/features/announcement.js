@@ -116,7 +116,6 @@ export const recentAnnouncement = () => async (dispatch) => {
             throw new Error(json.error)
         }
         const json = await response.json()
-        console.log(json)
         dispatch(fetchAnnouncementSuccess(json))
     } catch (err) {
         dispatch(fetchAnnouncementFailed(err.message))

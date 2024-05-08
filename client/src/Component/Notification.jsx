@@ -5,7 +5,6 @@ const Notification = ({ user, data, notifBg }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const handleNotif = async (id) => {
-    console.log(id)
     dispatch(readNotification(id, navigate))
   }
   return (

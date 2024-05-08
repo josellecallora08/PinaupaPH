@@ -37,7 +37,7 @@ module.exports.fetch_household = async (req, res) => {
     if (!household)
       return res.status(httpStatusCodes).json({ error: 'Household not found' })
 
-    return res.status(httpStatusCodes.OK).json(household)
+    return res.status(httpStatusCodes.OK).json({response:household})
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -139,7 +139,7 @@ module.exports.update_household = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message })
   }
 }
 // * Tested API
@@ -161,6 +161,7 @@ module.exports.delete_household = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Unable to locate household' })
     }
+    console.log(response.household[index])
     response.household.splice(index, 1)
     await response.save()
     return res.status(httpStatusCodes.OK).json({ msg: 'Removed household', response: response.household[index]})
@@ -168,6 +169,6 @@ module.exports.delete_household = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message})
   }
 }

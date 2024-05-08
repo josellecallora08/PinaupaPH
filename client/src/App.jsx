@@ -33,7 +33,7 @@ import ContactUsAdmin from './Page/ContactUs'
 import ErrorPage from './Page/ErrorPage'
 import Announcement from './Page/Admin/Announcement'
 import LeaseView from './Page/Admin/LeaseView'
-
+import SuperAdmin from './Page/SuperAdmin'
 function App() {
   const user = useSelector((state) => state.auth.isAuthenticated)
   const role = useSelector((state) => state.auth.user)
@@ -210,7 +210,7 @@ function App() {
         }
       />
 
-   
+
       <Route
         path="/document/lease-agreement"
         element={
@@ -237,10 +237,13 @@ function App() {
 
       <Route
         path="/profile"
-        element={
+        element={role?.role === "Admin" ?
           <Layout className="bg-white1">
-            <ProfileTenant />
+            <Profile />
           </Layout>
+          : role?.user_id?.role === "Tenant" ? <Layout className="bg-white1">
+            <ProfileTenant />
+          </Layout> : <Navigate to="/" />
         }
       />
       {/* <Route

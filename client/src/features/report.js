@@ -118,7 +118,6 @@ export const fetchReports = () => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    console.log(json.response)
     dispatch(fetchReportsSuccess(json.response))
   } catch (err) {
     console.log(err.message)
