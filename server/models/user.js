@@ -33,6 +33,7 @@ const USERMODEL = new mongoose.Schema(
     },
     role: {
       type: String,
+      enum: ['Superadmin', 'Admin', 'Tenant'],
       default: 'Tenant',
     },
     isDelete: {

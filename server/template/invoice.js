@@ -117,8 +117,8 @@ module.exports = ({response}) => {
                 </td>
                 <td>
                   Invoice #: ${response?.pdf.reference}<br />
-                  Created: ${new Date(response?.createdAt).toDateString()}<br />
-                  Due: ${new Date(response?.tenant_id.monthly_due).toDateString()}
+                  Created: ${new Date(response?.createdAt)?.toDateString()}<br />
+                  Due: ${new Date(response?.tenant_id.monthly_due)?.toDateString()}
                 </td>
               </tr>
             </table>
@@ -164,7 +164,7 @@ module.exports = ({response}) => {
 
         <tr class="item">
           <td>Monthly Rent</td>
-          <td>${(response.tenant_id.unit_id.rent).toLocaleString('en-PH', {
+          <td>${(response?.tenant_id.unit_id.rent)?.toLocaleString('en-PH', {
             style: 'currency',
             currency: 'PHP',
           })}</td>
@@ -172,7 +172,7 @@ module.exports = ({response}) => {
 
         <tr class="item">
           <td>Previous Bill</td>
-          <td>${(response.tenant_id.balance - response.tenant_id.unit_id.rent).toLocaleString('en-PH', {
+          <td>${(response?.tenant_id.balance - response?.tenant_id.unit_id.rent)?.toLocaleString('en-PH', {
             style: 'currency',
             currency: 'PHP',
           })}</td>
@@ -180,7 +180,7 @@ module.exports = ({response}) => {
 
         <tr class="total">
           <td></td>
-          <td>Total: ${(response.tenant_id.balance).toLocaleString('en-PH', {
+          <td>Total: ${(response?.tenant_id.balance)?.toLocaleString('en-PH', {
             style: 'currency',
             currency: 'PHP',
           })}</td>
