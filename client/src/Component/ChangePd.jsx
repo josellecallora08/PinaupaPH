@@ -7,7 +7,7 @@ const ChangePd = ({ userImage, selectedFile, setSelectedFile, handleFileChange, 
 
 
   return (
-    <div className="flex h-full fixed items-center justify-center w-full bg-gray-200 backdrop-blur-sm">
+    <div className="flex h-full fixed top-0 items-center z-10 justify-center w-full bg-gray backdrop-blur-sm">
       <div
         className="absolute w-full h-full flex items-center justify-center bg-black opacity-20 backdrop-blur-sm"
         onClick={() => setChangeModal((prevState) => !prevState)}

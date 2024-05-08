@@ -5,7 +5,7 @@ import { FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
 import { RxDotsVertical } from 'react-icons/rx'
 import TenantProfileInfo from '../../Data/TenantProfileInfo'
-
+import ChangePd from '../../Component/ChangePd'
 import EditTenantAccount from '../../Component/EditTenantAccount'
 import EditFamMemTable from '../../Component/EditFamMemTable'
 import DocumentCard from '../../Component/DocumentCard'
@@ -37,6 +37,8 @@ const TenantProfile = () => {
   const households = useSelector((state) => state.household.data)
   const pets = useSelector((state) => state.pet.data)
   const dropdownRef = useRef(null)
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [changeModal, setChangeModal] = useState(false)
   // const navigate = useNavigate()
   // const handleDeleteTenant = () => {
   //   const isConfirmed = window.confirm(
@@ -85,6 +87,23 @@ const TenantProfile = () => {
     dispatch(fetchHouseholds(tenant?.user_id?._id))
     dispatch(fetchPets(tenant?.user_id?._id))
   }, [])
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0])
+  }
+
+  const toggleChangeModal = () => {
+    setChangeModal(!changeModal)
+  }
+
+  const handleConfirm = (e) => {
+    e.preventDefault()
+    if (selectedFile) {
+      // Dispatch action to change profile picture
+      // Example: dispatch(changeProfilePicture(selectedFile));
+      // You need to implement the 'changeProfilePicture' action in your Redux store
+    }
+    setChangeModal(false)
+  }
 
   const handleClickOutsideDropdown = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -118,7 +137,6 @@ const TenantProfile = () => {
                 : ''
             }
           >
-        
             Documents
           </button>
           <button
@@ -132,8 +150,20 @@ const TenantProfile = () => {
             Transaction
           </button>
         </div>
-      </div>
-
+      </div>{' '}
+      {changeModal ? (
+        <ChangePd
+          
+          selectedFile={selectedFile}
+          setSelectedFile={setSelectedFile}
+          handleFileChange={handleFileChange}
+          setChangeModal={setChangeModal}
+          handleConfirm={handleConfirm}
+         
+        />
+      ) : (
+        ''
+      )}
       <div className="w-11/12 m-auto  rounded-md">
         {activeTab === 'profile' && (
           <div className=" lg:mt-5 mt-10   ">
@@ -145,7 +175,8 @@ const TenantProfile = () => {
                       <img
                         src={tenant?.user_id.profile_image.image_url}
                         alt="Profile"
-                        className="lg:w-24 rounded-full object-fill lg:h-24 w-14 h-14"
+                        className="lg:w-24 rounded-full object-fill lg:h-24 w-14 h-14 cursor-pointer"
+                        onClick={toggleChangeModal}
                       />
                     </figure>
                     <div>
@@ -156,7 +187,6 @@ const TenantProfile = () => {
                         Unit - {tenant?.unit_id.unit_no}
                       </h2>
                     </div>
-
                   </div>
 
                   {/*Profile Content */}
@@ -176,7 +206,7 @@ const TenantProfile = () => {
 
                     <div className="mb-4 text-sm mt-3 ml-2 flex flex-col items-start">
                       <p className="lg:text-lg flex gap-[4.8rem] items-center">
-                        Username
+                        Username1
                         <span className="lg:text-base lg:ml-7 ml-6">
                           {tenant?.user_id.username}
                         </span>
@@ -249,8 +279,6 @@ const TenantProfile = () => {
                       <h1 className="lg:text-xl font-bold ">
                         Apartment Details
                       </h1>
-
-
                     </div>
 
                     <div className=" mb-4 text-sm mt-3 ml-2 ">
@@ -262,9 +290,16 @@ const TenantProfile = () => {
                         </div>
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
                           <p className="">Unit - {tenant?.unit_id.unit_no}</p>
-                          <p className="">{(tenant?.deposit)?.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</p>
                           <p className="">
-                            {new Date(tenant?.monthly_due)?.toLocaleDateString()}
+                            {tenant?.deposit?.toLocaleString('en-PH', {
+                              style: 'currency',
+                              currency: 'PHP',
+                            })}
+                          </p>
+                          <p className="">
+                            {new Date(
+                              tenant?.monthly_due,
+                            )?.toLocaleDateString()}
                           </p>
                         </div>
                       </div>
@@ -351,7 +386,6 @@ const TenantProfile = () => {
                     </div>
                   )}
 
-
                   {isAddHouseholdForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-1/2 h-auto bg-white rounded-md relative">
@@ -431,7 +465,8 @@ const TenantProfile = () => {
                       <div className="lg:w-9/12 bg-white rounded-lg relative">
                         <EditPetTable
                           id={tenant?.user_id._id}
-                          setIsEditPetForm={setIsEditPetForm} />
+                          setIsEditPetForm={setIsEditPetForm}
+                        />
                       </div>
                     </div>
                   )}
@@ -451,17 +486,13 @@ const TenantProfile = () => {
           </div>
         )}
 
-    
-
         {activeTab === 'transaction' && (
           <div className="h-full w-full">
             <div className="lg:block hidden">
-              <TransactionTable
-                tenant={tenant} />
+              <TransactionTable tenant={tenant} />
             </div>
             <div className="lg:hidden">
-              <TransactionMobile
-                tenant={tenant} />
+              <TransactionMobile tenant={tenant} />
             </div>
           </div>
         )}

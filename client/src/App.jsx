@@ -33,7 +33,7 @@ import ContactUsAdmin from './Page/ContactUs'
 import ErrorPage from './Page/ErrorPage'
 import Announcement from './Page/Admin/Announcement'
 import LeaseView from './Page/Admin/LeaseView'
-
+import SuperAdmin from './Page/SuperAdmin'
 function App() {
   const user = useSelector((state) => state.auth.isAuthenticated)
   const role = useSelector((state) => state.auth.user)

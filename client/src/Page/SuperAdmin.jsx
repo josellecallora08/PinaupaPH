@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import logo from '/logo.svg';
+
+import SuperAdminImage from '/SuperAdmin.png';
 
 const CreateAdminPage = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ const CreateAdminPage = () => {
     role: 'admin',
   });
   const [error, setError] = useState('');
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -35,35 +37,98 @@ const CreateAdminPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col md:flex-row overflow-hidden ">
-      <div className="md:w-1/2 bg-gray-100 flex justify-center items-center">
-        <img src={logo} alt="Company Logo" className="mx-auto" style={{ maxWidth: '80%', maxHeight: '80%', filter: 'brightness(0.9)' }} />
-      </div>
-      <div className="md:w-1/2 bg-white flex justify-center items-center p-8">
-        <div className="max-w-md w-full">
-          <h1 className="text-3xl font-bold mb-4 text-center">Create Admin</h1>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label htmlFor="username" className="block text-gray-700 font-semibold mb-2">Username:</label>
-              <input type="text" id="username" name="username" value={formData.username} onChange={handleChange} className="border border-gray-400 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500" required />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="password" className="block text-gray-700 font-semibold mb-2">Password:</label>
-              <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} className="border border-gray-400 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500" required />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="email" className="block text-gray-700 font-semibold mb-2">Email:</label>
-              <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} className="border border-gray-400 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500" required />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="role" className="block text-gray-700 font-semibold mb-2">Role:</label>
-              <select id="role" name="role" value={formData.role} onChange={handleChange} className="border border-gray-400 rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500">
-                <option value="admin">Admin</option>
-                <option value="superadmin">Superadmin</option>
-              </select>
-            </div>
-            <button type="submit" className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 w-full">Create Admin</button>
+    <div className="w-full h-screen py-4 px-10">
+      <div className="lg:flex-row  flex flex-col items-center justify-center ">
+        <div className="lg:w-1/2 lg:mt-0 mt-5">
+          <img
+            src={SuperAdminImage}
+            alt="Super Admin Picture"
+            className="lg:w-9/12"
+          />
+        </div>
+
+        <div className="lg:w-1/2 lg:shadow-md lg:rounded-md lg:shadow-dark-gray p-5">
+          <div className="">
+            <h1 className="lg:text-xl text-lg font-bold text-primary-color">
+              Create Admin
+            </h1>
+            <p className="text-sm mt-3 font-regular text-dark-gray">
+              Fill in the details to create a new admin account.
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="w-full mt-2">
+            <label
+              htmlFor="username"
+              className="text-primary-color font-semibold "
+            >
+              Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder="Enter username"
+              className="mr-10 rounded-md py-2 font-regular border-2 px-3 border-dark-gray w-full mt-2"
+              required
+            />
+
+            <label
+              htmlFor="password"
+              className="text-primary-color font-semibold "
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter password"
+              className="mr-10 rounded-md py-2 font-regular border-2 px-3 border-dark-gray w-full mt-2"
+              required
+            />
+
+            <label
+              htmlFor="email"
+              className="text-primary-color font-semibold "
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter email"
+              className="mr-10 rounded-md py-2 font-regular border-2 px-3 border-dark-gray w-full mt-2"
+              required
+            />
+
+            <label
+              htmlFor="role"
+              className="text-primary-color font-semibold "
+            >
+              Role
+            </label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className="border-2 border-dark-gray rounded-md px-3 py-2 w-full focus:outline-none focus:border-blue-500 mt-2"
+            >
+              <option value="admin">Admin</option>
+              <option value="superadmin">Superadmin</option>
+            </select>
+
+            <button className="lg:mt-6 lg:mb-2 bg-primary-color font-semibold text-white w-full mt-3 py-3 px-2 rounded-md hover:opacity-80">
+              Create Admin
+            </button>
           </form>
         </div>
       </div>
