@@ -54,12 +54,15 @@ export const fetchPets = (user_id) => async (dispatch) => {
   try {
     dispatch(fetchPetStart())
     const token = Cookies.get('token')
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/user/${user_id}/fetch/pets`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/user/${user_id}/fetch/pets`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    })
+    )
 
     if (!response.ok) {
       const json = await response.json()
@@ -106,14 +109,17 @@ export const createPet = (user_id, fields) => async (dispatch) => {
     const token = Cookies.get('token')
 
     dispatch(fetchPetStart())
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/user/${user_id}/create_pet`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/user/${user_id}/create_pet`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(fields),
       },
-      body: JSON.stringify(fields),
-    })
+    )
 
     console.log('Create Pet: ', response)
 
@@ -153,7 +159,7 @@ export const editPet = (user_id, pet_id, fields) => async (dispatch) => {
     }
 
     const json = await response.json()
-    dispatch(editPetSuccess(json))
+    dispatch(fetchPets(user_id))
   } catch (err) {
     console.log('Unable to update pet')
     dispatch(actionPetFailed(err.message))
@@ -165,20 +171,23 @@ export const deletePet = (pet_id) => async (dispatch) => {
     const token = Cookies.get('token')
 
     dispatch(fetchPetStart())
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/user/delete_pet/${pet_id}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/user/delete_pet/${pet_id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       },
-    })
+    )
     if (!response.ok) {
       const json = await response.json()
       throw new Error(json.error)
     }
 
     const json = await response.json()
-    dispatch(deletePetSuccess(json))
+    dispatch(fetchPets(user_id))
   } catch (err) {
     console.log('Unable to delete pet')
     dispatch(actionPetFailed(err.message))

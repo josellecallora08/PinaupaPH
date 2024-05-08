@@ -56,7 +56,7 @@ export const {
   fetchFailed,
   deleteHouseholdSuccess,
   editHouseholdSuccess,
-  insertHouseholdsSuccess
+  insertHouseholdsSuccess,
 } = householdSlice.actions
 
 export const createHousehold = (user_id, fields) => async (dispatch) => {
@@ -106,7 +106,8 @@ export const fetchHousehold = (user_id, household_id) => async (dispatch) => {
     }
 
     const json = await response.json()
-    dispatch(fetchHouseholdSuccess())
+    console.log(json)
+    dispatch(fetchHouseholdSuccess(json.response))
   } catch (err) {
     dispatch(fetchFailed(err.message))
   }
@@ -163,7 +164,7 @@ export const editHousehold =
 
       const json = await response.json()
       console.log(json)
-      dispatch(editHouseholdSuccess(json))
+      dispatch(fetchHouseholds(user_id))
     } catch (err) {
       dispatch(fetchFailed(err.message))
     }
@@ -191,7 +192,7 @@ export const deleteHousehold = (user_id, household_id) => async (dispatch) => {
 
     const json = await response.json()
     console.log(json)
-    dispatch(deleteHouseholdSuccess(json))
+    dispatch(fetchHouseholds(user_id))
   } catch (err) {
     dispatch(fetchFailed(err.message))
   }

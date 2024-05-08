@@ -143,7 +143,7 @@ const TenantHome = () => {
                   </div>
                 ) : (
                   <Link
-                    to={`/tenant/payment/${invoice?.intent?.paymentIntent}/${invoice?.intent?.clientKey}`}
+                    to={`/tenant/payment/${invoice?._id}`}
                     className="bg-primary-color w-full text-white p-5"
                   >
                     Pay Now

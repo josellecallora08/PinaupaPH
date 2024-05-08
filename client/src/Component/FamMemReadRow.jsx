@@ -12,7 +12,7 @@ const ReadRow = ({id, contact, handleEditClick,handleDeleteClick }) => {
         <td className="px-4 py-2">
           <button
             type="button"
-            onClick={(event) => handleEditClick(event, contact._id)}
+            onClick={(event) => handleEditClick(event, contact)}
             className=" text-lime font-bold text-2xl "
           >
             <RiEditBoxFill />

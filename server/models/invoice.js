@@ -5,7 +5,7 @@ const INVOICEMODEL = new mongoose.Schema(
     tenant_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'tenant',
-      required: true
+      required: true,
     },
     amount: {
       type: Number,
@@ -13,14 +13,14 @@ const INVOICEMODEL = new mongoose.Schema(
     },
     pdf: {
       public_id: {
-        type: String
+        type: String,
       },
       pdf_url: {
-        type: String
+        type: String,
       },
       reference: {
-        type: String
-      }
+        type: String,
+      },
     },
     intent: {
       clientKey: {
@@ -28,30 +28,33 @@ const INVOICEMODEL = new mongoose.Schema(
       },
       paymentIntent: {
         type: String,
-      }
+      },
     },
     payment: {
       method_id: {
         type: String,
-        default: null
+        default: null,
       },
       method: {
         type: String,
-        default: null
-      }
+        default: null,
+      },
+      amountPaid: {
+        type: Number,
+      },
     },
     status: {
       type: String,
-      default: "Pending"
+      default: 'Pending',
     },
     isPaid: {
       type: Boolean,
-      default: false
+      default: false,
     },
     datePaid: {
       type: Date,
-      default: null
-    }
+      default: null,
+    },
   },
   { timestamps: true },
 )

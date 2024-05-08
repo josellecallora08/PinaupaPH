@@ -4,7 +4,7 @@ import PetEditableRow from './PetEditableRow'
 import PetReadRow from './PetReadRow'
 import { IoMdClose } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
-import { deletePet, fetchPets } from '../features/pet'
+import { deletePet, editPet, fetchPets } from '../features/pet'
 
 const EditPetTable = ({ id, setIsEditPetForm }) => {
   const [contacts, setContacts] = useState(petdata)
@@ -37,7 +37,7 @@ const EditPetTable = ({ id, setIsEditPetForm }) => {
     setEditContactId(pets._id)
 
     const formValues = {
-      petfullName: pets.name,
+      name: pets.name,
       species: pets.species,
       birthday: new Date(pets.birthday).toLocaleDateString(),
     }
@@ -47,24 +47,8 @@ const EditPetTable = ({ id, setIsEditPetForm }) => {
 
   const handleEditFormSubmit = (event) => {
     event.preventDefault()
-    setError(
-      'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
-    )
-
-    const editedContact = {
-      id: editContactId,
-      petfullName: editFormData.petfullName,
-      species: editFormData.species,
-      birthday: editFormData.birthday,
-    }
-
-    const newContacts = [...contacts]
-
-    const index = contacts.findIndex((contact) => contact.id === editContactId)
-
-    newContacts[index] = editedContact
-
-    setContacts(newContacts)
+    console.log(editFormData)
+    dispatch(editPet(id, editContactId, editFormData))
     setEditContactId(null)
   }
 
