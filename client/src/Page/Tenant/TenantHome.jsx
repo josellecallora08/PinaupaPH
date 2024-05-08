@@ -71,7 +71,7 @@ const TenantHome = () => {
                 <table className="w-full">
                   <tbody className="text-primary-color">
                     {report && report?.map((val, key) => (
-                      <tr className="border-b border-dark-gray">
+                      <tr key={key} className="border-b border-dark-gray">
                         <td className=" px-4 py-2   ">
                           <div className="flex items-center gap-3 w-fit">
                             <div className={`md:w-2 md:h-2 w-2 h-2 rounded-full ${val?.status ? 'bg-blue' : 'bg-red'}`}></div>
@@ -132,22 +132,23 @@ const TenantHome = () => {
                   <h1>Invoice Payable:</h1>
                   <p>10,000php</p>
                 </div> */}
-                <Link to="/tenant/payment">
-                  <div className="flex justify-center w-full hover:opacity-80">
-                    {invoice?.isPaid === true ? (
+
+                {invoice?.isPaid === true ? (
+                  <div>
+                    <div className="flex justify-center w-full hover:opacity-80">
                       <div className="bg-primary-color w-full text-white p-5">
                         Paid
                       </div>
-                    ) : (
-                      <Link
-                        to={`/tenant/payment/${invoice?.intent?.paymentIntent}/${invoice?.intent?.clientKey}`}
-                        className="bg-primary-color w-full text-white p-5"
-                      >
-                        Pay Now
-                      </Link>
-                    )}
+                    </div>
                   </div>
-                </Link>
+                ) : (
+                  <Link
+                    to={`/tenant/payment/${invoice?.intent?.paymentIntent}/${invoice?.intent?.clientKey}`}
+                    className="bg-primary-color w-full text-white p-5"
+                  >
+                    Pay Now
+                  </Link>
+                )}
               </div>
             </div>
 
@@ -193,7 +194,7 @@ const TenantHome = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div >
       )}
     </>
   )

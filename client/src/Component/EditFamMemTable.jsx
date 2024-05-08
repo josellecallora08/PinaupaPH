@@ -8,11 +8,11 @@ import { deleteHousehold, fetchHouseholds } from '../features/household'
 const Table = ({ id, setIsEditFamilyMemForm }) => {
   const dispatch = useDispatch()
   const household = useSelector((state) => state.household.data)
-  const [contacts, setContacts] = useState()
   const [error, setError] = useState(null)
   const [editContactId, setEditContactId] = useState(null)
   const [editFormData, setEditFormData] = useState({
     name: '',
+    // mobile: '',
     relationship: '',
     birthday: '',
   })
@@ -43,23 +43,9 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
 
   const handleEditFormSubmit = (event) => {
     event.preventDefault()
-
-    const editedContact = {
-      id: editContactId,
-      name: editFormData.name,
-      relationship: editFormData.relationship,
-      birthday: editFormData.birthday,
-    }
-
-    const newContacts = [...contacts]
-
-    const index = contacts.findIndex((contact) => contact._id === editContactId)
-
-    newContacts[index] = editedContact
     setError(
       'An error occurred while submitting the form.An error occurred while submitting the form An error occurred while submitting the form An error occurred while submitting the form ',
     )
-    setContacts(newContacts)
     setEditContactId(null)
   }
 
@@ -87,9 +73,7 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
           Edit Family Member Details
         </h1>
       </div>
-      <form
-        action=""
-        onSubmit={handleEditFormSubmit}
+      <div
         className="flex flex-col overflow-y-auto h-96 "
       >
         <div className="lg:justify-between lg:flex lg:items-center lg:-mb-1 mb-3">
@@ -106,6 +90,7 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
           <thead className="  bg-dark-blue  text-white sticky top-0 ">
             <tr className="text-center text-sm font-semibold  ">
               <th className="py-5 ">Name</th>
+              <th className="py-5 ">Mobile</th>
               <th className="">Relationship</th>
               <th className="">Birthday</th>
               <th className="">Actions</th>
@@ -115,13 +100,14 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
             {household.map((contact, key) => (
               <Fragment key={key}>
                 {editContactId === contact._id ? (
-                  <FamMemEditableRow1
-                    editFormData={editFormData}
-                    handleEditFormChange={handleEditFormChange}
+                  <FamMemEditableRow
+                    user_id={id}
+                    household_id={contact._id}
+                    // handleEditFormChange={handleEditFormChange}
                     handleCancelClick={handleCancelClick}
                   />
                 ) : (
-                  <FamMemReadRow1
+                  <FamMemReadRow
                     id={id}
                     contact={contact}
                     handleEditClick={handleEditClick}
@@ -132,12 +118,8 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
             ))}
           </tbody>
         </table>
-        {error && (
-          <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
-            {error}
-          </div>
-        )}
-        {household.length <= 4 && (
+       
+        {/* {household.length <= 4 && (
           <div className="flex justify-end absolute bottom-4 right-0 mb-5 mr-10 gap-3">
             <button
               type="submit"
@@ -156,8 +138,8 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
               Submit
             </button>
           </div>
-        )}
-      </form>
+        )} */}
+      </div>
     </div>
   )
 }

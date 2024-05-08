@@ -33,7 +33,7 @@ const HOUSEHOLDMODEL = new mongoose.Schema(
       type: Date,
     },
     mobile: {
-      type: Number,
+      type: String,
     },
   },
   { timestamps: true },
