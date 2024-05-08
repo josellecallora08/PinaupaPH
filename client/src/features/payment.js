@@ -217,17 +217,94 @@ export const createPayment =
       }
 
       const statusJson = await statusPayment.json()
-      console.log(statusJson)
-      // const updateStatus = await fetch(`${import.meta.env.VITE_URL}/api/invoice/update?invoice_id=${paymentData.response._id}&status=${statusJson.}`, {
-      //   method: "PATCH",
-      //   headers:{
-      //     Authorization: `Bearer ${token}`
+      // {
+      //   "data": {
+      //     "id": "pi_sBd4iHuNTyFKRRtQfMHGEb4J",
+      //     "type": "payment_intent",
+      //     "attributes": {
+      //       "amount": 5400,
+      //       "capture_type": "automatic",
+      //       "client_key": "pi_sBd4iHuNTyFKRRtQfMHGEb4J_client_afpJc953TtKzeGcJv7ckaaFA",
+      //       "currency": "PHP",
+      //       "description": "Monthly Rent",
+      //       "livemode": false,
+      //       "statement_descriptor": "Rental Fee",
+      //       "status": "succeeded",
+      //       "last_payment_error": null,
+      //       "payment_method_allowed": [
+      //         "gcash",
+      //         "paymaya",
+      //         "grab_pay"
+      //       ],
+      //       "payments": [
+      //         {
+      //           "id": "pay_bHYssLsoNEkAqQvZnrhvqomm",
+      //           "type": "payment",
+      //           "attributes": {
+      //             "access_url": null,
+      //             "amount": 5400,
+      //             "balance_transaction_id": "bal_txn_k2VNrrYGasxtgtvArtEQ5pay",
+      //             "billing": {
+      //               "address": {
+      //                 "city": null,
+      //                 "country": null,
+      //                 "line1": null,
+      //                 "line2": null,
+      //                 "postal_code": null,
+      //                 "state": null
+      //               },
+      //               "email": "josellecallora08@gmail.com",
+      //               "name": "joselle",
+      //               "phone": "09993541054"
+      //             },
+      //             "currency": "PHP",
+      //             "description": "Monthly Rent",
+      //             "disputed": false,
+      //             "external_reference_number": null,
+      //             "fee": 135,
+      //             "instant_settlement": null,
+      //             "livemode": false,
+      //             "net_amount": 5265,
+      //             "origin": "api",
+      //             "payment_intent_id": "pi_sBd4iHuNTyFKRRtQfMHGEb4J",
+      //             "payout": null,
+      //             "source": {
+      //               "id": "src_MdR2JULkygD3yGi3xhp2ApzS",
+      //               "type": "gcash"
+      //             },
+      //             "statement_descriptor": "Rental Fee",
+      //             "status": "paid",
+      //             "tax_amount": null,
+      //             "metadata": null,
+      //             "refunds": [],
+      //             "taxes": [],
+      //             "available_at": 1715158800,
+      //             "created_at": 1714803737,
+      //             "credited_at": 1715763600,
+      //             "paid_at": 1714803737,
+      //             "updated_at": 1714803737
+      //           }
+      //         }
+      //       ],
+      //       "next_action": null,
+      //       "payment_method_options": null,
+      //       "metadata": null,
+      //       "setup_future_usage": null,
+      //       "created_at": 1714735494,
+      //       "updated_at": 1714803737
+      //     }
       //   }
-      // })
-      // if(!statusJson.ok){
-      //   const json = await statusPayment.json()
-      //   throw new Error(json)
       // }
+      const updateStatus = await fetch(`${import.meta.env.VITE_URL}/api/invoice/payment?invoice_id=${paymentData.response._id}&status=${statusJson.data.attributes.status}`, {
+        method: "PATCH",
+        headers:{
+          Authorization: `Bearer ${token}`
+        }
+      })
+      if(!updateStatus.ok){
+        const json = await statusPayment.json()
+        throw new Error(json)
+      }
     } catch (err) {
       dispatch(actionFailed())
     }

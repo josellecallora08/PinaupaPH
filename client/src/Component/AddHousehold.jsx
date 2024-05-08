@@ -9,6 +9,7 @@ const AddHousehold = ({ id, setIsAddHouseholdForm }) => {
   const [fields, setFields] = useState({
     name: '',
     mobile: '',
+    birthday: '',
     relationship: '',
   })
   const toggleForm = () => {
@@ -85,7 +86,22 @@ const AddHousehold = ({ id, setIsAddHouseholdForm }) => {
             className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-
+        <div className="mb-4">
+          <label
+            htmlFor="birthday"
+            className="block  text-sm font-bold mb-2 text-dark-gray"
+          >
+            Birthday
+          </label>
+          <input
+            type="date"
+            name="birthday"
+            onChange={handleInput}
+            value={fields.birthday}
+            placeholder="Enter your Birthday"
+            className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
+        </div>
         <div className="mb-4">
           <label
             htmlFor="relationship"

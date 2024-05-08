@@ -71,7 +71,6 @@ const Dashboard = () => {
       },
     ],
   }
-  console.log(revenue)
   useEffect(() => {
     dispatch(fetchTotalOccupancy())
     dispatch(fetchTotalPaid())
@@ -137,14 +136,14 @@ const Dashboard = () => {
                     <h1 className="text-[#9e9e9e] font-semibold py-2 lg:text-xl">
                       Recent Activity
                     </h1>
-                    <div className=" w-full h-full overflow-hidden md:group-hover:overflow-y-scroll">
+                    <div className=" w-full h-full max-h-[400px] overflow-hidden md:group-hover:overflow-y-scroll">
                       {notifications &&
                         notifications
                           ?.filter(
                             (item) => item?.receiver_id?._id === user?._id,
                           )
                           .map((val, key) => (
-                            <div className="w-full h-auto md:max-h-[200px]">
+                            <div key={key} className="w-full h-auto md:max-h-[200px]">
                               <div className="flex justify-between p-2 rounded-full md:rounded-md hover:bg-gray">
                                 <article className="flex items-center gap-2">
                                   <figure className="w-full h-full max-w-10 max-h-10 overflow-hidden">

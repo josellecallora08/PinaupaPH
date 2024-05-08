@@ -61,7 +61,24 @@ module.exports.madePayment = async (req, res) => {
         .status(httpStatusCodes.CONFLICT)
         .json({ error: 'Failed to upload PDF to Cloudinary...' })
     }
-
+    const admin = await USERMODEL.findOne({ role: "Admin" })
+    if (!admin) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Invoice cannot be updated.' })
+    }
+       const sendNotif = await NOTIFMODEL.create({
+      sender_id: response.user_id._id,
+      receiver_id: admin._id,
+      title: 'Rental Fee',
+      description: 'Rental Payment has been paid.',
+      type: 'Payment'
+    })
+    if (!sendNotif) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Cannot send Notification' })
+    }
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: 'Invoice has been updated.', response })
@@ -95,25 +112,10 @@ module.exports.createPayment = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Invoice cannot be updated.' })
     }
-    const admin = await USERMODEL.findOne({ role: "Admin" })
-    if (!admin) {
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Invoice cannot be updated.' })
-    }
+
     
-    const sendNotif = await NOTIFMODEL.create({
-      sender_id: user_id,
-      receiver_id: admin._id,
-      title: 'Rental Fee',
-      description: 'Rental Payment has been paid.',
-      type: 'Payment'
-    })
-    if (!sendNotif) {
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Cannot send Notification' })
-    }
+ 
+  
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: 'Payment Method and ID are saved.', response })
@@ -123,6 +125,9 @@ module.exports.createPayment = async (req, res) => {
       .json({ error: err.message })
   }
 }
+
+
+
 
 // FOR WITH UI
 // module.exports.checkout = async (req, res) => {
