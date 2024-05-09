@@ -32,6 +32,66 @@ const paymentSlice = createSlice({
 export const { startLoading, paymentSuccess, fetchKeySuccess, actionFailed } =
   paymentSlice.actions
 
+
+export const paymentStatus = (invoice_id, navigate) => async (dispatch) => {
+  try {
+    const token = Cookies.get('token')
+    const socket = io(`${import.meta.env.VITE_URL}/`)
+    dispatch(startLoading())
+    const responseIntent = await fetch(
+      `${import.meta.env.VITE_URL}/api/invoice/list/v1?invoice_id=${invoice_id}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    if (!responseIntent.ok) {
+      const json = await responseIntent.json()
+      console.log(json)
+      throw new Error(json.error)
+    }
+    const jsonIntent = await responseIntent.json()
+    console.log(jsonIntent)
+    const statusPayment = await fetch(
+      `https://api.paymongo.com/v1/payment_intents/${jsonIntent.response.intent.paymentIntent}?client_key=${jsonIntent.response.intent.clienKey}`,
+      {
+        headers: {
+          accept: 'application/json',
+          authorization: `Basic ${import.meta.env.VITE_PAYMONGO_TOKEN}`,
+        },
+      },
+    )
+    if (!statusPayment.ok) {
+      const json = await statusPayment.json()
+      throw new Error(json)
+    }
+
+    const statusJson = await statusPayment.json()
+
+    const updateStatus = await fetch(
+      `${import.meta.env.VITE_URL}/api/payment/invoice?invoice_id=${invoice_id}&status=${statusJson.data.attributes.status}`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    if (!updateStatus.ok) {
+      const json = await updateStatus.json()
+      console.log(json)
+      throw new Error(json)
+    }
+
+    const jsonStatus = await updateStatus.json()
+    console.log(jsonStatus)
+    navigate('/dashboard')
+  } catch (err) {
+    dispatch(actionFailed(err.message))
+  }
+}
 export const createPaymentIntent = (invoice_id, fields) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
@@ -54,44 +114,6 @@ export const createPaymentIntent = (invoice_id, fields) => async (dispatch) => {
       throw new Error(json.error)
     }
     const jsonIntent = await responseIntent.json()
-    // {
-    //   "data": {
-    //     "id": "pi_3takubmxGRQySCz9G5jFUBgU",
-    //     "type": "payment_intent",
-    //     "attributes": {
-    //       "amount": 650000,
-    //       "capture_type": "automatic",
-    //       "client_key": "pi_3takubmxGRQySCz9G5jFUBgU_client_yrFQ4Jghx6fddAdR5mgoWq16",
-    //       "currency": "PHP",
-    //       "description": null,
-    //       "livemode": false,
-    //       "statement_descriptor": "PinaupaPH",
-    //       "status": "awaiting_payment_method",
-    //       "last_payment_error": null,
-    //       "payment_method_allowed": [
-    //         "paymaya",
-    //         "dob",
-    //         "card",
-    //         "billease",
-    //         "atome",
-    //         "grab_pay",
-    //         "gcash"
-    //       ],
-    //       "payments": [],
-    //       "next_action": null,
-    //       "payment_method_options": {
-    //         "card": {
-    //           "request_three_d_secure": "any"
-    //         }
-    //       },
-    //       "metadata": null,
-    //       "setup_future_usage": null,
-    //       "created_at": 1713399776,
-    //       "updated_at": 1713399776
-    //     }
-    //   }
-    // }
-
     const response = await fetch(
       `https://api.paymongo.com/v1/payment_methods`,
       {
@@ -126,21 +148,7 @@ export const createPaymentIntent = (invoice_id, fields) => async (dispatch) => {
     }
     const json = await response.json()
     console.log(json)
-    // {
-    //   "data": {
-    //     "id": "pm_hYrUUSfRGEs8ZNmG6fATWs9m",
-    //     "type": "payment_method",
-    //     "attributes": {
-    //       "livemode": false,
-    //       "type": "gcash",
-    //       "billing": null,
-    //       "created_at": 1713399339,
-    //       "updated_at": 1713399339,
-    //       "details": null,
-    //       "metadata": null
-    //     }
-    //   }
-    // }
+
     // if(fields.payment_method === "gcash" || fields.payment_method === "paymaya" || fields.payment_method === "grabpay"){
     const isPayment = await fetch(
       `${import.meta.env.VITE_URL}/api/payment/create?method=${json?.data.attributes.type}&method_id=${json?.data.id}`,
@@ -173,7 +181,7 @@ export const createPaymentIntent = (invoice_id, fields) => async (dispatch) => {
             attributes: {
               payment_method: `${paymentData.response.payment.method_id}`,
               client_key: `${jsonIntent.response.intent.clientKey}`,
-              return_url: `${import.meta.env.VITE_RETURN_URL}`,
+              return_url: `${import.meta.env.VITE_URL}/verify-payment/status/${invoice_id}`,
             },
           },
         }),
@@ -205,84 +213,7 @@ export const createPaymentIntent = (invoice_id, fields) => async (dispatch) => {
     }
 
     const statusJson = await statusPayment.json()
-    // {
-    //   "data": {
-    //     "id": "pi_sBd4iHuNTyFKRRtQfMHGEb4J",
-    //     "type": "payment_intent",
-    //     "attributes": {
-    //       "amount": 5400,
-    //       "capture_type": "automatic",
-    //       "client_key": "pi_sBd4iHuNTyFKRRtQfMHGEb4J_client_afpJc953TtKzeGcJv7ckaaFA",
-    //       "currency": "PHP",
-    //       "description": "Monthly Rent",
-    //       "livemode": false,
-    //       "statement_descriptor": "Rental Fee",
-    //       "status": "succeeded",
-    //       "last_payment_error": null,
-    //       "payment_method_allowed": [
-    //         "gcash",
-    //         "paymaya",
-    //         "grab_pay"
-    //       ],
-    //       "payments": [
-    //         {
-    //           "id": "pay_bHYssLsoNEkAqQvZnrhvqomm",
-    //           "type": "payment",
-    //           "attributes": {
-    //             "access_url": null,
-    //             "amount": 5400,
-    //             "balance_transaction_id": "bal_txn_k2VNrrYGasxtgtvArtEQ5pay",
-    //             "billing": {
-    //               "address": {
-    //                 "city": null,
-    //                 "country": null,
-    //                 "line1": null,
-    //                 "line2": null,
-    //                 "postal_code": null,
-    //                 "state": null
-    //               },
-    //               "email": "josellecallora08@gmail.com",
-    //               "name": "joselle",
-    //               "phone": "09993541054"
-    //             },
-    //             "currency": "PHP",
-    //             "description": "Monthly Rent",
-    //             "disputed": false,
-    //             "external_reference_number": null,
-    //             "fee": 135,
-    //             "instant_settlement": null,
-    //             "livemode": false,
-    //             "net_amount": 5265,
-    //             "origin": "api",
-    //             "payment_intent_id": "pi_sBd4iHuNTyFKRRtQfMHGEb4J",
-    //             "payout": null,
-    //             "source": {
-    //               "id": "src_MdR2JULkygD3yGi3xhp2ApzS",
-    //               "type": "gcash"
-    //             },
-    //             "statement_descriptor": "Rental Fee",
-    //             "status": "paid",
-    //             "tax_amount": null,
-    //             "metadata": null,
-    //             "refunds": [],
-    //             "taxes": [],
-    //             "available_at": 1715158800,
-    //             "created_at": 1714803737,
-    //             "credited_at": 1715763600,
-    //             "paid_at": 1714803737,
-    //             "updated_at": 1714803737
-    //           }
-    //         }
-    //       ],
-    //       "next_action": null,
-    //       "payment_method_options": null,
-    //       "metadata": null,
-    //       "setup_future_usage": null,
-    //       "created_at": 1714735494,
-    //       "updated_at": 1714803737
-    //     }
-    //   }
-    // }
+
     const updateStatus = await fetch(
       `${import.meta.env.VITE_URL}/api/payment/invoice?invoice_id=${invoice_id}&status=${statusJson.data.attributes.status}`,
       {
@@ -304,12 +235,13 @@ export const createPaymentIntent = (invoice_id, fields) => async (dispatch) => {
     dispatch(actionFailed(err.message))
   }
 }
+
 export const cashPayment = () => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     const socket = io(`${import.meta.env.VITE_URL}/`)
     const response = await fetch(`${import.meta.env.VITE_URL}/api/payment/cash`)
-  } catch (err) {}
+  } catch (err) { }
 }
 
 export const createPayment =
@@ -351,7 +283,6 @@ export const createPayment =
         throw new Error(json)
       }
       const json = await response.json()
-      console.log(json)
       // {
       //   "data": {
       //     "id": "pm_hYrUUSfRGEs8ZNmG6fATWs9m",
@@ -526,29 +457,5 @@ export const createPayment =
       dispatch(actionFailed())
     }
   }
-
-// const handleCheckout = async() => {
-//     try{
-//       const response = await fetch(`${import.meta.env.VITE_URL}/checkout`, {
-//         method: 'POST',
-//         headers:{
-//           authorization: `Bearer ${'token'}`
-//         },
-//         body: JSON.stringify({
-//           amount: `${'600000'}`
-//         })
-//       });
-
-//       if (!response.ok) {
-//         throw new Error('Unable to create payment method');
-//       }
-
-//       const data = await response.json();
-//       window.open(data.data.attributes.checkout_url)
-//     }
-//     catch(err){
-//       console.error('Error:', err.message);
-//     }
-//   }
 
 export default paymentSlice.reducer

@@ -10,11 +10,27 @@ const pdf_template = require('../template/invoice')
 module.exports.madePayment = async (req, res) => {
   const { invoice_id, status } = req.query
   try {
-    const response = await INVOICEMODEL.findByIdAndUpdate(
+    let response;
+    if (status === "succeeded") {
+      response = await INVOICEMODEL.findByIdAndUpdate(
+        invoice_id,
+        {
+          status,
+          isPaid: true,
+          datePaid: Date.now()
+        },
+        {
+          new: true,
+        },
+      ).populate({
+        path: 'tenant_id',
+        populate: 'user_id unit_id apartment_id',
+      })
+    }
+    response = await INVOICEMODEL.findByIdAndUpdate(
       invoice_id,
       {
         status,
-        isPaid: true,
       },
       {
         new: true,
@@ -23,6 +39,8 @@ module.exports.madePayment = async (req, res) => {
       path: 'tenant_id',
       populate: 'user_id unit_id apartment_id',
     })
+
+
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
