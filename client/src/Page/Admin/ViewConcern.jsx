@@ -231,7 +231,7 @@ const ViewConcern = () => {
                 </div>
                 <div className="w-full h-full flex items-center max-h-32 bg-primary-color py-2">
                   <div className="w-11/12 m-auto h-4/5">
-                    <form
+                    {!(report?.status) && <form
                       onSubmit={handleSubmit}
                       className="h-full w-full flex items-center gap-2 overflow-hidden"
                     >
@@ -241,13 +241,11 @@ const ViewConcern = () => {
                         value={comment || ''}
                         onChange={(e) => setComments(e.target.value)}
                         placeholder="Send Message"
-                        disabled={report?.status === true}
                         className="w-full h-full bg-white rounded-md outline-none border-2 border-gray lg:p-2"
                       ></textarea>
                       <div className="w-full max-w-fit flex items-center">
                         <button
                           type="submit"
-                          disabled={report?.status === true}
                           className="w-full h-full p-3 flex items-center justify-center  rounded-full hover:bg-white/10"
                         >
                           <figure className="w-full h-full max-w-5 max-h-5 md:max-w-10 md:max-h-10 flex justify-center items-center">
@@ -256,6 +254,7 @@ const ViewConcern = () => {
                         </button>
                       </div>
                     </form>
+                    || <h1 className='h-full flex items-center text-white font-regular text-3xl'>RESOLVED ISSUE</h1>}
                   </div>
                 </div>
               </div>
