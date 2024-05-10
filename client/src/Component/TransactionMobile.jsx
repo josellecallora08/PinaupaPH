@@ -12,7 +12,7 @@ const TransactionMobile = ({ tenant }) => {
   }, [])
 
   const handleDownload = async (id) => {
-    if (confirm("Cotinue download invoice pdf?")) {
+    if (confirm("Continue download invoice pdf?")) {
       dispatch(generateInvoice(id))
     }
   }
