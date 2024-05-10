@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { IoMdAdd } from 'react-icons/io';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Webcam from 'react-webcam';
-import AddCamera from '../../Component/AddCamera';
+import AddCamera from '../../Component/AdminComponent/AddCamera';
 
 const Security = () => {
   const [isOpenTripleDots, setIsOpenTripleDots] = useState([]);
