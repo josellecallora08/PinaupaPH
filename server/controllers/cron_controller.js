@@ -15,7 +15,7 @@ const DAY_IN_MS = 24 * 60 * 60 * 1000 // Number of milliseconds in a day
 module.exports.scheduledInvoice = () => {
   let hasRun = false // Initialize hasRun flag
 
-  cron.schedule('* * * * *', async () => {
+  cron.schedule('0 0 * * *', async () => {
     // Run every minute, adjust as needed
     if (!hasRun) {
       hasRun = true
@@ -40,7 +40,7 @@ module.exports.scheduledInvoice = () => {
           // Calculate the difference in days between current date and due date
           const daysDifference = Math.floor((due - current_date) / DAY_IN_MS)
 
-          if (daysDifference === 0) {
+          if (daysDifference <= 7) {
             // Check if the due date is today
             const ref_user = item.user_id._id.toString().slice(-3)
             const ref_unit = item.unit_id.unit_no
@@ -90,7 +90,6 @@ module.exports.scheduledInvoice = () => {
               },
               createdAt: Date.now(),
             }
-            console.log(details)
 
             const pdfBuffer = await new Promise((resolve, reject) => {
               pdf
@@ -124,44 +123,44 @@ module.exports.scheduledInvoice = () => {
                 )
                 .end(pdfBuffer)
             })
-            const intent = await fetch(
-              `${process.env.PAYMONGO_CREATE_INTENT}`,
-              {
-                method: 'POST',
-                headers: {
-                  accept: 'application/json',
-                  'content-type': 'application/json',
-                  authorization: `Basic ${Buffer.from(process.env.PAYMONGO_SECRET_KEY).toString('base64')}`,
-                },
-                body: JSON.stringify({
-                  data: {
-                    attributes: {
-                      amount: item.unit_id.rent,
-                      payment_method_allowed: ['paymaya', 'gcash', 'grab_pay'],
-                      payment_method_options: {
-                        card: { request_three_d_secure: 'any' },
-                      },
-                      currency: 'PHP',
-                      capture_type: 'automatic',
-                      statement_descriptor: 'Rental Fee',
-                      description: 'Monthly Rent',
-                    },
-                  },
-                }),
-              },
-            )
-            if (!intent) {
-              console.log('Error in Creating Paymnt Intent...')
-              continue
-            }
-            const json = await intent.json()
+            // const intent = await fetch(
+            //   `${process.env.PAYMONGO_CREATE_INTENT}`,
+            //   {
+            //     method: 'POST',
+            //     headers: {
+            //       accept: 'application/json',
+            //       'content-type': 'application/json',
+            //       authorization: `Basic ${Buffer.from(process.env.PAYMONGO_SECRET_KEY).toString('base64')}`,
+            //     },
+            //     body: JSON.stringify({
+            //       data: {
+            //         attributes: {
+            //           amount: item.unit_id.rent,
+            //           payment_method_allowed: ['paymaya', 'gcash', 'grab_pay'],
+            //           payment_method_options: {
+            //             card: { request_three_d_secure: 'any' },
+            //           },
+            //           currency: 'PHP',
+            //           capture_type: 'automatic',
+            //           statement_descriptor: 'Rental Fee',
+            //           description: 'Monthly Rent',
+            //         },
+            //       },
+            //     }),
+            //   },
+            // )
+            // if (!intent) {
+            //   console.log('Error in Creating Paymnt Intent...')
+            //   continue
+            // }
+            // const json = await intent.json()
 
             await INVOICEMODEL.create({
               tenant_id: item._id,
               'pdf.public_id': cloudinaryResponse.public_id,
               'pdf.pdf_url': cloudinaryResponse.secure_url,
-              'intent.clientKey': json.data.attributes.client_key,
-              'intent.paymentIntent': json.data.id,
+              // 'intent.clientKey': json.data.attributes.client_key,
+              // 'intent.paymentIntent': json.data.id,
               'pdf.reference': reference,
               amount,
             })
@@ -209,7 +208,6 @@ module.exports.scheduledInvoice = () => {
             })
             await item.save()
 
-            console.log(`Invoice created: ${reference}`)
           }
         }
       } catch (error) {
@@ -246,3 +244,4 @@ module.exports.deleteOTP = () => {
     }
   })
 }
+

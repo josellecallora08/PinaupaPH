@@ -36,7 +36,7 @@ module.exports.fetchContract = async (req, res) => {
     const response = await CONTRACTMODEL.findById(contract_id).populate({
       path: 'tenant_id',
       populate: {
-        path: 'user_id unit_id',
+        path: 'user_id unit_id apartment_id',
       },
     })
 
