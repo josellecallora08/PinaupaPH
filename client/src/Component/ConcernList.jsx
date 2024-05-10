@@ -25,7 +25,6 @@ const ConcernList = () => {
     }
   }, [searchItem])
 
-
   useEffect(() => {
     dispatch(fetchReports())
   }, [])
@@ -42,7 +41,7 @@ const ConcernList = () => {
           </div>
           <div className="lg:gap-9 flex justify-center gap-3">
 
-            <select name='selected' onChange={(e) => setSelected(JSON.parse(e.target.value))} className="select select-bordered w-full max-w-xs">
+            <select name='selected' onChange={(e) => setSelected(e.target.value)} className="select select-bordered w-full max-w-xs">
               <option value={"all"} >
                 Select Type of Concern
               </option>
@@ -78,7 +77,7 @@ const ConcernList = () => {
             loading ? (
               <Loading />
             ) : (
-              reports?.filter(item => (selected === "all" ? '' : item.status.toString() === selected.toString())).map((val, key) => (
+              reports?.filter(item => selected === "all" ? item.status.toString() : item.status.toString() === selected.toString()).map((val, key) => (
                 <ConcernCard key={key} val={val} num={key} />
               ))
             )

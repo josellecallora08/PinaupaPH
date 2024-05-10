@@ -23,6 +23,7 @@ module.exports.searchAnnouncement = async (req, res) => {
   }
 }
 
+
 module.exports.createAnnouncement = async (req, res) => {
   try {
     const id = req.user.id

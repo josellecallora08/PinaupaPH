@@ -96,7 +96,7 @@ const OTPVerify = () => {
         </div>
         <div className="lg:flex-row h-full  flex flex-col justify-center items-center">
           <div className="lg:w-1/2 lg:mt-0 mt-5">
-          <Link to="/" className='w-full h-full lg:max-w-10 max-h-20'>
+            <Link to="/" className='w-full h-full lg:max-w-10 max-h-20'>
               <img
                 src={logo}
                 alt="PinaupaPH logo"
@@ -140,9 +140,6 @@ const OTPVerify = () => {
 
               <button className="lg:mt-10 font-semibold bg-primary-color text-white w-full mt-5 py-3 px-2 rounded-md hover:opacity-80">
                 Send
-              </button>
-              <button className="lg:mb-4 font-semibold bg-white text-primary-color border-2 border-primary-color w-full mt-2 py-3 px-2 rounded-md hover:opacity-80">
-                Send Again
               </button>
             </form>
           </div>
