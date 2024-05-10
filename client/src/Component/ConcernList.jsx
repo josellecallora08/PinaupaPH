@@ -12,6 +12,7 @@ const ConcernList = () => {
   const user = useSelector((state) => state.auth.user)
   const loading = useSelector((state) => state.report.loading)
   const dispatch = useDispatch()
+  const [selected, setSelected] = useState('all')
   const reports = useSelector((state) => state.report.data)
   const handleSearch = (e) => {
     setSearchItem(e.target.value)
@@ -40,21 +41,14 @@ const ConcernList = () => {
             <SearchBar onSearch={handleSearch} />
           </div>
           <div className="lg:gap-9 flex justify-center gap-3">
-            {/* <select className="select select-bordered w-full max-w-xs">
-              <option disabled selected>
-                Who shot first?
-              </option>
-              <option>Han Solo</option>
-              <option>Greedo</option>
-            </select>
 
-            <select className="select select-bordered w-full max-w-xs">
-              <option disabled selected>
-                Who shot first?
+            <select name='selected' onChange={(e) => setSelected(JSON.parse(e.target.value))} className="select select-bordered w-full max-w-xs">
+              <option value={"all"} >
+                Select Type of Concern
               </option>
-              <option>Han Solo</option>
-              <option>Greedo</option>
-            </select> */}
+              <option value={'true'}>Resolved</option>
+              <option value={'false'}>Unresolved</option>
+            </select>
             {user && user?.user_id?.role === 'Tenant' ? (
               <>
                 <button
@@ -84,7 +78,7 @@ const ConcernList = () => {
             loading ? (
               <Loading />
             ) : (
-              reports?.map((val, key) => (
+              reports?.filter(item => (selected === "all" ? '' : item.status.toString() === selected.toString())).map((val, key) => (
                 <ConcernCard key={key} val={val} num={key} />
               ))
             )
@@ -93,7 +87,7 @@ const ConcernList = () => {
               <Loading />
             ) : (
               reports
-                ?.filter((item) => item.user_id === user?.id)
+                ?.filter((item) => selected === 'all' ? item.sender_id.user_id._id === user?.user_id._id  : item.sender_id.user_id._id === user?.user_id._id && selected !== 'all' && item.status.toString() === selected.toString())
                 .map((val, key) => (
                   <ConcernCard key={key} val={val} num={key} />
                 ))
@@ -101,7 +95,7 @@ const ConcernList = () => {
           ) : loading ? (
             <Loading />
           ) : (
-            reports?.map((val, key) => (
+            reports?.filter(item => item.status === selected).map((val, key) => (
               <ConcernCard key={key} val={val} num={key} />
             ))
           )}
