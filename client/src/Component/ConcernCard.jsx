@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import pfp from '/pfp.svg'
-import { HiOutlineDotsHorizontal } from 'react-icons/hi'
 
 import { Link } from 'react-router-dom'
 const ConcernCard = ({ val, num }) => {

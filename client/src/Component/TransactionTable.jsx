@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react'
-import { GrFormView } from "react-icons/gr";
 import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchInvoices, generateInvoice
 } from './../features/invoice'
-import { useParams } from 'react-router-dom';
 const TransactionTable = ({ tenant }) => {
   const dispatch = useDispatch()
   const invoices = useSelector((state) => state.invoice.data)

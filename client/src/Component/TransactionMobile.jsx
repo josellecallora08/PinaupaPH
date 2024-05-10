@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchInvoices, generateInvoice
 } from './../features/invoice'
-import { useParams } from 'react-router-dom';
 const TransactionMobile = ({ tenant }) => {
   const dispatch = useDispatch()
   const invoices = useSelector((state) => state.invoice.data)
