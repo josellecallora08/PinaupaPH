@@ -37,7 +37,7 @@ const TransactionTable = ({ tenant }) => {
               <td className="border px-4 py-2 capitalize">{val?.payment?.method}</td>
               <td className="border px-4 py-2">{(val?.amount).toLocaleString('en-PH', { style: "currency", currency: "PHP" })}</td>
               <td className="border px-4 py-2">
-                <button onClick={() => handleDownload(val?._id)} className="flex gap-1 mx-auto items-center py-1 px-3 bg-dark-blue text-white rounded-md">
+                <button onClick={() => handleDownload(val?._id)} className="btn hover:text-primary-color flex gap-1 mx-auto items-center py-1 px-3 bg-dark-blue text-white rounded-md">
                   <div>Download PDF</div>
                 </button>
               </td>

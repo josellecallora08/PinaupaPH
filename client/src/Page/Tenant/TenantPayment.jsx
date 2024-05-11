@@ -51,7 +51,7 @@ const TenantPayment = () => {
   return (
     <>
       <div className="w-full h-full bg-white1 px-5 overflow-y-scroll">
-        <h1 className="font-bold my-4">PAY INVOICE/DOCUMENTS</h1>
+        <h1 className="font-bold my-4"><span className=' hover:cursor-pointer hover:underline mr-1' onClick={() => window.history.back()}>DASHBOARD</span>/ PAYMENT</h1>
         <div className="flex lg:flex-row flex-col lg:gap-2  w-full h-full">
           <div className="flex-grow flex flex-col">
             <h1 className="bg-[#183044] p-2 text-white rounded-tl-md rounded-tr-md">

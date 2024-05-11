@@ -8,7 +8,7 @@ import TenantProfileInfo from '../../Data/TenantProfileInfo'
 import ChangePd from '../../Component/ChangePd'
 import EditTenantAccount from '../../Component/EditTenantAccount'
 import EditFamMemTable from '../../Component/EditFamMemTable'
-import DocumentCard from '../../Component/DocumentCard'
+import { MdOutlineFileDownload } from 'react-icons/md'
 import AddHousehold from '../../Component/AddHousehold'
 
 import TransactionTable from '../../Component/TransactionTable'
@@ -187,6 +187,9 @@ const TenantProfile = () => {
                         Unit - {tenant?.unit_id.unit_no}
                       </h2>
                     </div>
+                    <button className="btn  hover:text-primary-color flex items-center gap-2 absolute right-3 top-0 bg-primary-color text-white p-2 rounded-md ">
+                      <MdOutlineFileDownload size={20} /> Lease Agreement
+                    </button>
                   </div>
 
                   {/*Profile Content */}
@@ -198,7 +201,7 @@ const TenantProfile = () => {
                       </div>
                       <div>
                         <FaEdit
-                          className="lg:text-2xl text-lg cursor-pointer"
+                          className="lg:text-2xl text-lg cursor-pointer hover:scale-125 duration-200"
                           onClick={toggleEditTenantAccountForm}
                         />
                       </div>
@@ -240,7 +243,7 @@ const TenantProfile = () => {
                         Personal Details
                       </h1>
                       <FaEdit
-                        className="lg:text-2xl lg:mr-3 text-lg cursor-pointer"
+                        className="lg:text-2xl lg:mr-3 text-lg cursor-pointer hover:scale-125 duration-200"
                         onClick={toggleEditTenantDetailForm}
                       />
                     </div>

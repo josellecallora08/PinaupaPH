@@ -55,7 +55,7 @@ const Least = () => {
             </button>
           </div>
 
-          <div className=" md:grid-cols-2  grid grid-cols-1 gap-5 mt-3">
+          <div className=" md:grid-cols-3  grid grid-cols-1 gap-5 mt-3">
             {contracts &&
               contracts?.map((val, key) => <LeaseCard key={key} val={val} />)}
           </div>
