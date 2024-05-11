@@ -341,7 +341,6 @@ const Dashboard = () => {
                       Concern and Issue
                     </h1>
                     <div className="w-full h-full flex items-center bg-white">
-                      {/* <BarChart data={data} width="90%" height="80%"/> */}
                       <CircularProgressbar
                         className="mx-auto lg:w-28 md:mx-auto md:w-40 w-32 mt-4 "
                         value={percentage}

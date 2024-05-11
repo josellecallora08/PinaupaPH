@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchInvoices, generateInvoice
 } from './../features/invoice'
-import { useParams } from 'react-router-dom';
 const TransactionMobile = ({ tenant }) => {
   const dispatch = useDispatch()
   const invoices = useSelector((state) => state.invoice.data)
@@ -12,7 +11,7 @@ const TransactionMobile = ({ tenant }) => {
   }, [])
 
   const handleDownload = async (id) => {
-    if (confirm("Cotinue download invoice pdf?")) {
+    if (confirm("Continue download invoice pdf?")) {
       dispatch(generateInvoice(id))
     }
   }

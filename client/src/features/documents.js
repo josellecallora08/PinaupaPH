@@ -9,6 +9,7 @@ const documentSlice = createSlice({
     error: null,
     data: null,
     msg: null,
+    single: null
   },
   reducers: {
     startLoading: (state) => {
@@ -19,9 +20,13 @@ const documentSlice = createSlice({
       state.loading = false
       state.msg = action.payload
     },
-    fetchDocumentSuccess: (state, action) => {
+    fetchDocumentsSuccess: (state, action) => {
       state.loading = false
       state.data = action.payload.response
+    },
+    fetchDocumentSuccess: (state, action) => {
+      state.loading = false
+      state.single = action.payload.response
     },
     insertDocumentSuccess: (state, action) => {
       return {
@@ -56,6 +61,7 @@ const documentSlice = createSlice({
 
 export const {
   startLoading,
+  fetchDocumentsSuccess,
   fetchDocumentSuccess,
   editDocumentSuccess,
   insertDocumentSuccess,
@@ -69,7 +75,7 @@ export const generateDocument = (contract_id) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/documents/generate?contract_id=${contract_id}`,
+      `${import.meta.env.VITE_URL}/api/document/generate?contract_id=${contract_id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -85,7 +91,7 @@ export const generateDocument = (contract_id) => async (dispatch) => {
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.setAttribute('download', 'invoice.pdf')
+    link.setAttribute('download', 'Lease Agreement.pdf')
     document.body.appendChild(link)
     link.click()
     link.remove()
@@ -142,7 +148,7 @@ export const searchContract = (filter) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    dispatch(fetchDocumentSuccess(json))
+    dispatch(fetchDocumentsSuccess(json))
   } catch (err) {
     dispatch(actionDocumentFailed(err.message))
   }
@@ -166,7 +172,7 @@ export const fetchDocuments = () => async (dispatch) => {
     }
     const json = await response.json()
     console.log(json)
-    dispatch(fetchDocumentSuccess(json))
+    dispatch(fetchDocumentsSuccess(json))
   } catch (err) {
     dispatch(actionDocumentFailed(err.message))
   }
@@ -177,7 +183,7 @@ export const fetchDocument = (contract_id) => async (dispatch) => {
     const token = Cookies.get('token')
     dispatch(startLoading())
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/documents/list/v1?contract_id=${contract_id}`,
+      `${import.meta.env.VITE_URL}/api/document/list/v1?contract_id=${contract_id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

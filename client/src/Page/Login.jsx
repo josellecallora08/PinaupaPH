@@ -36,7 +36,7 @@ const Login = () => {
 
   useEffect(() => {
     dispatch(isLoggedin())
-  })
+  },[])
 
   return (
     <>

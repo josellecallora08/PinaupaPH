@@ -55,9 +55,8 @@ const Announcement = () => {
       dispatch(fetchAnnouncements())
     }
 
-    setUpdate(false)
-  }, [searchItem, update])
-
+    // setUpdate(false)
+  }, [searchItem])
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -103,28 +102,29 @@ const Announcement = () => {
           >
             All
           </button>
-          <button
-            className={`filter-tab ${filter === 'News' ? 'active' : ''}`}
-            onClick={() => setFilter('News')}
-            style={{
-              color: filter === 'News' ? '#000' : '#7e7e7e',
-              borderBottom: filter === 'News' ? '2px solid #000' : 'none',
-              transition: 'color 0.3s ease, border-bottom 0.3s ease',
-            }}
-          >
-            News
-          </button>
-          <button
-            className={`filter-tab ${filter === 'Payments' ? 'active' : ''}`}
-            onClick={() => setFilter('Payments')}
-            style={{
-              color: filter === 'Payments' ? '#000' : '#7e7e7e',
-              borderBottom: filter === 'Payments' ? '2px solid #000' : 'none',
-              transition: 'color 0.3s ease, border-bottom 0.3s ease',
-            }}
-          >
-            Payments
-          </button>
+          {announcement &&
+            [
+              ...new Set(
+                announcement.flatMap((obj) => obj?.type?.trim().split(' ')),
+              ),
+            ].map((word, index) => (
+              <button
+                key={index}
+                className={`capitalize filter-tab ${filter === `${word}` ? 'active' : ''}`}
+                onClick={() => setFilter(word.toUpperCase())}
+                style={{
+                  color:
+                    filter === `${word.toUpperCase()}` ? '#000' : '#7e7e7e',
+                  borderBottom:
+                    filter === `${word.toUpperCase()}`
+                      ? '2px solid #000'
+                      : 'none',
+                  transition: 'color 0.3s ease, border-bottom 0.3s ease',
+                }}
+              >
+                {word}
+              </button>
+            ))}
         </div>
         {/* Body of Announcement Tab */}
         <div className=" md:h-[25rem] min-[1440px]:h-[45rem] min-[1280px]:h-[45rem] min-[1366px]:h-[19rem] w-full h-80 overflow-x-auto px-8 rounded-bl-lg rounded-br-lg bg-white">
@@ -192,6 +192,70 @@ const Announcement = () => {
                   )}
                 </div>
               ))}
+            {announcement &&
+              filter !== 'All' &&
+              announcement
+                ?.filter((item) => item.type.toUpperCase() === filter)
+                .map((val, key) => (
+                  <div
+                    key={key}
+                    className="relative bg-white p-4 rounded-md shadow-md w-full mb-6"
+                  >
+                    <div className="flex ">
+                      <div className="  flex flex-col justify-center md:w-auto  border-r-2 border-gray w-32 pr-1  items-center mr-5">
+                        <p className="text-light-gray md:text-base text-xs flex">
+                          <span>{new Date(val.createdAt).toDateString()}</span>
+                        </p>
+                        <p className="text-light-gray md:text-sm text-xs">
+                          <span>
+                            {new Date(val.createdAt).toLocaleTimeString()}
+                          </span>
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col w-[80%] ">
+                        <p className="font-semibold text-lg">{val.title}</p>
+
+                        <p className="text-light-gray">{val.description}</p>
+                      </div>
+                    </div>
+                    <div
+                      onClick={() => toggleDropdown(val._id)}
+                      className="absolute top-3 right-2 text-xl cursor-pointer"
+                    >
+                      <BsThreeDotsVertical className="relative" />
+                    </div>
+                    {openDropdown === val._id && (
+                      <div
+                        ref={dropdownRef}
+                        className=" absolute top-2 right-7 flex items-center bg-white w- h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray "
+                      >
+                        <ul>
+                          <li
+                            onClick={() => {
+                              toggleEditAnnouncementForm(val)
+                              setOpenDropdown(null)
+                            }}
+                            className=" flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white py-2 px-5 text-center"
+                          >
+                            <MdOutlineModeEdit />
+                            Edit
+                          </li>
+                          <li
+                            onClick={() => {
+                              handleDelete(val._id)
+                              setOpenDropdown(null)
+                            }}
+                            className="flex items-center justify-center gap-2 py-2 px-5 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
+                          >
+                            <MdOutlineDeleteOutline />
+                            Delete
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                ))}
           </div>
         </div>
       </div>

@@ -16,7 +16,82 @@ const createToken = (id, username, role) => {
   })
 }
 
+module.exports.createAdminAccount = async (req, res) => {
+  try {
+    const { role } = req.user
+    if (role !== 'Super Admin') {
+      return res
+        .status(httpStatusCodes.UNAUTHORIZED)
+        .json({ error: 'Only super admin can create apartment owners' })
+    }
+    const { name, password, username, email, birthday, mobile_no } = req.body
+    if (name === '')
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Please fill all the blanks' })
+    if (password !== '') {
+      details.password = hashed
+    }
+    if (username === '' && (await USERMODEL.findOne({ username })))
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Username is either existing or empty.' })
+    if (email === '' && (await USERMODEL.findOne({ email })))
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Email is either existing or empty.' })
+    if (birthday === '')
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Failed to upload profile image.' })
+    if (mobile_no === '' && (await USERMODEL.findOne({ mobile_no })))
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Mobile Number is either existing or empty.' })
+
+    const imageUpload = await cloudinary.uploader.upload(
+      `./template/profile-default.svg`,
+      {
+        quality: 'auto:low',
+        folder: 'PinaupaPH/Profile',
+        resource_type: 'auto',
+      },
+    )
+
+    if (!imageUpload || !imageUpload.secure_url) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Failed to upload profile image.' })
+    }
+
+    const response = await USERMODEL.create({
+      name,
+      username,
+      email,
+      password: hashed,
+      birthday,
+      mobile_no,
+      'profile_image.image_url': imageUpload.secure_url,
+      'profile_image.public_id': imageUpload.public_id,
+    })
+    if (!response) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Failed to create admin' })
+    }
+
+    return res.status(httpStatusCodes.OK).json({ response })
+  } catch (err) {
+    console.error({ error: err.message })
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
+  }
+}
+
+
 // * Done Testing API
+
 module.exports.sign_up = async (req, res) => {
   try {
     // const errors = validationResult(req);
@@ -118,7 +193,6 @@ module.exports.sign_up = async (req, res) => {
         .json({ error: 'Failed to upload profile image.' })
     }
 
-
     let response = await USERMODEL.create({
       name: name,
       username: username,
@@ -127,7 +201,7 @@ module.exports.sign_up = async (req, res) => {
       mobile_no: mobile_no,
       birthday: birthday,
       'profile_image.image_url': imageUpload.secure_url,
-      'profile_image.public_id': imageUpload.public_id
+      'profile_image.public_id': imageUpload.public_id,
     })
 
     if (response.role === 'Tenant') {
@@ -153,7 +227,9 @@ module.exports.sign_up = async (req, res) => {
         })
       }
     }
-    const userResponse = await TENANTMODEL.findOne({ user_id: response._id }).populate('user_id unit_id apartment_id')
+    const userResponse = await TENANTMODEL.findOne({
+      user_id: response._id,
+    }).populate('user_id unit_id apartment_id')
     if (!userResponse) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({
         error: 'Failed to fetch user information.',
@@ -226,14 +302,14 @@ module.exports.search_user = async (req, res) => {
           from: 'apartments',
           localField: 'apartment_id',
           foreignField: '_id',
-          as: 'apartment'
-        }
+          as: 'apartment',
+        },
       },
       {
         $unwind: {
           path: '$apartment',
-          preserveNullAndEmptyArrays: true
-        }
+          preserveNullAndEmptyArrays: true,
+        },
       },
       {
         $lookup: {
@@ -271,8 +347,8 @@ module.exports.search_user = async (req, res) => {
           household: 1,
           pet: 1,
           createdAt: 1,
-          updatedAt: 1
-        }
+          updatedAt: 1,
+        },
       },
       {
         $sort: { createdAt: -1 },
@@ -302,8 +378,9 @@ module.exports.fetch_users = async (req, res) => {
   //     .status(httpStatusCodes.BAD_REQUEST)
   //     .json({ error: 'Unauthorized. Only admin can add tenants.' })
   // }
-  let response = await TENANTMODEL.find()
-    .populate('user_id unit_id apartment_id')
+  let response = await TENANTMODEL.find().populate(
+    'user_id unit_id apartment_id',
+  )
 
   try {
     if (!response) {
@@ -323,8 +400,9 @@ module.exports.fetch_users = async (req, res) => {
 
 module.exports.fetch_user = async (req, res) => {
   const { user_id } = req.query
-  let response = await TENANTMODEL.findOne({ user_id })
-    .populate('user_id unit_id apartment_id')
+  let response = await TENANTMODEL.findOne({ user_id }).populate(
+    'user_id unit_id apartment_id',
+  )
 
   try {
     if (!response) {
@@ -356,7 +434,9 @@ module.exports.fetch_data = async (req, res) => {
       return res.status(httpStatusCodes.OK).json(response)
     }
 
-    let response = await TENANTMODEL.findOne({ user_id: user_id }).populate('user_id unit_id apartment_id')
+    let response = await TENANTMODEL.findOne({ user_id: user_id }).populate(
+      'user_id unit_id apartment_id',
+    )
 
     if (!response) {
       return res
@@ -369,7 +449,7 @@ module.exports.fetch_data = async (req, res) => {
     console.error({ error: err.message })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error...' })
+      .json({ error: err.message })
   }
 }
 
@@ -423,8 +503,10 @@ module.exports.update_profile = async (req, res) => {
     }
 
     await response.save()
-    let tenant = await TENANTMODEL.findById(response._id).populate('user_id unit_id apartment_id')
-    if(!tenant){
+    let tenant = await TENANTMODEL.findById(response._id).populate(
+      'user_id unit_id apartment_id',
+    )
+    if (!tenant) {
       tenant = await USERMODEL.findById(response._id)
     }
 
@@ -452,7 +534,9 @@ module.exports.update_unit_info = async (req, res) => {
     const { unit_id, deposit, occupancy } = req.body
 
     // Find the current tenant
-    const tenant = await TENANTMODEL.findOne({ user_id: user_id }).populate('user_id unit_id apartment_id')
+    const tenant = await TENANTMODEL.findOne({ user_id: user_id }).populate(
+      'user_id unit_id apartment_id',
+    )
     if (!tenant) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
@@ -535,20 +619,20 @@ module.exports.update_profile_picture = async (req, res) => {
         .json({ error: 'Failed to upload profile.' })
     }
     const url = uploadedImage.secure_url
-    const response = await USERMODEL.findByIdAndUpdate(user_id,
-      {
-        profile_image: {
-          image_url: url,
-          public_id: public_id,
-        },
+    const response = await USERMODEL.findByIdAndUpdate(user_id, {
+      profile_image: {
+        image_url: url,
+        public_id: public_id,
       },
-    )
+    })
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to change image' })
     }
-    const tenant = await TENANTMODEL.findById(response._id).populate('user_id unit_id apartment_id')
+    const tenant = await TENANTMODEL.findById(response._id).populate(
+      'user_id unit_id apartment_id',
+    )
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: 'Profile has been changed', response: tenant })
@@ -580,7 +664,9 @@ module.exports.delete_tenant = async (req, res) => {
     await cloudinary.uploader.destroy(response.profile_image.public_id)
     console.log('deleted successfully!')
     if (response.role === 'Tenant') {
-      const tenant = await TENANTMODEL.findOneAndDelete({ user_id: user_id }).populate('user_id unit_id apartment_id')
+      const tenant = await TENANTMODEL.findOneAndDelete({
+        user_id: user_id,
+      }).populate('user_id unit_id apartment_id')
       if (!tenant)
         return res
           .status(httpStatusCodes.BAD_REQUEST)

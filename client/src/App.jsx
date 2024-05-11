@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
 import Dashboard from './Page/Admin/Dashboard'
-import Sidebar from './Component/Sidebar'
 import Layout from './Component/Layout'
 import Tenant from './Page/Admin/Tenant'
 import Apartment from './Page/Admin/Apartment'
@@ -10,7 +9,6 @@ import Profile from './Page/Admin/Profile'
 import Least from './Page/Admin/Lease'
 import Invoice from './Page/Admin/Invoice'
 import Login from './Page/Login'
-import TenantCard from './Component/TenantCard'
 import TenantProfile from './Page/Admin/TenantProfile'
 import ApartmentProfile from './Page/Admin/ApartmentProfile'
 import ViewConcern from './Page/Admin/ViewConcern'
@@ -18,13 +16,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 import { isLoggedin } from './features/authentication'
 import { useNavigate, Navigate } from 'react-router-dom'
-import Cookies from 'js-cookie'
 import ForgotPass from './Page/ForgotPass'
 import OTPVerify from './Page/OTPVerify'
 import ResetPass from './Page/ResetPass'
 import TenantPayment from './Page/Tenant/TenantPayment'
-import TenantLease from './Page/Tenant/TenantLease'
-import TenantSecurity from './Page/Tenant/TenantSecurity'
 import TenantHome from './Page/Tenant/TenantHome'
 import ProfileTenant from './Page/Tenant/ProfileTenant'
 import InvoiceFormat from './Component/InvoiceFormat'
@@ -34,6 +29,7 @@ import ErrorPage from './Page/ErrorPage'
 import Announcement from './Page/Admin/Announcement'
 import LeaseView from './Page/Admin/LeaseView'
 import SuperAdmin from './Page/SuperAdmin'
+import PaymentStatus from './Component/LoadingComponent/PaymentStatus'
 function App() {
   const user = useSelector((state) => state.auth.isAuthenticated)
   const role = useSelector((state) => state.auth.user)
@@ -50,6 +46,7 @@ function App() {
         path="/"
         element={user ? <Navigate to="/dashboard" /> : <Login />}
       />
+      <Route path="/verify-payment/status/:invoice_id" element={<PaymentStatus />} />
       <Route path="/forgot-password" element={<ForgotPass />} />
       <Route path="/otp-verify/:id" element={<OTPVerify />} />
       <Route path="/reset-password/:id" element={<ResetPass />} />
@@ -246,17 +243,8 @@ function App() {
           </Layout> : <Navigate to="/" />
         }
       />
-      {/* <Route
-        path="/tenant/document/lease"
-        element={
-          <Layout className="bg-white1">
-            <TenantLease />
-          </Layout>
-        }
-      /> */}
-
       <Route
-        path="/tenant/payment/:intentId/:clientKey"
+        path="/tenant/payment/:id"
         element={
           <Layout className="bg-white1">
             <TenantPayment />

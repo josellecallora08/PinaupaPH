@@ -3,28 +3,52 @@ const TENANTMODEL = require('../models/tenant')
 const INVOICEMODEL = require('../models/invoice')
 const httpStatusCodes = require('../constants/constants')
 const NOTIFMODEL = require('../models/notification')
+const pdf = require('html-pdf')
+const cloudinary = require('cloudinary').v2 // Import Cloudinary SDK
+const pdf_template = require('../template/invoice')
 
 module.exports.madePayment = async (req, res) => {
   const { invoice_id, status } = req.query
   try {
-    const response = await INVOICEMODEL.findByIdAndUpdate(invoice_id, {
-      status,
-      isPaid: true
-    }).populate({
-      path: 'tenant_id',
-      populate: {
-        path: 'user_id unit_id apartment_id',
+    let response;
+    if (status === "succeeded") {
+      response = await INVOICEMODEL.findByIdAndUpdate(
+        invoice_id,
+        {
+          status,
+          isPaid: true,
+          datePaid: Date.now()
+        },
+        {
+          new: true,
+        },
+      ).populate({
+        path: 'tenant_id',
+        populate: 'user_id unit_id apartment_id',
+      })
+    }
+    response = await INVOICEMODEL.findByIdAndUpdate(
+      invoice_id,
+      {
+        status,
       },
+      {
+        new: true,
+      },
+    ).populate({
+      path: 'tenant_id',
+      populate: 'user_id unit_id apartment_id',
     })
+
+
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to update invoice...' })
     }
-
     const pdfBuffer = await new Promise((resolve, reject) => {
       pdf
-        .create(pdf_template(response), {
+        .create(pdf_template({ response }), {
           childProcessOptions: {
             env: {
               OPENSSL_CONF: '/dev/null',
@@ -36,7 +60,7 @@ module.exports.madePayment = async (req, res) => {
           else resolve(buffer)
         })
     })
-    console.log(response.pdf.public_id)
+
     const cloudinaryResponse = await new Promise((resolve, reject) => {
       cloudinary.uploader
         .upload_stream(
@@ -54,25 +78,24 @@ module.exports.madePayment = async (req, res) => {
         )
         .end(pdfBuffer)
     })
-    console.log(cloudinaryResponse)
-    console.log(cloudinaryResponse.public_id)
     if (!cloudinaryResponse || !cloudinaryResponse.public_id) {
       return res
         .status(httpStatusCodes.CONFLICT)
         .json({ error: 'Failed to upload PDF to Cloudinary...' })
     }
-    const admin = await USERMODEL.findOne({ role: "Admin" })
+    const admin = await USERMODEL.findOne({ role: 'Admin' })
     if (!admin) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Invoice cannot be updated.' })
     }
-       const sendNotif = await NOTIFMODEL.create({
-      sender_id: response.user_id._id,
+    console.log("admin surpassed")
+    const sendNotif = await NOTIFMODEL.create({
+      sender_id: response.tenant_id.user_id._id,
       receiver_id: admin._id,
       title: 'Rental Fee',
       description: 'Rental Payment has been paid.',
-      type: 'Payment'
+      type: 'Payment',
     })
     if (!sendNotif) {
       return res
@@ -113,9 +136,6 @@ module.exports.createPayment = async (req, res) => {
         .json({ error: 'Invoice cannot be updated.' })
     }
 
-    
- 
-  
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: 'Payment Method and ID are saved.', response })
@@ -126,8 +146,69 @@ module.exports.createPayment = async (req, res) => {
   }
 }
 
+module.exports.createIntent = async (req, res) => {
+  try {
+    const { invoice_id } = req.query
+    const { amount } = req.body
 
+    const response = await fetch(`${process.env.PAYMONGO_CREATE_INTENT}`, {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+        authorization: `Basic ${Buffer.from(process.env.PAYMONGO_SECRET_KEY).toString('base64')}`,
+      },
+      body: JSON.stringify({
+        data: {
+          attributes: {
+            amount: amount * 100,
+            payment_method_allowed: ['paymaya', 'gcash', 'grab_pay'],
+            payment_method_options: { card: { request_three_d_secure: 'any' } },
+            currency: 'PHP',
+            capture_type: 'automatic',
+            statement_descriptor: 'Rental Fee',
+            description: 'Monthly Rent',
+          },
+        },
+      }),
+    })
+    if (!response.ok) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Failed to create payment intent.' })
+    }
+    const json = await response.json()
+    const user = await INVOICEMODEL.findById(invoice_id).populate({
+      path: 'tenant_id',
+      populate: 'user_id unit_id apartment_id',
+    })
+    const responseInvoice = await INVOICEMODEL.findByIdAndUpdate(
+      invoice_id,
+      {
+        'intent.clientKey': json.data.attributes.client_key,
+        'intent.paymentIntent': json.data.id,
+        amount: user.tenant_id.unit_id.rent,
+      },
+      { new: true },
+    ).populate({
+      path: 'tenant_id',
+      populate: 'user_id unit_id apartment_id',
+    })
+    if (!responseInvoice) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Invoice cannot be updated.' })
+    }
 
+    return res
+      .status(httpStatusCodes.OK)
+      .json({ msg: 'Created intent...', response: responseInvoice })
+  } catch (err) {
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
+  }
+}
 
 // FOR WITH UI
 // module.exports.checkout = async (req, res) => {
