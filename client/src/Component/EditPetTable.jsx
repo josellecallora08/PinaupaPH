@@ -59,7 +59,7 @@ const EditPetTable = ({ id, setIsEditPetForm }) => {
       'Are you sure you want to delete this tenant?',
     )) {
       dispatch(deletePet(id, contactId))
-      console.log('Tenant deleted')
+      console.log('Pet deleted')
     }
   }
 

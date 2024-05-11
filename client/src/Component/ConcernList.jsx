@@ -42,8 +42,11 @@ const ConcernList = () => {
           <div className="lg:gap-9 flex justify-center gap-3">
 
             <select name='selected' onChange={(e) => setSelected(e.target.value)} className="select select-bordered w-full max-w-xs">
-              <option value={"all"} >
+              <option hidden >
                 Select Type of Concern
+              </option>
+              <option value={"all"} >
+                All
               </option>
               <option value={'true'}>Resolved</option>
               <option value={'false'}>Unresolved</option>

@@ -8,7 +8,8 @@ import TenantProfileInfo from '../../Data/TenantProfileInfo'
 import EditTenantDetails from '../../Component/EditTenantDetails'
 import EditTenantAccount from '../../Component/EditTenantAccount'
 import EditFamMemTable from '../../Component/EditFamMemTable'
-import DocumentCard from '../../Component/DocumentCard'
+import { MdOutlineFileDownload } from 'react-icons/md'
+
 import AddHousehold from '../../Component/AddHousehold'
 import EditApartment from '../../Component/AdminComponent/EditApartment'
 import TransactionTable from '../../Component/TransactionTable'
@@ -19,6 +20,7 @@ import EditPetTable from '../../Component/EditPetTable'
 import { deleteUser, fetchUser } from '../../features/user'
 import { fetchHousehold, fetchHouseholds } from '../../features/household'
 import { fetchPets } from '../../features/pet'
+import { generateDocument } from '../../features/documents'
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile')
   const [isEditTenantDetailForm, setIsEditTenantDetailForm] = useState(false)
@@ -81,8 +83,9 @@ const TenantProfile = () => {
   const handleTabClick = (tab) => {
     setActiveTab(tab)
   }
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleDownload = (e) => {
+    console.log(id)
+    dispatch(generateDocument(id))
   }
   useEffect(() => {
     dispatch(fetchUser(id))
@@ -106,7 +109,7 @@ const TenantProfile = () => {
       {/* Tenant Profile Header */}
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="lg:mt-2 lg:ml-10 uppercase font-bold  p-5 mx-4">
-          <h1 className="">Tenant/Profile</h1>
+          <h1 ><span className=' hover:cursor-pointer hover:underline mr-1' onClick={() => window.history.back()}>Tenant</span>/  Tenant Profile</h1>
         </div>
 
         {/* Tab Navigation */}
@@ -120,16 +123,6 @@ const TenantProfile = () => {
             }
           >
             Profile
-          </button>
-          <button
-            onClick={() => handleTabClick('documents')}
-            className={
-              activeTab === 'documents'
-                ? 'text-white py-2 px-5 bg-primary-color rounded-full'
-                : ''
-            }
-          >
-            Documents
           </button>
           <button
             onClick={() => handleTabClick('transaction')}
@@ -166,13 +159,18 @@ const TenantProfile = () => {
                         Unit - {tenant?.unit_id.unit_no}
                       </h2>
                     </div>
+
                     <button
                       onClick={handleDeleteTenant}
-                      className="hidden lg:flex lg:py-2 lg:px-3 absolute top-0 right-3  items-center gap-2 bg-red text-white py-1 px-2 rounded-md hover:opacity-80"
+                      className="hidden lg:flex lg:py-2 lg:px-3 absolute top-0 right-3  items-center gap-2 bg-red text-white py-1 px-2 rounded-md hover:bg-red/55"
                     >
                       <MdDelete />
                       Delete
                     </button>
+                    <button onClick={handleDownload} className="btn hidden hover:text-primary-color lg:flex items-center gap-2 absolute right-3 top-12 bg-primary-color text-white p-2 rounded-md ">
+                      <MdOutlineFileDownload size={20} /> Lease Agreement
+                    </button>
+
                     <div className="lg:hidden absolute top-1 right-2">
                       <button
                         className="relative text-xl rotate-90"
@@ -182,12 +180,17 @@ const TenantProfile = () => {
                       </button>
 
                       {isRemovedot && (
-                        <button
-                          onClick={handleDeleteTenant}
-                          className="flex items-center gap-2 absolute  rounded-md -right-1 bg-red text-white p-2 hover:opacity-80 "
-                        >
-                          <MdDelete /> Delete
-                        </button>
+                        <div className="flex flex-col  absolute right-0 w-fit gap-1  bg-white rounded-md ">
+                          <button
+                            onClick={handleDeleteTenant}
+                            className="flex items-center gap-2 bg-red  text-white p-2 rounded-md hover:opacity-80 transition duration-300 ease-in-out"
+                          >
+                            <MdDelete className="text-lg" /> Delete
+                          </button>
+                          <button className=" flex items-center  gap-2  bg-primary-color w-[10.2rem] text-white p-2 rounded-md hover:bg-opacity-80 transition duration-300 ease-in-out">
+                          <MdOutlineFileDownload size={20} /> Lease Agreement
+                          </button>
+                        </div>
                       )}
                     </div>
                   </div>
@@ -201,7 +204,7 @@ const TenantProfile = () => {
                       </div>
                       <div>
                         <FaEdit
-                          className="lg:text-2xl text-lg cursor-pointer"
+                          className="lg:text-2xl text-lg cursor-pointer hover:scale-125"
                           onClick={toggleEditTenantAccountForm}
                         />
                       </div>
@@ -243,7 +246,7 @@ const TenantProfile = () => {
                         Personal Details
                       </h1>
                       <FaEdit
-                        className="lg:text-2xl lg:mr-3 text-lg cursor-pointer"
+                        className="lg:text-2xl lg:mr-3 text-lg cursor-pointer hover:scale-125"
                         onClick={toggleEditTenantDetailForm}
                       />
                     </div>
@@ -283,7 +286,7 @@ const TenantProfile = () => {
                         Apartment Details
                       </h1>
                       <FaEdit
-                        className="lg:text-2xl text-lg cursor-pointer"
+                        className="lg:text-2xl text-lg cursor-pointer hover:scale-125"
                         onClick={() =>
                           setIsEditApartmentForm(!isEditApartmentForm)
                         }
@@ -309,9 +312,16 @@ const TenantProfile = () => {
                         </div>
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
                           <p className="">Unit - {tenant?.unit_id.unit_no}</p>
-                          <p className="">{(tenant?.deposit)?.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</p>
                           <p className="">
-                            {new Date(tenant?.monthly_due)?.toLocaleDateString()}
+                            {tenant?.deposit?.toLocaleString('en-PH', {
+                              style: 'currency',
+                              currency: 'PHP',
+                            })}
+                          </p>
+                          <p className="">
+                            {new Date(
+                              tenant?.monthly_due,
+                            )?.toLocaleDateString()}
                           </p>
                         </div>
                       </div>
@@ -319,9 +329,9 @@ const TenantProfile = () => {
                   </div>
                 </div>
                 {/* Right profile */}
-                <div className="lg:w-1/2  lg:overflow-y-auto lg:origin-left lg:border-l-4 lg:border-dark-blue ">
+                <div className="lg:w-1/2   lg:overflow-y-auto lg:origin-left lg:border-l-4 lg:border-dark-blue ">
                   {/*Family Members */}
-                  <div className="relative lg:mb-3">
+                  <div className="relative lg:h-[20rem] h-[15rem] lg:mb-3">
                     <div className="lg:p-3 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
                       <h1 className="lg:text-xl font-bold">
                         Household Details
@@ -393,7 +403,6 @@ const TenantProfile = () => {
                       </div>
                     </div>
                   )}
-
 
                   {isAddHouseholdForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
@@ -474,7 +483,8 @@ const TenantProfile = () => {
                       <div className="lg:w-9/12 bg-white rounded-lg relative">
                         <EditPetTable
                           id={tenant?.user_id._id}
-                          setIsEditPetForm={setIsEditPetForm} />
+                          setIsEditPetForm={setIsEditPetForm}
+                        />
                       </div>
                     </div>
                   )}
@@ -494,23 +504,13 @@ const TenantProfile = () => {
           </div>
         )}
 
-        {activeTab === 'documents' && (
-          <div className="px-5 grid grid-cols-1 lg:grid-cols-2 gap-2">
-            <DocumentCard />
-            <DocumentCard />
-            <DocumentCard />
-          </div>
-        )}
-
         {activeTab === 'transaction' && (
           <div className="h-full w-full">
             <div className="lg:block hidden">
-              <TransactionTable
-                tenant={tenant} />
+              <TransactionTable tenant={tenant} />
             </div>
             <div className="lg:hidden">
-              <TransactionMobile
-              tenant={tenant} />
+              <TransactionMobile tenant={tenant} />
             </div>
           </div>
         )}

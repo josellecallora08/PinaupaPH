@@ -14,7 +14,7 @@ const PetEditableRow = ({
           required="required"
           placeholder="Enter Pet Name"
           name="name"
-          value={editFormData.petfullName}
+          value={editFormData.name}
           onChange={handleEditFormChange}
         />
       </td>

@@ -136,17 +136,17 @@ const Dashboard = () => {
                     <h1 className="text-[#9e9e9e] font-semibold py-2 lg:text-xl">
                       Recent Activity
                     </h1>
-                    <div className=" w-full h-full max-h-[400px] overflow-hidden md:group-hover:overflow-y-scroll">
+                    <div className=" w-full h-full max-h-[400px]  overflow-hidden group-hover:overflow-y-scroll">
                       {notifications &&
                         notifications
                           ?.filter(
                             (item) => item?.receiver_id?._id === user?._id,
                           )
                           .map((val, key) => (
-                            <div key={key} className="w-full h-auto md:max-h-[200px]">
+                            <div key={key} className="hover:scale-105 p-2 duration-300 cursor-pointer w-full h-auto md:max-h-[200px]">
                               <div className="flex justify-between p-2 rounded-full md:rounded-md hover:bg-gray">
                                 <article className="flex items-center gap-2">
-                                  <figure className="w-full h-full max-w-10 max-h-10 overflow-hidden">
+                                  <figure className="w-full h-full max-w-10 max-h-10 rounded-full overflow-hidden">
                                     <img
                                       src={val?.sender_id?.profile_image?.image_url}
                                       className="w-full h-full object-contain"
@@ -193,7 +193,7 @@ const Dashboard = () => {
                             <p className="text-[#9e9e9e] text-xs text-center xl:text-base font-semibold">
                               Total Paid
                             </p>
-                            <p className="font-bold text-center text-lg xl:text-4xl">
+                            <p className="font-bold text-center text-base xl:text-2xl">
                               {totalPaid && totalPaid?.totalPayment?.toLocaleString(
                                 'en-PH',
                                 {
@@ -240,7 +240,7 @@ const Dashboard = () => {
                             <p className="text-[#9e9e9e] text-xs text-center xl:text-base font-semibold">
                               Good Payer
                             </p>
-                            <p className="font-bold text-center text-xl xl:text-4xl">
+                            <p className="font-bold text-center text-base xl:text-2xl">
                               {totalPayer?.percentage?.toFixed(2)}%
                             </p>
                           </div>
@@ -279,7 +279,7 @@ const Dashboard = () => {
                             <p className="text-[#9e9e9e] text-xs text-center xl:text-base font-semibold">
                               Occupancy Rate
                             </p>
-                            <p className="font-bold text-center text-xl xl:text-4xl">
+                            <p className="font-bold text-center text-base xl:text-2xl">
                               {totalOccupancy?.percentage?.toFixed(2)}%
                             </p>
                           </div>
@@ -316,7 +316,7 @@ const Dashboard = () => {
                             <p className="text-[#9e9e9e] text-xs text-center xl:text-base font-semibold">
                               Renewal Rate
                             </p>
-                            <p className="font-bold text-center text-xl xl:text-4xl">
+                            <p className="font-bold text-center text-base xl:text-2xl">
                               66%
                             </p>
                           </div>

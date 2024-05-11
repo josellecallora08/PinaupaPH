@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react'
 import pinaupa from '/logo.svg'
 import { Dropdown } from 'rsuite'
-import { CiEdit } from 'react-icons/ci'
 import { BsDownload } from 'react-icons/bs'
 import { Link, useParams } from 'react-router-dom'
-import { IoPrintOutline } from 'react-icons/io5'
 //optional
 import 'rsuite/Dropdown/styles/index.css'
 import { useDispatch, useSelector } from 'react-redux'
@@ -74,7 +72,7 @@ const LeaseView = () => {
           {/* <p className="font-serif text-xl mb-4"></p> */}
           <p className="font-serif xl:text-xl lg:text-sm ml-[2.5rem] xl:mb-6 lg:mb-3">
             1.) Ang upa o renta sa bawat buwan ay nagkakahalaga ng{' '}
-            <span className="font-bold">{(contract?.tenant_id.unit_id.rent).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</span>
+            <span className="font-bold">{(contract?.tenant_id.unit_id.rent)?.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</span>
           </p>
           <p className="font-serif xl:text-xl lg:text-sm ml-[2.5rem] xl:leading-8 lg:leading-5">
             2.) Dapat ay may paunang isang (1) buwan na upa o renta sa isang (1)
@@ -176,17 +174,17 @@ const LeaseView = () => {
           </p>
 
           <p className="xl:mt-60 lg:mt-40 xl:text-2xl lg:text-xl font-bold font-serif">
-            Petsa ng simula ng kontrata: {new Date().toLocaleDateString()}
+            Petsa ng simula ng kontrata: {new Date()?.toLocaleDateString()}
           </p>
           <p className="xl:mt-10 lg:mt-5 xl:text-2xl lg:text-xl font-bold font-serif">
             Araw ng bayad: {new Date(contract?.tenant_id.monthly_due).getDate()} of the month
           </p>
           <div className="h-60 lg:h-60"></div>
 
-          {contract.witnesses >= 1 && <p className="xl:text-2xl lg:text-xlfont-serif font-bold underline">
+          {contract?.witnesses >= 1 && <p className="xl:text-2xl lg:text-xlfont-serif font-bold underline">
             Mga saksi sa kasunduan
           </p>}
-          {contract?.witnesses.map((val, key) => (
+          {contract?.witnesses?.map((val, key) => (
             <p className="xl:mt-10 lg:mt-5 xl:text-2xl lg:text-xlfont-serif font-bold underline">
               1.)  {val.name}
             </p>

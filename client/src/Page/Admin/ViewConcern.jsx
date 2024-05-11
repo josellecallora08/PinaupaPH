@@ -12,6 +12,8 @@ import { LuTrash2 } from 'react-icons/lu'
 import { deleteReport, fetchReport, resolveReport } from '../../features/report'
 import { fetchComments } from '../../features/comment'
 import { isLoggedin } from '../../features/authentication'
+import { RiArrowLeftSLine } from "react-icons/ri";
+
 const socket = io(`${import.meta.env.VITE_URL}/`)
 
 const ViewConcern = () => {
@@ -107,13 +109,13 @@ const ViewConcern = () => {
   return (
     <>
       <div className="w-full h-full flex flex-col pb-5 xl:bg-gray text-primary-color">
-        <div className="w-11/12 m-auto h-fit py-2">
-          <h1 className="uppercase font-bold">Concern and Issue</h1>
+        <div className="w-11/12 m-auto h-fit py-2 gap-5 flex items-center">
+          <h1 className="uppercase font-bold"><span className=' hover:cursor-pointer hover:underline mr-1' onClick={() => window.history.back()}>Concern and Issue</span> / View</h1>
         </div>
         <div className="md:w-11/12 h-full  m-auto grid grid-cols-2 grid-flow-row rounded-lg bg-white">
           <div className="col-span-2 xl:col-span-1 xl:row-span-1  p-5  ">
             <div className="w-full h-full grid grid-flow-4 gap-5 ">
-              {/*  */}
+         
               <div className=" relative row-span-1 grid grid-cols-2 items-center">
                 <div className="col-span-1 h-full flex items-center gap-5">
                   <figure className="w-full h-full max-w-20 max-h-20 rounded-full shadow-xl  overflow-hidden">
