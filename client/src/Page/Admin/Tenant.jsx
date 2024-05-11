@@ -119,7 +119,7 @@ const Tenant = () => {
               </div>
               <button
                 onClick={toggleAddTenantForm}
-                className="btn w-fit md:btn-wide bg-primary-color font-semibold uppercase text-white hover:text-primary-color"
+                className="btn w-fit md:btn-wide bg-primary-color font-semibold  text-white hover:text-primary-color"
               >
                 <FaPlus />
                 Add Tenant

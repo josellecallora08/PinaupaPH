@@ -49,10 +49,10 @@ const ApartmentProfile = () => {
 
   return (
     <>
-      <div className="w-full h-full pb-10  bg-white1">
-        <div className="w-[95%] m-auto">
+      <div className="w-full h-full  bg-white1">
+        <div className="w-[95%] m-auto pb-7">
           {/* Upper part of Apartment Profile */}
-          <h1 className="uppercase font-bold py-5">View Apartment</h1>
+          <h1 className="uppercase font-bold py-5"><span className=' hover:cursor-pointer hover:underline mr-1' onClick={() => window.history.back()}>Apartment</span>/ View Apartment</h1>
           <div className=" flex gap-10  py-4 rounded-md md:shadow-md md:shadow-gray ">
             <div className="lg:w-1/2">
               <h1 className="lg:text-3xl md:text-3xl font-semibold text-black text-lg mb-3">
@@ -64,13 +64,13 @@ const ApartmentProfile = () => {
               <div className="flex gap-5 mt-16 ">
                 <button
                   onClick={toggleEditApartmentForm}
-                  className="lg:text-xl lg:px-5 lg:py-1 bg-dark-blue text-white  py-2 px-6 rounded-md"
+                  className="hover:scale-105 hover:duration-300 hover:bg-primary-color/55 lg:text-base lg:px-5 lg:py-1 bg-dark-blue text-white  py-2 px-6 rounded-md"
                 >
                   Edit
                 </button>
                 <button
                   onClick={handleDelete}
-                  className="lg:text-base lg:px-5 lg:py-2 uppercase bg-red text-white  py-2 px-4 rounded-md"
+                  className="hover:scale-105 hover:duration-300 hover:bg-red/55 lg:text-base lg:px-5 lg:py-2  bg-red text-white  py-2 px-4 rounded-md"
                 >
                   Delete
                 </button>
@@ -106,7 +106,7 @@ const ApartmentProfile = () => {
           <div className="flex justify-end gap-2 w-full">
             <button
               onClick={toggleAddRoomForm}
-              className="w-full flex gap-2 items-center justify-center bg-primary-color text-white font-semibold uppercase py-2 rounded-md lg:px-2 mt-5 lg:w-fit"
+              className="btn w-44 lg:text-base text-sm flex gap-2 items-center justify-center bg-primary-color hover:text-primary-color  text-white  lg:w-42 py-2   rounded-md lg:mr-2 mr-5  mt-5 "
             >
               <FaPlus />
               Add Unit

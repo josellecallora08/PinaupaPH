@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import { IoMdClose } from 'react-icons/io'
 import { useDispatch } from 'react-redux'
 import { createAnnouncement } from '../../features/announcement'
-
 const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
   const dispatch = useDispatch()
   const modalRef = useRef(null)
@@ -63,7 +62,7 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
                   name={name}
                   value={value}
                   onChange={handleChange}
-                  className="w-full border border-black text-dark-gray rounded p-2 cursor-pointer"
+                  className=" w-full border border-black text-dark-gray rounded p-2  cursor-pointer"
                   placeholder="Select announcement type"
                 >
                   <option hidden>Select Type:</option>
@@ -83,7 +82,6 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
                   <option value="utilities">Utilities</option>
                   <option value="security">Security</option>
                   <option value="community">Community</option>
-                  
                 </select>
               ) : name === 'description' ? (
                 <textarea

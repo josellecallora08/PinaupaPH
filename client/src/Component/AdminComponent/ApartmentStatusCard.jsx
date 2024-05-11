@@ -24,7 +24,7 @@ const ApartmentStatusCard = ({ apartmentId, val }) => {
   }
   return (
     <>
-      <div className="relative flex  overflow-hidden shadow-md shadow-gray rounded-lg">
+      <div className=" relative flex  overflow-hidden shadow-md shadow-gray rounded-lg">
         <div className="text-4xl text-white flex items-center justify-center flex-1 px-5 bg-dark-blue">
           <h1 className='text-4xl font-black'>{val?.unit_no}</h1>
         </div>
@@ -32,8 +32,8 @@ const ApartmentStatusCard = ({ apartmentId, val }) => {
         <div className="relative pt-8 flex-grow bg-white ">
           <p><span className='text-2xl font-black ml-5'>{(val?.rent).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</span> / per month</p>
           <div className='lg:justify-end lg:mr-5 md:justify-end md:mr-5  lg:mt-14 flex gap-2 mt-16 ml-44 pb-2'>
-            <button className='lg:p-2  bg-blue p-1 rounded-md' onClick={toggleisEditApartmentUnit}><MdOutlineModeEditOutline size={15} color='white' /></button>
-            <button onClick={() => handleDelete(val?._id)} className='lg:p-2  bg-red p-1 rounded-md'><MdOutlineClose size={15} color='white' /></button>
+            <button className='lg:p-2 hover:scale-105 hover:duration-300 hover:bg-blue/55 bg-blue p-1 rounded-md' onClick={toggleisEditApartmentUnit}><MdOutlineModeEditOutline size={15} color='white' /></button>
+            <button onClick={() => handleDelete(val?._id)} className='lg:p-2 hover:scale-105 hover:duration-300 hover:bg-red/55  bg-red p-1 rounded-md'><MdOutlineClose size={15} color='white' /></button>
           </div>
 
         </div>

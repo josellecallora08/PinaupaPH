@@ -167,11 +167,11 @@ const Profile = () => {
             APARTMENT DETAILS
           </p>
 
-          <div className='flex flex-wrap gap-2'>
+          <div className='flex flex-wrap gap-3 pb-10'>
             {apartment && apartment.map((val, key) => (
               <div key={key} className="w-11/12 md:h-full md:max-w-[500px] md:max-h-[300px] overflow-hidden bg-white rounded-md shadow-md md:mx-[52px] mx-4">
                 <div className="w-full h-full max-h-12 px-4 py-2 text-white bg-[#183044] flex items-center">
-                  <p>LANDLORD APARTMENT</p>
+                  <p>APARTMENT NO. {key + 1}</p>
                 </div>
 
                 <div className="w-full flex flex-col">

@@ -74,7 +74,7 @@ const Invoice = () => {
                   onChange={(e) => setStatus(JSON.parse(e.target.value))}
                   className="select font-semibold select-bordered w-full max-w-xs"
                 >
-                  <option defaultValue="false">Select Status</option>
+                  <option defaultValue="false" hidden>Select Status</option>
                   <option value="true">Paid</option>
                   <option value="false">Unpaid</option>
                 </select>
@@ -113,7 +113,7 @@ const Invoice = () => {
                         .map((val, index) => (
                           <tr
                             key={index}
-                            className="text-center bg-gray text-xs md:text-base"
+                            className="text-center bg-white text-xs md:text-base"
                           >
                             <td className="text-primary-color font-regular p-2">
                               {val?.pdf?.reference}
