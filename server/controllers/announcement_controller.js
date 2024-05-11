@@ -29,7 +29,6 @@ module.exports.createAnnouncement = async (req, res) => {
     const id = req.user.id
     const role = req.user.role
     const { title, type, description } = req.body
-    console.log(req.body)
     const details = {}
     details.user_id = id
     if (title !== '') details.title = title
@@ -53,7 +52,6 @@ module.exports.createAnnouncement = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to create announcement' })
     }
-    console.log(tenants)
     await Promise.all(
       tenants.map(async (user) => {
         await NOTIFMODEL.create({

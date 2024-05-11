@@ -20,6 +20,7 @@ import EditPetTable from '../../Component/EditPetTable'
 import { deleteUser, fetchUser } from '../../features/user'
 import { fetchHousehold, fetchHouseholds } from '../../features/household'
 import { fetchPets } from '../../features/pet'
+import { generateDocument } from '../../features/documents'
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile')
   const [isEditTenantDetailForm, setIsEditTenantDetailForm] = useState(false)
@@ -82,8 +83,9 @@ const TenantProfile = () => {
   const handleTabClick = (tab) => {
     setActiveTab(tab)
   }
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleDownload = (e) => {
+    console.log(id)
+    dispatch(generateDocument(id))
   }
   useEffect(() => {
     dispatch(fetchUser(id))
@@ -165,7 +167,7 @@ const TenantProfile = () => {
                       <MdDelete />
                       Delete
                     </button>
-                    <button className="btn hidden hover:text-primary-color lg:flex items-center gap-2 absolute right-3 top-12 bg-primary-color text-white p-2 rounded-md ">
+                    <button onClick={handleDownload} className="btn hidden hover:text-primary-color lg:flex items-center gap-2 absolute right-3 top-12 bg-primary-color text-white p-2 rounded-md ">
                       <MdOutlineFileDownload size={20} /> Lease Agreement
                     </button>
 

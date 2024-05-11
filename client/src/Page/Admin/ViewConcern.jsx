@@ -4,7 +4,7 @@ import angle from '/angle.svg'
 import send from '/send.svg'
 import { io } from 'socket.io-client'
 import comments from '/comments.svg'
-import { createComment, deleteComment } from '../../features/comment'
+import { createComment, deleteComment, insertCommentSuccess } from '../../features/comment'
 import { useDispatch, useSelector } from 'react-redux'
 import { IoIosCheckboxOutline } from 'react-icons/io'
 import { BsThreeDotsVertical } from 'react-icons/bs'
@@ -14,6 +14,8 @@ import { fetchComments } from '../../features/comment'
 import { isLoggedin } from '../../features/authentication'
 import { RiArrowLeftSLine } from "react-icons/ri";
 
+const socket = io(`${import.meta.env.VITE_URL}/`)
+
 const ViewConcern = () => {
   const { id } = useParams()
   const location = useLocation()
@@ -22,9 +24,10 @@ const ViewConcern = () => {
   const loading = useSelector((state) => state.report.loading)
   const user = useSelector((state) => state.auth.user)
   const msg = useSelector((state) => state.comment.data)
-  const [comment, setComments] = useState('')
+  const [comment, setComments] = useState(null)
   const messageContainerRef = useRef(null)
   const [isDotOpen, setIsDotOpen] = useState(false)
+
   const toggleDot = () => {
     setIsDotOpen(!isDotOpen)
   }
@@ -37,17 +40,22 @@ const ViewConcern = () => {
     }
   }
   const handleComplete = async () => {
-    alert(id)
     dispatch(resolveReport(id))
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (comment === '' || comment === null) {
+      return;
+    }
+
+    let user_id = user.role === "Admin" ? user : user.user_id
+    socket.emit('send-comment', { user_id, comment, id })
     dispatch(
       createComment(
         user.role === 'Admin' ? user?._id : user?.user_id?._id,
         id,
         comment,
-        location.pathname,
+        location.pathname
       ),
     ) // Submit the comment
     setComments(null)
@@ -70,14 +78,19 @@ const ViewConcern = () => {
   }, [handleSubmit])
 
   useEffect(() => {
-    const socket = io(`${import.meta.env.VITE_URL}/`)
-    socket.on('receive-comment', (comment) => {
-      dispatch(fetchComments(id))
-    })
+    const handleReceiveComment = (message) => {
+      dispatch(insertCommentSuccess(message));
+    };
+  
+    // Listen for incoming comments
+    socket.on('receive-comment', handleReceiveComment);
+  
+    // Clean up socket connection when the component unmounts
     return () => {
-      socket.disconnect()
-    }
-  }, [dispatch])
+      socket.off('receive-comment', handleReceiveComment);
+    };
+  }, [dispatch]);
+  
 
   useEffect(() => {
     dispatch(isLoggedin())
@@ -255,7 +268,7 @@ const ViewConcern = () => {
                         </button>
                       </div>
                     </form>
-                    || <h1 className='h-full flex items-center text-white font-regular text-xl'>RESOLVED ISSUE</h1>}
+                      || <h1 className='h-full flex items-center text-white font-regular text-3xl'>RESOLVED ISSUE</h1>}
                   </div>
                 </div>
               </div>

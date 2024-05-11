@@ -1,27 +1,5 @@
 module.exports = ({ response }) => {
-  const today = new Date()
-  let months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'Novesmber',
-    'December',
-  ]
-
-  let month = months[today.getMonth()]
-  let date = today.getDate()
-  if (date < 10) {
-    date = '0' + date
-  }
-  let year = today.getFullYear()
-
+  console.log(response)
   return `
 
   <!DOCTYPE html>
@@ -57,7 +35,7 @@ module.exports = ({ response }) => {
       </div>
 
       <p style="font-family: Poppins; white-space: nowrap; margin-bottom: 3rem;  margin-top: 40px;">
-        <span style="font-weight: bold; font-family: Poppins;">Lokasyon: </span>${response.tenant_id.apartment_id.address}, ${response.tenant_id.apartment_id.barangay}, ${response.tenant_id.apartment_id.province}
+        <span style="font-weight: bold; font-family: Poppins;">Lokasyon: </span>${response.tenant_id?.apartment_id.address}, ${response.tenant_id?.apartment_id.barangay}, ${response.tenant_id?.apartment_id.province}
       </p>
       <p style="font-family: serif;  margin-bottom: 1rem; font-weight: bold;  font-family: Poppins;">
         SA MGA KINAUUKULANG NITO,
@@ -69,7 +47,7 @@ module.exports = ({ response }) => {
       </p>
       <p>
         1.) Ang upa o renta sa bawat buwan ay nagkakahalaga ng{' '}
-        <span className="font-bold">${response?.tenant_id.unit_id.rent}</span>
+        <span className="font-bold">${response?.tenant_id?.unit_id.rent}</span>
       </p>
 
       <p>
@@ -175,14 +153,14 @@ module.exports = ({ response }) => {
 
       <p style="margin-top: 200px">
         Nilagdaan namin ang kasunduang ito ngayong ________, ng
-        _____________ dito sa ${response?.tenant_id.apartment_id.address}, ${response.tenant_id.apartment_id.barangay}, ${response.tenant_id.apartment_id.province}
+        _____________ dito sa ${response?.tenant_id?.apartment_id.address}, ${response?.tenant_id?.apartment_id.barangay}, ${response?.tenant_id?.apartment_id.province}
       </p>
 
       <p style="margin-top: 100px;">
         Petsa ng simula ng kontrata: ${new Date().toDateString()}
       </p>
       <p>
-        Araw ng bayad: ${new Date(response?.tenant_id.monthly_due).getDate()} of the Month
+        Araw ng bayad: ${new Date(response?.tenant_id?.monthly_due).getDate()} of the Month
       </p>
       <div className="h-60 lg:h-60"></div>
 
@@ -190,7 +168,7 @@ module.exports = ({ response }) => {
         Mga saksi sa kasunduan
       </p>`}
       
-      ${response?.witnesses.map((val, key) => (
+      ${response?.witnesses?.map((val, key) => (
     `<p>
       1.) ${val.name}
     </p>`

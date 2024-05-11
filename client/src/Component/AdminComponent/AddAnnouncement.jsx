@@ -1,9 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { IoMdClose } from 'react-icons/io'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { io } from 'socket.io-client'
 import { createAnnouncement } from '../../features/announcement'
+import { fetchUsers } from '../../features/user'
+const socket = io(`${import.meta.env.VITE_URL}/`)
+
 const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
+  const user = useSelector((state) => state.auth.user)
   const dispatch = useDispatch()
+  const tenants = useSelector((state) => state.user.data)
   const modalRef = useRef(null)
   const [formData, setFormData] = useState({
     title: '',
@@ -13,6 +19,9 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
+  useEffect(() => {
+    dispatch(fetchUsers())
+  }, [])
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -26,7 +35,8 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
   }, [setisAddAnnouncementFormOpen])
   const handleSubmit = (e) => {
     e.preventDefault()
-    dispatch(createAnnouncement(formData, url))
+    socket.emit('send-announcement', {sender_id:user,receiver_id:tenants, type:'Announcement',isRead: false})
+    dispatch(createAnnouncement(formData))
     setisAddAnnouncementFormOpen((prevState) => !prevState)
   }
 

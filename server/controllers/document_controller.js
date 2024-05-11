@@ -155,7 +155,6 @@ module.exports.createContract = async (req, res) => {
       'user_id unit_id apartment_id',
     )
 
-    console.log('Response', response)
     if (!response) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
@@ -251,17 +250,26 @@ module.exports.createContract = async (req, res) => {
 
 module.exports.generateContract = async (req, res) => {
   try {
-    const { contract_id } = req.query
-
-    const contract = await CONTRACTMODEL.findById(contract_id)
+    let { contract_id } = req.query
+    console.log(req.query)
+    let contract = await CONTRACTMODEL.findById(contract_id)
     if (!contract)
-      return res
-        .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'Contract Not found' })
+      {
+        const user = await TENANTMODEL.findOne({user_id: contract_id})
+        if(!user){
+          return res.status(httpStatusCodes.NOT_FOUND).json({error: "User not found"})
+        }
+        console.log(user)
+        contract = await CONTRACTMODEL.findOne({tenant_id:user._id})
+        if(!contract){
+          console.log('run')
+          return res.status(httpStatusCodes.NOT_FOUND).json({error: "User not found"})
+        }
+      }
 
+      console.log("Ran")
     const { public_id } = contract.pdf
     console.log(public_id)
-
     // Fetch the file from Cloudinary
     const cloudinaryUrl = cloudinary.url(public_id, {
       resource_type: 'raw',

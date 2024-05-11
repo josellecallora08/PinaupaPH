@@ -166,18 +166,17 @@ export const editPet = (user_id, pet_id, fields) => async (dispatch) => {
   }
 }
 
-export const deletePet = (pet_id) => async (dispatch) => {
+export const deletePet = (user_id,pet_id) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
 
     dispatch(fetchPetStart())
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/user/delete_pet/${pet_id}`,
+      `${import.meta.env.VITE_URL}/api/user/${user_id}/delete_pet?pet_id=${pet_id}`,
       {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
         },
       },
     )

@@ -132,6 +132,8 @@ module.exports.delete_pet = async (req, res) => {
   try {
     const { user_id } = req.params
     const { pet_id } = req.query
+
+    console.log(req.params)
     const response = await TENANTMODEL.findOne({ user_id: user_id })
     if (!response) {
       return res

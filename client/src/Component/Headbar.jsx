@@ -15,7 +15,10 @@ import { isLoggedin, isLogout, logout } from '../features/authentication'
 import { fetchNotifications } from '../features/notification'
 import { useNavigate } from 'react-router-dom'
 import Notification from './Notification'
+import {io} from 'socket.io-client'
+import { insertAnnouncementNotification } from '../features/announcement'
 
+const socket = io(`${import.meta.env.VITE_URL}/`)
 const Headbar = () => {
   const sidebar = useSelector((state) => state.toggle.sidebar)
   const profile = useSelector((state) => state.toggle.profile)
@@ -27,7 +30,20 @@ const Headbar = () => {
   const menuBg = useRef(null)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  useEffect(() => {
+    const handleReceiveComment = (data) => {
+      console.log(data)
+      dispatch(insertAnnouncementNotification(data));
+    };
 
+    // Listen for incoming comments
+    socket.on('receive-announcement', handleReceiveComment);
+
+    // Clean up socket connection when the component unmounts
+    return () => {
+      socket.off('receive-announcement', handleReceiveComment);
+    };
+  }, [dispatch]);
   useEffect(() => {
     dispatch(fetchNotifications())
   }, [])
