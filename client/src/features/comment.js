@@ -19,6 +19,9 @@ const commentSlice = createSlice({
       state.loading = false
       state.data = action.payload
     },
+    insertCommentSuccess :(state, action) => {
+      state.data = [...state.data, action.payload]
+    },
     editCommentsSuccess: (state, action) => {
       state.loading = false
       state.data = action.payload
@@ -37,6 +40,7 @@ const commentSlice = createSlice({
 export const {
   fetchCommentStart,
   fetchCommentsSuccess,
+  insertCommentSuccess,
   editCommentsSuccess,
   deleteCommentSuccess,
   actionFailed,
@@ -48,7 +52,7 @@ export const createComment =
       console.log(userId)
       dispatch(fetchCommentStart())
       const token = Cookies.get('token')
-      const socket = io(`${import.meta.env.VITE_URL}/`)
+      // const socket = io(`${import.meta.env.VITE_URL}/`)
       const response = await fetch(
         `${import.meta.env.VITE_URL}/api/report/create/comment?user_id=${userId}&report_id=${reportId}`,
         {
@@ -66,8 +70,8 @@ export const createComment =
         throw new Error(json.error)
       }
       const json = await response.json()
-      console.log(json)
-      socket.emit('send-comment', comment)
+      console.log(comment)
+      
       // dispatch(fetchReport(reportId))
     } catch (err) {
       dispatch(actionFailed(err.message))

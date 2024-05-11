@@ -1,12 +1,15 @@
 import {useDispatch} from 'react-redux'
 import { readNotification } from '../features/notification'
 import { useNavigate } from 'react-router-dom'
+import {io} from 'socket.io-client'
+
 const Notification = ({ user, data, notifBg }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const handleNotif = async (id) => {
     dispatch(readNotification(id, navigate))
   }
+
   return (
     <>
       <div

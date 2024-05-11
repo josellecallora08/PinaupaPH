@@ -144,17 +144,7 @@ export const fetchReport = (report_id) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    socket.on('receive-comment', (comment) => {
-      // Handle the received comment
-      console.log('Received comment:', comment)
-    })
-
-    // Event listener for 'receive-comment-notification' event
-    socket.on('receive-comment-notification', () => {
-      // Handle the received comment notification
-      console.log('Received comment notification')
-    })
-    console.log(json.response)
+    
     dispatch(fetchReportSuccess(json.response))
   } catch (err) {
     console.log(err.message)

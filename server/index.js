@@ -71,9 +71,11 @@ mongoose
         console.log('Disconnected')
       })
 
-      socket.on('send-comment', (comment) => {
-        io.emit('receive-comment', comment)
-        io.emit('receive-comment-notification')
+      socket.on('send-comment', (message) => {
+        console.log(message)
+        socket.join(message.id);
+        io.to(message.id).emit('receive-comment', message)
+        io.emit('receive-comment-notification', message)
       })
 
       socket.on('send-payment', () => {
@@ -81,9 +83,13 @@ mongoose
         io.emit('receive-payment-notification')
       })
 
-      socket.on('send-announcement', () => {
-        io.emit('receive-announcement')
-        io.emit('receive-announcement-notification')
+      socket.on('send-announcement', (data) => {
+        if (Array.isArray(data.receiver_id)) {
+          // If receiver_id is an array, emit to multiple recipients
+          data.receiver_id.forEach((recipientId) => {
+            io.to(recipientId._id).emit('new-announcement', { sender_id:data.sender_id, receiver_id: recipientId._id, type:data.type, isRead: false });
+          });
+        }
       })
     })
     server.listen(process.env.PORT, () => {
