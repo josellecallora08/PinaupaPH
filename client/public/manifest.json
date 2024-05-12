@@ -1,7 +1,7 @@
 {
     "name": "PinaupaPH",
     "short_name": "Pinaupa",
-    "start_url": "http://localhost:5173",
+    "start_url": "https://pinaupaph.vercel.app",
     "display": "standalone",
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
