@@ -5,7 +5,7 @@ module.exports.fetchNotifications = async (req, res) => {
   try {
     const response = await NOTIFMODEL.find()
       .populate('sender_id receiver_id')
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: -1})
     if (!response) {
       return res
         .status(httpStatusCodes.NOT_FOUND)

@@ -165,7 +165,7 @@ const Sidebar = () => {
                 </li>
               </>
             )}
-            <li className="w-full h-fit">
+           {user?.role !== 'Superadmin' && <li className="w-full h-fit">
               <Link
                 to={`/security`}
                 className={`flex items-center ${!menu && 'justify-center'} w-4/5 m-auto h-full hover:bg-primary-color/40 rounded-md ${menu ? 'p-3 md:p-5' : 'p-3'
@@ -190,7 +190,7 @@ const Sidebar = () => {
                   ''
                 )}
               </Link>
-            </li>
+            </li>}
             {user?.role === "Admin" &&<li className="w-full h-fit flex flex-col cursor-pointer">
               <div
                 onClick={handleDocs}
@@ -295,7 +295,7 @@ const Sidebar = () => {
                 </Link>
               </li>
             )}
-            <li className="w-full h-fit">
+           {user?.role !== 'Superadmin' && <li className="w-full h-fit">
               <Link
                 to={`/concern&issue`}
                 className={`flex items-center gap-5 ${!menu && 'justify-center'} w-4/5 mx-auto h-full hover:bg-primary-color/40 rounded-md ${menu ? 'p-3 md:p-5' : 'p-3'
@@ -320,7 +320,7 @@ const Sidebar = () => {
                   ''
                 )}
               </Link>
-            </li>
+            </li>}
 
 
             <li className="w-full h-fit">

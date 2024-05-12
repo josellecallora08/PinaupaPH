@@ -22,7 +22,7 @@ const FamMemEditableRow = ({
         <input
           className="lg:w-auto ml-2 p-1 w-24 rounded-md border-2 border-primary-color"
           type="text"
-          placeholder="Enter Name"
+          placeholder="Enter Phone Number"
           name="mobile"
           value={editFormData.mobile}
           onChange={handleEditFormChange}
@@ -42,7 +42,7 @@ const FamMemEditableRow = ({
         <input
           className="lg:w-auto p-1 border-2 w-24 rounded-md border-primary-color"
           type="date"
-          placeholder="Enter Phone"
+          placeholder="Enter Birthday"
           name="birthday"
           value={editFormData.birthday}
           onChange={handleEditFormChange}

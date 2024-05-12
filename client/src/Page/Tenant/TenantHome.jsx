@@ -17,6 +17,7 @@ const TenantHome = () => {
   const announcement = useSelector((state) => state.announcement.single)
   const report = useSelector((state) => state.report.data)
   const dispatch = useDispatch()
+  console.log(report)
   useEffect(() => {
     dispatch(isLoggedin())
     dispatch(tenantInvoice())
@@ -70,33 +71,44 @@ const TenantHome = () => {
               <div className=" overflow-y-auto h-40">
                 <table className="w-full">
                   <tbody className="text-primary-color">
-                    {report && report?.map((val, key) => (
-                      <tr key={key} className="border-b border-dark-gray">
-                        <td className=" px-4 py-2   ">
-                          <div className="flex items-center gap-3 w-fit">
-                            <div className={`md:w-2 md:h-2 w-2 h-2 rounded-full ${val?.status ? 'bg-blue' : 'bg-red'}`}></div>
-                            <div className="md:text-sm text-xs">
-                              {val?.title}
+                    {report &&
+                      report?.map((val, key) => (
+                        <tr key={key} className="border-b border-dark-gray">
+                          <td className=" px-4 py-2   ">
+                            <div className="flex items-center gap-3 w-fit">
+                              <div
+                                className={`md:w-2 md:h-2 w-2 h-2 rounded-full ${val?.status ? 'bg-blue' : 'bg-red'}`}
+                              ></div>
+                              <div className="md:text-sm text-xs">
+                                {val?.title}
+                              </div>
                             </div>
-                          </div>
-                        </td>
-                        <td className="px-4 py-2 md:text-sm text-xs">
-                          {new Date(val?.createdAt).toDateString()}
-                        </td>
-                        <td className="px-4 py-2 flex items-center gap-3">
-                          <div className=" flex items-center gap-3 bg-gray rounded-full w-fit md:pr-20  p-2">
-                            <img
-                              src={val?.sender_id?.user_id.profile_image?.image_url}
-                              alt="tenantlogo"
-                              className="w-6 h-6 rounded-full "
-                            />
-                            <div className="md:text-sm text-xs text-ellipsis text-nowrap max-w-[300px] overflow-hidden">
-                              {val?.description}
+                          </td>
+                          <td className="px-4 py-2 md:text-sm text-xs">
+                            <span className='hidden'>
+                              {new Date(val?.createdAt).toDateString()}
+                            </span>
+                            <span className=''>
+                              {new Date(val?.createdAt).toLocaleDateString()}
+                            </span>
+                          </td>
+                          <td className="px-4 py-2 flex items-center gap-3">
+                            <div className=" flex items-center gap-3 bg-gray rounded-full w-full md:pr-20  p-2">
+                              <img
+                                src={
+                                  val?.sender_id?.user_id.profile_image
+                                    ?.image_url
+                                }
+                                alt="tenantlogo"
+                                className="w-6 h-6 rounded-full "
+                              />
+                              <div className="md:text-sm text-xs text-ellipsis text-nowrap w-52 max-w-[100px] md:max-w-[300px] overflow-hidden">
+                                {val?.description}
+                              </div>
                             </div>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
@@ -136,7 +148,7 @@ const TenantHome = () => {
                 {invoice?.isPaid === true ? (
                   <div>
                     <div className="flex justify-center w-full hover:opacity-80">
-                      <div className="bg-primary-color w-full text-white p-5">
+                      <div className="bg-primary-color w-full text-white p-5 text-center text-xl">
                         Paid
                       </div>
                     </div>
@@ -144,7 +156,7 @@ const TenantHome = () => {
                 ) : (
                   <Link
                     to={`/tenant/payment/${invoice?._id}`}
-                    className="bg-primary-color w-full text-white p-5"
+                    className="bg-primary-color w-full text-white p-5 text-center hover:opacity-80 hover:scale-105 duration-200"
                   >
                     Pay Now
                   </Link>
@@ -158,7 +170,7 @@ const TenantHome = () => {
                 Calendar
               </div>
               <div className="w-full h-full">
-                <Calendar />
+                <Calendar user={user} />
               </div>
             </div>
 
@@ -194,7 +206,7 @@ const TenantHome = () => {
               </div>
             </div>
           </div>
-        </div >
+        </div>
       )}
     </>
   )

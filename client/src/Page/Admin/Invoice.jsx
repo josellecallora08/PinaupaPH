@@ -98,6 +98,7 @@ const Invoice = () => {
                     <th className="text-white p-3 w-1/5">Reference Number</th>
                     <th className="text-white p-3 w-1/5">Tenant</th>
                     <th className="text-white p-3 w-1/5">Unpaid Balance</th>
+                    <th className="text-white p-3 w-1/5">Date Paid</th>
                     <th className="text-white p-3 w-1/5">Balance</th>
                     <th className="text-white p-3 w-1/5">Status</th>
                     <th className="text-white py-3 lg:px-5 w-1/5">Action</th>
@@ -118,7 +119,7 @@ const Invoice = () => {
                             <td className="text-primary-color font-regular p-2">
                               {val?.pdf?.reference}
                             </td>
-                            <td className="text-sm md:text-base font-regular text-primary-color p-2">
+                            <td className="text-xs md:text-base font-regular text-primary-color p-2">
                               {val?.tenant_id?.user_id.name}
                             </td>
                             <td className="p-2">
@@ -126,6 +127,12 @@ const Invoice = () => {
                                 ? 0
                                 : val?.tenant_id?.balance - val?.amount
                               )?.toLocaleString('en-PH', {
+                                style: 'currency',
+                                currency: 'PHP',
+                              })}
+                            </td>
+                            <td className="p-2">
+                              {val?.amount?.toLocaleString('en-PH', {
                                 style: 'currency',
                                 currency: 'PHP',
                               })}

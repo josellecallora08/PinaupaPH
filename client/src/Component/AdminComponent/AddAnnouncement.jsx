@@ -35,7 +35,13 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
   }, [setisAddAnnouncementFormOpen])
   const handleSubmit = (e) => {
     e.preventDefault()
-    socket.emit('send-announcement', {sender_id:user,receiver_id:tenants, type:'Announcement',isRead: false})
+    console.log(tenants)
+    socket.emit('send-announcement', {
+      sender_id: user,
+      receiver_id: tenants,
+      type: 'Announcement',
+      isRead: false,
+    })
     dispatch(createAnnouncement(formData))
     setisAddAnnouncementFormOpen((prevState) => !prevState)
   }

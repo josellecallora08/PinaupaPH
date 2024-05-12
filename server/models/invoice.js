@@ -55,6 +55,10 @@ const INVOICEMODEL = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    due: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true },
 )
