@@ -36,7 +36,6 @@ export const { startLoading, paymentSuccess, fetchKeySuccess, actionFailed } =
 export const paymentStatus = (invoice_id, navigate) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
-    const socket = io(`${import.meta.env.VITE_URL}/`)
     dispatch(startLoading())
     const responseIntent = await fetch(
       `${import.meta.env.VITE_URL}/api/invoice/list/v1?invoice_id=${invoice_id}`,

@@ -1,12 +1,15 @@
-import {useDispatch} from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { readNotification } from '../features/notification'
 import { useNavigate } from 'react-router-dom'
+import { io } from 'socket.io-client'
+
 const Notification = ({ user, data, notifBg }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const handleNotif = async (id) => {
+  const handleNotif = (id) => {
     dispatch(readNotification(id, navigate))
   }
+
   return (
     <>
       <div
@@ -16,11 +19,12 @@ const Notification = ({ user, data, notifBg }) => {
         {(data &&
           data
             ?.filter((item) => item?.receiver_id?._id === user?.user_id._id)
+            .sort((a, b) => (a.isRead ? (b.isRead ? 0 : 1) : b.isRead ? -1 : 0))
             .map((val, key) => (
               <button
                 onClick={() => handleNotif(val._id)}
                 key={key}
-                className={`p-2 hover:bg-gray/50 size-full md:max-w-[300px] max-h-[50px] rounded-md overflow-hidden shadow-md m-auto my-2 flex gap-2 items-center ${!(val?.isRead) ? 'bg-primary-color/20 hover:border-primary-color hover:border' : ''}`}
+                className={`p-2 hover:bg-gray/50 size-full md:max-w-[300px] max-h-[50px] rounded-md overflow-hidden shadow-md m-auto my-2 flex gap-2 items-center ${!val?.isRead ? 'bg-primary-color/20 hover:border-primary-color hover:border' : ''}`}
               >
                 <div className="flex items-center">
                   <figure className="w-10 h-10 rounded-full overflow-hidden">
@@ -31,12 +35,18 @@ const Notification = ({ user, data, notifBg }) => {
                     />
                   </figure>
                 </div>
-                <div className='w-full flex justify-between'>
-                  <div className='flex flex-col'>
-                    <span className='font-semibold text-start text-sm md:max-w-[150px] text-ellipsis text-nowrap overflow-hidden'>New {val?.type}</span>
-                    <span className='text-xs text-start max-w-[150px] lg:max-w-[150px] md:max-w-[500px] text-ellipsis text-nowrap overflow-hidden'>{val?.description}</span>
+                <div className="w-full flex justify-between">
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-start text-sm md:max-w-[150px] text-ellipsis text-nowrap overflow-hidden">
+                      New {val?.type}
+                    </span>
+                    <span className="text-xs text-start max-w-[150px] lg:max-w-[150px] md:max-w-[500px] text-ellipsis text-nowrap overflow-hidden">
+                      {val?.description}
+                    </span>
                   </div>
-                  <div className='text-xs'>{new Date(val?.createdAt).toLocaleDateString()}</div>
+                  <div className="text-xs">
+                    {new Date(val?.createdAt).toLocaleDateString()}
+                  </div>
                 </div>
               </button>
             ))) ||

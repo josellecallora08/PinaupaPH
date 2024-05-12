@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import pfp from '/pfp.svg'
-import { HiOutlineDotsHorizontal } from 'react-icons/hi'
 
 import { Link } from 'react-router-dom'
 const ConcernCard = ({ val, num }) => {
@@ -12,7 +10,7 @@ const ConcernCard = ({ val, num }) => {
   return (
     <>
       <Link to={`/view-concern/${val?._id}`}>
-        <div className=" flex h-28 w-full mt-5 items-center rounded-tl-lg rounded-bl-lg bg-white  shadow-md shadow-gray">
+        <div className=" hover:scale-105 hover:duration-300 flex h-28 w-full mt-5 items-center rounded-tl-lg rounded-bl-lg bg-white  shadow-md shadow-gray">
           <div
             className={` h-28 w-4 rounded-tl-lg rounded-bl-lg ${val?.status ? 'bg-lime' : 'bg-red'}`}
           ></div>

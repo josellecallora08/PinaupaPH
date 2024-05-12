@@ -4,8 +4,7 @@ import angle from '/angle.svg'
 import send from '/send.svg'
 import { io } from 'socket.io-client'
 import comments from '/comments.svg'
-import { createComment, deleteComment } from '../../features/comment'
-import sample from '/background.jpg'
+import { createComment, deleteComment, insertCommentSuccess } from '../../features/comment'
 import { useDispatch, useSelector } from 'react-redux'
 import { IoIosCheckboxOutline } from 'react-icons/io'
 import { BsThreeDotsVertical } from 'react-icons/bs'
@@ -13,6 +12,10 @@ import { LuTrash2 } from 'react-icons/lu'
 import { deleteReport, fetchReport, resolveReport } from '../../features/report'
 import { fetchComments } from '../../features/comment'
 import { isLoggedin } from '../../features/authentication'
+import { RiArrowLeftSLine } from "react-icons/ri";
+
+const socket = io(`${import.meta.env.VITE_URL}/`)
+
 const ViewConcern = () => {
   const { id } = useParams()
   const location = useLocation()
@@ -21,9 +24,10 @@ const ViewConcern = () => {
   const loading = useSelector((state) => state.report.loading)
   const user = useSelector((state) => state.auth.user)
   const msg = useSelector((state) => state.comment.data)
-  const [comment, setComments] = useState('')
+  const [comment, setComments] = useState(null)
   const messageContainerRef = useRef(null)
   const [isDotOpen, setIsDotOpen] = useState(false)
+
   const toggleDot = () => {
     setIsDotOpen(!isDotOpen)
   }
@@ -36,17 +40,22 @@ const ViewConcern = () => {
     }
   }
   const handleComplete = async () => {
-    alert(id)
     dispatch(resolveReport(id))
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (comment === '' || comment === null) {
+      return;
+    }
+
+    let user_id = user.role === "Admin" ? user : user.user_id
+    socket.emit('send-comment', { user_id, comment, id })
     dispatch(
       createComment(
         user.role === 'Admin' ? user?._id : user?.user_id?._id,
         id,
         comment,
-        location.pathname,
+        location.pathname
       ),
     ) // Submit the comment
     setComments(null)
@@ -69,14 +78,19 @@ const ViewConcern = () => {
   }, [handleSubmit])
 
   useEffect(() => {
-    const socket = io(`${import.meta.env.VITE_URL}/`)
-    socket.on('receive-comment', (comment) => {
-      dispatch(fetchComments(id))
-    })
+    const handleReceiveComment = (message) => {
+      dispatch(insertCommentSuccess(message));
+    };
+  
+    // Listen for incoming comments
+    socket.on('receive-comment', handleReceiveComment);
+  
+    // Clean up socket connection when the component unmounts
     return () => {
-      socket.disconnect()
-    }
-  }, [dispatch])
+      socket.off('receive-comment', handleReceiveComment);
+    };
+  }, [dispatch]);
+  
 
   useEffect(() => {
     dispatch(isLoggedin())
@@ -91,17 +105,16 @@ const ViewConcern = () => {
       container.scrollTop = container.scrollHeight
     }
   }, [report, comment, handleSubmit])
-
   return (
     <>
       <div className="w-full h-full flex flex-col pb-5 xl:bg-gray text-primary-color">
-        <div className="w-11/12 m-auto h-fit py-2">
-          <h1 className="uppercase font-bold">Concern and Issue</h1>
+        <div className="w-11/12 m-auto h-fit py-2 gap-5 flex items-center">
+          <h1 className="uppercase font-bold"><span className=' hover:cursor-pointer hover:underline mr-1' onClick={() => window.history.back()}>Concern and Issue</span> / View</h1>
         </div>
         <div className="md:w-11/12 h-full  m-auto grid grid-cols-2 grid-flow-row rounded-lg bg-white">
           <div className="col-span-2 xl:col-span-1 xl:row-span-1  p-5  ">
             <div className="w-full h-full grid grid-flow-4 gap-5 ">
-              {/*  */}
+         
               <div className=" relative row-span-1 grid grid-cols-2 items-center">
                 <div className="col-span-1 h-full flex items-center gap-5">
                   <figure className="w-full h-full max-w-20 max-h-20 rounded-full shadow-xl  overflow-hidden">
@@ -201,7 +214,7 @@ const ViewConcern = () => {
                     </figure>
 
                     <p className="font-light tracking-wider text-white">
-                      Comments
+                      Conversation
                     </p>
                   </div>
                 </div>
@@ -213,7 +226,7 @@ const ViewConcern = () => {
                     {msg?.map((val, key) => (
                       <div
                         key={key}
-                        className="min-h-12 w-full flex gap-2 items-center overflow-hidden"
+                        className={`min-h-12 w-full flex ${val.user_id?._id === user?._id && ' flex-row-reverse' || val.user_id?._id === user?.user_id?._id && ' flex-row-reverse'} gap-2 items-center overflow-hidden`}
                       >
                         <figure className=" w-12 h-12 overflow-hidden border shadow-xl rounded-full">
                           <img
@@ -254,7 +267,7 @@ const ViewConcern = () => {
                         </button>
                       </div>
                     </form>
-                    || <h1 className='h-full flex items-center text-white font-regular text-3xl'>RESOLVED ISSUE</h1>}
+                      || <h1 className='h-full flex items-center text-white font-regular text-3xl'>RESOLVED ISSUE</h1>}
                   </div>
                 </div>
               </div>

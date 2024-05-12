@@ -25,6 +25,9 @@ const announcementSlice = createSlice({
             state.single = action.payload.response
             state.msg = action.payload.msg
         },
+        insertAnnouncementNotification: (state, action) => {
+            state.data = [...state.data, action.payload]
+        },
         insertAnnouncementSuccess: (state, action) => {
             state.loading = false
             state.data = [...state.data, action.payload.response]
@@ -50,7 +53,7 @@ const announcementSlice = createSlice({
     }
 })
 
-export const { fetchAnnouncementStart, fetchAnnouncementsSuccess, insertAnnouncementSuccess, fetchAnnouncementSuccess, editAnnouncementSuccess, deleteAnnouncementSuccess, fetchAnnouncementFailed } = announcementSlice.actions
+export const { insertAnnouncementNotification, fetchAnnouncementStart, fetchAnnouncementsSuccess, insertAnnouncementSuccess, fetchAnnouncementSuccess, editAnnouncementSuccess, deleteAnnouncementSuccess, fetchAnnouncementFailed } = announcementSlice.actions
 
 export const searchAnnouncement = (filter) => async (dispatch) => {
     try {

@@ -14,10 +14,13 @@ const LeaseCard = ({ val }) => {
   }
 
   return (
-    <div className="flex flex-row shadow-sm shadow-light-gray rounded-md items-center bg-white">
+    <div className="relative hover:scale-105 hover:duration-300 cursor-pointer flex flex-row shadow-sm shadow-light-gray rounded-md items-center bg-white">
       <div className="w-[95%] flex gap-2 items-center m-auto">
         <figure className="w-[70px] items-center">
-          <img src={val?.tenant_id?.user_id?.profile_image?.image_url} alt="Profile" />
+          <img
+            src={val?.tenant_id?.user_id?.profile_image?.image_url}
+            alt="Profile"
+          />
         </figure>
         <div className="py-6 align-middle">
           <h1 className="text-nowrap">{val?.tenant_id?.user_id?.name}</h1>
@@ -25,19 +28,16 @@ const LeaseCard = ({ val }) => {
             {val?.tenant_id?.unit_id?.unit_no}
           </p>
         </div>
-
-        <div className="flex items-center justify-end gap-3  w-full">
+        <div className="w-full flex gap-5 justify-end">
           <Link
             to={`/agreement/${val._id}/${val.pdf.reference}`}
-            className="bg-primary-color p-2 inline-flex gap-1 flex-row items-center rounded-md"
+            className="bg-primary-color inline-flex p-2 rounded-md  top-8 right-4 hover:bg-primary-color/55"
           >
-            <h1 className="text-white text-xs">View</h1>
-            <MdOutlineRemoveRedEye color="white" size={15} />
+            <MdOutlineRemoveRedEye color='white' />
           </Link>
-
           <button
             onClick={handleDelete}
-            className="bg-red inline-flex p-2 flex-row items-center rounded-md"
+            className="bg-red inline-flex p-2 rounded-md top-8 right-4 hover:bg-red/55"
           >
             <MdOutlineClose color="white" size={18} />
           </button>

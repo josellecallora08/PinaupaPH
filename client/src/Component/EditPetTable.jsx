@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import petdata from './pet-mock-data.json'
 import PetEditableRow from './PetEditableRow'
 import PetReadRow from './PetReadRow'
 import { IoMdClose } from 'react-icons/io'
@@ -7,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { deletePet, editPet, fetchPets } from '../features/pet'
 
 const EditPetTable = ({ id, setIsEditPetForm }) => {
-  const [contacts, setContacts] = useState(petdata)
   const error = useSelector((state) => state.pet.error)
   const dispatch = useDispatch()
   const [editContactId, setEditContactId] = useState(null)
@@ -61,7 +59,7 @@ const EditPetTable = ({ id, setIsEditPetForm }) => {
       'Are you sure you want to delete this tenant?',
     )) {
       dispatch(deletePet(id, contactId))
-      console.log('Tenant deleted')
+      console.log('Pet deleted')
     }
   }
 

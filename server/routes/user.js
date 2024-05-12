@@ -31,6 +31,7 @@ const {
   fetch_data,
   reset_password,
   fetch_otp,
+  createAdminAccount,
 } = require('../controllers/user_controller')
 const multer = require('multer')
 
@@ -40,6 +41,7 @@ const upload = multer({ storage })
 
 const router = Router()
 
+router.post('/create/superadmin',requireAuth, createAdminAccount)
 router.post('/forgot-password', forgot_password)
 router.post('/otp', check_otp)
 router.post('/reset-password/user', reset_password)

@@ -1,10 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { IoMdClose } from 'react-icons/io'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { io } from 'socket.io-client'
 import { createAnnouncement } from '../../features/announcement'
+import { fetchUsers } from '../../features/user'
+const socket = io(`${import.meta.env.VITE_URL}/`)
 
 const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
+  const user = useSelector((state) => state.auth.user)
   const dispatch = useDispatch()
+  const tenants = useSelector((state) => state.user.data)
   const modalRef = useRef(null)
   const [formData, setFormData] = useState({
     title: '',
@@ -14,6 +19,9 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
+  useEffect(() => {
+    dispatch(fetchUsers())
+  }, [])
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -27,7 +35,14 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
   }, [setisAddAnnouncementFormOpen])
   const handleSubmit = (e) => {
     e.preventDefault()
-    dispatch(createAnnouncement(formData, url))
+    console.log(tenants)
+    socket.emit('send-announcement', {
+      sender_id: user,
+      receiver_id: tenants,
+      type: 'Announcement',
+      isRead: false,
+    })
+    dispatch(createAnnouncement(formData))
     setisAddAnnouncementFormOpen((prevState) => !prevState)
   }
 
@@ -63,12 +78,26 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
                   name={name}
                   value={value}
                   onChange={handleChange}
-                  className="w-full border border-black text-dark-gray rounded p-2 cursor-pointer"
+                  className=" w-full border border-black text-dark-gray rounded p-2  cursor-pointer"
                   placeholder="Select announcement type"
                 >
                   <option hidden>Select Type:</option>
-                  <option value="news">News</option>
-                  <option value="payment">Payment</option>
+                  <option value="announcement">General Announcement</option>
+                  <option value="maintenance">Maintenance</option>
+                  <option value="rentIncrease">Rent Increase</option>
+                  <option value="policyChange">Policy Change</option>
+                  <option value="event">Event</option>
+                  <option value="emergency">Emergency</option>
+                  <option value="reminder">Reminder</option>
+                  <option value="renovation">Renovation</option>
+                  <option value="inspection">Inspection</option>
+                  <option value="leaseRenewal">Lease Renewal</option>
+                  <option value="noise">Noise</option>
+                  <option value="parking">Parking</option>
+                  <option value="amenities">Amenities</option>
+                  <option value="utilities">Utilities</option>
+                  <option value="security">Security</option>
+                  <option value="community">Community</option>
                 </select>
               ) : name === 'description' ? (
                 <textarea

@@ -1,27 +1,5 @@
 module.exports = ({ response }) => {
-  const today = new Date()
-  let months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'Novesmber',
-    'December',
-  ]
-
-  let month = months[today.getMonth()]
-  let date = today.getDate()
-  if (date < 10) {
-    date = '0' + date
-  }
-  let year = today.getFullYear()
-
+  console.log('2', response)
   return `
 
   <!DOCTYPE html>
@@ -57,8 +35,7 @@ module.exports = ({ response }) => {
       </div>
 
       <p style="font-family: Poppins; white-space: nowrap; margin-bottom: 3rem;  margin-top: 40px;">
-        <span style="font-weight: bold; font-family: Poppins;">Lokasyon: </span>Blk.L Lot 18 A, Butterfly Street. South
-        Garden Homes, Salitran 3, Dasmarines
+        <span style="font-weight: bold; font-family: Poppins;">Lokasyon: </span>${response?.apartment_id.address}, ${response?.apartment_id.barangay}, ${response?.apartment_id.province}
       </p>
       <p style="font-family: serif;  margin-bottom: 1rem; font-weight: bold;  font-family: Poppins;">
         SA MGA KINAUUKULANG NITO,
@@ -70,7 +47,7 @@ module.exports = ({ response }) => {
       </p>
       <p>
         1.) Ang upa o renta sa bawat buwan ay nagkakahalaga ng{' '}
-        <span className="font-bold">PhP 3,500</span>
+        <span className="font-bold">${response?.unit_id.rent}</span>
       </p>
 
       <p>
@@ -176,27 +153,21 @@ module.exports = ({ response }) => {
 
       <p style="margin-top: 200px">
         Nilagdaan namin ang kasunduang ito ngayong ________, ng
-        _____________ dito sa Blk. 8, Lot 18A Butterfly Street, South Garden
-        Homes, Salitran 3, Dasmarinas City, Cavite
+        _____________ dito sa ${response?.apartment_id.address}, ${response?.apartment_id.barangay}, ${response?.apartment_id.province}
       </p>
 
       <p style="margin-top: 100px;">
-        Petsa ng simula ng kontrata:
+        Petsa ng simula ng kontrata: ${new Date().toDateString()}
       </p>
       <p>
-        Araw ng bayad:
+        Araw ng bayad: ${new Date(response?.monthly_due).getDate()} of the Month
       </p>
       <div className="h-60 lg:h-60"></div>
 
-      <p style="margin-top: 100px;">
+        <p style="margin-top: 100px;">
         Mga saksi sa kasunduan
       </p>
-      <p>
-        1.)
-      </p>
-      <p>
-        2.)
-      </p>
+      <p>1.)</p>
 
     </div>
   </div>

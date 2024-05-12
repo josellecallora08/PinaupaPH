@@ -1,14 +1,24 @@
-import React from 'react'
-import  pinaupa from '/logo.svg'
+import React, { useEffect } from 'react'
+import pinaupa from '/logo.svg'
 import { Dropdown } from 'rsuite'
-import { CiEdit } from 'react-icons/ci'
 import { BsDownload } from 'react-icons/bs'
-import { Link } from 'react-router-dom'
-import { IoPrintOutline } from 'react-icons/io5'
+import { Link, useParams } from 'react-router-dom'
 //optional
 import 'rsuite/Dropdown/styles/index.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchDocument, generateDocument } from '../../features/documents'
 
 const LeaseView = () => {
+  const { contract_id } = useParams()
+  const contract = useSelector((state) => state.docs.single)
+  const dispatch = useDispatch()
+  const handleDownload = () => {
+    dispatch(generateDocument(contract_id))
+  }
+  useEffect(() => {
+    dispatch(fetchDocument(contract_id))
+  }, [])
+  console.log(contract)
   return (
     <div className="flex flex-col bg-white1">
       <div className="pl-5 pt-5 font-bold text-base">
@@ -25,22 +35,11 @@ const LeaseView = () => {
         className="ml-auto mr-6 border border-light-gray rounded-lg"
       >
         <Dropdown.Item
+          onClick={handleDownload}
           icon={<BsDownload className="mr-2" />}
           className="w-32 flex flex-row items-center"
         >
           Download
-        </Dropdown.Item>
-        <Dropdown.Item
-          icon={<IoPrintOutline className="mr-2" />}
-          className="w-32 flex flex-row items-center"
-        >
-          Print
-        </Dropdown.Item>
-        <Dropdown.Item
-          icon={<CiEdit className="mr-2" />}
-          className="w-32 flex flex-row items-center"
-        >
-          Edit
         </Dropdown.Item>
       </Dropdown>
 
@@ -52,14 +51,13 @@ const LeaseView = () => {
               <img src={pinaupa} className='h-12 lg:h-20' />
             </figure>
             <p className="pt-2 lg:pt-4 xl:text-4xl lg:text-xl font-bold font-serif  xl:mb-12 lg:mb-2 ">
-                KONTRATA SA PAGPAPAUPA
+              KONTRATA SA PAGPAPAUPA
             </p>
           </div>
-         
+
 
           <p className="font-serif lg:text-nowrap xl:mb-12 xl:text-xl lg:text-sm pb-6 pt-6">
-            <span className="font-bold">Lokasyon: </span>Blk.L Lot 18 A,
-            Butterfly Street. South Garden Homes, Salitran 3, Dasmarines
+            <span className="font-bold">Lokasyon: </span>{contract?.tenant_id.apartment_id.address}, {contract?.tenant_id.apartment_id.barangay}, {contract?.tenant_id.apartment_id.province}
           </p>
           <p className=" xl:text-xl lg:text-sm font-serif xl:mb-2 lg:mb-1 pb-4 font-bold">
             {' '}
@@ -74,7 +72,7 @@ const LeaseView = () => {
           {/* <p className="font-serif text-xl mb-4"></p> */}
           <p className="font-serif xl:text-xl lg:text-sm ml-[2.5rem] xl:mb-6 lg:mb-3">
             1.) Ang upa o renta sa bawat buwan ay nagkakahalaga ng{' '}
-            <span className="font-bold">PhP 3,500</span>
+            <span className="font-bold">{(contract?.tenant_id.unit_id.rent)?.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</span>
           </p>
           <p className="font-serif xl:text-xl lg:text-sm ml-[2.5rem] xl:leading-8 lg:leading-5">
             2.) Dapat ay may paunang isang (1) buwan na upa o renta sa isang (1)
@@ -172,27 +170,25 @@ const LeaseView = () => {
 
           <p className="pt-20 xl:mt-60 lg:mt-40 xl:text-xl lg:text-sm font-serif xl:leading-8 lg:leading-5">
             Nilagdaan namin ang kasunduang ito ngayong ________, ng
-            _____________ dito sa Blk. 8, Lot 18A Butterfly Street, South Garden
-            Homes, Salitran 3, Dasmarinas City, Cavite
+            _____________ dito sa {contract?.tenant_id.apartment_id.address}, {contract?.tenant_id.apartment_id.barangay}, {contract?.tenant_id.apartment_id.province}
           </p>
 
           <p className="xl:mt-60 lg:mt-40 xl:text-2xl lg:text-xl font-bold font-serif">
-            Petsa ng simula ng kontrata:
+            Petsa ng simula ng kontrata: {new Date()?.toLocaleDateString()}
           </p>
           <p className="xl:mt-10 lg:mt-5 xl:text-2xl lg:text-xl font-bold font-serif">
-            Araw ng bayad:
+            Araw ng bayad: {new Date(contract?.tenant_id.monthly_due).getDate()} of the month
           </p>
           <div className="h-60 lg:h-60"></div>
 
-          <p className="xl:text-2xl lg:text-xlfont-serif font-bold underline">
+          {contract?.witnesses >= 1 && <p className="xl:text-2xl lg:text-xlfont-serif font-bold underline">
             Mga saksi sa kasunduan
-          </p>
-          <p className="xl:mt-10 lg:mt-5 xl:text-2xl lg:text-xlfont-serif font-bold underline">
-            1.)
-          </p>
-          <p className="pb-20 xl:text-2xl lg:text-xlfont-serif font-bold underline">
-            2.)
-          </p>
+          </p>}
+          {contract?.witnesses?.map((val, key) => (
+            <p className="xl:mt-10 lg:mt-5 xl:text-2xl lg:text-xlfont-serif font-bold underline">
+              1.)  {val.name}
+            </p>
+          ))}
         </div>
       </div>
     </div>

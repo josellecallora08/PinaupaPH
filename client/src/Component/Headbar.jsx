@@ -15,7 +15,10 @@ import { isLoggedin, isLogout, logout } from '../features/authentication'
 import { fetchNotifications } from '../features/notification'
 import { useNavigate } from 'react-router-dom'
 import Notification from './Notification'
+import { io } from 'socket.io-client'
+import { insertAnnouncementNotification } from '../features/announcement'
 
+const socket = io(`${import.meta.env.VITE_URL}/`)
 const Headbar = () => {
   const sidebar = useSelector((state) => state.toggle.sidebar)
   const profile = useSelector((state) => state.toggle.profile)
@@ -27,6 +30,19 @@ const Headbar = () => {
   const menuBg = useRef(null)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  useEffect(() => {
+    console.log('1')
+    const handleReceiveComment = (data) => {
+      console.log(data)
+      dispatch(insertAnnouncementNotification(data))
+    }
+    // Listen for incoming comments
+    socket.on('receive-announcement', handleReceiveComment)
+    // Clean up socket connection when the component unmounts
+    return () => {
+      socket.off('receive-announcement', handleReceiveComment)
+    }
+  }, [dispatch])
 
   useEffect(() => {
     dispatch(fetchNotifications())
@@ -129,9 +145,11 @@ const Headbar = () => {
       )}
       <div className="flex justify-between items-center p-5 w-full relative m-auto">
         <div className="flex items-center gap-5">
-          <button onClick={handleSidebar} className="flex items-center">
-            <img src={sidebar ? close : menu} className="w-5 h-5" alt="" />
-          </button>
+          {user?.role !== 'Superadmin' && (
+            <button onClick={handleSidebar} className="flex items-center">
+              <img src={sidebar ? close : menu} className="w-5 h-5" alt="" />
+            </button>
+          )}
           <div>
             <span className="text-gray text-sm md:text-regular font-light">
               {completeDate}
@@ -139,18 +157,20 @@ const Headbar = () => {
           </div>
         </div>
         <div className="flex items-center">
-          {user?.role !== 'Admin' && (
+          {user?.user_id?.role === 'Tenant' && (
             <button onClick={handleNotif} className="relative">
               <TbBellRinging size={25} color="white" />
 
               <span className="absolute text-white bg-red/80 w-full max-w-[15px] rounded-full text-sm -top-2 -right-1">
-                {filteredNotif && filteredNotif?.length >= 1 ? filteredNotif?.length : ''}
+                {filteredNotif && filteredNotif?.length >= 1
+                  ? filteredNotif?.length
+                  : ''}
               </span>
             </button>
           )}
           <img
             src={
-              user?.role === 'Admin'
+              user?.role === 'Admin' || user?.role === 'Superadmin'
                 ? user?.profile_image.image_url
                 : user?.user_id.profile_image.image_url
             }

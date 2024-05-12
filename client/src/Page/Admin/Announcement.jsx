@@ -89,7 +89,7 @@ const Announcement = () => {
           </button>
         </div>
         {/* Tabs */}
-        <div className="flex items-center bg-white gap-7 p-2 pb-6 pt-5 pl-7 mt-5 rounded-tl-lg rounded-tr-lg">
+        <div className="flex items-center bg-white gap-7 p-2 pb-6 pt-5 pl-7 mt-5 rounded-tl-lg rounded-tr-lg lg:w-1/3 w-full no-scrollbar overflow-x-auto with-scrollbar ">
           {/* Filter Tabs */}
           <button
             className={`filter-tab ${filter === 'All' ? 'active' : ''}`}
@@ -110,7 +110,7 @@ const Announcement = () => {
             ].map((word, index) => (
               <button
                 key={index}
-                className={`capitalize filter-tab ${filter === `${word}` ? 'active' : ''}`}
+                className={`capitalize filter-tab  ${filter === `${word}` ? 'active' : ''}`}
                 onClick={() => setFilter(word.toUpperCase())}
                 style={{
                   color:
@@ -127,7 +127,7 @@ const Announcement = () => {
             ))}
         </div>
         {/* Body of Announcement Tab */}
-        <div className=" md:h-[25rem] min-[1440px]:h-[45rem] min-[1280px]:h-[45rem] min-[1366px]:h-[19rem] w-full h-80 overflow-x-auto px-8 rounded-bl-lg rounded-br-lg bg-white">
+        <div className=" md:h-[25rem] min-[1440px]:h-[45rem] min-[1280px]:h-[45rem] min-[1366px]:h-[19rem] w-full h-[30rem] overflow-x-auto px-8 rounded-bl-lg rounded-br-lg bg-white">
           {/* Announcement Cards */}
           <div className="flex flex-wrap mt-5 ">
             {announcement &&
@@ -138,8 +138,8 @@ const Announcement = () => {
                   className="relative bg-white p-4 rounded-md shadow-md w-full mb-6"
                 >
                   <div className="flex ">
-                    <div className="  flex flex-col justify-center md:w-auto  border-r-2 border-gray w-32 pr-1  items-center mr-5">
-                      <p className="text-light-gray md:text-base text-xs flex">
+                    <div className="  flex flex-col justify-center md:w-auto  border-r-2 border-gray w-[40%] pr-1  items-center mr-5">
+                      <p className="text-light-gray md:text-base text-xs flex text-center">
                         <span>{new Date(val.createdAt).toDateString()}</span>
                       </p>
                       <p className="text-light-gray md:text-sm text-xs">

@@ -7,7 +7,6 @@ const bcrypt = require('bcrypt')
 const OTPMODEL = require('../models/otp')
 const nodemailer = require('nodemailer')
 const { emailContent } = require('../template/emailTemplate')
-
 const cloudinary = require('cloudinary').v2
 
 const createToken = (id, username, role) => {
@@ -18,19 +17,18 @@ const createToken = (id, username, role) => {
 
 module.exports.createAdminAccount = async (req, res) => {
   try {
-    const { role } = req.user
-    if (role !== 'Super Admin') {
+    const Role = req.user.role
+    if (Role !== 'Superadmin') {
       return res
         .status(httpStatusCodes.UNAUTHORIZED)
         .json({ error: 'Only super admin can create apartment owners' })
     }
-    const { name, password, username, email, birthday, mobile_no } = req.body
-    if (name === '')
+    const { password, username, email } = req.body
+
+    if (password === '') {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Please fill all the blanks' })
-    if (password !== '') {
-      details.password = hashed
+        .json({ error: 'Input password' })
     }
     if (username === '' && (await USERMODEL.findOne({ username })))
       return res
@@ -40,15 +38,13 @@ module.exports.createAdminAccount = async (req, res) => {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Email is either existing or empty.' })
-    if (birthday === '')
+    const salt = await bcrypt.genSalt(10)
+    const hashed = await bcrypt.hash(password, salt)
+    if (!hashed) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Failed to upload profile image.' })
-    if (mobile_no === '' && (await USERMODEL.findOne({ mobile_no })))
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Mobile Number is either existing or empty.' })
-
+        .json({ error: 'Password failed to hash' })
+    }
     const imageUpload = await cloudinary.uploader.upload(
       `./template/profile-default.svg`,
       {
@@ -65,12 +61,10 @@ module.exports.createAdminAccount = async (req, res) => {
     }
 
     const response = await USERMODEL.create({
-      name,
       username,
       email,
       password: hashed,
-      birthday,
-      mobile_no,
+      role: 'Admin',
       'profile_image.image_url': imageUpload.secure_url,
       'profile_image.public_id': imageUpload.public_id,
     })
@@ -88,7 +82,6 @@ module.exports.createAdminAccount = async (req, res) => {
       .json({ error: err.message })
   }
 }
-
 
 // * Done Testing API
 
@@ -425,7 +418,7 @@ module.exports.fetch_data = async (req, res) => {
   const user_id = req.user.id
 
   try {
-    if (req.user.role === 'Admin') {
+    if (req.user.role === 'Admin' || req.user.role === 'Superadmin') {
       let response = await USERMODEL.findById(user_id)
       if (!response)
         return res

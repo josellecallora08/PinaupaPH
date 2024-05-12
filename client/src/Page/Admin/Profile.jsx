@@ -65,7 +65,7 @@ const Profile = () => {
                 <figure className=" border-black border-2 cursor-pointer flex justify-center items-center w-full h-full md:max-w-60 md:max-h-60  max-w-40 max-h-40 rounded-full ">
                   <img
                     src={
-                      user?.role === 'Admin'
+                      user?.role === 'Admin' || user?.role === 'Superadmin'
                         ? user?.profile_image.image_url
                         : user?.user_id.profile_image.image_url
                     }
@@ -76,7 +76,7 @@ const Profile = () => {
               </div>
               <div className="w-full h-full max-h-10 flex justify-center items-center py-6">
                 <p className="md:text-2xl text-base uppercase font-bold">
-                  {user?.role === 'Admin' ? user?.name : user?.user_id.name}
+                  {user?.role === 'Admin' || user?.role === 'Superadmin' ? user?.name : user?.user_id.name}
                 </p>
               </div>
             </div>
@@ -96,7 +96,7 @@ const Profile = () => {
                   <div className="w-full flex m-auto">
                     <p className="w-[170px] pb-2">Phone No.</p>
                     <p>
-                      {user?.role === 'Admin'
+                      {user?.role === 'Admin' || user?.role === 'Superadmin'
                         ? user?.mobile_no
                         : user?.user_id.mobile_no}
                     </p>
@@ -105,7 +105,7 @@ const Profile = () => {
                   <div className="w-full flex m-auto">
                     <p className="w-[170px] pb-2">Email Address</p>
                     <p>
-                      {user?.role === 'Admin'
+                      {user?.role === 'Admin' || user?.role === 'Superadmin'
                         ? user?.email
                         : user?.user_id.email}
                     </p>
@@ -115,7 +115,7 @@ const Profile = () => {
                     <p className="w-[170px]">Date of Birth</p>
                     <p>
                       {new Date(
-                        user?.role === 'Admin'
+                        user?.role === 'Admin' || user?.role === 'Superadmin'
                           ? user?.birthday
                           : user?.user_id.birthday,
                       ).toLocaleDateString()}
@@ -136,7 +136,7 @@ const Profile = () => {
                   <div className="w-full flex m-auto pb-2">
                     <p className="w-[170px]">Username</p>
                     <p>
-                      {user?.role === 'Admin'
+                      {user?.role === 'Admin' || user?.role === 'Superadmin'
                         ? user?.username
                         : user?.user_id.username}
                     </p>
@@ -163,15 +163,15 @@ const Profile = () => {
         </div>
         {/* Apartment Details */}
         <div className="w-full h-full ">
-          <p className="h-full max-h-5 text-2xl font-bold w-11/12 m-auto py-8 mb-4">
+          {user?.role !== 'Superadmin' && <p className="h-full max-h-5 text-2xl font-bold w-11/12 m-auto py-8 mb-4">
             APARTMENT DETAILS
-          </p>
+          </p>}
 
-          <div className='flex flex-wrap gap-2'>
-            {apartment && apartment.map((val, key) => (
+          <div className='flex flex-wrap gap-3 pb-10'>
+            {user?.role !== 'Superadmin' && apartment && apartment.map((val, key) => (
               <div key={key} className="w-11/12 md:h-full md:max-w-[500px] md:max-h-[300px] overflow-hidden bg-white rounded-md shadow-md md:mx-[52px] mx-4">
                 <div className="w-full h-full max-h-12 px-4 py-2 text-white bg-[#183044] flex items-center">
-                  <p>LANDLORD APARTMENT</p>
+                  <p>APARTMENT NO. {key + 1}</p>
                 </div>
 
                 <div className="w-full flex flex-col">
