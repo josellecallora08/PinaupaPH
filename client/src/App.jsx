@@ -46,7 +46,10 @@ function App() {
         path="/"
         element={user ? <Navigate to="/dashboard" /> : <Login />}
       />
-      <Route path="/verify-payment/status/:invoice_id" element={<PaymentStatus />} />
+      <Route
+        path="/verify-payment/status/:invoice_id"
+        element={<PaymentStatus />}
+      />
       <Route path="/forgot-password" element={<ForgotPass />} />
       <Route path="/otp-verify/:id" element={<OTPVerify />} />
       <Route path="/reset-password/:id" element={<ResetPass />} />
@@ -81,22 +84,8 @@ function App() {
             <Layout className="bg-white1">
               <Dashboard />
             </Layout>
-          ) : role?.user_id.role === 'Tenant' ? (
-            <Layout className="bg-white1">
-              <TenantHome />
-            </Layout>
-          ) : (
-            <Navigate to="/" />
-          )
-        }
-      />
-      <Route
-        path="/dashboard"
-        element={
-          role?.role === 'Admin' ? (
-            <Layout className="bg-white1">
-              <Dashboard />
-            </Layout>
+          ) : role?.role === 'Superadmin' ? (
+            <SuperAdmin />
           ) : role?.user_id.role === 'Tenant' ? (
             <Layout className="bg-white1">
               <TenantHome />
@@ -207,7 +196,6 @@ function App() {
         }
       />
 
-
       <Route
         path="/document/lease-agreement"
         element={
@@ -234,13 +222,18 @@ function App() {
 
       <Route
         path="/profile"
-        element={role?.role === "Admin" ?
-          <Layout className="bg-white1">
-            <Profile />
-          </Layout>
-          : role?.user_id?.role === "Tenant" ? <Layout className="bg-white1">
-            <ProfileTenant />
-          </Layout> : <Navigate to="/" />
+        element={
+          role?.role === 'Admin' || role?.role === 'Superadmin' ? (
+            <Layout className="bg-white1">
+              <Profile />
+            </Layout>
+          ) : role?.user_id?.role === 'Tenant' ? (
+            <Layout className="bg-white1">
+              <ProfileTenant />
+            </Layout>
+          ) : (
+            <Navigate to="/" />
+          )
         }
       />
       <Route

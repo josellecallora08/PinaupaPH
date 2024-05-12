@@ -16,7 +16,7 @@ import TransactionMobile from '../../Component/TransactionMobile'
 import { GrFormView, GrFormAdd } from 'react-icons/gr'
 import Addpet from '../../Component/AddPet'
 import EditPetTable from '../../Component/EditPetTable'
-import { deleteUser, fetchUser } from '../../features/user'
+import { generateDocument } from '../../features/documents'
 import { fetchHousehold, fetchHouseholds } from '../../features/household'
 import { fetchPets } from '../../features/pet'
 import EditTenantDetails from '../../Component/EditTenantDetails'
@@ -117,7 +117,9 @@ const TenantProfile = () => {
       document.removeEventListener('mousedown', handleClickOutsideDropdown)
     }
   }, [])
-
+  const handleDownload = () => {
+    dispatch(generateDocument(tenant.user_id._id))
+  }
   const birthday = new Date(tenant?.user_id.birthday).toLocaleDateString()
   return (
     <div className="bg-white1  h-full ">
@@ -153,13 +155,11 @@ const TenantProfile = () => {
       </div>{' '}
       {changeModal ? (
         <ChangePd
-          
           selectedFile={selectedFile}
           setSelectedFile={setSelectedFile}
           handleFileChange={handleFileChange}
           setChangeModal={setChangeModal}
           handleConfirm={handleConfirm}
-         
         />
       ) : (
         ''
@@ -187,7 +187,10 @@ const TenantProfile = () => {
                         Unit - {tenant?.unit_id.unit_no}
                       </h2>
                     </div>
-                    <button className="btn  hover:text-primary-color flex items-center gap-2 absolute right-3 top-0 bg-primary-color text-white p-2 rounded-md ">
+                    <button
+                      onClick={handleDownload}
+                      className="btn  hover:text-primary-color flex items-center gap-2 absolute right-3 top-0 bg-primary-color text-white p-2 rounded-md "
+                    >
                       <MdOutlineFileDownload size={20} /> Lease Agreement
                     </button>
                   </div>

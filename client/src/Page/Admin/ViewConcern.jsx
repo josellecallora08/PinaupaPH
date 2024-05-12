@@ -105,7 +105,6 @@ const ViewConcern = () => {
       container.scrollTop = container.scrollHeight
     }
   }, [report, comment, handleSubmit])
-
   return (
     <>
       <div className="w-full h-full flex flex-col pb-5 xl:bg-gray text-primary-color">
@@ -215,7 +214,7 @@ const ViewConcern = () => {
                     </figure>
 
                     <p className="font-light tracking-wider text-white">
-                      Comments
+                      Conversation
                     </p>
                   </div>
                 </div>
@@ -227,7 +226,7 @@ const ViewConcern = () => {
                     {msg?.map((val, key) => (
                       <div
                         key={key}
-                        className="min-h-12 w-full flex gap-2 items-center overflow-hidden"
+                        className={`min-h-12 w-full flex ${val.user_id?._id === user?._id && ' flex-row-reverse' || val.user_id?._id === user?.user_id?._id && ' flex-row-reverse'} gap-2 items-center overflow-hidden`}
                       >
                         <figure className=" w-12 h-12 overflow-hidden border shadow-xl rounded-full">
                           <img

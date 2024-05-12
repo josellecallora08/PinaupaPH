@@ -123,7 +123,7 @@ module.exports.searchContract = async (req, res) => {
             createdAt: '$tenant.createdAt',
             updatedAt: '$tenant.updatedAt',
           },
-          pdf:1,
+          pdf: 1,
           witnesses: 1,
         },
       },
@@ -178,7 +178,6 @@ module.exports.createContract = async (req, res) => {
         .status(httpStatusCodes.FOUND)
         .json({ error: 'Invoice exists...' })
     }
-    console.log(response)
     const pdfBuffer = await new Promise((resolve, reject) => {
       pdf
         .create(pdf_template({ response }), {
@@ -231,7 +230,9 @@ module.exports.createContract = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Contract Not found' })
 
-    const contract = await CONTRACTMODEL.findById(contractResponse._id).populate({
+    const contract = await CONTRACTMODEL.findById(
+      contractResponse._id,
+    ).populate({
       path: 'tenant_id',
       populate: 'user_id unit_id apartment_id',
     })
@@ -253,21 +254,22 @@ module.exports.generateContract = async (req, res) => {
     let { contract_id } = req.query
     console.log(req.query)
     let contract = await CONTRACTMODEL.findById(contract_id)
-    if (!contract)
-      {
-        const user = await TENANTMODEL.findOne({user_id: contract_id})
-        if(!user){
-          return res.status(httpStatusCodes.NOT_FOUND).json({error: "User not found"})
-        }
-        console.log(user)
-        contract = await CONTRACTMODEL.findOne({tenant_id:user._id})
-        if(!contract){
-          console.log('run')
-          return res.status(httpStatusCodes.NOT_FOUND).json({error: "User not found"})
-        }
+    if (!contract) {
+      const user = await TENANTMODEL.findOne({ user_id: contract_id })
+      if (!user) {
+        return res
+          .status(httpStatusCodes.NOT_FOUND)
+          .json({ error: 'User not found' })
       }
+      console.log(user)
+      contract = await CONTRACTMODEL.findOne({ tenant_id: user._id })
+      if (!contract) {
+        return res
+          .status(httpStatusCodes.NOT_FOUND)
+          .json({ error: 'User not found' })
+      }
+    }
 
-      console.log("Ran")
     const { public_id } = contract.pdf
     console.log(public_id)
     // Fetch the file from Cloudinary

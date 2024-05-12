@@ -57,7 +57,7 @@ const Login = () => {
           <img
             src={logImg}
             alt=""
-            className="lg:w-1/3 lg:mr-24 w-10/12 mb-7 ml-8"
+            className="md:w-3/5 md:m-auto lg:w-1/3 lg:mr-24 w-10/12 mb-7 ml-8"
           />
           <p className="lg:hidden text-lg text-dark-gray">
             Sign in your account
