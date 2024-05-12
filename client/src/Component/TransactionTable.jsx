@@ -21,6 +21,7 @@ const TransactionTable = ({ tenant }) => {
             <th className="px-4 py-2">Transaction No.</th>
             <th className="px-4 py-2">Status</th>
             <th className="px-4 py-2">Due Dates</th>
+            <th className="px-4 py-2">Date Paid</th>
             <th className="px-4 py-2">Apartment Unit No.</th>
             <th className="px-4 py-2">Payment Method</th>
             <th className="px-4 py-2">Total Paid</th>
@@ -32,6 +33,7 @@ const TransactionTable = ({ tenant }) => {
             <tr key={key} className="text-dark-blue">
               <td className="border px-4 py-2 capitalize">{val?.pdf.reference}</td>
               <td className="border px-4 py-2 capitalize">{val?.status}</td>
+              <td className="border px-4 py-2">{new Date(val?.tenant_id.monthly_due).toDateString()}</td>
               <td className="border px-4 py-2">{new Date(val?.tenant_id.monthly_due).toDateString()}</td>
               <td className="border px-4 py-2">Unit - {val?.tenant_id?.unit_id?.unit_no}</td>
               <td className="border px-4 py-2 capitalize">{val?.payment?.method}</td>

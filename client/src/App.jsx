@@ -252,6 +252,19 @@ function App() {
         }
       />
 
+      {/* SuperAdmin */}
+      <Route
+        path="/announcement"
+        element={
+          role?.role === 'SuperAdmin' ? (
+            <Layout className="bg-white1">
+              <SuperAdmin />
+            </Layout>
+          ) : (
+            <Navigate to="/" />
+          )
+        }
+      />
     </Routes>
   )
 }

@@ -588,3 +588,23 @@ input[type=number] {
 .radio-container input[type="radio"]:checked[value="grabpay"] + img {
   border: 2px solid lime; /* Dark green border for GrabPay */
 }
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.with-scrollbar:hover{
+
+
+  padding-bottom:15px ;
+
+  scrollbar-width: thin;
+}
+ 
+
+

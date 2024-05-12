@@ -84,7 +84,7 @@ const TenantHome = () => {
                           {new Date(val?.createdAt).toDateString()}
                         </td>
                         <td className="px-4 py-2 flex items-center gap-3">
-                          <div className=" flex items-center gap-3 bg-gray rounded-full w-fit md:pr-20  p-2">
+                          <div className=" flex items-center gap-3 bg-gray rounded-full w-28 md:pr-20  p-2">
                             <img
                               src={val?.sender_id?.user_id.profile_image?.image_url}
                               alt="tenantlogo"
@@ -136,7 +136,7 @@ const TenantHome = () => {
                 {invoice?.isPaid === true ? (
                   <div>
                     <div className="flex justify-center w-full hover:opacity-80">
-                      <div className="bg-primary-color w-full text-white p-5">
+                      <div className="bg-primary-color w-full text-white p-5 text-center text-xl">
                         Paid
                       </div>
                     </div>
@@ -144,7 +144,7 @@ const TenantHome = () => {
                 ) : (
                   <Link
                     to={`/tenant/payment/${invoice?._id}`}
-                    className="bg-primary-color w-full text-white p-5"
+                    className="bg-primary-color w-full text-white p-5 text-center hover:opacity-80 hover:scale-105 duration-200" 
                   >
                     Pay Now
                   </Link>
