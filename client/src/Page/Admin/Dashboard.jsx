@@ -4,7 +4,7 @@ import City from '/city.svg'
 import 'chartkick/chart.js'
 import 'react-circular-progressbar/dist/styles.css'
 import renew from '/renew.svg'
-import { Bar } from 'react-chartjs-2'
+import { Bar, Line } from 'react-chartjs-2'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import rent from '/Rent.svg'
@@ -116,16 +116,40 @@ const Dashboard = () => {
               </div>
               <div className="order-last md:order-none col-span-3 row-span-4 flex flex-col md:grid grid-cols-3 grid-rows-1 gap-5 ">
                 <div className="col-span-3 md:col-span-2 row-span-auto xl:row-span-1 bg-white h-fit md:h-full flex items-center justify-center flex-col rounded-md overflow-hidden shadow-md">
-                  <div className="w-11/12 h-fit  xl:max-h-fit m-auto md:py-2">
+                  <div className="w-11/12 h-fit flex justify-between items-center xl:max-h-fit m-auto md:py-2">
                     <p className="font-bold text-[#9e9e9e] lg:text-xl">
                       Revenue Overview
                     </p>
+                    <div className='border-2 p-2  rounded-xl shadow-md bg-white'>
+                      <input type="date" className='size-full outline-none' />
+                    </div>
                   </div>
                   <div className="w-full h-fit xl:h-full flex">
-                    <figure className="flex justify-center items-center h-full w-11/12 xl:w-11/12 m-auto">
-                      <Bar
+                    <figure className="flex justify-center items-center h-full w-11/12 m-auto">
+                      <Line
                         data={data}
-                        options={options}
+                        options={{
+                          ...options,
+                          elements: {
+                            line: {
+                              borderColor: "#183044",
+                              borderWidth: 5
+                            },
+
+                          },
+                          scales: {
+                            y: {
+                              grid: {
+                                color: 'rgba(0, 0, 0, .3)'
+                              }
+                            },
+                            x: {
+                              grid: {
+                                color: 'rgba(0, 0, 0, 0.3)'
+                              }
+                            }
+                          },
+                        }}
                         className="py-2 md:py-5 h-60 md:h-auto"
                       />
                     </figure>

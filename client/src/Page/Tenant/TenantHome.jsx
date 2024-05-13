@@ -185,7 +185,7 @@ const TenantHome = () => {
                     <img
                       src={announcement?.user_id?.profile_image?.image_url}
                       alt=""
-                      className="w-10 h-10"
+                      className="w-10 h-10 rounded-full"
                     />
                     <div>
                       <p>{announcement?.user_id?.name}</p>

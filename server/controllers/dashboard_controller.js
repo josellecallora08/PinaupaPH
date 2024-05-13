@@ -5,6 +5,15 @@ const UNITMODEL = require('../models/unit')
 const REPORTMODEL = require('../models/report')
 const httpStatusCodes = require('../constants/constants')
 
+module.exports.delayedRents = async(req,res) => {
+  try {
+    
+    
+  } catch (err) {
+    
+  }
+}
+
 module.exports.revenueDashboard = async (req, res) => {
   try {
     let monthlyTotal = []

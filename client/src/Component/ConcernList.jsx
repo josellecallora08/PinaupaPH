@@ -41,7 +41,7 @@ const ConcernList = () => {
           </div>
           <div className="lg:gap-9 flex justify-center gap-3">
 
-            <select name='selected' onChange={(e) => setSelected(e.target.value)} className="select select-bordered w-full max-w-xs">
+            <select name='selected' onChange={(e) => setSelected(e.target.value)} className="select select-bordered w-full lg:max-w-xs">
               <option hidden >
                 Select Type of Concern
               </option>
@@ -55,7 +55,7 @@ const ConcernList = () => {
               <>
                 <button
                   onClick={() => setisCreateTicket((prevState) => !prevState)}
-                  className="btn btn-wide bg-primary-color font-bold uppercase text-white hover:text-primary-color"
+                  className="btn lg:btn-wide bg-primary-color font-bold uppercase text-white hover:text-primary-color"
                 >
                   <FaPlus />
                   Add Report
