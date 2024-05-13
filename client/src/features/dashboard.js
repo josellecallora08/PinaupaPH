@@ -51,12 +51,12 @@ export const {
   fetchFailed,
 } = dashboardSlice.actions
 
-export const fetchTotalPaid = () => async (dispatch) => {
+export const fetchTotalPaid = ( year) => async (dispatch) => {
   try {
     dispatch(fetchRateStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/dashboard/totalpaid`,
+      `${import.meta.env.VITE_URL}/api/dashboard/totalpaid?year=${year}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -68,17 +68,18 @@ export const fetchTotalPaid = () => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
+    console.log(json)
     dispatch(fetchTotalPaymentSuccess(json))
   } catch (err) {
     dispatch(fetchFailed())
   }
 }
-export const fetchRevenue = () => async (dispatch) => {
+export const fetchRevenue = (month, year) => async (dispatch) => {
   try {
     dispatch(fetchRateStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/dashboard/chart`,
+      `${import.meta.env.VITE_URL}/api/dashboard/chart?month=${month}&year=${year}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -96,12 +97,12 @@ export const fetchRevenue = () => async (dispatch) => {
     dispatch(fetchFailed())
   }
 }
-export const fetchTotalPayer = () => async (dispatch) => {
+export const fetchTotalPayer = (month, year) => async (dispatch) => {
   try {
     dispatch(fetchRateStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/dashboard/deliquency`,
+      `${import.meta.env.VITE_URL}/api/dashboard/deliquency?month=${month}&year=${year}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -118,12 +119,12 @@ export const fetchTotalPayer = () => async (dispatch) => {
     dispatch(fetchFailed())
   }
 }
-export const fetchTotalOccupancy = () => async (dispatch) => {
+export const fetchTotalOccupancy = (month, year) => async (dispatch) => {
   try {
     dispatch(fetchRateStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/dashboard/occupancyrate`,
+      `${import.meta.env.VITE_URL}/api/dashboard/occupancyrate?month=${month}&year=${year}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
