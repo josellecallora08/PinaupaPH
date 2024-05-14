@@ -22,7 +22,6 @@ const {
   sign_up,
   sign_in,
   update_profile,
-  delete_tenant,
   search_user,
   update_profile_picture,
   update_unit_info,
@@ -32,6 +31,8 @@ const {
   reset_password,
   fetch_otp,
   createAdminAccount,
+  deleteTenant,
+  forcedDeleteTenant,
 } = require('../controllers/user_controller')
 const multer = require('multer')
 
@@ -67,6 +68,7 @@ router.patch(
   update_profile_picture,
 )
 
+router.patch('/account/delete', requireAuth, deleteTenant)
 router.patch('/account/update', requireAuth, update_profile)
 router.patch('/:user_id/update_household', requireAuth, update_household)
 router.patch('/:user_id/update_pet', requireAuth, update_pet)
@@ -75,7 +77,7 @@ router.patch(
   requireAuth,
   update_unit_info,
 )
-router.delete('/delete_tenant', requireAuth, delete_tenant)
+router.delete('/delete_tenant', requireAuth, forcedDeleteTenant)
 router.delete('/:user_id/delete_household', requireAuth, delete_household)
 router.delete('/:user_id/delete_pet', requireAuth, delete_pet)
 

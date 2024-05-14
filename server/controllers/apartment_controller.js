@@ -185,10 +185,12 @@ module.exports.edit_apartment = async (req, res) => {
     const { name, address, province, barangay } = req.body
     const details = {}
     if (name !== '') {
-      if (await APARTMENTMODEL.findOne({ name }))
-        return res
-          .status(httpStatusCodes.BAD_REQUEST)
-          .json({ error: 'Apartment Building Exists' })
+      // const admin = await APARTMENTMODEL.findOne({ name })
+      // if(admin.name !== name)
+      //   return res
+      //     .status(httpStatusCodes.BAD_REQUEST)
+      //     .json({ error: 'Apartment Building Exists' })
+      //check at home
 
       details.name = name
     }
@@ -243,7 +245,7 @@ module.exports.delete_apartment = async (req, res) => {
     await Promise.all([...cctv, ...units])
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: `Apartment building Deleted`, cctv, units })
+      .json({ msg: `Apartment building Deleted`, response })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -364,7 +366,7 @@ module.exports.create_apartment_unit = async (req, res) => {
     await apartment.save()
     return res
       .status(httpStatusCodes.CREATED)
-      .json({ msg: 'Created Apartment Unit', response: apartment.units})
+      .json({ msg: 'Created Apartment Unit', response }) //updated today 5-14
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -379,7 +381,7 @@ module.exports.edit_apartment_unit = async (req, res) => {
     const { apartment_id, unit_id } = req.params
     const { unit_no, rent } = req.body
     const details = {}
-
+    let unitExist
     const apartment = await APARTMENTMODEL.findById({ _id: apartment_id })
       .populate({
         path: 'units',
@@ -392,15 +394,19 @@ module.exports.edit_apartment_unit = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: `Apartment Not Found` })
     }
-
     details.unit_no = unit_no
-    const is_unit_exist = apartment.units.some(
-      (item) => item.unit_no === unit_no,
+    const unit = apartment.units.find(
+      (item) => item._id.toString() === unit_id.toString(),
     )
-    if (is_unit_exist) {
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Unit Number exists' })
+    if (unit.unit_no !== unit_no) {
+      unitExist = apartment.units.some(
+        (item) => item.unit_no === unit_no, 
+      )
+      if (unitExist) {
+        return res
+          .status(httpStatusCodes.BAD_REQUEST)
+          .json({ error: 'Unit Number exists' })
+      }
     }
 
     if (rent !== '') details.rent = rent
@@ -416,7 +422,7 @@ module.exports.edit_apartment_unit = async (req, res) => {
     }
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: `Updated ${details.unit_no}`, response: response.unit})
+      .json({ msg: `Updated ${details.unit_no}`, response })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -430,13 +436,25 @@ module.exports.delete_apartment_unit = async (req, res) => {
   try {
     const { apartment_id } = req.params
     const { unit_id } = req.query
+    const unit = await UNITMODEL.findById(unit_id)
+    if (!unit) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Apartment Not Found' })
+    }
 
+    if (unit.occupied) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Cannot delete occupied apartment unit' })
+    }
     const apartment_response = await APARTMENTMODEL.findById(apartment_id)
     if (!apartment_response) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Apartment Not Found' })
     }
+
     const index = apartment_response.units.findIndex(
       (item) => item.toString() === unit_id,
     )

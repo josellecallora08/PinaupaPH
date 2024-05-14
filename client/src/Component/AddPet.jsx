@@ -4,15 +4,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createPet } from '../features/pet'
 
 const AddPet = ({ id, setIsAddPetForm }) => {
-  const [isFormOpen, setIsFormOpen] = useState(false)
   const dispatch = useDispatch()
   const error = useSelector((state) => state.pet.error)
-  const toggleForm = () => {
-    setIsFormOpen(!isFormOpen)
-  }
+  const msg = useSelector((state) => state.pet.msg)
 
   const [fields, setFields] = useState({
-    name: '' ,
+    name: '',
     species: '',
     birthday: '',
   })
@@ -28,11 +25,10 @@ const AddPet = ({ id, setIsAddPetForm }) => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     dispatch(createPet(id, fields))
-
-    toggleForm()
-    console.log('Form submitted');
+    if (msg || error) {
+      setIsAddPetForm((prevState) => !prevState)
+    }
   }
-  
 
   return (
     <div className="relative">

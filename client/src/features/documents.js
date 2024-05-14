@@ -243,6 +243,7 @@ export const deleteDocument = (contract_id) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
+    console.log("docs delete", json)
     dispatch(deleteDocumentSuccess(json))
   } catch (err) {
     dispatch(actionDocumentFailed(err.message))

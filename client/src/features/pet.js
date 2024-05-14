@@ -22,17 +22,23 @@ const petSlice = createSlice({
       state.loading = false
       state.single = action.payload
     },
+    insertPetSuccess: (state, action) => {
+      state.loading = false
+      state.data = [...state.data, action.payload.response]
+      state.msg = action.payload.msg
+    },
     editPetSuccess: (state, action) => {
       state.loading = false
       state.data = state.data.map((pet) =>
-        pet._id === action.payload
-          ? { ...pet, ...action.payload.response }
-          : pet,
+        pet._id === action.payload.response._id ? action.payload.response : pet,
       )
+      state.msg = action.payload.msg
     },
     deletePetSuccess: (state, action) => {
       state.loading = false
-      state.data = state.data.filter((pet) => pet._id !== action.payload)
+      state.data = state.data.filter(
+        (pet) => pet._id !== action.payload.response._id,
+      )
     },
     actionPetFailed: (state, action) => {
       state.loading = false
@@ -166,7 +172,7 @@ export const editPet = (user_id, pet_id, fields) => async (dispatch) => {
   }
 }
 
-export const deletePet = (user_id,pet_id) => async (dispatch) => {
+export const deletePet = (user_id, pet_id) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
 
@@ -186,7 +192,7 @@ export const deletePet = (user_id,pet_id) => async (dispatch) => {
     }
 
     const json = await response.json()
-    dispatch(fetchPets(user_id))
+    dispatch(deletePetSuccess(json))
   } catch (err) {
     console.log('Unable to delete pet')
     dispatch(actionPetFailed(err.message))

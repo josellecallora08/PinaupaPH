@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import banner from '/banner.svg'
-const TenantCard = ({ data }) => {
+const TenantCard = ({ data}) => {
   return (
     <Link to={`/tenantprofile/${data?.user_id?._id}`} className="relative">
       <div className="lg:text-base flex bg-white w-full h-[11rem] rounded-md relative text-xs shadow-sm shadow-light-gray hover:scale-105  hover:z-10  hover:duration-300 ">

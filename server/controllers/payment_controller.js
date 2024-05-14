@@ -129,6 +129,9 @@ module.exports.createPayment = async (req, res) => {
         'payment.method_id': method_id,
         'payment.method': method,
       },
+      {
+        new: true
+      }
     )
     if (!response) {
       return res
@@ -150,7 +153,7 @@ module.exports.createIntent = async (req, res) => {
   try {
     const { invoice_id } = req.query
     const { amount } = req.body
-
+    console.log(amount)
     const response = await fetch(`${process.env.PAYMONGO_CREATE_INTENT}`, {
       method: 'POST',
       headers: {

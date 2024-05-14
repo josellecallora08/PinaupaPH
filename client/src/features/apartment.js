@@ -31,10 +31,13 @@ const apartmentSlice = createSlice({
       state.loading = false
       state.data = state.data.map((item) =>
         item._id === action.payload.response._id
-          ? { ...item, ...action.payload.response }
+          ? action.payload.response
           : item,
       )
-      state.single = state.single._id === action.payload.response._id ? action.payload.response : state.single
+      state.single =
+        state.single._id === action.payload.response._id
+          ? { ...action.payload.response }
+          : state.single
       state.msg = action.payload.msg
     },
     deleteApartmentSuccess: (state, action) => {

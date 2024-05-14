@@ -27,17 +27,20 @@ body {
 }
 
 ::-webkit-scrollbar {
-  background: #183044;
-  width: 5px;
+  background: #1830444b;
+  width: 8px;
+  border-radius: 100px;
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: #183044;
+  border-radius: 100px;
 }
 
 ::-webkit-scrollbar-button {
   background-color: #183044;
-  height: 48px;
+  height: 10px;
+  border-radius: 100px;
 }
 
 input[type=number]::-webkit-inner-spin-button,

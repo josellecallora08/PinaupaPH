@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-
+import React, { useEffect, useRef } from 'react'
+import { IoMdClose } from 'react-icons/io'
 const AddApartment = ({
   setIsAddApartmentFormOpen,
   fields,
@@ -7,32 +7,32 @@ const AddApartment = ({
   handleSubmit,
   error,
 }) => {
-  const modalRef = useRef(null);
+  const modalRef = useRef(null)
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setIsAddApartmentFormOpen(false);
+        setIsAddApartmentFormOpen(false)
       }
-    };
+    }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside)
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [setIsAddApartmentFormOpen]);
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [setIsAddApartmentFormOpen])
   return (
     <>
+    <div className='relative' ref={modalRef}>
       <div className="relative w-full flex py-4 rounded-t-md bg-dark-blue text-white items-center ">
         <h1 className="lg:text-md  ml-5 text-lg font-bold uppercase ">
           Add Apartment Building
         </h1>
       </div>
-
       <form
         onSubmit={handleSubmit}
-        ref={modalRef}
+        
         className="lg:w-[40rem] py-2 w-full h-[25rem] px-3 overflow-y-auto  "
       >
         {error && (
@@ -40,7 +40,13 @@ const AddApartment = ({
             {error}
           </p>
         )}
-
+      <button className="absolute top-4 right-6">
+          <IoMdClose
+            onClick={() => setIsAddApartmentFormOpen((prevState) => !prevState)}
+            size={25}
+            color="white"
+          />
+        </button>
         <div className="py-5">
           <div className="mb-2">
             <label
@@ -129,6 +135,7 @@ const AddApartment = ({
           </button>
         </div>
       </form>
+      </div>
     </>
   )
 }

@@ -190,12 +190,16 @@ module.exports.createInvoice = async (req, res) => {
     //     .status(httpStatusCodes.NOT_FOUND)
     //     .json({ error: 'Failed to create payment intent.' })
     // }
+    const dateDue = new Date(details.tenant_id.monthly_due).getDate()
+    const dueMonth = new Date().setDate(dateDue) //test at home
+    console.log(dueMonth)
     const response = await INVOICEMODEL.create({
       tenant_id: tenant._id,
       'pdf.public_id': cloudinaryResponse.public_id,
       'pdf.pdf_url': cloudinaryResponse.secure_url,
       'pdf.reference': reference,
       amount: tenant.unit_id.rent,
+      due: dueMonth
     })
 
     if (!response) {

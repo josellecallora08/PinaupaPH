@@ -26,7 +26,7 @@ const EditApartmentUnit = ({ apartmentId, val, setIsEditApartmentUnit }) => {
     e.preventDefault()
     dispatch(editUnit(fields, apartmentId, val._id));
     console.log('Form submitted');
-    toggleForm();
+    setIsEditApartmentUnit(false);
   };
 
   const handleInput = (e) => {

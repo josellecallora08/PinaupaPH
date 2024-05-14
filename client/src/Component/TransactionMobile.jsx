@@ -19,13 +19,13 @@ const TransactionMobile = ({ tenant }) => {
 
   return (
     <div>
-      {invoices && invoices.filter(item => item.tenant_id.user_id._id === tenant?.user_id._id).map((val, key) => (
+      {invoices && invoices.filter(item => item?.tenant_id?.user_id._id === tenant?.user_id._id).map((val, key) => (
         <div
           key={key}
           className="flex h-20 mt-5  items-center rounded-lg mx-4 shadow-md shadow-gray relative"
          
         >
-          <div className={`flex items-center justify-center ${val?.isPaid ? 'bg-lime' : 'bg-red'} rounded-tl-lg rounded-bl-lg h-full min-w-28 text-center text-xl font-bold p-3  text-white capitalize`}>{val?.status}</div>
+          <div className={`flex items-center justify-center ${val?.isPaid ? 'bg-lime' : 'bg-red'} rounded-tl-lg rounded-bl-lg h-full min-w-28 text-center text-xl font-bold p-3  text-white capitalize`}>{val?.status === "succeeded" ? 'Paid' : val?.status === 'awaiting_for_action' ? 'Pending' : 'Unpaid'}</div>
           <div className='flex w-full gap-2 justify-between px-4 items-center'>
             <div className="flex flex-col text-lg">
               <div className='font-semibold text-left text-xs'>{val?.pdf.reference}</div>

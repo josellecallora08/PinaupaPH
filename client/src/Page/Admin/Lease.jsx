@@ -6,7 +6,7 @@ import AddLease from '../../Component/AdminComponent/AddLease'
 import { Link } from 'react-router-dom'
 import 'react-datepicker/dist/react-datepicker.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchDocuments, searchContract } from '../../features/documents'
+import { deleteDocument, fetchDocuments, searchContract } from '../../features/documents'
 
 const Least = () => {
   const dispatch = useDispatch()
@@ -16,11 +16,19 @@ const Least = () => {
   const toggleModal = () => {
     setModal(!modal)
   }
+  console.log("docs contracts", contracts)
 
   const handleSearch = (e) => {
     setSearchItem(e.target.value)
   }
-  
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this item?')) {
+      dispatch(deleteDocument(id))
+      console.log('Deleting item...')
+    }
+  }
+
   useEffect(() => {
     if (searchItem && searchItem !== '') {
       dispatch(searchContract(searchItem))
@@ -28,6 +36,7 @@ const Least = () => {
       dispatch(fetchDocuments())
     }
   }, [searchItem])
+
   return (
     <>
       {modal && <AddLease setModal={setModal} />}
@@ -57,7 +66,7 @@ const Least = () => {
 
           <div className=" md:grid-cols-3  grid grid-cols-1 gap-5 mt-3">
             {contracts &&
-              contracts?.map((val, key) => <LeaseCard key={key} val={val} />)}
+              contracts?.map((val, key) => <LeaseCard key={key} val={val} handleDelete={handleDelete} />)}
           </div>
         </div>
       </div>

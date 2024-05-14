@@ -9,7 +9,7 @@ const EditPetTable = ({ id, setIsEditPetForm }) => {
   const error = useSelector((state) => state.pet.error)
   const dispatch = useDispatch()
   const [editContactId, setEditContactId] = useState(null)
-  const pets = useSelector(state => state.pet.data)
+  const pets = useSelector((state) => state.pet.data)
   const [editFormData, setEditFormData] = useState({
     name: '',
     species: '',
@@ -37,7 +37,7 @@ const EditPetTable = ({ id, setIsEditPetForm }) => {
     const formValues = {
       name: pets.name,
       species: pets.species,
-      birthday: new Date(pets.birthday).toLocaleDateString(),
+      birthday: new Date(pets?.birthday).toISOString().split('T')[0],
     }
 
     setEditFormData(formValues)
@@ -55,14 +55,11 @@ const EditPetTable = ({ id, setIsEditPetForm }) => {
   }
 
   const handleDeleteClick = (id, contactId) => {
-    if (window.confirm(
-      'Are you sure you want to delete this tenant?',
-    )) {
+    if (window.confirm('Are you sure you want to delete this tenant?')) {
       dispatch(deletePet(id, contactId))
       console.log('Pet deleted')
     }
   }
-
 
   return (
     <div>
@@ -71,7 +68,11 @@ const EditPetTable = ({ id, setIsEditPetForm }) => {
           Edit Pet Details
         </h1>
       </div>
-      <form action="" onSubmit={handleEditFormSubmit} className='flex flex-col overflow-y-auto h-96 flex-shrink-0'>
+      <form
+        action=""
+        onSubmit={handleEditFormSubmit}
+        className="flex flex-col overflow-y-auto h-96 flex-shrink-0"
+      >
         <div className="lg:justify-between lg:flex lg:items-center lg:-mb-1 mb-3">
           <button className="absolute top-4 right-6">
             <IoMdClose
@@ -82,8 +83,8 @@ const EditPetTable = ({ id, setIsEditPetForm }) => {
           </button>
         </div>
         <table className=" table-fixed min-w-full border-collapse w-full  ">
-          <thead className='  bg-dark-blue  text-white sticky top-0 '>
-            <tr className='text-center text-sm font-semibold  ' >
+          <thead className="  bg-dark-blue  text-white sticky top-0 ">
+            <tr className="text-center text-sm font-semibold  ">
               <th className="py-5 ">Name</th>
               <th className="">Species</th>
               <th className="">Birthday</th>
@@ -91,24 +92,25 @@ const EditPetTable = ({ id, setIsEditPetForm }) => {
             </tr>
           </thead>
           <tbody className="pt-10">
-            {pets && pets.map((val, key) => (
-              <Fragment key={key}>
-                {editContactId === val._id ? (
-                  <PetEditableRow
-                    editFormData={editFormData}
-                    handleEditFormChange={handleEditFormChange}
-                    handleCancelClick={handleCancelClick}
-                  />
-                ) : (
-                  <PetReadRow
-                    id={id}
-                    pets={val}
-                    handleEditClick={handleEditClick}
-                    handleDeleteClick={handleDeleteClick}
-                  />
-                )}
-              </Fragment>
-            ))}
+            {pets &&
+              pets.map((val, key) => (
+                <Fragment key={key}>
+                  {editContactId === val._id ? (
+                    <PetEditableRow
+                      editFormData={editFormData}
+                      handleEditFormChange={handleEditFormChange}
+                      handleCancelClick={handleCancelClick}
+                    />
+                  ) : (
+                    <PetReadRow
+                      id={id}
+                      pets={val}
+                      handleEditClick={handleEditClick}
+                      handleDeleteClick={handleDeleteClick}
+                    />
+                  )}
+                </Fragment>
+              ))}
           </tbody>
         </table>
         {error && (
