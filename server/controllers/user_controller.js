@@ -598,7 +598,7 @@ module.exports.update_profile_picture = async (req, res) => {
     const user_id = req.user.id
     const { public_id } = req.query
     const profile_image = req.file
-    // console.log(profile_image)
+    console.log(profile_image)
     const b64 = Buffer.from(profile_image.buffer).toString('base64')
     let dataURI = 'data:' + profile_image.mimetype + ';base64,' + b64
     console.log(`dataURI: ${dataURI}`)
@@ -634,7 +634,7 @@ module.exports.update_profile_picture = async (req, res) => {
     )
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Profile has been changed', response: tenant })
+      .json({ msg: 'Profile has been changed', response: (response.role.toString() === "Tenant" ? tenant : response) })
   } catch (err) {
     console.error({ err })
     return res

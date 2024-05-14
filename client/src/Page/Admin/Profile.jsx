@@ -7,7 +7,7 @@ import { isLoggedin } from '../../features/authentication'
 import { changeProfile } from '../../features/user'
 import { fetchApartments } from '../../features/apartment'
 import ProfileEditAccount from '../../Component/AdminComponent/ProfileEditAccount'
-import MessageToast from '../../Component/ToastComponent/MessageToast';
+import MessageToast from '../../Component/ToastComponent/MessageToast'
 
 const Profile = () => {
   const [modal, setIsModalOpen] = useState(false)
@@ -27,13 +27,15 @@ const Profile = () => {
     setIsProfileEditAccount(!isProfileEditAccount)
   }
 
-
   const handleConfirm = (e) => {
     e.preventDefault()
-    dispatch(changeProfile(user.id, user.image_id, selectedFile))
-    setchangeModal(false)
+    // const userId = user?.role === "Admin" || user?.role === "Superadmin" ? user?._id : user?._id 
+    dispatch(changeProfile(user._id, user?.profile_image.public_id, selectedFile))
+    if (msg || error) {
+      setchangeModal((prevState) => !prevState)
+    }
   }
-
+  console.log(user)
   useEffect(() => {
     dispatch(isLoggedin())
     dispatch(fetchApartments())
@@ -41,13 +43,27 @@ const Profile = () => {
 
   return (
     <>
-      {isVisible && <MessageToast message={msg} error={error} isVisible={isVisible} setIsVisible={setIsVisible} />}
-      {modal && <EditOwnerDetails isVisible={isVisible} setIsVisible={setIsVisible}
-        error={error}
-        msg={msg} user={user} setIsModalOpen={setIsModalOpen} />}
+      {isVisible && (
+        <MessageToast
+          message={msg}
+          error={error}
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+        />
+      )}
+      {modal && (
+        <EditOwnerDetails
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+          error={error}
+          msg={msg}
+          user={user}
+          setIsModalOpen={setIsModalOpen}
+        />
+      )}
       {changeModal && (
         <ChangePd
-          userImage={user?.image}
+          userImage={user?.profile_image.image_url}
           selectedFile={selectedFile}
           setSelectedFile={setSelectedFile}
           handleFileChange={handleFileChange}
@@ -79,7 +95,9 @@ const Profile = () => {
               </div>
               <div className="w-full h-full max-h-10 flex justify-center items-center py-6">
                 <p className="md:text-2xl text-base uppercase font-bold">
-                  {user?.role === 'Admin' || user?.role === 'Superadmin' ? user?.name : user?.user_id.name}
+                  {user?.role === 'Admin' || user?.role === 'Superadmin'
+                    ? user?.name
+                    : user?.user_id.name}
                 </p>
               </div>
             </div>
@@ -132,7 +150,10 @@ const Profile = () => {
               <div className="w-full h-full flex-col flex">
                 <div className="w-full h-full max-h-12 py-2 px-4 text-white bg-[#183044] flex items-center justify-between ">
                   <p className="md:text-xl text-base">ACCOUNTS</p>
-                  <BiEdit className="h-20 w-7 cursor-pointer hover:scale-125 duration-300" onClick={toggleEditAccount} />
+                  <BiEdit
+                    className="h-20 w-7 cursor-pointer hover:scale-125 duration-300"
+                    onClick={toggleEditAccount}
+                  />
                 </div>
 
                 <div className="w-full flex flex-col px-4 py-3 ">
@@ -154,7 +175,8 @@ const Profile = () => {
                   <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50">
                     <div className="lg:w-1/2 bg-white rounded-lg">
                       <ProfileEditAccount
-                        isVisible={isVisible} setIsVisible={setIsVisible}
+                        isVisible={isVisible}
+                        setIsVisible={setIsVisible}
                         setIsProfileEditAccount={setIsProfileEditAccount}
                         user={user}
                         error={error}
@@ -169,36 +191,41 @@ const Profile = () => {
         </div>
         {/* Apartment Details */}
         <div className="w-full h-full ">
-          {user?.role !== 'Superadmin' && <p className="h-full max-h-5 text-2xl font-bold w-11/12 m-auto py-8 mb-4">
-            APARTMENT DETAILS
-          </p>}
+          {user?.role !== 'Superadmin' && (
+            <p className="h-full max-h-5 text-2xl font-bold w-11/12 m-auto py-8 mb-4">
+              APARTMENT DETAILS
+            </p>
+          )}
 
-          <div className='flex flex-wrap gap-3 pb-10'>
-            {user?.role !== 'Superadmin' && apartment && apartment.map((val, key) => (
-              <div key={key} className="w-11/12 md:h-full md:max-w-[500px] md:max-h-[300px] overflow-hidden bg-white rounded-md shadow-md md:mx-[52px] mx-4">
-                <div className="w-full h-full max-h-12 px-4 py-2 text-white bg-[#183044] flex items-center">
-                  <p>APARTMENT NO. {key + 1}</p>
+          <div className="flex flex-wrap gap-3 pb-10">
+            {user?.role !== 'Superadmin' &&
+              apartment &&
+              apartment.map((val, key) => (
+                <div
+                  key={key}
+                  className="w-11/12 md:h-full md:max-w-[500px] md:max-h-[300px] overflow-hidden bg-white rounded-md shadow-md md:mx-[52px] mx-4"
+                >
+                  <div className="w-full h-full max-h-12 px-4 py-2 text-white bg-[#183044] flex items-center">
+                    <p>APARTMENT NO. {key + 1}</p>
+                  </div>
+
+                  <div className="w-full flex flex-col">
+                    <div className="w-full h-full flex px-4 py-2">
+                      <p className="w-[170px]">Apartment Name:</p>
+                      <p>{val?.name}</p>
+                    </div>
+                    <div className="w-full h-full flex px-4 py-2">
+                      <p className="w-[170px]">Address:</p>
+                      <p>{val?.address}</p>
+                    </div>
+
+                    <div className="w-full h-full flex px-4 py-2">
+                      <p className="w-[170px]">Total House:</p>
+                      <p>{val?.units?.length}</p>
+                    </div>
+                  </div>
                 </div>
-
-                <div className="w-full flex flex-col">
-                  <div className="w-full h-full flex px-4 py-2">
-                    <p className="w-[170px]">Apartment Name:</p>
-                    <p>{val?.name}</p>
-                  </div>
-                  <div className="w-full h-full flex px-4 py-2">
-                    <p className="w-[170px]">Address:</p>
-                    <p>{val?.address}</p>
-                  </div>
-
-                  <div className="w-full h-full flex px-4 py-2">
-                    <p className="w-[170px]">Total House:</p>
-                    <p>
-                      {(val?.units)?.length}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </div>

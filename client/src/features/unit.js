@@ -8,7 +8,7 @@ const unitSlice = createSlice({
     error: null,
     data: null,
     single: null,
-    msg: null
+    msg: null,
   },
   reducers: {
     startUnit: (state) => {
@@ -24,20 +24,22 @@ const unitSlice = createSlice({
       state.loading = false
       state.single = action.payload
     },
-    insertUnitSuccess:(state, action)=>{
+    insertUnitSuccess: (state, action) => {
       state.loading = false
       state.data = [...state.data, action.payload.response]
       state.msg = action.payload.msg
     },
     editUnitSuccess: (state, action) => {
-      state.loading = false
-      state.data = state.data.filter((unit) => unit._id !== action.payload)
+      state.loading = false 
+      state.data = state.data.map((unit) =>
+        unit._id === action.payload ? action.payload.response : unit,
+      )
+      state.msg = action.payload.msg
     },
     deleteUnitSuccess: (state, action) => {
       state.loading = false
-      state.data = state.data.map((unit) =>
-        unit._id === action.payload ? { ...unit, ...action.payload } : unit,
-      )
+      state.data = state.data.filter((unit) => unit._id !== action.payload.response._id)
+      state.msg = action.payload.msg
     },
     actionUnitFailed: (state, action) => {
       state.loading = false
@@ -198,7 +200,9 @@ export const deleteUnit = (apartmentId, unitId) => async (dispatch) => {
       const error = await response.json()
       throw new Error(error.error)
     }
-    dispatch(fetchUnitsApartment(apartmentId))
+    const json = await response.json()
+    console.log(json)
+    dispatch(deleteUnitSuccess(json))
   } catch (err) {
     dispatch(actionUnitFailed(err.message))
   }

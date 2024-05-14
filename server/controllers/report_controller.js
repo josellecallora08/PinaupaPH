@@ -180,7 +180,7 @@ module.exports.createReport = async (req, res) => {
 
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Report submitted successfully' })
+      .json({ msg: 'Report submitted successfully', response})
   } catch (err) {
     console.error({ error: err.message })
     return res.status(500).json({ error: `Server Error: ${err.message}` })
@@ -201,7 +201,7 @@ module.exports.editReport = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to edit report' })
 
-    return res.status(httpStatusCodes.OK).json({ msg: 'Report updated' })
+    return res.status(httpStatusCodes.OK).json({ msg: 'Report updated', response })
   } catch (err) {
     console.log(err.message)
     return res
@@ -217,11 +217,11 @@ module.exports.deleteReport = async (req, res) => {
     if (!response)
       return res
         .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'Report not found' })
+      .json({ error: 'Report not found' })
 
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Report has been deleted.' })
+      .json({ msg: 'Report has been deleted.', response })
   } catch (err) {
     console.log(err.message)
     return res

@@ -39,7 +39,7 @@ const AddRoom = ({ apartment_id, setIsAddRoomFormOpen }) => {
     e.preventDefault()
     dispatch(createUnit(fields, apartment_id))
     if (error || msg) {
-      setIsAddRoomFormOpen(false)
+      setIsAddRoomFormOpen(prevState => !prevState)
     }
   }
   return (

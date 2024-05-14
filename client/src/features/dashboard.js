@@ -51,7 +51,7 @@ export const {
   fetchFailed,
 } = dashboardSlice.actions
 
-export const fetchTotalPaid = ( year) => async (dispatch) => {
+export const fetchTotalPaid = (year) => async (dispatch) => {
   try {
     dispatch(fetchRateStart())
     const token = Cookies.get('token')

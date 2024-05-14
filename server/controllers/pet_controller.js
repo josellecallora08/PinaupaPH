@@ -55,26 +55,27 @@ module.exports.create_pet = async (req, res) => {
         .json({ error: 'Invalid to create pet...' })
     }
     const details = { name, birthday, species }
-    const pet_index = response.pet.findIndex(
-      (item) => item.name.toString() === name,
-    )
-    if (pet_index === -1) {
-      response.pet.push(details)
-    } else {
+    // const pet_index = response.pet.findIndex(
+    //   (item) => item.name.toString() === name,
+    // )
+    const pet = response.pet.find((item) => item.name === name)
+    if (pet) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Pet already exists.' })
     }
-
+    response.pet.push(details)
     const saved_response = await response.save()
     if (!saved_response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to save pet information' })
     }
+
+    const createdPet = response.pet[response.pet.length - 1]
     return res
       .status(httpStatusCodes.CREATED)
-      .json({ msg: 'Created pet successfully!' })
+      .json({ msg: 'Created pet successfully!', response: createdPet })
   } catch (err) {
     // console.error({ error: err.message })
     return res
@@ -146,11 +147,17 @@ module.exports.delete_pet = async (req, res) => {
     if (index === -1) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Pet not found2' })
+    }
+    const pet = response.pet.find(item => item._id.toString() === pet_id.toString())
+    if(!pet){
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Pet not found' })
     }
     response.pet.splice(index, 1)
     await response.save()
-    return res.status(httpStatusCodes.OK).json({ msg: 'Removed Pet' })
+    return res.status(httpStatusCodes.OK).json({ msg: 'Removed Pet', response:pet})
   } catch (err) {
     console.error({ error: err.message })
     return res

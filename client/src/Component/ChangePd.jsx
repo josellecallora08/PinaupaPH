@@ -1,15 +1,12 @@
 import React, { useState } from 'react'
 import { IoMdClose } from 'react-icons/io'
-import { useDispatch } from 'react-redux'
-import { changeProfile } from '../features/user'
 
 const ChangePd = ({ userImage, selectedFile, setSelectedFile, handleFileChange, setChangeModal, handleConfirm }) => {
 
-
   return (
-    <div className="flex h-full fixed top-0 items-center z-10 justify-center w-full bg-gray backdrop-blur-sm">
+    <div className="flex h-full fixed top-0 items-center z-10 justify-center w-full bg-gray/10 backdrop-blur-sm">
       <div
-        className="absolute w-full h-full flex items-center justify-center bg-black opacity-20 backdrop-blur-sm"
+        className="absolute w-full h-full flex items-center justify-center bg-black/05 backdrop-blur-sm"
         onClick={() => setChangeModal((prevState) => !prevState)}
       ></div>
       <div className="relative md:w-[550px] w-[360px] h-[360px] py-12 rounded-md shadow-md bg-white overflow-hidden ">
@@ -19,15 +16,15 @@ const ChangePd = ({ userImage, selectedFile, setSelectedFile, handleFileChange, 
         />
         <label
           htmlFor="fileInput"
-          className="w-60 h-60  mx-auto bg-black flex justify-center items-center cursor-pointer rounded-full"
+          className="w-60 h-60  mx-auto border flex justify-center items-center cursor-pointer rounded-full"
         >
-          {selectedFile ? (
+          {selectedFile && (
             <img
               src={URL.createObjectURL(selectedFile)}
               alt="Selected"
               className="w-60 h-60 rounded-full"
             />
-          ) : (
+          ) || (
             <img
               src={userImage}
               alt="Profile"
