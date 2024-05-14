@@ -7,12 +7,27 @@ const httpStatusCodes = require('../constants/constants')
 
 module.exports.delayedRents = async (req, res) => {
   try {
-    const { month, year } = req.query
+    const { year } = req.query
     const response = await INVOICEMODEL.find().populate({
       path: 'tenant_id',
       populate: 'user_id unit_id apartment_id',
     })
-  } catch (err) {}
+
+    const delayedPayments = response
+      .filter(item => new Date(item.datePaid).getMonth() > new Date(item.due).getMonth() && parseInt(new Date(item.datePaid).getFullYear()) === parseInt(year))
+      .length
+
+    const totalofPayments = response.length
+    const advancePayment = response
+      .filter(item => new Date(item.datePaid).getMonth() < new Date(item.tenant_id.monthly_due).getMonth() && parseInt(new Date(item.datePaid).getFullYear()) === parseInt(year))
+      .length
+
+    return res.status(httpStatusCodes.OK).json({ delayedPayments, totalofPayments, advancePayment })
+  } catch (err) {
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
+  }
 }
 
 module.exports.revenueDashboard = async (req, res) => {
@@ -120,17 +135,16 @@ module.exports.totalPaid = async (req, res) => {
 
 module.exports.deliquencyRate = async (req, res) => {
   try {
-    const { month, year } = req.query
+    const { year } = req.query
 
     const response = await INVOICEMODEL.find().populate({
       path: 'tenant_id',
       populate: 'user_id',
     })
     const tenants = await TENANTMODEL.find().populate('user_id')
-    const totalGoodPayer = tenants.reduce((acc, sum) => {
-      return (acc = acc + (sum.balance === 0 ? 1 : 0))
-    }, 0)
-    console.log(tenants.length)
+    const totalGoodPayer = tenants
+      .filter((item) => new Date(item.datePaid).getMonth() <= new Date(item.due).getMonth() && parseInt(new Date(item.datePaid).getFullYear() === parseInt(year)))
+      .length
     // const totalDeliquency = response.reduce((acc, sum, index) => {
     //   return (acc =
     //     acc +

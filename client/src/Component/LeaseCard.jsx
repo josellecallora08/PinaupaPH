@@ -4,14 +4,9 @@ import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { deleteDocument } from '../features/documents'
 
-const LeaseCard = ({ val }) => {
+const LeaseCard = ({ val, handleDelete }) => {
   const dispatch = useDispatch()
-  const handleDelete = () => {
-    if (window.confirm('Are you sure you want to delete this item?')) {
-      dispatch(deleteDocument(val._id))
-      console.log('Deleting item...')
-    }
-  }
+
 
   return (
     <div className="relative hover:scale-105 hover:duration-300 cursor-pointer flex flex-row shadow-sm shadow-light-gray rounded-md items-center bg-white">
@@ -36,7 +31,7 @@ const LeaseCard = ({ val }) => {
             <MdOutlineRemoveRedEye color='white' />
           </Link>
           <button
-            onClick={handleDelete}
+            onClick={() => handleDelete(val._id)}
             className="bg-red inline-flex p-2 rounded-md top-8 right-4 hover:bg-red/55"
           >
             <MdOutlineClose color="white" size={18} />
