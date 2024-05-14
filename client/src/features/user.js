@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 import Cookies from 'js-cookie'
-import { isLoggedin } from './authentication'
 const userSlice = createSlice({
   name: 'user',
   initialState: {
@@ -47,7 +46,7 @@ const userSlice = createSlice({
           ? action.payload.response
           : user
       )
-      state.single = { ...state.single, ...action.payload.response }
+      state.single = state.single._id === action.payload.response._id ? action.payload.response : state.single;
       state.msg = action.payload.msg
     },
     actionUserFailed: (state, action) => {
@@ -98,7 +97,6 @@ export const handleSearchUser = (filter) => async (dispatch) => {
 export const createTenant = (fields) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
-    dispatch(fetchUserStart())
     const response = await fetch(`${import.meta.env.VITE_URL}/api/user`, {
       method: 'POST',
       headers: {
@@ -258,13 +256,13 @@ export const changeProfile =
 
       const json = await response.json()
       console.log(json)
-      dispatch(isLoggedin())
+      dispatch(editUserSuccess(json))
     } catch (err) {
       dispatch(actionUserFailed(err.message))
     }
   }
 
-export const deleteTenant = (userId, navigate) => async (dispatch) => {
+export const deleteTenant = (userId) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchUserStart())
@@ -284,7 +282,7 @@ export const deleteTenant = (userId, navigate) => async (dispatch) => {
     }
     const json = await response.json()
     console.log(json)
-    navigate('/tenant')
+    // navigate('/tenant')
     dispatch(deleteUserSuccess(json))
   } catch (err) {
     dispatch(actionUserFailed(err.message))

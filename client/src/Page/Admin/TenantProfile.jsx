@@ -1,26 +1,29 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+
 import { FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
 import { RxDotsVertical } from 'react-icons/rx'
-import TenantProfileInfo from '../../Data/TenantProfileInfo'
-import EditTenantDetails from '../../Component/EditTenantDetails'
-import EditTenantAccount from '../../Component/EditTenantAccount'
-import EditFamMemTable from '../../Component/EditFamMemTable'
+import { GrFormView, GrFormAdd } from 'react-icons/gr'
 import { MdOutlineFileDownload } from 'react-icons/md'
 
 import AddHousehold from '../../Component/AddHousehold'
 import EditApartment from '../../Component/AdminComponent/EditApartment'
 import TransactionTable from '../../Component/TransactionTable'
 import TransactionMobile from '../../Component/TransactionMobile'
-import { GrFormView, GrFormAdd } from 'react-icons/gr'
+import TenantProfileInfo from '../../Data/TenantProfileInfo'
+import EditTenantDetails from '../../Component/EditTenantDetails'
+import EditTenantAccount from '../../Component/EditTenantAccount'
+import EditFamMemTable from '../../Component/EditFamMemTable'
 import AddPet from '../../Component/AddPet'
 import EditPetTable from '../../Component/EditPetTable'
-import { deleteUser, fetchUser } from '../../features/user'
-import { fetchHousehold, fetchHouseholds } from '../../features/household'
+
+import { deleteTenant, deleteUser, fetchUser } from '../../features/user'
+import { fetchHouseholds } from '../../features/household'
 import { fetchPets } from '../../features/pet'
 import { generateDocument } from '../../features/documents'
+
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile')
   const [isEditTenantDetailForm, setIsEditTenantDetailForm] = useState(false)
@@ -36,6 +39,8 @@ const TenantProfile = () => {
   const dispatch = useDispatch()
   const { id } = useParams()
   const tenant = useSelector((state) => state.user.single)
+  const error = useSelector((state) => state.user.error)
+  const msg = useSelector((state) => state.user.msg)
   const households = useSelector((state) => state.household.data)
   const pets = useSelector((state) => state.pet.data)
   const navigate = useNavigate()
@@ -45,7 +50,10 @@ const TenantProfile = () => {
       'Are you sure you want to delete this tenant?',
     )
     if (isConfirmed) {
-      dispatch(deleteUser(id, navigate))
+      dispatch(deleteTenant(id))
+      if (msg || error) {
+        navigate('/tenant')
+      }
     }
   }
   const handleClickOutsideDropdown = (event) => {
@@ -70,12 +78,6 @@ const TenantProfile = () => {
   const toggleEditTenantAccountForm = () => {
     setIsEditTenantAccountForm(!isEditTenantAccountForm)
   }
-  const toggleEditFamilyMemForm = () => {
-    setIsEditFamilyMemForm(!isEditFamilyMemForm)
-  }
-  const toggleEditPetForm = () => {
-    setIsEditPetForm(!isEditPetForm)
-  }
   const toggleRemoveDot = () => {
     setIsRemovedot(!isRemovedot)
   }
@@ -87,12 +89,9 @@ const TenantProfile = () => {
     dispatch(generateDocument(id))
   }
   useEffect(() => {
-    dispatch(fetchUser(id))
-  }, [])
-
-  useEffect(() => {
     dispatch(fetchHouseholds(id))
     dispatch(fetchPets(id))
+    dispatch(fetchUser(id))
   }, [])
 
   useEffect(() => {
@@ -108,7 +107,15 @@ const TenantProfile = () => {
       {/* Tenant Profile Header */}
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="lg:mt-2 lg:ml-10 uppercase font-bold  p-5 mx-4">
-          <h1 ><span className=' hover:cursor-pointer hover:underline mr-1' onClick={() => window.history.back()}>Tenant</span>/  Tenant Profile</h1>
+          <h1>
+            <span
+              className=" hover:cursor-pointer hover:underline mr-1"
+              onClick={() => window.history.back()}
+            >
+              Tenant
+            </span>
+            / Tenant Profile
+          </h1>
         </div>
 
         {/* Tab Navigation */}
@@ -166,7 +173,10 @@ const TenantProfile = () => {
                       <MdDelete />
                       Delete
                     </button>
-                    <button onClick={handleDownload} className="btn hidden hover:text-primary-color lg:flex items-center gap-2 absolute right-3 top-12 bg-primary-color text-white p-2 rounded-md ">
+                    <button
+                      onClick={handleDownload}
+                      className="btn hidden hover:text-primary-color lg:flex items-center gap-2 absolute right-3 top-12 bg-primary-color text-white p-2 rounded-md "
+                    >
                       <MdOutlineFileDownload size={20} /> Lease Agreement
                     </button>
 
@@ -187,7 +197,7 @@ const TenantProfile = () => {
                             <MdDelete className="text-lg" /> Delete
                           </button>
                           <button className=" flex items-center  gap-2  bg-primary-color w-[10.2rem] text-white p-2 rounded-md hover:bg-opacity-80 transition duration-300 ease-in-out">
-                          <MdOutlineFileDownload size={20} /> Lease Agreement
+                            <MdOutlineFileDownload size={20} /> Lease Agreement
                           </button>
                         </div>
                       )}

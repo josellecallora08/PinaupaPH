@@ -13,15 +13,17 @@ import Loading from '../../Component/LoadingComponent/Loading'
 
 const Apartment = () => {
   const dispatch = useDispatch()
+  const error = useSelector((state) => state.apartment.error)
+  const msg = useSelector((state) => state.apartment.msg)
   const loading = useSelector((state) => state.apartment.loading)
   const apartment = useSelector((state) => state.apartment.data)
+  const [isAddApartmentFormOpen, setIsAddApartmentFormOpen] = useState(false)
   const [searchItem, setSearchItem] = useState('')
 
   const handleSearch = (e) => {
     setSearchItem(e.target.value)
   }
 
-  const [isAddApartmentFormOpen, setIsAddApartmentFormOpen] = useState(false)
   const toggleAddApartmentForm = () => {
     setIsAddApartmentFormOpen(!isAddApartmentFormOpen)
   }
@@ -34,7 +36,6 @@ const Apartment = () => {
     }
   }, [searchItem])
 
-  const error = useSelector((state) => state.apartment.error)
   const [fields, setFields] = useState({
     name: '',
     address: '',
@@ -52,8 +53,8 @@ const Apartment = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     dispatch(createApartment(fields))
-    if (error !== null) {
-      setIsAddApartmentFormOpen((prevState) => !prevState)
+    if (error || msg) {
+      setIsAddApartmentFormOpen(prevState => !prevState)
     }
     
   } 

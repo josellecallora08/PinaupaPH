@@ -34,8 +34,8 @@ const Tenant = () => {
   const tenant = useSelector((state) => state.user.data)
   const loading = useSelector((state) => state.user.loading)
   const error = useSelector((state) => state.user.error)
-  const apartment = useSelector((state) => state.apartment.data)
   const msg = useSelector((state) => state.user.msg)
+  const apartment = useSelector((state) => state.apartment.data)
   const handleDropdown = (e) => {
     setSelectedOption(e.target.value)
   }
@@ -43,20 +43,20 @@ const Tenant = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(createTenant(fields))
-    setFields({
-      name: '',
-      username: '',
-      birthday: '',
-      mobile_no: '',
-      email: '',
-      password: '',
-      unit_id: '',
-      apartment_id: '',
-      deposit: '',
-      occupancy: '',
-    })
-    if (error !== null) {
+    if (error || msg) {
       setIsAddTenantFormOpen((prevState) => !prevState)
+      setFields({
+        name: '',
+        username: '',
+        birthday: '',
+        mobile_no: '',
+        email: '',
+        password: '',
+        unit_id: '',
+        apartment_id: '',
+        deposit: '',
+        occupancy: '',
+      })
     }
   }
 

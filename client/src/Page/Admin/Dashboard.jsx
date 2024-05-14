@@ -72,14 +72,14 @@ const Dashboard = () => {
       },
     ],
   }
-
+console.log(totalPaid)
   useEffect(() => {
     const month = new Date(date).getMonth()
     const year = new Date(date).getFullYear()
-    dispatch(fetchTotalOccupancy(month, year))
-    dispatch(fetchTotalPaid(month, year))
-    dispatch(fetchTotalPayer(month, year))
-    dispatch(fetchReports(month, year))
+    dispatch(fetchTotalOccupancy(year))
+    dispatch(fetchTotalPaid(year))
+    dispatch(fetchTotalPayer(year))
+    dispatch(fetchReports(year))
     dispatch(fetchRevenue(month, year))
   }, [date, setDate])
   function formatDate(date) {
@@ -258,7 +258,9 @@ const Dashboard = () => {
                             className={`relative w-11/12 m-auto xl:w-full h-2 bg-primary-color/20 rounded-full overflow-hidden shadow-inner`}
                           >
                             <span
-                              style={{ width: `${totalPaid?.percentage}%` }}
+                              style={{
+                                width: `${totalPaid?.percentage && totalPaid?.percentage || 0}%`,
+                              }}
                               className={`absolute h-2 bg-primary-color animate-in slide-in-from-left-20 duration-1000`}
                             ></span>
                           </p>

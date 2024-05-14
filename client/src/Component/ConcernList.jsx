@@ -89,7 +89,7 @@ const ConcernList = () => {
               <Loading />
             ) : (
               reports
-                ?.filter((item) => selected === 'all' ? item?.sender_id?.user_id._id === user?.user_id._id  : item?.sender_id?.user_id._id === user?.user_id._id && selected !== 'all' && item.status.toString() === selected.toString())
+                ?.filter((item) => selected === 'all' ? item?.sender_id?.user_id?._id === user?.user_id?._id  : item?.sender_id?.user_id?._id === user?.user_id?._id && selected !== 'all' && item.status.toString() === selected.toString())
                 .map((val, key) => (
                   <ConcernCard key={key} val={val} num={key} />
                 ))
