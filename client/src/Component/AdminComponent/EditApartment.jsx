@@ -32,7 +32,9 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(editUserApartment(tenant?.user_id?._id, fields))
-    console.log('Form submitted')
+    console.log('asdasasdas')
+    setIsEditApartmentForm((prevState) => !prevState)
+    
   }
 
   return (
@@ -122,7 +124,7 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
             />
           </div>
           <div className="flex justify-end mt-5 gap-3">
-            <button className=" bg-dark-blue text-white font-bold py-2 px-4 rounded">
+            <button onClick={() => setIsEditApartmentForm((prevState) => !prevState)} className=" bg-dark-blue text-white font-bold py-2 px-4 rounded">
               Submit
             </button>
             <button
