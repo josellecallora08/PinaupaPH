@@ -8,6 +8,7 @@ const userSlice = createSlice({
     error: null,
     data: null,
     single: null,
+    msg: null
   },
   reducers: {
     fetchUserStart: (state) => {
@@ -27,6 +28,11 @@ const userSlice = createSlice({
       state.loading = false
       state.single = action.payload
     },
+    editSingleUser: (state, action) => {
+      state.loading = false
+      state.single = { ...state.single, ...action.payload.response }
+      state.msg = action.payload.msg
+    },
     deleteUserSuccess: (state, action) => {
       state.loading = false
       state.msg = action.payload.msg
@@ -39,8 +45,9 @@ const userSlice = createSlice({
       state.data = state.data.map((user) =>
         user._id === action.payload.response._id
           ? action.payload.response
-          : user,
+          : user
       )
+      state.single = { ...state.single, ...action.payload.response }
       state.msg = action.payload.msg
     },
     actionUserFailed: (state, action) => {
@@ -56,6 +63,7 @@ export const {
   insertUserSuccess,
   fetchSingleUser,
   deleteUserSuccess,
+  editSingleUser,
   editUserSuccess,
   actionUserFailed,
 } = userSlice.actions
@@ -184,12 +192,13 @@ export const editUser = (userId, credentials) => async (dispatch) => {
     }
 
     const json = await response.json()
-    console.log('success')
-    dispatch(editUserSuccess(json))
+    console.log(json)
+    dispatch(fetchUser(userId))
   } catch (err) {
     dispatch(actionUserFailed(err.message))
   }
 }
+
 
 export const editUserApartment = (userId, credentials) => async (dispatch) => {
   try {
@@ -255,7 +264,35 @@ export const changeProfile =
     }
   }
 
-export const deleteUser = (userId) => async (dispatch) => {
+export const deleteTenant = (userId, navigate) => async (dispatch) => {
+  try {
+    const token = Cookies.get('token')
+    dispatch(fetchUserStart())
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/user/account/delete?user_id=${userId}`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
+    }
+    const json = await response.json()
+    console.log(json)
+    navigate('/tenant')
+    dispatch(deleteUserSuccess(json))
+  } catch (err) {
+    dispatch(actionUserFailed(err.message))
+  }
+}
+
+
+export const deleteUser = (userId, navigate) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(fetchUserStart())
@@ -275,6 +312,7 @@ export const deleteUser = (userId) => async (dispatch) => {
     }
     const json = await response.json()
     console.log(json)
+    navigate('/tenant')
     dispatch(deleteUserSuccess(json))
   } catch (err) {
     dispatch(actionUserFailed(err.message))

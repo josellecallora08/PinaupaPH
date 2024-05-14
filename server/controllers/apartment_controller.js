@@ -185,10 +185,12 @@ module.exports.edit_apartment = async (req, res) => {
     const { name, address, province, barangay } = req.body
     const details = {}
     if (name !== '') {
-      if (await APARTMENTMODEL.findOne({ name }))
-        return res
-          .status(httpStatusCodes.BAD_REQUEST)
-          .json({ error: 'Apartment Building Exists' })
+      // const admin = await APARTMENTMODEL.findOne({ name })
+      // if(admin.name !== name)
+      //   return res
+      //     .status(httpStatusCodes.BAD_REQUEST)
+      //     .json({ error: 'Apartment Building Exists' })
+      //check at home
 
       details.name = name
     }
@@ -395,7 +397,7 @@ module.exports.edit_apartment_unit = async (req, res) => {
 
     details.unit_no = unit_no
     const is_unit_exist = apartment.units.some(
-      (item) => item.unit_no === unit_no,
+      (item) => item.unit_no === unit_no && item._id !== unit_id, //check at home
     )
     if (is_unit_exist) {
       return res
@@ -430,13 +432,25 @@ module.exports.delete_apartment_unit = async (req, res) => {
   try {
     const { apartment_id } = req.params
     const { unit_id } = req.query
+    const unit = await UNITMODEL.findById(unit_id)
+    if (!unit) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Apartment Not Found' })
+    }
 
+    if(unit.occupied){
+      return res
+      .status(httpStatusCodes.NOT_FOUND)
+      .json({ error: 'Cannot delete occupied apartment unit' })
+    }
     const apartment_response = await APARTMENTMODEL.findById(apartment_id)
     if (!apartment_response) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Apartment Not Found' })
     }
+
     const index = apartment_response.units.findIndex(
       (item) => item.toString() === unit_id,
     )

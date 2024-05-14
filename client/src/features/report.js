@@ -200,7 +200,7 @@ export const editReport = (report_id, fields) => async (dispatch) => {
     dispatch(fetchReportFailed(err.message))
   }
 }
-export const deleteReport = (report_id) => async (dispatch) => {
+export const deleteReport = (report_id,navigate) => async (dispatch) => {
   try {
     dispatch(fetchReportStart())
     const token = Cookies.get('token')
@@ -219,6 +219,7 @@ export const deleteReport = (report_id) => async (dispatch) => {
     }
     const json = await response.json()
     dispatch(deleteReport())
+    navigate('/concern&issue')
   } catch (err) {
     console.log(err.message)
     dispatch(fetchReportFailed(err.message))

@@ -248,14 +248,14 @@ module.exports.sign_in = async (req, res) => {
       if (!response)
         return res
           .status(httpStatusCodes.BAD_REQUEST)
-          .json({ error: 'Invalid Credentials (temp - Username)' })
+          .json({ error: 'Invalid credentials.' })
     }
 
     const match = await bcrypt.compare(password, response.password)
     if (!match)
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Invalid Credentials (temp - Password)' })
+        .json({ error: 'Invalid credentials.' })
 
     const token = createToken(response._id, response.username, response.role)
     res.cookie('token', token, { maxAge: 300000 })
@@ -398,10 +398,14 @@ module.exports.fetch_user = async (req, res) => {
   )
 
   try {
-    if (!response) {
-      return res
-        .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'User not found' })
+
+    if (!response) { //check at home
+      response = await USERMODEL.findById(user_id)
+      if (!response) {
+        return res
+          .status(httpStatusCodes.NOT_FOUND)
+          .json({ error: 'User not found' })
+      }
     }
 
     return res.status(httpStatusCodes.OK).json({ response })
@@ -492,6 +496,8 @@ module.exports.update_profile = async (req, res) => {
             .json({ error: 'Error hashing the password.' })
 
         response.password = hashed
+      } else {
+        return res.status(httpStatusCodes.BAD_REQUEST).json({ error: "Old password does not match the current password" }) //new update
       }
     }
 
@@ -637,7 +643,7 @@ module.exports.update_profile_picture = async (req, res) => {
   }
 }
 //  * Tested API
-module.exports.delete_tenant = async (req, res) => {
+module.exports.forcedDeleteTenant = async (req, res) => {
   try {
     const role = req.user.role
     if (role !== 'Admin') {
@@ -678,6 +684,58 @@ module.exports.delete_tenant = async (req, res) => {
       }
     }
     console.log(response)
+    return res
+      .status(httpStatusCodes.OK)
+      .json({ msg: 'Tenant removed.', response: tenant })
+  } catch (err) {
+    console.error({ error: err.message })
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
+  }
+}
+
+module.exports.deleteTenant = async (req, res) => {
+  try {
+    const role = req.user.role
+    if (role !== 'Admin') {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unauthorized. Only admin can add tenants.' })
+    }
+
+    const { user_id } = req.query
+    const response = await USERMODEL.findByIdAndUpdate(user_id, {
+      isDelete: true
+    })
+    if (!response) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'User not found...' })
+    }
+
+    // await cloudinary.uploader.destroy(response.profile_image.public_id)
+    if (response.role === 'Tenant') {
+      const tenant = await TENANTMODEL.findOne({
+        user_id: user_id,
+      }).populate('user_id unit_id apartment_id')
+      if (!tenant)
+        return res
+          .status(httpStatusCodes.BAD_REQUEST)
+          .json({ error: 'Unable to Locate Tenant' })
+
+      if (tenant.unit_id) {
+        const unit = await UNITMODEL.findByIdAndUpdate(
+          { _id: tenant.unit_id },
+          { occupied: false },
+        )
+
+        if (!unit)
+          return res
+            .status(httpStatusCodes.BAD_REQUEST)
+            .json({ error: 'Unable to locate Unit' })
+      }
+    }
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: 'Tenant removed.', response: tenant })

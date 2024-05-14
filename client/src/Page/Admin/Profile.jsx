@@ -7,12 +7,16 @@ import { isLoggedin } from '../../features/authentication'
 import { changeProfile } from '../../features/user'
 import { fetchApartments } from '../../features/apartment'
 import ProfileEditAccount from '../../Component/AdminComponent/ProfileEditAccount'
+import MessageToast from '../../Component/ToastComponent/MessageToast';
 
 const Profile = () => {
   const [modal, setIsModalOpen] = useState(false)
   const [changeModal, setchangeModal] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
+  const [isVisible, setIsVisible] = useState(false)
   const user = useSelector((state) => state.auth.user)
+  const error = useSelector((state) => state.user.error)
+  const msg = useSelector((state) => state.user.msg)
   const apartment = useSelector((state) => state.apartment.data)
   const [isProfileEditAccount, setIsProfileEditAccount] = useState(false)
   const dispatch = useDispatch()
@@ -23,9 +27,7 @@ const Profile = () => {
     setIsProfileEditAccount(!isProfileEditAccount)
   }
 
-  const toggleModal = () => {
-    setIsModalOpen(!modal)
-  }
+
   const handleConfirm = (e) => {
     e.preventDefault()
     dispatch(changeProfile(user.id, user.image_id, selectedFile))
@@ -39,8 +41,11 @@ const Profile = () => {
 
   return (
     <>
-      {modal ? <EditOwnerDetails user={user} setIsModalOpen={setIsModalOpen} /> : ''}
-      {changeModal ? (
+      {isVisible && <MessageToast message={msg} error={error} isVisible={isVisible} setIsVisible={setIsVisible} />}
+      {modal && <EditOwnerDetails isVisible={isVisible} setIsVisible={setIsVisible}
+        error={error}
+        msg={msg} user={user} setIsModalOpen={setIsModalOpen} />}
+      {changeModal && (
         <ChangePd
           userImage={user?.image}
           selectedFile={selectedFile}
@@ -49,8 +54,6 @@ const Profile = () => {
           setChangeModal={setchangeModal}
           handleConfirm={handleConfirm}
         />
-      ) : (
-        ''
       )}
 
       <div className="flex flex-col gap-5 w-full h-full py-5 bg-white1">
@@ -87,7 +90,7 @@ const Profile = () => {
                 <div className="w-full h-full max-h-12 px-4 py-2 text-white bg-[#183044] flex items-center justify-between">
                   <p className="md:text-xl text-base">PERSONAL DETAILS</p>
                   <BiEdit
-                    className="h-20 w-7"
+                    className="h-20 w-7 cursor-pointer hover:scale-125 duration-300"
                     onClick={() => setIsModalOpen((prevState) => !prevState)}
                   />
                 </div>
@@ -129,7 +132,7 @@ const Profile = () => {
               <div className="w-full h-full flex-col flex">
                 <div className="w-full h-full max-h-12 py-2 px-4 text-white bg-[#183044] flex items-center justify-between ">
                   <p className="md:text-xl text-base">ACCOUNTS</p>
-                  <BiEdit className="h-20 w-7" onClick={toggleEditAccount} />
+                  <BiEdit className="h-20 w-7 cursor-pointer hover:scale-125 duration-300" onClick={toggleEditAccount} />
                 </div>
 
                 <div className="w-full flex flex-col px-4 py-3 ">
@@ -151,8 +154,11 @@ const Profile = () => {
                   <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50">
                     <div className="lg:w-1/2 bg-white rounded-lg">
                       <ProfileEditAccount
+                        isVisible={isVisible} setIsVisible={setIsVisible}
                         setIsProfileEditAccount={setIsProfileEditAccount}
                         user={user}
+                        error={error}
+                        msg={msg}
                       />
                     </div>
                   </div>

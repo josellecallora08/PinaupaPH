@@ -28,7 +28,7 @@ const ForgotPass = () => {
   }
   return (
     <>
-      <div className=" w-full h-screen py-5 px-10">
+      <div className=" w-full h-screen py-5 lg:px-10">
         <div className="w-11/12 h-full max-h-40 m-auto flex justify-center lg:justify-start">
           <Link to={'/'} className='size-full max-w-40 flex justify-center'>
             <img
@@ -76,7 +76,7 @@ const ForgotPass = () => {
                 name="email"
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g juan.delacruz@gmail.com"
-                className="mr-10 rounded-md py-3 font-regular border-2 px-3 border-dark-gray w-full mt-2"
+                className="mr-10  rounded-md py-3 font-regular border-2 px-3 border-dark-gray w-full mt-2"
               />
               <button className="lg:mt-10 lg:mb-4 bg-primary-color font-bold text-white w-full mt-5 py-3 px-2 rounded-md hover:opacity-80">
                 Send

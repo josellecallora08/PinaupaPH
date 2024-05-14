@@ -5,56 +5,107 @@ const UNITMODEL = require('../models/unit')
 const REPORTMODEL = require('../models/report')
 const httpStatusCodes = require('../constants/constants')
 
+module.exports.delayedRents = async (req, res) => {
+  try {
+    const { month, year } = req.query
+    const response = await INVOICEMODEL.find().populate({
+      path: 'tenant_id',
+      populate: 'user_id unit_id apartment_id',
+    })
+  } catch (err) {}
+}
+
 module.exports.revenueDashboard = async (req, res) => {
   try {
+    const { year } = req.query
+    console.log(req.query)
     let monthlyTotal = []
     const response = await INVOICEMODEL.find().populate({
       path: 'tenant_id',
-      populate: 'user_id unit_id apartment_id'
+      populate: 'user_id unit_id apartment_id',
     })
-    const month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    const monthValue = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ]
     if (!response) {
-      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: "No payment" })
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'No payment' })
     }
 
     // const data = await response.reduce((acc, curr) => {
     //   return acc = acc + ((new Date(curr.datePaid).getMonth === ))
     // }, 0)
-    for (const monthName of month) {
-      let totalAmount = 0;
+    for (const monthName of monthValue) {
+      let totalAmount = 0
 
       for (const item of response) {
-          if (item.isPaid) {
-              const paidMonth = new Date(item.datePaid).getMonth();
-              if (month[paidMonth] === monthName) {
-                  totalAmount += item.amount;
-              }
+        if (item.isPaid) {
+          const paidMonth = new Date(item.datePaid).getMonth()
+          const paidYear = new Date(item.datePaid).getFullYear()
+
+          if (year) {
+            if (
+              monthValue[paidMonth] === monthName &&
+              parseInt(paidYear) === parseInt(year)
+            ) {
+              totalAmount += item.amount
+            }
+          } else {
+            if (monthValue[paidMonth] === monthName) {
+              totalAmount += item.amount
+            }
           }
+        }
       }
 
-      monthlyTotal.push(totalAmount);
-  }
+      monthlyTotal.push(totalAmount)
+    }
 
-  return res.status(httpStatusCodes.OK).json({response:monthlyTotal})
+    return res.status(httpStatusCodes.OK).json({ response: monthlyTotal })
   } catch (err) {
     return res
-    .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-    .json({ error: err.message })
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
   }
 }
 
 module.exports.totalPaid = async (req, res) => {
   try {
+    const { year } = req.query
+    console.log('owekow', req.query)
     const response = await INVOICEMODEL.find().populate({
       path: 'tenant_id',
       populate: 'user_id',
     })
-    const totalPayment = response.reduce((acc, sum) => {
-      return (acc = acc + sum.amount)
-    }, 0)
-    const totalBalance = response.reduce((acc, sum) => {
-      return (acc = acc + sum.tenant_id.balance)
-    }, 0)
+    console.log(response)
+    const totalPayment = response
+      .filter(
+        (item) =>
+          parseInt(new Date(item.datePaid).getFullYear()) === parseInt(year),
+      )
+      .reduce((acc, sum) => {
+        return (acc = acc + sum.amount)
+      }, 0)
+    const totalBalance = response
+      .filter(
+        (item) =>
+          parseInt(new Date(item.datePaid).getFullYear()) === parseInt(year),
+      )
+      .reduce((acc, sum) => {
+        return (acc = acc + (sum.tenant_id?.balance || 0))
+      }, 0)
     const percentage = (totalPayment / (totalPayment + totalBalance)) * 100
     console.log(totalBalance + totalPayment)
     return res
@@ -69,6 +120,8 @@ module.exports.totalPaid = async (req, res) => {
 
 module.exports.deliquencyRate = async (req, res) => {
   try {
+    const { month, year } = req.query
+
     const response = await INVOICEMODEL.find().populate({
       path: 'tenant_id',
       populate: 'user_id',
@@ -99,6 +152,8 @@ module.exports.deliquencyRate = async (req, res) => {
 
 module.exports.renewalRate = async (req, res) => {
   try {
+    const { month, year } = req.query
+
     const response = await INVOICEMODEL.find().populate(
       'user_id unit_id apartment_id',
     )
@@ -115,6 +170,8 @@ module.exports.renewalRate = async (req, res) => {
 
 module.exports.occupancyRate = async (req, res) => {
   try {
+    const { month, year } = req.query
+
     const response = await APARTMENTMODEL.find().populate('units')
     const units = await UNITMODEL.find()
     let occupiedUnits = 0
@@ -127,7 +184,7 @@ module.exports.occupancyRate = async (req, res) => {
     console.log(occupiedUnits)
     return res
       .status(httpStatusCodes.OK)
-      .json({ occupied: occupiedUnits, percentage })
+      .json({ occupied: occupiedUnits, total: units.length, percentage })
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)

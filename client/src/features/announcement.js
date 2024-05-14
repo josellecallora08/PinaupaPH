@@ -30,7 +30,7 @@ const announcementSlice = createSlice({
         },
         insertAnnouncementSuccess: (state, action) => {
             state.loading = false
-            state.data = [...state.data, action.payload.response]
+            state.data = [action.payload.response, ...state.data]
             state.msg = action.payload.msg
         },
         editAnnouncementSuccess: (state, action) => {

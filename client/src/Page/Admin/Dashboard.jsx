@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
 import City from '/city.svg'
 import 'chartkick/chart.js'
 import 'react-circular-progressbar/dist/styles.css'
 import renew from '/renew.svg'
-import { Bar } from 'react-chartjs-2'
+import { Bar, Line } from 'react-chartjs-2'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import rent from '/Rent.svg'
@@ -24,6 +24,7 @@ import {
 } from '../../features/dashboard'
 
 const Dashboard = () => {
+  const [date, setDate] = useState(formatDate(new Date()))
   const loading = useSelector((state) => state.auth.loading)
   const user = useSelector((state) => state.auth.user)
   const totalPaid = useSelector((state) => state.dash.totalpaid)
@@ -64,21 +65,28 @@ const Dashboard = () => {
     ],
     datasets: [
       {
-        label: `Rental Paid for 2024`,
+        label: `Rental Paid for ${new Date(date).getFullYear()}`,
         data: revenue,
         backgroundColor: '#183044',
         borderWidth: 1,
       },
     ],
   }
-  useEffect(() => {
-    dispatch(fetchTotalOccupancy())
-    dispatch(fetchTotalPaid())
-    dispatch(fetchTotalPayer())
-    dispatch(fetchReports())
-    dispatch(fetchRevenue())
-  }, [])
 
+  useEffect(() => {
+    const month = new Date(date).getMonth()
+    const year = new Date(date).getFullYear()
+    dispatch(fetchTotalOccupancy(month, year))
+    dispatch(fetchTotalPaid(month, year))
+    dispatch(fetchTotalPayer(month, year))
+    dispatch(fetchReports(month, year))
+    dispatch(fetchRevenue(month, year))
+  }, [date, setDate])
+  function formatDate(date) {
+    const year = date.getFullYear()
+    const month = (date.getMonth() + 1).toString().padStart(2, '0')
+    return `${year}-${month}`
+  }
   return (
     <>
       {loading ? (
@@ -116,16 +124,47 @@ const Dashboard = () => {
               </div>
               <div className="order-last md:order-none col-span-3 row-span-4 flex flex-col md:grid grid-cols-3 grid-rows-1 gap-5 ">
                 <div className="col-span-3 md:col-span-2 row-span-auto xl:row-span-1 bg-white h-fit md:h-full flex items-center justify-center flex-col rounded-md overflow-hidden shadow-md">
-                  <div className="w-11/12 h-fit  xl:max-h-fit m-auto md:py-2">
+                  <div className="w-11/12 h-fit flex justify-between items-center xl:max-h-fit m-auto md:py-2">
                     <p className="font-bold text-[#9e9e9e] lg:text-xl">
                       Revenue Overview
                     </p>
+                    <div className="flex gap-2">
+                      <div className="border-2 p-2  rounded-xl shadow-md bg-white">
+                        <input
+                          type="month"
+                          name="date"
+                          value={date}
+                          onChange={(e) => setDate(e.target.value)}
+                          className="w-fit px-2 h-full outline-none"
+                        />
+                      </div>
+                    </div>
                   </div>
                   <div className="w-full h-fit xl:h-full flex">
-                    <figure className="flex justify-center items-center h-full w-11/12 xl:w-11/12 m-auto">
-                      <Bar
+                    <figure className="flex justify-center items-center h-full w-11/12 m-auto">
+                      <Line
                         data={data}
-                        options={options}
+                        options={{
+                          ...options,
+                          elements: {
+                            line: {
+                              borderColor: '#183044',
+                              borderWidth: 5,
+                            },
+                          },
+                          scales: {
+                            y: {
+                              grid: {
+                                color: 'rgba(0, 0, 0, .3)',
+                              },
+                            },
+                            x: {
+                              grid: {
+                                color: 'rgba(0, 0, 0, 0.3)',
+                              },
+                            },
+                          },
+                        }}
                         className="py-2 md:py-5 h-60 md:h-auto"
                       />
                     </figure>
@@ -143,12 +182,17 @@ const Dashboard = () => {
                             (item) => item?.receiver_id?._id === user?._id,
                           )
                           .map((val, key) => (
-                            <div key={key} className="hover:scale-105 p-2 duration-300 cursor-pointer w-full h-auto md:max-h-[200px]">
+                            <div
+                              key={key}
+                              className="hover:scale-105 p-2 duration-300 cursor-pointer w-full h-auto md:max-h-[200px]"
+                            >
                               <div className="flex justify-between p-2 rounded-full md:rounded-md hover:bg-gray">
                                 <article className="flex items-center gap-2">
                                   <figure className="w-full h-full max-w-10 max-h-10 rounded-full overflow-hidden">
                                     <img
-                                      src={val?.sender_id?.profile_image?.image_url}
+                                      src={
+                                        val?.sender_id?.profile_image?.image_url
+                                      }
                                       className="w-full h-full object-contain"
                                       alt=""
                                     />
@@ -163,7 +207,9 @@ const Dashboard = () => {
                                   </div>
                                 </article>
                                 <div>
-                                  <span className="text-xs">{new Date(val?.createdAt).toDateString()}</span>
+                                  <span className="text-xs">
+                                    {new Date(val?.createdAt).toDateString()}
+                                  </span>
                                 </div>
                               </div>
                             </div>
@@ -194,19 +240,18 @@ const Dashboard = () => {
                               Total Paid
                             </p>
                             <p className="font-bold text-center text-base xl:text-2xl">
-                              {totalPaid && totalPaid?.totalPayment?.toLocaleString(
-                                'en-PH',
-                                {
+                              {(totalPaid &&
+                                totalPaid?.totalPayment?.toLocaleString(
+                                  'en-PH',
+                                  {
+                                    style: 'currency',
+                                    currency: 'PHP',
+                                  },
+                                )) ||
+                                (0).toLocaleString('en-PH', {
                                   style: 'currency',
                                   currency: 'PHP',
-                                },
-                              ) || (0).toLocaleString(
-                                'en-PH',
-                                {
-                                  style: 'currency',
-                                  currency: 'PHP',
-                                },
-                              )}
+                                })}
                             </p>
                           </div>
                           <p
@@ -280,7 +325,7 @@ const Dashboard = () => {
                               Occupancy Rate
                             </p>
                             <p className="font-bold text-center text-base xl:text-2xl">
-                              {totalOccupancy?.percentage?.toFixed(2)}%
+                              {totalOccupancy?.occupied}/{totalOccupancy?.total}
                             </p>
                           </div>
                           <p

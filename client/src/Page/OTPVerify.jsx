@@ -110,7 +110,7 @@ const OTPVerify = () => {
             />
           </div>
 
-          <div className="lg:shadow-md lg:rounded-md lg:w-1/3 lg:shadow-dark-gray p-10">
+          <div className="lg:shadow-md lg:rounded-md lg:w-1/3 lg:shadow-dark-gray lg:p-10">
             <div className="">
               <h1 className="lg:text-3xl text-2xl font-bold text-primary-color">
                 Check your Email.

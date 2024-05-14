@@ -180,7 +180,7 @@ export const createPaymentIntent = (invoice_id, fields) => async (dispatch) => {
             attributes: {
               payment_method: `${paymentData.response.payment.method_id}`,
               client_key: `${jsonIntent.response.intent.clientKey}`,
-              return_url: `${import.meta.env.VITE_URL}/verify-payment/status/${invoice_id}`,
+              return_url: `${import.meta.env.VITE_RETURN_URL}/verify-payment/status/${invoice_id}`,
             },
           },
         }),

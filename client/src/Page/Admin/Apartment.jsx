@@ -55,6 +55,7 @@ const Apartment = () => {
     if (error !== null) {
       setIsAddApartmentFormOpen((prevState) => !prevState)
     }
+    
   } 
 
   return (

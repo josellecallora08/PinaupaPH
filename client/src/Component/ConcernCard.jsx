@@ -17,20 +17,20 @@ const ConcernCard = ({ val, num }) => {
           <div className=" flex justify-evenly w-full ">
             <figure className="w-full h-full max-w-20 max-h-20 overflow-hidden rounded-full">
               <img
-                src={val?.sender_id.user_id?.profile_image.image_url}
+                src={val?.sender_id?.user_id?.profile_image.image_url}
                 className="size-full object-contain"
                 alt=""
               />
             </figure>
             <div className="">
-              <div className="font-bold text-lg">{val.sender_id.user_id.name}</div>
+              <div className="font-bold text-lg">{val?.sender_id?.user_id.name}</div>
               <div className="text-sm text-dark-gray">{val.title}</div>
               <div className="text-sm">
-                Unit - <span>{val.sender_id.unit_id.unit_no}</span>
+                Unit - <span>{val?.sender_id?.unit_id.unit_no}</span>
               </div>
             </div>
             <div className=" text-sm mt-1">
-              {new Date(val.createdAt).toLocaleDateString()}
+              {new Date(val?.createdAt).toLocaleDateString()}
             </div>
 
           </div>

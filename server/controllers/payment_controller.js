@@ -129,6 +129,9 @@ module.exports.createPayment = async (req, res) => {
         'payment.method_id': method_id,
         'payment.method': method,
       },
+      {
+        new: true
+      }
     )
     if (!response) {
       return res

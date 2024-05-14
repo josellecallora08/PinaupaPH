@@ -71,9 +71,9 @@ const ResetPass = () => {
             />
           </div>
 
-          <div className="lg:shadow-md lg:rounded-md lg:shadow-dark-gray lg:w-1/3 p-10">
+          <div className="lg:shadow-md lg:rounded-md lg:shadow-dark-gray lg:w-1/3 lg:p-10">
             <div className="">
-              <h1 className="lg:text-3xl text-2xl font-bold text-primary-color">
+              <h1 className="lg:text-3xl text-base font-bold text-primary-color">
                 Reset your password
               </h1>
               <p className="text-sm mt-3  text-dark-gray">
@@ -84,7 +84,7 @@ const ResetPass = () => {
             <form onSubmit={handleSubmit} className="  w-full mt-3 ">
               <label
                 htmlFor="new password"
-                className="text-primary-color font-bold text-lg"
+                className="text-primary-color font-bold text-sm"
               >
                 New Password
               </label>
@@ -98,7 +98,7 @@ const ResetPass = () => {
 
               <label
                 htmlFor="confirmpassword"
-                className="text-primary-color font-bold text-lg"
+                className="text-primary-color font-bold text-sm"
               >
                 Confirm Password
               </label>

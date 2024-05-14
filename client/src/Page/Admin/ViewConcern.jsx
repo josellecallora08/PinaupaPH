@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import angle from '/angle.svg'
 import send from '/send.svg'
 import { io } from 'socket.io-client'
@@ -27,7 +27,7 @@ const ViewConcern = () => {
   const [comment, setComments] = useState(null)
   const messageContainerRef = useRef(null)
   const [isDotOpen, setIsDotOpen] = useState(false)
-
+  const navigate = useNavigate()
   const toggleDot = () => {
     setIsDotOpen(!isDotOpen)
   }
@@ -36,7 +36,7 @@ const ViewConcern = () => {
       'Are you sure you want to delete this Issue?',
     )
     if (isConfirmed) {
-      dispatch(deleteReport(id))
+      dispatch(deleteReport(id, navigate))
     }
   }
   const handleComplete = async () => {
@@ -81,16 +81,16 @@ const ViewConcern = () => {
     const handleReceiveComment = (message) => {
       dispatch(insertCommentSuccess(message));
     };
-  
+
     // Listen for incoming comments
     socket.on('receive-comment', handleReceiveComment);
-  
+
     // Clean up socket connection when the component unmounts
     return () => {
       socket.off('receive-comment', handleReceiveComment);
     };
   }, [dispatch]);
-  
+
 
   useEffect(() => {
     dispatch(isLoggedin())
@@ -114,28 +114,28 @@ const ViewConcern = () => {
         <div className="md:w-11/12 h-full  m-auto grid grid-cols-2 grid-flow-row rounded-lg bg-white">
           <div className="col-span-2 xl:col-span-1 xl:row-span-1  p-5  ">
             <div className="w-full h-full grid grid-flow-4 gap-5 ">
-         
+
               <div className=" relative row-span-1 grid grid-cols-2 items-center">
                 <div className="col-span-1 h-full flex items-center gap-5">
-                  <figure className="w-full h-full max-w-20 max-h-20 rounded-full shadow-xl  overflow-hidden">
+                  <figure className="w-full h-full max-w-10 max-h-10 rounded-full shadow-xl  overflow-hidden">
                     <img
-                      src={report?.sender_id.user_id.profile_image.image_url}
+                      src={report?.sender_id?.user_id.profile_image.image_url}
                       className="w-full h-full"
                       alt=""
                     />
                   </figure>
                   <div className="w-full">
                     <p className="text-sm  xl:text-lg font-semibold">
-                      {report?.sender_id.user_id.name}
+                      {report?.sender_id?.user_id.name}
                     </p>
                     <p className="text-xs">
                       <span>UNIT - </span>
-                      {report?.sender_id.unit_id.unit_no}
+                      {report?.sender_id?.unit_id.unit_no}
                     </p>
                   </div>
                 </div>
                 <div className=" col-span-1 xl:w-full xl:mb-4 items-center  text-sm xl:text-base flex justify-end ">
-                  <p className="xl:mt-1  ">
+                  <p className="xl:mt-1  text-xs">
                     {new Date(report?.createdAt).toDateString()}
                   </p>
                   <div className="">
@@ -181,7 +181,7 @@ const ViewConcern = () => {
               {/*  */}
               <div className="row-span-4 w-full h-full bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="relative w-full h-full min-h-60">
-                  <figure className="w-full h-full max-h-[550px]">
+                  <figure className="w-full h-full max-w-[200px] lg:max-w-full m-auto max-h-[550px]">
                     <img
                       src={report?.attached_image?.image_url}
                       className="w-full h-full object-contain"
@@ -221,22 +221,24 @@ const ViewConcern = () => {
                 <div className="w-full h-full ">
                   <div
                     ref={messageContainerRef}
-                    className={`w-full h-auto max-h-[300px] lg:max-h-[600px] font-regular flex flex-col gap-2 px-5 ${report?.comments.length > 5 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}
+                    className={`w-full h-auto md:max-h-[300px] lg:max-h-[600px]  font-regular  gap-2 px-5 ${report?.comments.length > 5 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}
                   >
                     {msg?.map((val, key) => (
                       <div
                         key={key}
-                        className={`min-h-12 w-full flex ${val.user_id?._id === user?._id && ' flex-row-reverse' || val.user_id?._id === user?.user_id?._id && ' flex-row-reverse'} gap-2 items-center overflow-hidden`}
+                        className={`min-h-12 py-2 h-auto flex ${val.user_id?._id === user?._id && ' flex-row-reverse' || val.user_id?._id === user?.user_id?._id && ' flex-row-reverse'} gap-2 overflow-hidden`}
                       >
                         <figure className=" w-12 h-12 overflow-hidden border shadow-xl rounded-full">
                           <img
                             src={val?.user_id?.profile_image?.image_url}
-                            className="w-full h-full  object-contain"
+                            className="w-full h-full"
                             alt=""
                           />
                         </figure>
-                        <div className="w-fit text-xs md:text-base rounded-md bg-gray/50 p-3">
-                          {val.comment}
+                        <div className='w-4/6 h-auto'>
+                          <div className="w-full h-auto break-words text-ellipsis overflow-hidden shadow-md text-xs md:text-base rounded-xl bg-gray/50 p-3">
+                            {val.comment}
+                          </div>
                         </div>
                       </div>
                     ))}
