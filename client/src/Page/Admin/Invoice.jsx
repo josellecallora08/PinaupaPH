@@ -98,6 +98,7 @@ const Invoice = () => {
                     <th className="text-white p-3 w-1/5">Reference Number</th>
                     <th className="text-white p-3 w-1/5">Tenant</th>
                     <th className="text-white p-3 w-1/5">Unpaid Balance</th>
+                    <th className="text-white p-3 w-1/5">Due Date</th>
                     <th className="text-white p-3 w-1/5">Date Paid</th>
                     <th className="text-white p-3 w-1/5">Due Date</th>
                     <th className="text-white p-3 w-1/5">Balance</th>
@@ -108,46 +109,47 @@ const Invoice = () => {
                 <tbody className="w-full h-full bg-white font-regular">
                   {user && user.role === 'Admin'
                     ? invoices
-                      ?.filter(
-                        (item) =>
-                          item.isPaid.toString() === status.toString(),
-                      )
-                      .map((val, index) => (
-                        <tr
-                          key={index}
-                          className="text-center bg-white text-xs md:text-base"
-                        >
-                          <td className="text-primary-color font-regular p-2">
-                            {val?.pdf?.reference}
-                          </td>
-                          <td className="text-xs md:text-base capitalize font-regular text-primary-color p-2">
-                            {val?.tenant_id?.user_id.name}
-                          </td>
-                          <td className="p-2">
-                            {(val?.tenant_id?.balance === 0
-                              ? 0
-                              : val?.tenant_id?.balance - val?.amount
-                            )?.toLocaleString('en-PH', {
-                              style: 'currency',
-                              currency: 'PHP',
-                            })}
-                          </td>
-                          <td className="p-2">
-                            {val?.datePaid && new Date(val?.datePaid)?.toLocaleDateString()}
-                          </td>
-                          <td className="p-2">
-                            {val?.due && new Date(val?.due)?.toLocaleDateString()}
-                          </td>
-                          <td className="p-2">
-                            {val?.amount?.toLocaleString('en-PH', {
-                              style: 'currency',
-                              currency: 'PHP',
-                            })}
-                          </td>
-                          <th
-                            className={`capitalize font-semibold ${val?.isPaid === false
-                                ? 'text-red'
-                                : 'text-primary-color'
+                        ?.filter(
+                          (item) =>
+                            item.isPaid.toString() === status.toString(),
+                        )
+                        .map((val, index) => (
+                          <tr
+                            key={index}
+                            className="text-center bg-white text-xs md:text-base"
+                          >
+                            <td className="text-primary-color font-regular p-2">
+                              {val?.pdf?.reference}
+                            </td>
+                            <td className="text-xs md:text-base font-regular text-primary-color p-2">
+                              {val?.tenant_id?.user_id.name}
+                            </td>
+                            <td className="p-2">
+                              {(val?.tenant_id?.balance === 0
+                                ? 0
+                                : val?.tenant_id?.balance - val?.amount
+                              )?.toLocaleString('en-PH', {
+                                style: 'currency',
+                                currency: 'PHP',
+                              })}
+                            </td>
+                            <td className="py-2 px-1">
+                              {new Date(val?.monthly_due)?.toLocaleDateString()}
+                            </td>
+                            <td className="p-2">
+                              {new Date(val?.date_paid)?.toLocaleDateString()}
+                            </td>
+                            <td className="p-2">
+                              {val?.amount?.toLocaleString('en-PH', {
+                                style: 'currency',
+                                currency: 'PHP',
+                              })}
+                            </td>
+                            <th
+                              className={`capitalize font-semibold ${
+                                val?.isPaid === false
+                                  ? 'text-red'
+                                  : 'text-primary-color'
                               } p-2 w-1/5`}
                           >
                             {val?.isPaid === false ? 'Unpaid' : 'Paid'}

@@ -103,6 +103,7 @@ const AddRoom = ({ apartment_id, setIsAddRoomFormOpen }) => {
           <div className="flex justify-end mt-5 gap-3">
             <button
               className=" bg-dark-blue text-white font-bold py-2 px-4 rounded"
+              
             >
               Submit
             </button>

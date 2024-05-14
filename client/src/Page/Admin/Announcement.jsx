@@ -89,7 +89,8 @@ const Announcement = () => {
           </button>
         </div>
         {/* Tabs */}
-        <div className="flex items-center bg-white gap-7 p-2 pb-6 pt-5 pl-7 mt-5 rounded-tl-lg rounded-tr-lg lg:w-1/3 w-full no-scrollbar overflow-x-auto with-scrollbar ">
+        <div className="flex items-center bg-white gap-7 p-2  pt-5 pl-7 mt-5 rounded-tl-lg rounded-tr-lg w-full  ">
+          <div className='flex gap-7 w-1/3 no-scrollbar overflow-x-auto with-scrollbar'>
           {/* Filter Tabs */}
           <button
             className={`filter-tab ${filter === 'All' ? 'active' : ''}`}
@@ -125,6 +126,7 @@ const Announcement = () => {
                 {word}
               </button>
             ))}
+            </div>
         </div>
         {/* Body of Announcement Tab */}
         <div className=" md:h-[25rem] min-[1440px]:h-[45rem] min-[1280px]:h-[45rem] min-[1366px]:h-[19rem] w-full h-[30rem] overflow-x-auto px-8 rounded-bl-lg rounded-br-lg bg-white">
