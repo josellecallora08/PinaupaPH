@@ -8,6 +8,7 @@ const unitSlice = createSlice({
     error: null,
     data: null,
     single: null,
+    msg: null
   },
   reducers: {
     startUnit: (state) => {
@@ -17,10 +18,16 @@ const unitSlice = createSlice({
     fetchUnitSuccess: (state, action) => {
       state.loading = false
       state.data = action.payload
+      // state.msg= action.payload.msg
     },
     fetchSingleUnitSuccess: (state, action) => {
       state.loading = false
       state.single = action.payload
+    },
+    insertUnitSuccess:(state, action)=>{
+      state.loading = false
+      state.data = [...state.data, action.payload.response]
+      state.msg = action.payload.msg
     },
     editUnitSuccess: (state, action) => {
       state.loading = false
@@ -41,6 +48,7 @@ const unitSlice = createSlice({
 
 export const {
   startUnit,
+  insertUnitSuccess,
   fetchUnitSuccess,
   editUnitSuccess,
   deleteUnitSuccess,
@@ -69,6 +77,7 @@ export const createUnit = (fields, apartmentId) => async (dispatch) => {
       throw new Error(error.error)
     }
     const json = await response.json()
+    console.log(json)
     dispatch(fetchUnitsApartment(apartmentId))
   } catch (err) {
     dispatch(actionUnitFailed(err.message))
@@ -127,7 +136,7 @@ export const fetchUnitsApartment = (apartment_id) => async (dispatch) => {
     const token = Cookies.get('token')
     dispatch(startUnit())
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/apartment/${apartment_id}/units/`,
+      `${import.meta.env.VITE_URL}/api/apartment/${apartment_id}/units`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

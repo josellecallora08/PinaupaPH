@@ -98,7 +98,6 @@ export const handleSearchUser = (filter) => async (dispatch) => {
 export const createTenant = (fields) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
-    dispatch(fetchUserStart())
     const response = await fetch(`${import.meta.env.VITE_URL}/api/user`, {
       method: 'POST',
       headers: {

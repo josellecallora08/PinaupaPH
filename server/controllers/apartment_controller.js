@@ -353,7 +353,7 @@ module.exports.create_apartment_unit = async (req, res) => {
         .json({ error: 'Unit exists' })
     }
 
-    let response = await UNITMODEL.create(details)
+    let response = await UNITMODEL.create(details,{new:true})
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -366,7 +366,7 @@ module.exports.create_apartment_unit = async (req, res) => {
     await apartment.save()
     return res
       .status(httpStatusCodes.CREATED)
-      .json({ msg: 'Created Apartment Unit', response: apartment.units})
+      .json({ msg: 'Created Apartment Unit', response}) //updated today 5-14
   } catch (err) {
     console.error({ error: err.message })
     return res

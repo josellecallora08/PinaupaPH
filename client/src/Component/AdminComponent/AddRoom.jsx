@@ -3,15 +3,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createUnit } from '../../features/unit'
 import { IoMdClose } from 'react-icons/io'
 const AddRoom = ({ apartment_id, setIsAddRoomFormOpen }) => {
-  const [isFormOpen, setIsFormOpen] = useState(false)
   const dispatch = useDispatch()
   const error = useSelector((state) => state.unit.error)
+  const msg = useSelector((state) => state.unit.msg)
+  const modalRef = useRef(null);
   const [fields, setFields] = useState({
     name: '',
     rent: '',
     unit_no: '',
   })
-  const modalRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -33,14 +33,14 @@ const AddRoom = ({ apartment_id, setIsAddRoomFormOpen }) => {
       [name]: value,
     }))
   }
-  const toggleForm = () => {
-    setIsFormOpen(!isFormOpen)
-  }
+
 
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(createUnit(fields, apartment_id))
-    toggleForm()
+    if (error || msg) {
+      setIsAddRoomFormOpen(false)
+    }
   }
   return (
     <>
