@@ -36,7 +36,7 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
       name: contact.name,
       mobile: contact.mobile,
       relationship: contact.relationship,
-      birthday: contact.birthday,
+      birthday: new Date(contact?.birthday).toISOString().split('T')[0],
     }
 
     setEditFormData(formValues)

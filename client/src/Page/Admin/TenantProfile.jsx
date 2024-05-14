@@ -45,8 +45,7 @@ const TenantProfile = () => {
       'Are you sure you want to delete this tenant?',
     )
     if (isConfirmed) {
-      dispatch(deleteUser(id))
-      navigate('/tenant')
+      dispatch(deleteUser(id, navigate))
     }
   }
   const handleClickOutsideDropdown = (event) => {
@@ -156,7 +155,7 @@ const TenantProfile = () => {
                         {tenant?.user_id.name}
                       </h2>
                       <h2 className="lg:text-2xl">
-                        Unit - {tenant?.unit_id.unit_no}
+                        Unit - {tenant?.unit_id?.unit_no}
                       </h2>
                     </div>
 
@@ -311,7 +310,7 @@ const TenantProfile = () => {
                           <p>Date of Move-in</p>
                         </div>
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
-                          <p className="">Unit - {tenant?.unit_id.unit_no}</p>
+                          <p className="">Unit - {tenant?.unit_id?.unit_no}</p>
                           <p className="">
                             {tenant?.deposit?.toLocaleString('en-PH', {
                               style: 'currency',
@@ -369,7 +368,7 @@ const TenantProfile = () => {
                       </div>
                     )}
 
-                    <div className="text-sm md:text-base p-3 flex flex-col gap-5 overflow-y-auto h-[20rem] ">
+                    <div className="text-sm md:text-base p-3 flex flex-col gap-5 overflow-y-auto h-[12rem] md:h-[16rem] lg:h-[18rem] ">
                       {households?.map((val, key) => (
                         <div
                           key={key}
@@ -378,6 +377,10 @@ const TenantProfile = () => {
                           <div className="flex gap-5">
                             <p className="w-1/4">Name:</p>
                             <span className="w-3/4">{val.name}</span>
+                          </div>
+                          <div className="flex gap-5">
+                            <p className="w-1/4">Mobile:</p>
+                            <span className="w-3/4">{val.mobile}</span>
                           </div>
                           <div className="flex gap-5">
                             <p className="w-1/4">Birthday:</p>

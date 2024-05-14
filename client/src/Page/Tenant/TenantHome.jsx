@@ -72,7 +72,7 @@ const TenantHome = () => {
                 <table className="w-full">
                   <tbody className="text-primary-color">
                     {report &&
-                      report?.map((val, key) => (
+                      report?.filter(item => item?.sender_id?.user_id._id === user?.user_id._id).map((val, key) => (
                         <tr key={key} className="border-b border-dark-gray">
                           <td className=" px-4 py-2   ">
                             <div className="flex items-center gap-3 w-fit">
@@ -108,7 +108,10 @@ const TenantHome = () => {
                             </div>
                           </td>
                         </tr>
-                      ))}
+                      )) ||
+                      <tr>
+                        <td colSpan={3} className='text-center'> No Data Found...</td>
+                      </tr>}
                   </tbody>
                 </table>
               </div>

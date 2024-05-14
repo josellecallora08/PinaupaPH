@@ -3,20 +3,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { isLoggedin } from '../features/authentication'
 import { editUser } from '../features/user'
 
-function EditOwnerDetails({ user, setIsModalOpen }) {
+function EditOwnerDetails({ isVisible, setIsVisible, error, msg, user, setIsModalOpen }) {
   // const user = useSelector((state) => state.auth.user)
   const dispatch = useDispatch()
   const [fields, setFields] = useState({
-    username: user?.username || '',
+    name: user?.name || '',
     birthday: user?.birthday || '',
     mobile_no: user?.mobile_no || '',
     email: user?.email || '',
   })
 
-  const [isFormOpen, setIsFormOpen] = useState(false)
-  const toggleForm = (e) => {
-    setIsFormOpen(!isFormOpen)
-  }
+
   const handleInput = (e) => {
     const { name, value } = e.target
     setFields({
@@ -27,8 +24,10 @@ function EditOwnerDetails({ user, setIsModalOpen }) {
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(editUser(user?._id, fields))
-    console.log('Form submitted')
-    toggleForm()
+    if (error || msg) {
+      setIsModalOpen(false)
+      setIsVisible(true)
+    }
   }
   useEffect(() => {
     dispatch(isLoggedin())
@@ -57,8 +56,8 @@ function EditOwnerDetails({ user, setIsModalOpen }) {
               <div className="w-full h-full max-h-12 border-2 border-[#183044] rounded-md overflow-hidden">
                 <input
                   type="text"
-                  name='username'
-                  value={fields.username}
+                  name='name'
+                  value={fields.name}
                   onChange={handleInput}
                   placeholder="Name"
                   className="w-full h-full p-3 outline-none"

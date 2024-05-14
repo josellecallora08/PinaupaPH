@@ -172,10 +172,10 @@ module.exports = ({response}) => {
 
         <tr class="item">
           <td>Previous Bill</td>
-          <td>${(response?.tenant_id.balance - response?.tenant_id.unit_id.rent)?.toLocaleString('en-PH', {
+          <td>${response?.tenant_id.balance !== 0 && (response?.tenant_id.balance - response?.tenant_id.unit_id.rent)?.toLocaleString('en-PH', {
             style: 'currency',
             currency: 'PHP',
-          })}</td>
+          }) || 0}</td>
         </tr>
 
         <tr class="total">

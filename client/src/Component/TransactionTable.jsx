@@ -29,12 +29,12 @@ const TransactionTable = ({ tenant }) => {
           </tr>
         </thead>
         <tbody className='text-center'>
-          {invoices && invoices?.filter((item) => item.tenant_id.user_id._id === tenant?.user_id._id).map((val, key) => (
+          {invoices && invoices?.filter((item) => item?.tenant_id?.user_id._id === tenant?.user_id._id).map((val, key) => (
             <tr key={key} className="text-dark-blue">
               <td className="border px-4 py-2 capitalize">{val?.pdf.reference}</td>
               <td className="border px-4 py-2 capitalize">{val?.status}</td>
               <td className="border px-4 py-2">{new Date(val?.tenant_id.monthly_due).toDateString()}</td>
-              <td className="border px-4 py-2">{new Date(val?.tenant_id.monthly_due).toDateString()}</td>
+              <td className="border px-4 py-2">{val?.datePaid && new Date(val?.datePaid).toDateString() || 'Not yet paid.'}</td>
               <td className="border px-4 py-2">Unit - {val?.tenant_id?.unit_id?.unit_no}</td>
               <td className="border px-4 py-2 capitalize">{val?.payment?.method}</td>
               <td className="border px-4 py-2">{(val?.amount).toLocaleString('en-PH', { style: "currency", currency: "PHP" })}</td>
@@ -44,7 +44,10 @@ const TransactionTable = ({ tenant }) => {
                 </button>
               </td>
             </tr>
-          ))}
+          )) || <tr>
+              <td colSpan={8}>
+               <span className='font-semibold font-primary'> No data found</span>
+              </td></tr>}
         </tbody>
       </table>
     </div>

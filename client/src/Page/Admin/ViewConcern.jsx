@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import angle from '/angle.svg'
 import send from '/send.svg'
 import { io } from 'socket.io-client'
@@ -27,7 +27,7 @@ const ViewConcern = () => {
   const [comment, setComments] = useState(null)
   const messageContainerRef = useRef(null)
   const [isDotOpen, setIsDotOpen] = useState(false)
-
+  const navigate = useNavigate()
   const toggleDot = () => {
     setIsDotOpen(!isDotOpen)
   }
@@ -36,7 +36,7 @@ const ViewConcern = () => {
       'Are you sure you want to delete this Issue?',
     )
     if (isConfirmed) {
-      dispatch(deleteReport(id))
+      dispatch(deleteReport(id, navigate))
     }
   }
   const handleComplete = async () => {
@@ -119,18 +119,18 @@ const ViewConcern = () => {
                 <div className="col-span-1 h-full flex items-center gap-5">
                   <figure className="w-full h-full max-w-10 max-h-10 rounded-full shadow-xl  overflow-hidden">
                     <img
-                      src={report?.sender_id.user_id.profile_image.image_url}
+                      src={report?.sender_id?.user_id.profile_image.image_url}
                       className="w-full h-full"
                       alt=""
                     />
                   </figure>
                   <div className="w-full">
                     <p className="text-sm  xl:text-lg font-semibold">
-                      {report?.sender_id.user_id.name}
+                      {report?.sender_id?.user_id.name}
                     </p>
                     <p className="text-xs">
                       <span>UNIT - </span>
-                      {report?.sender_id.unit_id.unit_no}
+                      {report?.sender_id?.unit_id.unit_no}
                     </p>
                   </div>
                 </div>
