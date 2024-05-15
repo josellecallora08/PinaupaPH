@@ -1,54 +1,56 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { createInvoice } from '../features/invoice';
-import { fetchUsers } from '../features/user';
-import Select from 'react-select';
+import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { createInvoice } from '../features/invoice'
+import { fetchUsers } from '../features/user'
+import Select from 'react-select'
 
 const ManualInvoice = ({ setModal }) => {
-  const dispatch = useDispatch();
-  const [selectedUser, setSelectedUser] = useState(null);
-  const modal = useRef(null);
-  const loading = useSelector((state) => state.invoice.loading);
-  const users = useSelector((state) => state.user.data);
+  const dispatch = useDispatch()
+  const [selectedUser, setSelectedUser] = useState(null)
+  const modal = useRef(null)
+  const loading = useSelector((state) => state.invoice.loading)
+  const error = useSelector((state) => state.invoice.error)
+  const msg = useSelector((state) => state.invoice.msg)
+  const users = useSelector((state) => state.user.data)
 
   const handleInvoice = (e) => {
-    e.preventDefault();
-    dispatch(createInvoice(selectedUser.value));
-    if (loading) {
-      setModal((state) => !state);
+    e.preventDefault()
+    dispatch(createInvoice(selectedUser.value))
+    if ( msg || error) {
+      setModal((state) => !state)
     }
-  };
+  }
 
   useEffect(() => {
     const closeModal = (e) => {
       if (e.key === 'Escape') {
-        setModal((state) => !state);
+        setModal((state) => !state)
       }
-    };
+    }
 
-    document.addEventListener('keydown', closeModal);
+    document.addEventListener('keydown', closeModal)
 
     return () => {
-      document.removeEventListener('keydown', closeModal);
-    };
-  }, []);
+      document.removeEventListener('keydown', closeModal)
+    }
+  }, [])
 
   useEffect(() => {
-    dispatch(fetchUsers());
-  }, []);
+    dispatch(fetchUsers())
+  }, [])
 
   const options = users
     ? users.map((user) => ({
         value: user.user_id._id,
         label: user.user_id.name,
       }))
-    : [];
+    : []
 
   // Custom styles for the Select component
   const customStyles = {
     control: (provided) => ({
       ...provided,
-      width: '100%', 
+      width: '100%',
     }),
     menu: (provided) => ({
       ...provided,
@@ -56,7 +58,7 @@ const ManualInvoice = ({ setModal }) => {
       maxHeight: '8.5rem',
       overflowY: 'auto',
     }),
-  };
+  }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-10">
@@ -76,7 +78,10 @@ const ManualInvoice = ({ setModal }) => {
               options={options}
               isClearable
               className="font-semibold"
-              styles={{ ...customStyles, menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+              styles={{
+                ...customStyles,
+                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+              }}
               placeholder="Select Tenant"
             />
             <div className="flex mt-5 gap-2">
@@ -98,7 +103,7 @@ const ManualInvoice = ({ setModal }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ManualInvoice;
+export default ManualInvoice

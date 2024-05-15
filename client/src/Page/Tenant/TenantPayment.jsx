@@ -2,43 +2,47 @@ import React, { useState, useEffect } from 'react'
 import gcashlogo from '/Gcashlogo.png'
 import paymayalogo from '/Paymayalogo.png'
 import grabpaylogo from '/Grabpaylogo.png'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createPayment, createPaymentIntent } from '../../features/payment'
 import { useParams } from 'react-router-dom'
 import '../../index.css'
+import { fetchInvoice } from '../../features/invoice'
 const TenantPayment = () => {
   const { id } = useParams()
   const [selectedOption, setSelectedOption] = useState('ewallet') // Default selected option is 'ewallet'
-  const [selectedEwallet, setSelectedEwallet] = useState(null);
+  const [selectedEwallet, setSelectedEwallet] = useState(null)
+  const invoice = useSelector((state) => state.invoice.single)
   const dispatch = useDispatch()
   const [formData, setFormData] = useState({
     name: '',
     mobile_no: '',
     email: '',
     amount: '',
-    method: ''
+    method: '',
   })
-
+  useEffect(() => {
+    dispatch(fetchInvoice(id))
+  }, [])
   useEffect(() => {
     setSelectedOption('ewallet')
   }, [])
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value)
-    setSelectedEwallet(null);
+    setSelectedEwallet(null)
     setFormData({
       name: '',
       mobile_no: '',
       email: '',
       amount: '',
-      method: ''
+      method: '',
     })
   }
   const handleEwalletChange = (event) => {
-    setSelectedEwallet(event.target.value); // Update selected e-wallet option
-  };
+    setSelectedEwallet(event.target.value) // Update selected e-wallet option
+  }
   const handlePayment = () => {
-    dispatch(createPaymentIntent(id,formData))
+    dispatch(createPaymentIntent(id, formData))
   }
 
   const handleChange = (e) => {
@@ -51,7 +55,15 @@ const TenantPayment = () => {
   return (
     <>
       <div className="w-full h-full bg-white1 px-5 overflow-y-scroll">
-        <h1 className="font-bold my-4"><span className=' hover:cursor-pointer hover:underline mr-1' onClick={() => window.history.back()}>DASHBOARD</span>/ PAYMENT</h1>
+        <h1 className="font-bold my-4">
+          <span
+            className=" hover:cursor-pointer hover:underline mr-1"
+            onClick={() => window.history.back()}
+          >
+            DASHBOARD
+          </span>
+          / PAYMENT
+        </h1>
         <div className="flex lg:flex-row flex-col lg:gap-2  w-full h-full">
           <div className="flex-grow flex flex-col">
             <h1 className="bg-[#183044] p-2 text-white rounded-tl-md rounded-tr-md">
@@ -317,10 +329,15 @@ const TenantPayment = () => {
               </h1>
               <div className="px-5 flex-grow flex flex-col">
                 <h1 className="text-light-blue text-4xl py-8 border-b-2 border-dark-gray mb-4 pb-4 ">
-                  {parseInt('10000').toLocaleString('en-PH', {
-                    style: 'currency',
-                    currency: 'PHP',
-                  })}
+                  {formData.amount === ''
+                    ? (0).toLocaleString('en-PH', {
+                        style: 'currency',
+                        currency: 'PHP',
+                      })
+                    : parseInt(formData.amount)?.toLocaleString('en-PH', {
+                        style: 'currency',
+                        currency: 'PHP',
+                      })}
                 </h1>
                 <div className="flex-grow">
                   <p className="my-3 text-dark-gray font-bold text-lg">
@@ -333,18 +350,28 @@ const TenantPayment = () => {
                   <div className="flex justify-between text-lg pb-10 border-b-2 border-dark-gray">
                     <p>Rent</p>
                     <p>
-                      {parseInt('10000').toLocaleString('en-PH', {
-                        style: 'currency',
-                        currency: 'PHP',
-                      })}
+                      {invoice?.amount
+                        && (invoice?.amount).toLocaleString('en-PH', {
+                            style: 'currency',
+                            currency: 'PHP',
+                          })
+                        || parseInt(0)?.toLocaleString('en-PH', {
+                            style: 'currency',
+                            currency: 'PHP',
+                          })}
                     </p>
                   </div>
                   <div className="text-end my-5 text-3xl text-primary-color">
                     <span className="mr-4">Total:</span>
-                    {parseInt('10000').toLocaleString('en-PH', {
-                      style: 'currency',
-                      currency: 'PHP',
-                    })}
+                    {formData.amount === ''
+                      ? (0).toLocaleString('en-PH', {
+                          style: 'currency',
+                          currency: 'PHP',
+                        })
+                      : parseInt(formData.amount)?.toLocaleString('en-PH', {
+                          style: 'currency',
+                          currency: 'PHP',
+                        })}
                   </div>
                 </div>
               </div>

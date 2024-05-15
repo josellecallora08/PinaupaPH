@@ -3,36 +3,16 @@ import { IoMdClose } from 'react-icons/io'
 import { useSelector, useDispatch } from 'react-redux'
 import { editUser } from '../../features/user'
 const ProfileEditAccount = ({
-  isVisible,
-  setIsVisible,
+  handleInput,
+  handleSubmit,
+  fields,
   setIsProfileEditAccount,
-  user,
   error,
   msg,
 }) => {
   const dispatch = useDispatch()
-  const [fields, setFields] = useState({
-    username: user?.username || '',
-    password: '',
-    newpassword: '',
-    confirmpassword: '',
-  })
-  const handleInput = (e) => {
-    const { name, value } = e.target
-    setFields({
-      ...fields,
-      [name]: value,
-    })
-  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    dispatch(editUser(user?._id, fields))
-    if (error || msg) {
-      setIsProfileEditAccount(false)
-      setIsVisible(true)
-    }
-  }
+
 
   return (
     <div className="relative">
@@ -59,7 +39,7 @@ const ProfileEditAccount = ({
         )}
         <div className="mb-4">
           <label
-            htmlFor="oldpassword"
+            htmlFor="username"
             className="block text-gray-700 text-sm font-bold mb-2 "
           >
             Username
@@ -71,7 +51,7 @@ const ProfileEditAccount = ({
             name="username"
             required
             value={fields.username}
-            placeholder="Enter your Old Password"
+            placeholder="Enter your Username"
             className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>

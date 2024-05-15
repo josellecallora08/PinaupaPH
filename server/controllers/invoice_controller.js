@@ -199,7 +199,7 @@ module.exports.createInvoice = async (req, res) => {
       'pdf.pdf_url': cloudinaryResponse.secure_url,
       'pdf.reference': reference,
       amount: tenant.unit_id.rent,
-      due: dueMonth
+      due: (new Date(dueMonth).toISOString()),
     })
 
     if (!response) {
@@ -272,7 +272,7 @@ module.exports.createInvoice = async (req, res) => {
     await tenant.save()
 
     return res.status(httpStatusCodes.CREATED).json({
-      message: 'Created Invoice and Successfully saved to Database',
+      message: 'Created Invoice and Successfully saved to Database', response
     })
   } catch (err) {
     return res

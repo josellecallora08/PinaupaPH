@@ -2,8 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { isLoggedin } from '../features/authentication'
 import { editUser } from '../features/user'
+import { IoMdClose } from 'react-icons/io'
 
-function EditOwnerDetails({ isVisible, setIsVisible, error, msg, user, setIsModalOpen }) {
+function EditOwnerDetails({
+  isVisible,
+  setIsVisible,
+  error,
+  msg,
+  user,
+  data,
+  single,
+  setIsModalOpen,
+}) {
   // const user = useSelector((state) => state.auth.user)
   const dispatch = useDispatch()
   const [fields, setFields] = useState({
@@ -12,7 +22,6 @@ function EditOwnerDetails({ isVisible, setIsVisible, error, msg, user, setIsModa
     mobile_no: user?.mobile_no || '',
     email: user?.email || '',
   })
-
 
   const handleInput = (e) => {
     const { name, value } = e.target
@@ -24,16 +33,14 @@ function EditOwnerDetails({ isVisible, setIsVisible, error, msg, user, setIsModa
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(editUser(user?._id, fields))
-    if (error || msg) {
-      setIsModalOpen(false)
+    if (error || msg || data || single) {
+      setIsModalOpen((prevState) => !prevState)
       setIsVisible(true)
     }
   }
   useEffect(() => {
     dispatch(isLoggedin())
-    console.log(user)
-    console.log(user?.birthday)
-  }, [])
+  }, [handleSubmit])
 
   return (
     <div className="fixed w-full h-full flex items-center justify-center ">
@@ -53,7 +60,7 @@ function EditOwnerDetails({ isVisible, setIsVisible, error, msg, user, setIsModa
           >
             <button type="button" className="absolute top-3 right-6">
               <IoMdClose
-               onClick={() => setIsModalOpen((prevState) => !prevState)}
+                onClick={() => setIsModalOpen((prevState) => !prevState)}
                 size={20}
                 color="white"
               />
@@ -63,7 +70,7 @@ function EditOwnerDetails({ isVisible, setIsVisible, error, msg, user, setIsModa
               <div className="w-full h-full max-h-12 border-2 border-[#183044] rounded-md overflow-hidden">
                 <input
                   type="text"
-                  name='name'
+                  name="name"
                   value={fields.name}
                   onChange={handleInput}
                   placeholder="Name"
@@ -119,11 +126,13 @@ function EditOwnerDetails({ isVisible, setIsVisible, error, msg, user, setIsModa
               >
                 Submit
               </button>
-      
-              <button  onClick={() => setIsModalOpen((prevState) => !prevState)} className=' bg-red text-white font-semibold py-2 px-4 rounded'>
-                    Close
-                  </button>
-               
+
+              <button
+                onClick={() => setIsModalOpen((prevState) => !prevState)}
+                className=" bg-red text-white font-semibold py-2 px-4 rounded"
+              >
+                Close
+              </button>
             </div>
           </form>
         </div>

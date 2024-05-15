@@ -7,7 +7,7 @@ const userSlice = createSlice({
     error: null,
     data: null,
     single: null,
-    msg: null
+    msg: null,
   },
   reducers: {
     fetchUserStart: (state) => {
@@ -44,9 +44,12 @@ const userSlice = createSlice({
       state.data = state.data.map((user) =>
         user._id === action.payload.response._id
           ? action.payload.response
-          : user
+          : user,
       )
-      state.single = state.single._id === action.payload.response._id ? action.payload.response : state.single;
+      state.single =
+        state.single._id === action.payload.response._id
+          ? { ...action.payload.response }
+          : state.single
       state.msg = action.payload.msg
     },
     actionUserFailed: (state, action) => {
@@ -170,7 +173,6 @@ export const fetchUsers = () => async (dispatch) => {
 export const editUser = (userId, credentials) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
-    dispatch(fetchUserStart())
     console.log(userId)
     const response = await fetch(
       `${import.meta.env.VITE_URL}/api/user/account/update?user_id=${userId}`,
@@ -191,12 +193,11 @@ export const editUser = (userId, credentials) => async (dispatch) => {
 
     const json = await response.json()
     console.log(json)
-    dispatch(fetchUser(userId))
+    dispatch(editSingleUser(json))
   } catch (err) {
     dispatch(actionUserFailed(err.message))
   }
 }
-
 
 export const editUserApartment = (userId, credentials) => async (dispatch) => {
   try {
@@ -230,7 +231,6 @@ export const editUserApartment = (userId, credentials) => async (dispatch) => {
 export const changeProfile =
   (userId, public_id, imageFile) => async (dispatch) => {
     try {
-      dispatch(fetchUserStart())
       const token = Cookies.get('token')
 
       // Create a new FormData object
@@ -250,13 +250,13 @@ export const changeProfile =
 
       if (!response.ok) {
         const json = await response.json()
-        throw new Error(json)
+        throw new Error(json.error)
         // Handle error response
       }
 
       const json = await response.json()
       console.log(json)
-      dispatch(editUserSuccess(json))
+      dispatch(editSingleUser(json))
     } catch (err) {
       dispatch(actionUserFailed(err.message))
     }
@@ -288,7 +288,6 @@ export const deleteTenant = (userId) => async (dispatch) => {
     dispatch(actionUserFailed(err.message))
   }
 }
-
 
 export const deleteUser = (userId, navigate) => async (dispatch) => {
   try {
