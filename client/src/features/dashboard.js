@@ -97,12 +97,12 @@ export const fetchRevenue = (month, year) => async (dispatch) => {
     dispatch(fetchFailed())
   }
 }
-export const fetchTotalPayer = (month, year) => async (dispatch) => {
+export const fetchTotalPayer = (year) => async (dispatch) => {
   try {
     dispatch(fetchRateStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/dashboard/deliquency?month=${month}&year=${year}`,
+      `${import.meta.env.VITE_URL}/api/dashboard/deliquency?year=${year}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

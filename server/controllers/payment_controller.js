@@ -6,54 +6,36 @@ const NOTIFMODEL = require('../models/notification')
 const pdf = require('html-pdf')
 const cloudinary = require('cloudinary').v2 // Import Cloudinary SDK
 const pdf_template = require('../template/invoice')
-
+const nodemailer = require('nodemailer')
+const axios = require('axios')
 module.exports.madePayment = async (req, res) => {
   const { invoice_id, status } = req.query
+
   try {
-    let response;
-    if (status === "succeeded") {
-      response = await INVOICEMODEL.findByIdAndUpdate(
-        invoice_id,
-        {
-          status,
-          isPaid: true,
-          datePaid: Date.now()
-        },
-        {
-          new: true,
-        },
-      ).populate({
-        path: 'tenant_id',
-        populate: 'user_id unit_id apartment_id',
-      })
+    let invoiceUpdate = { status }
+    if (status === 'succeeded') {
+      invoiceUpdate = { ...invoiceUpdate, isPaid: true, datePaid: Date.now() }
     }
-    response = await INVOICEMODEL.findByIdAndUpdate(
+
+    let response = await INVOICEMODEL.findByIdAndUpdate(
       invoice_id,
-      {
-        status,
-      },
-      {
-        new: true,
-      },
+      invoiceUpdate,
+      { new: true },
     ).populate({
       path: 'tenant_id',
       populate: 'user_id unit_id apartment_id',
     })
-
 
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to update invoice...' })
     }
+
     const pdfBuffer = await new Promise((resolve, reject) => {
       pdf
         .create(pdf_template({ response }), {
-          childProcessOptions: {
-            env: {
-              OPENSSL_CONF: '/dev/null',
-            },
-          },
+          childProcessOptions: { env: { OPENSSL_CONF: '/dev/null' } },
         })
         .toBuffer((err, buffer) => {
           if (err) reject(err)
@@ -65,11 +47,10 @@ module.exports.madePayment = async (req, res) => {
       cloudinary.uploader
         .upload_stream(
           {
-            public_id: response.pdf.public_id,
             resource_type: 'raw',
-            format: 'pdf', // Specify resource type as 'raw' for PDF
-            // folder: 'PinaupaPH/Invoices', // Folder in Cloudinary where PDF will be stored
-            overwrite: true, // Do not overwrite if file with the same name exists
+            format: 'pdf',
+            folder: 'PinaupaPH/Invoices',
+            overwrite: true,
           },
           (error, result) => {
             if (error) reject(error)
@@ -78,30 +59,94 @@ module.exports.madePayment = async (req, res) => {
         )
         .end(pdfBuffer)
     })
+
     if (!cloudinaryResponse || !cloudinaryResponse.public_id) {
       return res
         .status(httpStatusCodes.CONFLICT)
         .json({ error: 'Failed to upload PDF to Cloudinary...' })
     }
-    const admin = await USERMODEL.findOne({ role: 'Admin' })
-    if (!admin) {
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Invoice cannot be updated.' })
+
+    if (status === 'succeeded') {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.GOOGLE_EMAIL,
+          pass: process.env.GOOGLE_PASSWORD,
+        },
+      })
+
+      const downloadPdfFromCloudinary = async () => {
+        const response = await axios.get(cloudinaryResponse.secure_url, {
+          responseType: 'stream',
+        })
+        return response.data
+      }
+
+      const mailOptions = {
+        from: 'pinaupaph@gmail.com',
+        to: response.tenant_id.user_id.email,
+        subject: `Invoice for ${response.tenant_id.unit_id.unit_no}!`,
+        html: `
+          <html>
+          <body>
+            <p>Hi, ${response.tenant_id.user_id.name},</p>
+            <p>Thank you for paying your rent.</p>
+            <p>This is to inform you that an invoice has been sent your way for your <strong>Unit ${response.tenant_id.unit_id.unit_no}</strong>.</p>
+            <p>Here's what you need to know:</p>
+            <ul>
+              <li>Invoice Number: <strong>${response.pdf.reference}</strong></li>
+              <li>Invoice Date: <strong>${new Date(response.createdAt).toDateString()}</strong></li>
+              <li>Due Date: <strong>${new Date(response.tenant_id.monthly_due).toDateString()}</strong></li>
+              <li>Total Amount: <strong>${response.payment.amountPaid.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
+              <li>Previous Balance: <strong>${(response.tenant_id.balance - response.payment.amountPaid).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
+            </ul>
+            <p>Attached to this email, you will find the invoice file for your reference and records.</p>
+            <p>If you have any questions or concerns regarding this invoice, please feel free to reach out to me.</p>
+            <p>Thank you for your prompt attention to this matter.</p>
+            <p>Best regards,</p>
+            <strong>Wendell C. Ibias</strong>
+            <strong>Apartment Owner</strong>
+            <strong>09993541054</strong>
+          </body>
+          </html>`,
+        attachments: [
+          {
+            filename: 'invoice.pdf',
+            content: await downloadPdfFromCloudinary(),
+          },
+        ],
+      }
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log('Error:', error)
+        } else {
+          console.log('Email sent:', info.response)
+        }
+      })
+
+      const admin = await USERMODEL.findOne({ role: 'Admin' })
+      if (!admin) {
+        return res
+          .status(httpStatusCodes.BAD_REQUEST)
+          .json({ error: 'Invoice cannot be updated.' })
+      }
+
+      const sendNotif = await NOTIFMODEL.create({
+        sender_id: response.tenant_id.user_id._id,
+        receiver_id: admin._id,
+        title: 'Rental Fee',
+        description: 'Rental Payment has been paid.',
+        type: 'Payment',
+      })
+
+      if (!sendNotif) {
+        return res
+          .status(httpStatusCodes.BAD_REQUEST)
+          .json({ error: 'Cannot send Notification' })
+      }
     }
-    console.log("admin surpassed")
-    const sendNotif = await NOTIFMODEL.create({
-      sender_id: response.tenant_id.user_id._id,
-      receiver_id: admin._id,
-      title: 'Rental Fee',
-      description: 'Rental Payment has been paid.',
-      type: 'Payment',
-    })
-    if (!sendNotif) {
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Cannot send Notification' })
-    }
+
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: 'Invoice has been updated.', response })
@@ -130,8 +175,8 @@ module.exports.createPayment = async (req, res) => {
         'payment.method': method,
       },
       {
-        new: true
-      }
+        new: true,
+      },
     )
     if (!response) {
       return res
@@ -190,7 +235,8 @@ module.exports.createIntent = async (req, res) => {
       {
         'intent.clientKey': json.data.attributes.client_key,
         'intent.paymentIntent': json.data.id,
-        amount: user.tenant_id.unit_id.rent,
+        'payment.amountPaid': amount,
+        'payment.unpaidBalance': user.tenant_id.balance - amount,
       },
       { new: true },
     ).populate({

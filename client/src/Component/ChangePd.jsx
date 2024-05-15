@@ -1,8 +1,14 @@
 import React, { useState } from 'react'
 import { IoMdClose } from 'react-icons/io'
 
-const ChangePd = ({ userImage, selectedFile, setSelectedFile, handleFileChange, setChangeModal, handleConfirm }) => {
-
+const ChangePd = ({
+  userImage,
+  selectedFile,
+  setSelectedFile,
+  handleFileChange,
+  setChangeModal,
+  handleConfirm,
+}) => {
   return (
     <div className="flex h-full fixed top-0 items-center z-10 justify-center w-full bg-gray/10 backdrop-blur-sm">
       <div
@@ -18,13 +24,13 @@ const ChangePd = ({ userImage, selectedFile, setSelectedFile, handleFileChange, 
           htmlFor="fileInput"
           className="w-60 h-60  mx-auto border flex justify-center items-center cursor-pointer rounded-full"
         >
-          {selectedFile && (
+          {(selectedFile && (
             <img
               src={URL.createObjectURL(selectedFile)}
               alt="Selected"
               className="w-60 h-60 rounded-full"
             />
-          ) || (
+          )) || (
             <img
               src={userImage}
               alt="Profile"
@@ -32,7 +38,7 @@ const ChangePd = ({ userImage, selectedFile, setSelectedFile, handleFileChange, 
             />
           )}
         </label>
-        <form onSubmit={handleConfirm} method="PATCH"  >
+        <form onSubmit={handleConfirm}>
           <input
             type="file"
             id="fileInput"
@@ -41,9 +47,7 @@ const ChangePd = ({ userImage, selectedFile, setSelectedFile, handleFileChange, 
             onChange={handleFileChange}
           />
 
-          <button
-            className="absolute bottom-0 h-full w-full max-h-16 bg-[#183044] text-white text-lg"
-          >
+          <button className="absolute bottom-0 h-full w-full max-h-16 bg-[#183044] text-white text-lg">
             Change Profile
           </button>
         </form>

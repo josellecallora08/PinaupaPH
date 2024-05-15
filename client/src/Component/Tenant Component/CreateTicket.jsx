@@ -4,38 +4,23 @@ import { IoMdClose } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
 import { createReport } from '../../features/report'
 
-const CreateTicket = ({ id, setisCreateTicket }) => {
-  const [type, setSelectedType] = useState('')
-  const [description, setDescription] = useState('')
-  const [attached_image, setImage] = useState(null)
-  const dispatch = useDispatch()
-  const error = useSelector(state => state.report.error) 
-  const msg = useSelector(state => state.report.msg) 
+const CreateTicket = ({
+  id,
+  setisCreateTicket,
+  title,
+  setTitle,
+  description,
+  setDescription,
+  attached_image,
+  setImage,
+  type,
+  setSelectedType,
+  handleImageChange,
+  handleDescriptionChange,
+  handleTypeChange,
+  handleSubmit,
+}) => {
   const modalRef = useRef(null)
-  const [title, setTitle] = useState('')
-  const handleImageChange = (event) => {
-    console.log('asd')
-    const file = event.target.files[0]
-    setImage(file)
-  }
-  const handleDescriptionChange = (event) => {
-    setDescription(event.target.value)
-  }
-  const handleTypeChange = (event) => {
-    setSelectedType(event.target.value)
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log('Form submitted')
-    dispatch(createReport(id, title, description, attached_image, type))
-    // Add form submission logic here
-    if (msg || error) {
-      setisCreateTicket((prevState) => !prevState)
-    }
-
-  }
-
 
   const handleClickOutside = (event) => {
     if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -59,7 +44,10 @@ const CreateTicket = ({ id, setisCreateTicket }) => {
           onSubmit={handleSubmit}
           className="lg:w-full lg:pt-4 w-[20rem] bg-white h-[30rem] px-4 overflow-y-auto"
         >
-          <button className="absolute top-4 right-6" onClick={() => setisCreateTicket(prevState => !prevState)}>
+          <button
+            className="absolute top-4 right-6"
+            onClick={() => setisCreateTicket((prevState) => !prevState)}
+          >
             <IoMdClose size={25} color="white" />
           </button>
           <div className="mb-4">
@@ -162,7 +150,7 @@ const CreateTicket = ({ id, setisCreateTicket }) => {
             </button>
             <button
               className="bg-red-500 bg-red text-white font-bold py-2 px-4 rounded"
-              onClick={() => setisCreateTicket(prevState => !prevState)}
+              onClick={() => setisCreateTicket((prevState) => !prevState)}
             >
               Close
             </button>
