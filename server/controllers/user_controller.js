@@ -398,8 +398,8 @@ module.exports.fetch_user = async (req, res) => {
   )
 
   try {
-
-    if (!response) { //check at home
+    if (!response) {
+      //check at home
       response = await USERMODEL.findById(user_id)
       if (!response) {
         return res
@@ -497,7 +497,9 @@ module.exports.update_profile = async (req, res) => {
 
         response.password = hashed
       } else {
-        return res.status(httpStatusCodes.BAD_REQUEST).json({ error: "Old password does not match the current password" }) //new update
+        return res
+          .status(httpStatusCodes.BAD_REQUEST)
+          .json({ error: 'Old password does not match the current password' }) //new update
       }
     }
 
@@ -618,23 +620,33 @@ module.exports.update_profile_picture = async (req, res) => {
         .json({ error: 'Failed to upload profile.' })
     }
     const url = uploadedImage.secure_url
-    const response = await USERMODEL.findByIdAndUpdate(user_id, {
-      profile_image: {
-        image_url: url,
-        public_id: public_id,
+    const response = await USERMODEL.findByIdAndUpdate(
+      user_id,
+      {
+        profile_image: {
+          image_url: url,
+          public_id: public_id,
+        },
       },
-    })
+      { new: true },
+    )
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to change image' })
     }
-    const tenant = await TENANTMODEL.findById(response._id).populate(
+    console.log(response._id)
+    const tenant = await TENANTMODEL.findOne({user_id}).populate(
       'user_id unit_id apartment_id',
     )
+    console.log(tenant)
+    console.log(response.role)
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Profile has been changed', response: (response.role.toString() === "Tenant" ? tenant : response) })
+      .json({
+        msg: 'Profile has been changed',
+        response: response.role == 'Tenant' ? tenant : response,
+      })
   } catch (err) {
     console.error({ err })
     return res
@@ -706,7 +718,7 @@ module.exports.deleteTenant = async (req, res) => {
 
     const { user_id } = req.query
     const response = await USERMODEL.findByIdAndUpdate(user_id, {
-      isDelete: true
+      isDelete: true,
     })
     if (!response) {
       return res

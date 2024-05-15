@@ -21,6 +21,7 @@ import { fetchHousehold, fetchHouseholds } from '../../features/household'
 import { fetchPets } from '../../features/pet'
 import EditTenantDetails from '../../Component/EditTenantDetails'
 import { isLoggedin } from '../../features/authentication'
+import { changeProfile } from '../../features/user'
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile')
   const [isEditTenantDetailForm, setIsEditTenantDetailForm] = useState(false)
@@ -36,6 +37,9 @@ const TenantProfile = () => {
   const tenant = useSelector((state) => state.auth.user)
   const households = useSelector((state) => state.household.data)
   const pets = useSelector((state) => state.pet.data)
+  const error = useSelector((state) => state.user.error)
+  const single = useSelector((state) => state.user.single)
+  const msg = useSelector((state) => state.user.msg)
   const dropdownRef = useRef(null)
   const [selectedFile, setSelectedFile] = useState(null)
   const [changeModal, setChangeModal] = useState(false)
@@ -65,24 +69,40 @@ const TenantProfile = () => {
   const toggleEditTenantAccountForm = () => {
     setIsEditTenantAccountForm(!isEditTenantAccountForm)
   }
-  const toggleEditFamilyMemForm = () => {
-    setIsEditFamilyMemForm(!isEditFamilyMemForm)
-  }
-  const toggleEditPetForm = () => {
-    setIsEditPetForm(!isEditPetForm)
-  }
-  const toggleRemoveDot = () => {
-    setIsRemovedot(!isRemovedot)
-  }
+  // const toggleEditFamilyMemForm = () => {
+  //   setIsEditFamilyMemForm(!isEditFamilyMemForm)
+  // }
+  // const toggleEditPetForm = () => {
+  //   setIsEditPetForm(!isEditPetForm)
+  // }
+  // const toggleRemoveDot = () => {
+  //   setIsRemovedot(!isRemovedot)
+  // }
   const handleTabClick = (tab) => {
     setActiveTab(tab)
   }
-  const handleSubmit = (e) => {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault()
+  // }
+
+  const handleConfirm = (e) => {
     e.preventDefault()
+    dispatch(
+      changeProfile(
+        tenant?.user_id._id,
+        tenant?.user_id?.profile_image.public_id,
+        selectedFile,
+      ),
+    )
+    if (msg || error || single) {
+      setChangeModal(false)
+      // setIsVisible((prevState) => !prevState)
+    }
   }
+
   useEffect(() => {
     dispatch(isLoggedin())
-  }, [])
+  }, [handleConfirm])
   useEffect(() => {
     dispatch(fetchHouseholds(tenant?.user_id?._id))
     dispatch(fetchPets(tenant?.user_id?._id))
@@ -93,16 +113,6 @@ const TenantProfile = () => {
 
   const toggleChangeModal = () => {
     setChangeModal(!changeModal)
-  }
-
-  const handleConfirm = (e) => {
-    e.preventDefault()
-    if (selectedFile) {
-      // Dispatch action to change profile picture
-      // Example: dispatch(changeProfilePicture(selectedFile));
-      // You need to implement the 'changeProfilePicture' action in your Redux store
-    }
-    setChangeModal(false)
   }
 
   const handleClickOutsideDropdown = (event) => {
@@ -155,6 +165,7 @@ const TenantProfile = () => {
       </div>{' '}
       {changeModal ? (
         <ChangePd
+          userImage={tenant?.user_id?.profile_image.image_url}
           selectedFile={selectedFile}
           setSelectedFile={setSelectedFile}
           handleFileChange={handleFileChange}

@@ -71,47 +71,56 @@ const TenantHome = () => {
               <div className=" overflow-y-auto h-40">
                 <table className="w-full">
                   <tbody className="text-primary-color">
-                    {report &&
-                      report?.filter(item => item?.sender_id?.user_id._id === user?.user_id._id).map((val, key) => (
-                        <tr key={key} className="border-b border-dark-gray">
-                          <td className=" px-4 py-2   ">
-                            <div className="flex items-center gap-3 w-fit">
-                              <div
-                                className={`md:w-2 md:h-2 w-2 h-2 rounded-full ${val?.status ? 'bg-blue' : 'bg-red'}`}
-                              ></div>
-                              <div className="md:text-sm text-xs">
-                                {val?.title}
+                    {(report &&
+                      report
+                        ?.filter(
+                          (item) =>
+                            item?.sender_id?.user_id._id === user?.user_id._id,
+                        )
+                        .map((val, key) => (
+                          <tr key={key} className="border-b border-dark-gray">
+                            <td className=" px-4 py-2   ">
+                              <div className="flex items-center gap-3 w-fit">
+                                <div
+                                  className={`md:w-2 md:h-2 w-2 h-2 rounded-full ${val?.status ? 'bg-blue' : 'bg-red'}`}
+                                ></div>
+                                <div className="md:text-sm text-xs">
+                                  {val?.title}
+                                </div>
                               </div>
-                            </div>
-                          </td>
-                          <td className="px-4 py-2 md:text-sm text-xs">
-                            <span className='hidden'>
-                              {new Date(val?.createdAt).toDateString()}
-                            </span>
-                            <span className=''>
-                              {new Date(val?.createdAt).toLocaleDateString()}
-                            </span>
-                          </td>
-                          <td className="px-4 py-2 flex items-center gap-3">
-                            <div className=" flex items-center gap-3 bg-gray rounded-full w-full md:pr-20  p-2">
-                              <img
-                                src={
-                                  val?.sender_id?.user_id.profile_image
-                                    ?.image_url
-                                }
-                                alt="tenantlogo"
-                                className="w-6 h-6 rounded-full "
-                              />
-                              <div className="md:text-sm text-xs text-ellipsis text-nowrap w-52 max-w-[100px] md:max-w-[300px] overflow-hidden">
-                                {val?.description}
+                            </td>
+                            <td className="px-4 py-2 md:text-sm text-xs">
+                              <span className="hidden">
+                                {new Date(val?.createdAt).toDateString()}
+                              </span>
+                              <span className="">
+                                {new Date(val?.createdAt).toLocaleDateString()}
+                              </span>
+                            </td>
+                            <td className="px-4 py-2 flex items-center gap-3">
+                              <div className=" flex items-center gap-3 bg-gray rounded-full w-full md:pr-20  p-2">
+                                <img
+                                  src={
+                                    val?.sender_id?.user_id.profile_image
+                                      ?.image_url
+                                  }
+                                  alt="tenantlogo"
+                                  className="w-6 h-6 rounded-full "
+                                />
+                                <div className="md:text-sm text-xs text-ellipsis text-nowrap w-52 max-w-[100px] md:max-w-[300px] overflow-hidden">
+                                  {val?.description}
+                                </div>
                               </div>
-                            </div>
-                          </td>
-                        </tr>
-                      )) ||
+                            </td>
+                          </tr>
+                        ))) || (
                       <tr>
-                        <td colSpan={3} className='text-center'> No Data Found...</td>
-                      </tr>}
+                        <td colSpan={3} className="text-center">
+                          {' '}
+                          No Data Found...
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -152,7 +161,12 @@ const TenantHome = () => {
                   <div>
                     <div className="flex justify-center w-full hover:opacity-80">
                       <div className="bg-primary-color w-full text-white p-5 text-center text-xl">
-                        Paid
+                        Paid{' '}
+                        {parseInt(invoice?.payment?.amountPaid)?.toLocaleString('en-PH', {
+                          style: 'currency',
+                          currency: 'PHP',
+                        })}{' '}
+                        on {new Date(invoice?.datePaid).toDateString()}
                       </div>
                     </div>
                   </div>

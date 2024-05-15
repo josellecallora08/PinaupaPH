@@ -4,17 +4,20 @@ import { BiEdit } from 'react-icons/bi'
 import EditOwnerDetails from '../../Component/EditOwnerDetails'
 import ChangePd from '../../Component/ChangePd'
 import { isLoggedin } from '../../features/authentication'
-import { changeProfile } from '../../features/user'
+import { changeProfile, editUser } from '../../features/user'
 import { fetchApartments } from '../../features/apartment'
 import ProfileEditAccount from '../../Component/AdminComponent/ProfileEditAccount'
 import MessageToast from '../../Component/ToastComponent/MessageToast'
 
 const Profile = () => {
+  const [update, setUpdate] = useState(false)
   const [modal, setIsModalOpen] = useState(false)
   const [changeModal, setchangeModal] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
   const [isVisible, setIsVisible] = useState(false)
   const user = useSelector((state) => state.auth.user)
+  const data = useSelector((state) => state.user.data)
+  const single = useSelector((state) => state.user.single)
   const error = useSelector((state) => state.user.error)
   const msg = useSelector((state) => state.user.msg)
   const apartment = useSelector((state) => state.apartment.data)
@@ -26,21 +29,55 @@ const Profile = () => {
   const toggleEditAccount = () => {
     setIsProfileEditAccount(!isProfileEditAccount)
   }
-
   const handleConfirm = (e) => {
     e.preventDefault()
-    // const userId = user?.role === "Admin" || user?.role === "Superadmin" ? user?._id : user?._id 
-    dispatch(changeProfile(user._id, user?.profile_image.public_id, selectedFile))
-    if (msg || error) {
-      setchangeModal((prevState) => !prevState)
+    // const userId = user?.role === "Admin" || user?.role === "Superadmin" ? user?._id : user?._id
+    dispatch(
+      changeProfile(user._id, user?.profile_image.public_id, selectedFile),
+    )
+    if (msg || error || data || single) {
+      setUpdate(true)
+      setchangeModal(false)
+      setIsVisible((prevState) => !prevState)
     }
   }
-  console.log(user)
+
+  const [fields, setFields] = useState({
+    username: user?.username || '',
+    password: '',
+    newpassword: '',
+    confirmpassword: '',
+  })
+  const handleInput = (e) => {
+    const { name, value } = e.target
+    setFields({
+      ...fields,
+      [name]: value,
+    })
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    dispatch(editUser(user?._id, fields))
+    if (error || msg || data) {
+      setIsProfileEditAccount((prevState) => !prevState)
+      setIsVisible(true)
+      setFields({
+        username: user?.username || '',
+        password: '',
+        newpassword: '',
+        confirmpassword: '',
+      })
+    }
+  }
+
   useEffect(() => {
     dispatch(isLoggedin())
+  }, [update, setUpdate, handleSubmit])
+
+  useEffect(() => {
     dispatch(fetchApartments())
   }, [])
-
   return (
     <>
       {isVisible && (
@@ -58,6 +95,8 @@ const Profile = () => {
           error={error}
           msg={msg}
           user={user}
+          data={data}
+          single={single}
           setIsModalOpen={setIsModalOpen}
         />
       )}
@@ -175,10 +214,10 @@ const Profile = () => {
                   <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50">
                     <div className="lg:w-1/2 bg-white rounded-lg">
                       <ProfileEditAccount
-                        isVisible={isVisible}
-                        setIsVisible={setIsVisible}
+                        handleInput={handleInput}
+                        handleSubmit={handleSubmit}
+                        fields={fields}
                         setIsProfileEditAccount={setIsProfileEditAccount}
-                        user={user}
                         error={error}
                         msg={msg}
                       />
