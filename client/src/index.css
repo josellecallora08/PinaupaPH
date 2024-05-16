@@ -585,11 +585,11 @@ input[type=number] {
 }
 
 .radio-container input[type="radio"]:checked[value="paymaya"] + img {
-  border: 2px solid lightblue; /* Light green border for PayMaya */
+  border: 2px solid rgb(86, 255, 86); /* Light green border for PayMaya */
 }
 
-.radio-container input[type="radio"]:checked[value="grabpay"] + img {
-  border: 2px solid lime; /* Dark green border for GrabPay */
+.radio-container input[type="radio"]:checked[value="grab_pay"] + img {
+  border: 2px solid rgb(6, 77, 6); /* Dark green border for GrabPay */
 }
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {

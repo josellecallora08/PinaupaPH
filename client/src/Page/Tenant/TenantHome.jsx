@@ -84,7 +84,7 @@ const TenantHome = () => {
                       report
                         ?.filter(
                           (item) =>
-                            item?.sender_id?.user_id._id === user?.user_id._id,
+                            item?.sender_id?.user_id?._id === user?.user_id?._id,
                         )
                         .map((val, key) => (
                           <tr key={key} className="border-b border-dark-gray">

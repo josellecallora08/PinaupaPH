@@ -21,7 +21,11 @@ import EditPetTable from '../../Component/EditPetTable'
 import MessageToast from '../../Component/ToastComponent/MessageToast'
 
 import { deleteTenant, deleteUser, fetchUser } from '../../features/user'
-import { createHousehold, deleteHousehold, fetchHouseholds } from '../../features/household'
+import {
+  createHousehold,
+  deleteHousehold,
+  fetchHouseholds,
+} from '../../features/household'
 import { fetchPets } from '../../features/pet'
 import { generateDocument } from '../../features/documents'
 
@@ -40,7 +44,7 @@ const TenantProfile = () => {
   const dispatch = useDispatch()
   const { id } = useParams()
   const tenant = useSelector((state) => state.user.single)
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false)
 
   const error = useSelector((state) => state.user.error)
   const msg = useSelector((state) => state.household.msg)
@@ -54,9 +58,7 @@ const TenantProfile = () => {
     )
     if (isConfirmed) {
       dispatch(deleteTenant(id))
-      if (msg || error) {
-        navigate('/tenant')
-      }
+      navigate('/tenant')
     }
   }
   const handleClickOutsideDropdown = (event) => {
@@ -108,8 +110,8 @@ const TenantProfile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     dispatch(createHousehold(id, fields))
-    setIsVisible(prevState => !prevState)
-    setIsAddHouseholdForm(prevState => !prevState)
+    setIsVisible((prevState) => !prevState)
+    setIsAddHouseholdForm((prevState) => !prevState)
     setFields({
       name: '',
       mobile: '',
@@ -119,11 +121,9 @@ const TenantProfile = () => {
   }
 
   const handleDeleteClick = async (contactId) => {
-    if (window.confirm(
-      'Are you sure you want to delete this tenant?',
-    )) {
+    if (window.confirm('Are you sure you want to delete this household?')) {
       dispatch(deleteHousehold(tenant?.user_id._id, contactId))
-      setIsVisible(prevState => !prevState)
+      setIsVisible((prevState) => !prevState)
     }
   }
 
@@ -143,7 +143,14 @@ const TenantProfile = () => {
   const birthday = new Date(tenant?.user_id.birthday).toLocaleDateString()
   return (
     <>
-      {isVisible && <MessageToast message={msg} error={error} isVisible={isVisible} setIsVisible={setIsVisible} />}
+      {isVisible && (
+        <MessageToast
+          message={msg}
+          error={error}
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+        />
+      )}
 
       <div className="bg-white1  h-full ">
         {/* Tenant Profile Header */}
@@ -239,7 +246,8 @@ const TenantProfile = () => {
                               <MdDelete className="text-lg" /> Delete
                             </button>
                             <button className=" flex items-center  gap-2  bg-primary-color w-[10.2rem] text-white p-2 rounded-md hover:bg-opacity-80 transition duration-300 ease-in-out">
-                              <MdOutlineFileDownload size={20} /> Lease Agreement
+                              <MdOutlineFileDownload size={20} /> Lease
+                              Agreement
                             </button>
                           </div>
                         )}
@@ -323,7 +331,9 @@ const TenantProfile = () => {
                       <div className="fixed top-0 left-0 w-full z-50 h-full flex items-center justify-center bg-black bg-opacity-50">
                         <div className="lg:w-1/2 lg:h-[30rem] h-auto bg-white  rounded-lg">
                           <EditTenantDetails
-                            setIsEditTenantDetailForm={setIsEditTenantDetailForm}
+                            setIsEditTenantDetailForm={
+                              setIsEditTenantDetailForm
+                            }
                             tenant={tenant}
                           />
                         </div>
@@ -362,7 +372,9 @@ const TenantProfile = () => {
                             <p>Date of Move-in</p>
                           </div>
                           <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
-                            <p className="">Unit - {tenant?.unit_id?.unit_no}</p>
+                            <p className="">
+                              Unit - {tenant?.unit_id?.unit_no}
+                            </p>
                             <p className="">
                               {tenant?.deposit?.toLocaleString('en-PH', {
                                 style: 'currency',

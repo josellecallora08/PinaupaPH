@@ -181,7 +181,7 @@ const Headbar = () => {
           {profile && (
             <div
               ref={menuBg}
-              className={`absolute top-full right-2 w-48 mt-2 text-black rounded-md shadow-lg bg-white overflow-hidden transition-all duration-300 transform-gpu ${profile ? 'scale-y-100' : 'scale-y-0'} origin-top ease-in-out`}
+              className={`absolute top-[4.5rem] right-2 w-48 mt-2 text-black rounded-md shadow-lg bg-white overflow-hidden transition-all duration-300 transform-gpu ${profile ? 'scale-y-100' : 'scale-y-0'} origin-top ease-in-out`}
             >
               <ul>
               <Link to={'/profile'}>

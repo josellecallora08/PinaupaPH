@@ -10,12 +10,10 @@ const ConcernList = () => {
   const [isCreateTicket, setisCreateTicket] = useState(false)
   const [searchItem, setSearchItem] = useState('')
   const [type, setSelectedType] = useState('')
-  const [update, setUpdate] = useState(false)
   const [description, setDescription] = useState('')
   const [attached_image, setImage] = useState(null)
   const error = useSelector((state) => state.report.error)
   const msg = useSelector((state) => state.report.msg)
-  const data = useSelector((state) => state.report.data)
   const user = useSelector((state) => state.auth.user)
   const loading = useSelector((state) => state.report.loading)
   const dispatch = useDispatch()
@@ -38,10 +36,7 @@ const ConcernList = () => {
     dispatch(
       createReport(user?.user_id._id, title, description, attached_image, type),
     )
-    // Add form submission logic here
-    if (msg || error || data) {
-      setisCreateTicket((prevState) => !prevState)
-    }
+    setisCreateTicket((prevState) => !prevState)
   }
 
   const handleSearch = (e) => {
@@ -53,8 +48,7 @@ const ConcernList = () => {
     } else {
       dispatch(fetchReports())
     }
-
-  }, [searchItem])
+  }, [searchItem, dispatch, msg])
 
   return (
     <>
@@ -141,8 +135,8 @@ const ConcernList = () => {
                   selected === 'all'
                     ? item?.sender_id?.user_id?._id === user?.user_id?._id
                     : item?.sender_id?.user_id?._id === user?.user_id?._id &&
-                    selected !== 'all' &&
-                    item.status.toString() === selected.toString(),
+                      selected !== 'all' &&
+                      item.status.toString() === selected.toString(),
                 )
                 .map((val, key) => (
                   <ConcernCard key={key} val={val} num={key} />

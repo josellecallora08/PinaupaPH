@@ -11,7 +11,8 @@ import tenant from '/tenant.svg'
 import tenant_ from '/tenant_white.svg'
 import apartment from '/apartment.svg'
 import apartment_ from '/apartment_white.svg'
-import security from '/Security.svg'
+import security from '/security.svg'
+import security_ from '/security_white.svg'
 import documents from '/document.svg'
 import document_ from '/document_white.svg'
 import report from '/concern.svg'
@@ -175,7 +176,7 @@ const Sidebar = () => {
                   className={`${menu ? '' : 'flex justify-center'} max-w-10 w-full h-full`}
                 >
                   <img
-                    src={isActive('/apartment') ? security : security}
+                    src={isActive('/security') ? security_ : security}
                     alt=""
                     className="max-w-5 max-h-5 object-contain"
                   />
@@ -190,6 +191,7 @@ const Sidebar = () => {
                   ''
                 )}
               </Link>
+            
             </li>}
             {user?.role === "Admin" &&<li className="w-full h-fit flex flex-col cursor-pointer">
               <div

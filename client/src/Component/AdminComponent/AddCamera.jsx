@@ -127,7 +127,7 @@ const AddCamera = ({ setIsAddCameraForm, addCamera, availableCameras }) => {
             className="text-sm shadow appearance-none border border-primary-color rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
             required
           >
-            <option value="">Select Camera</option>
+            <option value="" hidden>Select Camera</option>
             {availableCameras.map(camera => (
               <option key={camera.deviceId} value={camera.deviceId}>{camera.label || `Camera ${camera.deviceId}`}</option>
             ))}

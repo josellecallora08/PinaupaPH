@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import gcashlogo from '/Gcashlogo.png'
-import paymayalogo from '/Paymayalogo.png'
+import paymayalogo from '/maya-logo.jpg'
 import grabpaylogo from '/Grabpaylogo.png'
 import { useDispatch, useSelector } from 'react-redux'
-import { createPayment, createPaymentIntent } from '../../features/payment'
+import { createPaymentIntent } from '../../features/payment'
 import { useParams } from 'react-router-dom'
 import '../../index.css'
 import { fetchInvoice } from '../../features/invoice'
@@ -51,7 +51,7 @@ const TenantPayment = () => {
       [e.target.name]: e.target.value,
     })
   }
-
+  console.log(formData.method)
   return (
     <>
       <div className="w-full h-full bg-white1 px-5 overflow-y-scroll">
@@ -143,7 +143,7 @@ const TenantPayment = () => {
                               type="radio"
                               name="method"
                               onChange={handleChange}
-                              value="grabpay"
+                              value="grab_pay"
                               className="hidden"
                             />
                             <img
@@ -268,7 +268,7 @@ const TenantPayment = () => {
                   </div>
                   <div className="mb-4">
                     <label
-                      htmlFor="contactNumber"
+                      htmlFor="mobile_no"
                       className="block font-medium text-primary-color"
                     >
                       Contact Number
@@ -276,9 +276,9 @@ const TenantPayment = () => {
                     <input
                       type="text"
                       placeholder="Enter Contact Number"
-                      id="contactNumber"
-                      name="contactNumber"
-                      value={formData.contactNumber}
+                      id="mobile_no"
+                      name="mobile_no"
+                      value={formData.mobile_no}
                       onChange={handleChange}
                       autoComplete="off"
                       className="mt-1 px-4 py-3 border text-xl text-primary-color bg-white border-dark-gray rounded-md w-full"
@@ -350,15 +350,15 @@ const TenantPayment = () => {
                   <div className="flex justify-between text-lg pb-10 border-b-2 border-dark-gray">
                     <p>Rent</p>
                     <p>
-                      {invoice?.amount
-                        && (invoice?.amount).toLocaleString('en-PH', {
-                            style: 'currency',
-                            currency: 'PHP',
-                          })
-                        || parseInt(0)?.toLocaleString('en-PH', {
-                            style: 'currency',
-                            currency: 'PHP',
-                          })}
+                      {(invoice?.amount &&
+                        (invoice?.amount).toLocaleString('en-PH', {
+                          style: 'currency',
+                          currency: 'PHP',
+                        })) ||
+                        parseInt(0)?.toLocaleString('en-PH', {
+                          style: 'currency',
+                          currency: 'PHP',
+                        })}
                     </p>
                   </div>
                   <div className="text-end my-5 text-3xl text-primary-color">
