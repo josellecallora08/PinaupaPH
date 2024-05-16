@@ -38,9 +38,7 @@ const AddRoom = ({ apartment_id, setIsAddRoomFormOpen }) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(createUnit(fields, apartment_id))
-    if (error || msg) {
-      setIsAddRoomFormOpen(false)
-    }
+    setIsAddRoomFormOpen(prevState => !prevState)
   }
   return (
     <>
@@ -50,7 +48,7 @@ const AddRoom = ({ apartment_id, setIsAddRoomFormOpen }) => {
             Add Apartment Unit Details
           </h1>
         </div>
-      {/* check */}
+        {/* check */}
 
         <form onSubmit={handleSubmit} className="lg:w-[30rem] w-[22rem] h-auto pt-8 px-4 ">
           <button className="absolute top-4 right-6">
@@ -105,7 +103,7 @@ const AddRoom = ({ apartment_id, setIsAddRoomFormOpen }) => {
           <div className="flex justify-end mt-5 gap-3">
             <button
               className=" bg-dark-blue text-white font-bold py-2 px-4 rounded"
-              
+
             >
               Submit
             </button>
