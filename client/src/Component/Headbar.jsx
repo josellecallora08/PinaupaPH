@@ -151,7 +151,7 @@ const Headbar = () => {
             </button>
           )}
           <div>
-            <span className="text-gray text-sm md:text-regular font-light">
+            <span className="text-gray text-sm md:text-regular font-light ml-4">
               {completeDate}
             </span>
           </div>
