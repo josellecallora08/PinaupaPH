@@ -58,7 +58,7 @@ const ConcernList = () => {
 
   return (
     <>
-      <div className="h-2 px-5 lg:pl-14 py-3">
+      <div className="h-2 px-5 lg:pl-14 py-3 ">
         <h1 className="lg:text-base uppercase text-sm font-bold my-5 ">
           Concern And Issues
         </h1>
@@ -117,7 +117,7 @@ const ConcernList = () => {
           </div>
         </div>
 
-        <div className="lg:grid lg:grid-cols-3 lg:gap-y-2 lg:gap-x-3">
+        <div className="lg:grid lg:grid-cols-3 lg:gap-y-2 lg:gap-x-3 pb-10 ">
           {user && user?.role === 'Admin' ? (
             loading ? (
               <Loading />
@@ -141,8 +141,8 @@ const ConcernList = () => {
                   selected === 'all'
                     ? item?.sender_id?.user_id?._id === user?.user_id?._id
                     : item?.sender_id?.user_id?._id === user?.user_id?._id &&
-                      selected !== 'all' &&
-                      item.status.toString() === selected.toString(),
+                    selected !== 'all' &&
+                    item.status.toString() === selected.toString(),
                 )
                 .map((val, key) => (
                   <ConcernCard key={key} val={val} num={key} />

@@ -1,32 +1,9 @@
 import React, { useState } from 'react'
 import { IoMdClose } from 'react-icons/io'
-import { useDispatch, useSelector } from 'react-redux'
-import { createHousehold } from '../features/household'
-const AddHousehold = ({ id, setIsAddHouseholdForm }) => {
-  const [isFormOpen, setIsFormOpen] = useState(false)
-  const error = useSelector((state) => state.household.error)
-  const dispatch = useDispatch()
-  const [fields, setFields] = useState({
-    name: '',
-    mobile: '',
-    birthday: '',
-    relationship: '',
-  })
-  const toggleForm = () => {
-    setIsFormOpen(!isFormOpen)
-  }
-  const handleInput = (e) => {
-    const { name, value } = e.target
-    setFields((states) => ({
-      ...states,
-      [name]: value,
-    }))
-  }
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    dispatch(createHousehold(id, fields))
-    toggleForm()
-  }
+// import { useDispatch, useSelector } from 'react-redux'
+const AddHousehold = ({ id, setIsAddHouseholdForm, fields, handleInput, handleSubmit }) => {
+  // const error = useSelector((state) => state.household.error)
+
 
   return (
     <div className="relative">
@@ -46,12 +23,12 @@ const AddHousehold = ({ id, setIsAddHouseholdForm }) => {
             color="white"
           />
         </button>
-
+{/* 
         {error && (
           <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
             {error}
           </div>
-        )}
+        )} */}
 
         <div className="mb-4">
           <label

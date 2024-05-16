@@ -200,9 +200,9 @@ const TenantProfile = () => {
                     </div>
                     <button
                       onClick={handleDownload}
-                      className="btn  hover:text-primary-color flex items-center gap-2 absolute right-3 top-0 bg-primary-color text-white p-2 rounded-md "
+                      className=" text-xs lg:p-3 py-2 px-1 pr-2 hover:bg-primary-color/55 duration-300 hover:text-prim bg-primary-color  hover:text-primary-color flex items-center gap-2 absolute right-0 lg:top-1 bg-primary-color text-white  rounded-md "
                     >
-                      <MdOutlineFileDownload size={20} /> Lease Agreement
+                      <MdOutlineFileDownload size={15} /> Lease Agreement
                     </button>
                   </div>
 
@@ -223,7 +223,7 @@ const TenantProfile = () => {
 
                     <div className="mb-4 text-sm mt-3 ml-2 flex flex-col items-start">
                       <p className="lg:text-lg flex gap-[4.8rem] items-center">
-                        Username1
+                        Username
                         <span className="lg:text-base lg:ml-7 ml-6">
                           {tenant?.user_id.username}
                         </span>
@@ -293,7 +293,7 @@ const TenantProfile = () => {
                   {/*Apartment Details */}
                   <div>
                     <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center  w-full justify-between  py-1 bg-dark-blue text-white">
-                      <h1 className="lg:text-xl font-bold ">
+                      <h1 className="lg:text-xl pl-2 font-bold ">
                         Apartment Details
                       </h1>
                     </div>

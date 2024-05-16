@@ -27,6 +27,15 @@ const TenantHome = () => {
 
   return (
     <>
+              <style jsx>{`
+        .truncate-title {
+          display: block;
+          max-width: 250px; /* Adjust this value as needed */
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      `}</style>
       {loading ? (
         <span className="loading loading-bars loading-md"></span>
       ) : (
@@ -84,7 +93,7 @@ const TenantHome = () => {
                                 <div
                                   className={`md:w-2 md:h-2 w-2 h-2 rounded-full ${val?.status ? 'bg-blue' : 'bg-red'}`}
                                 ></div>
-                                <div className="md:text-sm text-xs">
+                                <div className=" truncate-title md:text-sm text-xs">
                                   {val?.title}
                                 </div>
                               </div>
@@ -107,7 +116,7 @@ const TenantHome = () => {
                                   alt="tenantlogo"
                                   className="w-6 h-6 rounded-full "
                                 />
-                                <div className="md:text-sm text-xs text-ellipsis text-nowrap w-52 max-w-[100px] md:max-w-[300px] overflow-hidden">
+                                <div className=" md:text-sm text-xs text-ellipsis text-nowrap w-52 max-w-[100px] md:max-w-[300px] overflow-hidden">
                                   {val?.description}
                                 </div>
                               </div>
@@ -187,7 +196,7 @@ const TenantHome = () => {
                 Calendar
               </div>
               <div className="w-full h-full">
-                <Calendar user={user} />
+                <Calendar user={user} invoice={invoice} />
               </div>
             </div>
 

@@ -18,9 +18,10 @@ import EditTenantAccount from '../../Component/EditTenantAccount'
 import EditFamMemTable from '../../Component/EditFamMemTable'
 import AddPet from '../../Component/AddPet'
 import EditPetTable from '../../Component/EditPetTable'
+import MessageToast from '../../Component/ToastComponent/MessageToast'
 
 import { deleteTenant, deleteUser, fetchUser } from '../../features/user'
-import { fetchHouseholds } from '../../features/household'
+import { createHousehold, deleteHousehold, fetchHouseholds } from '../../features/household'
 import { fetchPets } from '../../features/pet'
 import { generateDocument } from '../../features/documents'
 
@@ -39,8 +40,10 @@ const TenantProfile = () => {
   const dispatch = useDispatch()
   const { id } = useParams()
   const tenant = useSelector((state) => state.user.single)
+  const [isVisible, setIsVisible] = useState(false);
+
   const error = useSelector((state) => state.user.error)
-  const msg = useSelector((state) => state.user.msg)
+  const msg = useSelector((state) => state.household.msg)
   const households = useSelector((state) => state.household.data)
   const pets = useSelector((state) => state.pet.data)
   const navigate = useNavigate()
@@ -85,9 +88,45 @@ const TenantProfile = () => {
     setActiveTab(tab)
   }
   const handleDownload = (e) => {
-    console.log(id)
     dispatch(generateDocument(id))
   }
+
+  const [fields, setFields] = useState({
+    name: '',
+    mobile: '',
+    birthday: '',
+    relationship: '',
+  })
+
+  const handleInput = (e) => {
+    const { name, value } = e.target
+    setFields((states) => ({
+      ...states,
+      [name]: value,
+    }))
+  }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    dispatch(createHousehold(id, fields))
+    setIsVisible(prevState => !prevState)
+    setIsAddHouseholdForm(prevState => !prevState)
+    setFields({
+      name: '',
+      mobile: '',
+      birthday: '',
+      relationship: '',
+    })
+  }
+
+  const handleDeleteClick = async (contactId) => {
+    if (window.confirm(
+      'Are you sure you want to delete this tenant?',
+    )) {
+      dispatch(deleteHousehold(tenant?.user_id._id, contactId))
+      setIsVisible(prevState => !prevState)
+    }
+  }
+
   useEffect(() => {
     dispatch(fetchHouseholds(id))
     dispatch(fetchPets(id))
@@ -103,432 +142,440 @@ const TenantProfile = () => {
 
   const birthday = new Date(tenant?.user_id.birthday).toLocaleDateString()
   return (
-    <div className="bg-white1  h-full ">
-      {/* Tenant Profile Header */}
-      <div className="lg:flex lg:items-center lg:justify-between">
-        <div className="lg:mt-2 lg:ml-10 uppercase font-bold  p-5 mx-4">
-          <h1>
-            <span
-              className=" hover:cursor-pointer hover:underline mr-1"
-              onClick={() => window.history.back()}
+    <>
+      {isVisible && <MessageToast message={msg} error={error} isVisible={isVisible} setIsVisible={setIsVisible} />}
+
+      <div className="bg-white1  h-full ">
+        {/* Tenant Profile Header */}
+        <div className="lg:flex lg:items-center lg:justify-between">
+          <div className="lg:mt-2 lg:ml-10 uppercase font-bold  p-5 mx-4">
+            <h1>
+              <span
+                className=" hover:cursor-pointer hover:underline mr-1"
+                onClick={() => window.history.back()}
+              >
+                Tenant
+              </span>
+              / Tenant Profile
+            </h1>
+          </div>
+
+          {/* Tab Navigation */}
+          <div className=" lg:mt-0 lg:mr-14 lg:text-dark-gray flex justify-evenly gap-3 ">
+            <button
+              onClick={() => handleTabClick('profile')}
+              className={
+                activeTab === 'profile'
+                  ? ' text-white py-2 px-5 bg-primary-color rounded-full '
+                  : ''
+              }
             >
-              Tenant
-            </span>
-            / Tenant Profile
-          </h1>
+              Profile
+            </button>
+            <button
+              onClick={() => handleTabClick('transaction')}
+              className={
+                activeTab === 'transaction'
+                  ? 'text-white py-2 px-5 bg-primary-color rounded-full'
+                  : ''
+              }
+            >
+              Transaction
+            </button>
+          </div>
         </div>
 
-        {/* Tab Navigation */}
-        <div className=" lg:mt-0 lg:mr-14 lg:text-dark-gray flex justify-evenly gap-3 ">
-          <button
-            onClick={() => handleTabClick('profile')}
-            className={
-              activeTab === 'profile'
-                ? ' text-white py-2 px-5 bg-primary-color rounded-full '
-                : ''
-            }
-          >
-            Profile
-          </button>
-          <button
-            onClick={() => handleTabClick('transaction')}
-            className={
-              activeTab === 'transaction'
-                ? 'text-white py-2 px-5 bg-primary-color rounded-full'
-                : ''
-            }
-          >
-            Transaction
-          </button>
-        </div>
-      </div>
+        <div className="w-11/12 m-auto  rounded-md">
+          {activeTab === 'profile' && (
+            <div className=" lg:mt-5 mt-10   ">
+              {TenantProfileInfo.map((profile, index) => (
+                <div className="lg:flex lg:gap-5 p-5 lg:pb-2" key={index}>
+                  <div className="lg:w-1/2  lg:rounded-lg lg:origin-left  ">
+                    <div className="lg:items-center flex gap-3 relative mb-7 ">
+                      <figure>
+                        <img
+                          src={tenant?.user_id.profile_image.image_url}
+                          alt="Profile"
+                          className="lg:w-24 rounded-full object-fill lg:h-24 w-14 h-14"
+                        />
+                      </figure>
+                      <div>
+                        <h2 className="lg:text-2xl text-xl font-bold mb-2">
+                          {tenant?.user_id.name}
+                        </h2>
+                        <h2 className="lg:text-2xl">
+                          Unit - {tenant?.unit_id?.unit_no}
+                        </h2>
+                      </div>
 
-      <div className="w-11/12 m-auto  rounded-md">
-        {activeTab === 'profile' && (
-          <div className=" lg:mt-5 mt-10   ">
-            {TenantProfileInfo.map((profile, index) => (
-              <div className="lg:flex lg:gap-5 p-5 lg:pb-2" key={index}>
-                <div className="lg:w-1/2  lg:rounded-lg lg:origin-left  ">
-                  <div className="lg:items-center flex gap-3 relative mb-7 ">
-                    <figure>
-                      <img
-                        src={tenant?.user_id.profile_image.image_url}
-                        alt="Profile"
-                        className="lg:w-24 rounded-full object-fill lg:h-24 w-14 h-14"
-                      />
-                    </figure>
-                    <div>
-                      <h2 className="lg:text-2xl text-xl font-bold mb-2">
-                        {tenant?.user_id.name}
-                      </h2>
-                      <h2 className="lg:text-2xl">
-                        Unit - {tenant?.unit_id?.unit_no}
-                      </h2>
-                    </div>
-
-                    <button
-                      onClick={handleDeleteTenant}
-                      className="hidden lg:flex lg:py-2 lg:px-3 absolute top-0 right-3  items-center gap-2 bg-red text-white py-1 px-2 rounded-md hover:bg-red/55"
-                    >
-                      <MdDelete />
-                      Delete
-                    </button>
-                    <button
-                      onClick={handleDownload}
-                      className="btn hidden hover:text-primary-color lg:flex items-center gap-2 absolute right-3 top-12 bg-primary-color text-white p-2 rounded-md "
-                    >
-                      <MdOutlineFileDownload size={20} /> Lease Agreement
-                    </button>
-
-                    <div className="lg:hidden absolute top-1 right-2">
                       <button
-                        className="relative text-xl rotate-90"
-                        onClick={toggleRemoveDot}
+                        onClick={handleDeleteTenant}
+                        className="hidden lg:flex lg:py-2 lg:px-3 absolute top-0 right-3  items-center gap-2 bg-red text-white py-1 px-2 rounded-md hover:bg-red/55"
                       >
-                        <RxDotsVertical />
+                        <MdDelete />
+                        Delete
+                      </button>
+                      <button
+                        onClick={handleDownload}
+                        className="btn hidden hover:text-primary-color lg:flex items-center gap-2 absolute right-3 top-12 bg-primary-color text-white p-2 rounded-md "
+                      >
+                        <MdOutlineFileDownload size={20} /> Lease Agreement
                       </button>
 
-                      {isRemovedot && (
-                        <div className="flex flex-col  absolute right-0 w-fit gap-1  bg-white rounded-md ">
-                          <button
-                            onClick={handleDeleteTenant}
-                            className="flex items-center gap-2 bg-red  text-white p-2 rounded-md hover:opacity-80 transition duration-300 ease-in-out"
-                          >
-                            <MdDelete className="text-lg" /> Delete
-                          </button>
-                          <button className=" flex items-center  gap-2  bg-primary-color w-[10.2rem] text-white p-2 rounded-md hover:bg-opacity-80 transition duration-300 ease-in-out">
-                            <MdOutlineFileDownload size={20} /> Lease Agreement
-                          </button>
+                      <div className="lg:hidden absolute top-1 right-2">
+                        <button
+                          className="relative text-xl rotate-90"
+                          onClick={toggleRemoveDot}
+                        >
+                          <RxDotsVertical />
+                        </button>
+
+                        {isRemovedot && (
+                          <div className="flex flex-col  absolute right-0 w-fit gap-1  bg-white rounded-md ">
+                            <button
+                              onClick={handleDeleteTenant}
+                              className="flex items-center gap-2 bg-red  text-white p-2 rounded-md hover:opacity-80 transition duration-300 ease-in-out"
+                            >
+                              <MdDelete className="text-lg" /> Delete
+                            </button>
+                            <button className=" flex items-center  gap-2  bg-primary-color w-[10.2rem] text-white p-2 rounded-md hover:bg-opacity-80 transition duration-300 ease-in-out">
+                              <MdOutlineFileDownload size={20} /> Lease Agreement
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/*Profile Content */}
+                    {/*Account */}
+                    <div>
+                      <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
+                        <div>
+                          <h1 className="lg:text-xl font-bold ">Account</h1>
                         </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/*Profile Content */}
-                  {/*Account */}
-                  <div>
-                    <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <div>
-                        <h1 className="lg:text-xl font-bold ">Account</h1>
-                      </div>
-                      <div>
-                        <FaEdit
-                          className="lg:text-2xl text-lg cursor-pointer hover:scale-125"
-                          onClick={toggleEditTenantAccountForm}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="mb-4 text-sm mt-3 ml-2 flex flex-col items-start">
-                      <p className="lg:text-lg flex gap-[4.8rem] items-center">
-                        Username
-                        <span className="lg:text-base lg:ml-7 ml-6">
-                          {tenant?.user_id.username}
-                        </span>
-                      </p>
-                      <p className="lg:text-lg flex gap-20 items-center">
-                        Password
-                        <span className="lg:text-base lg:ml-7 ml-6 ">
-                          ******************
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                  {isEditTenantAccountForm && (
-                    <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50">
-                      <div className="lg:w-1/2 bg-white rounded-lg">
-                        <EditTenantAccount
-                          setIsEditTenantAccountForm={
-                            setIsEditTenantAccountForm
-                          }
-                          tenant={tenant}
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {/*Personal Details */}
-
-                  <div>
-                    <div className="flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <h1 className="lg:p-3 lg:pl-2 lg:border-2 lg:border-dark-blue lg:text-xl font-bold ">
-                        Personal Details
-                      </h1>
-                      <FaEdit
-                        className="lg:text-2xl lg:mr-3 text-lg cursor-pointer hover:scale-125"
-                        onClick={toggleEditTenantDetailForm}
-                      />
-                    </div>
-
-                    <div className="mb-4 text-sm mt-3 ml-2 ">
-                      <div className=" flex gap-20">
-                        <div className="lg:text-lg">
-                          <p>Name</p>
-                          <p>Date of Birth</p>
-                          <p>Contact</p>
-                          <p>Email</p>
-                        </div>
-                        <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
-                          <p className="">{tenant?.user_id.name}</p>
-                          <p className="">{birthday}</p>
-                          <p className="">+63{tenant?.user_id.mobile_no}</p>
-                          <p className="">{tenant?.user_id.email}</p>
+                        <div>
+                          <FaEdit
+                            className="lg:text-2xl text-lg cursor-pointer hover:scale-125"
+                            onClick={toggleEditTenantAccountForm}
+                          />
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  {isEditTenantDetailForm && (
-                    <div className="fixed top-0 left-0 w-full z-50 h-full flex items-center justify-center bg-black bg-opacity-50">
-                      <div className="lg:w-1/2 lg:h-[30rem] h-auto bg-white  rounded-lg">
-                        <EditTenantDetails
-                          setIsEditTenantDetailForm={setIsEditTenantDetailForm}
-                          tenant={tenant}
-                        />
+
+                      <div className="mb-4 text-sm mt-3 ml-2 flex flex-col items-start">
+                        <p className="lg:text-lg flex gap-[4.8rem] items-center">
+                          Username
+                          <span className="lg:text-base lg:ml-7 ml-6">
+                            {tenant?.user_id.username}
+                          </span>
+                        </p>
+                        <p className="lg:text-lg flex gap-20 items-center">
+                          Password
+                          <span className="lg:text-base lg:ml-7 ml-6 ">
+                            ******************
+                          </span>
+                        </p>
                       </div>
                     </div>
-                  )}
-
-                  {/*Apartment Details */}
-                  <div>
-                    <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <h1 className="lg:text-xl font-bold ">
-                        Apartment Details
-                      </h1>
-                      <FaEdit
-                        className="lg:text-2xl text-lg cursor-pointer hover:scale-125"
-                        onClick={() =>
-                          setIsEditApartmentForm(!isEditApartmentForm)
-                        }
-                      />
-                    </div>
-                    {isEditApartmentForm && (
-                      <div className="fixed top-0 left-0 w-full z-50 h-full flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="lg:w-1/2   h-auto bg-white  rounded-lg">
-                          <EditApartment
-                            setIsEditApartmentForm={setIsEditApartmentForm}
+                    {isEditTenantAccountForm && (
+                      <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50">
+                        <div className="lg:w-1/2 bg-white rounded-lg">
+                          <EditTenantAccount
+                            setIsEditTenantAccountForm={
+                              setIsEditTenantAccountForm
+                            }
                             tenant={tenant}
                           />
                         </div>
                       </div>
                     )}
 
-                    <div className=" mb-4 text-sm mt-3 ml-2 ">
-                      <div className="flex gap-14">
-                        <div className="lg:text-lg ">
-                          <p>Apartment Unit</p>
-                          <p>Deposit</p>
-                          <p>Date of Move-in</p>
-                        </div>
-                        <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
-                          <p className="">Unit - {tenant?.unit_id?.unit_no}</p>
-                          <p className="">
-                            {tenant?.deposit?.toLocaleString('en-PH', {
-                              style: 'currency',
-                              currency: 'PHP',
-                            })}
-                          </p>
-                          <p className="">
-                            {new Date(
-                              tenant?.monthly_due,
-                            )?.toLocaleDateString()}
-                          </p>
+                    {/*Personal Details */}
+
+                    <div>
+                      <div className="flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
+                        <h1 className="lg:p-3 lg:pl-2 lg:border-2 lg:border-dark-blue lg:text-xl font-bold ">
+                          Personal Details
+                        </h1>
+                        <FaEdit
+                          className="lg:text-2xl lg:mr-3 text-lg cursor-pointer hover:scale-125"
+                          onClick={toggleEditTenantDetailForm}
+                        />
+                      </div>
+
+                      <div className="mb-4 text-sm mt-3 ml-2 ">
+                        <div className=" flex gap-20">
+                          <div className="lg:text-lg">
+                            <p>Name</p>
+                            <p>Date of Birth</p>
+                            <p>Contact</p>
+                            <p>Email</p>
+                          </div>
+                          <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
+                            <p className="">{tenant?.user_id.name}</p>
+                            <p className="">{birthday}</p>
+                            <p className="">+63{tenant?.user_id.mobile_no}</p>
+                            <p className="">{tenant?.user_id.email}</p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-                {/* Right profile */}
-                <div className="lg:w-1/2   lg:overflow-y-auto lg:origin-left lg:border-l-4 lg:border-dark-blue ">
-                  {/*Family Members */}
-                  <div className="relative lg:h-[20rem] h-[15rem] lg:mb-3">
-                    <div className="lg:p-3 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <h1 className="lg:text-xl font-bold">
-                        Household Details
-                      </h1>
-                      <RxDotsVertical
-                        className="lg:text-2xl text-lg cursor-pointer"
-                        onClick={() => toggleDropdown('household')}
-                      />
-                    </div>
-                    {isHousedotOpen && (
-                      <div
-                        ref={dropdownRef}
-                        className="absolute right-0 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400"
-                      >
-                        <div
-                          className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
-                          onClick={() => {
-                            setIsEditFamilyMemForm(!isEditFamilyMemForm)
-                            setIsHouseDotOpen(false)
-                          }}
-                        >
-                          <GrFormView size={25} />
-                          View
-                        </div>
-                        <div
-                          className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
-                          onClick={() => {
-                            setIsAddHouseholdForm(!isAddHouseholdForm)
-                            setIsHouseDotOpen(false)
-                          }}
-                        >
-                          <GrFormAdd size={25} />
-                          Add
+                    {isEditTenantDetailForm && (
+                      <div className="fixed top-0 left-0 w-full z-50 h-full flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="lg:w-1/2 lg:h-[30rem] h-auto bg-white  rounded-lg">
+                          <EditTenantDetails
+                            setIsEditTenantDetailForm={setIsEditTenantDetailForm}
+                            tenant={tenant}
+                          />
                         </div>
                       </div>
                     )}
 
-                    <div className="text-sm md:text-base p-3 flex flex-col gap-5 overflow-y-auto h-[12rem] md:h-[16rem] lg:h-[18rem] ">
-                      {households?.map((val, key) => (
-                        <div
-                          key={key}
-                          className="w-full flex flex-col md:gap-2"
-                        >
-                          <div className="flex gap-5">
-                            <p className="w-1/4">Name:</p>
-                            <span className="w-3/4">{val.name}</span>
-                          </div>
-                          <div className="flex gap-5">
-                            <p className="w-1/4">Mobile:</p>
-                            <span className="w-3/4">{val.mobile}</span>
-                          </div>
-                          <div className="flex gap-5">
-                            <p className="w-1/4">Birthday:</p>
-                            <span className="w-3/4">
-                              {new Date(val.birthday).toLocaleDateString()}
-                            </span>
-                          </div>
-                          <div className="flex gap-5">
-                            <p className="w-1/4">Relationship:</p>
-                            <span className="w-3/4">{val.relationship}</span>
+                    {/*Apartment Details */}
+                    <div>
+                      <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
+                        <h1 className="lg:text-xl font-bold ">
+                          Apartment Details
+                        </h1>
+                        <FaEdit
+                          className="lg:text-2xl text-lg cursor-pointer hover:scale-125"
+                          onClick={() =>
+                            setIsEditApartmentForm(!isEditApartmentForm)
+                          }
+                        />
+                      </div>
+                      {isEditApartmentForm && (
+                        <div className="fixed top-0 left-0 w-full z-50 h-full flex items-center justify-center bg-black bg-opacity-50">
+                          <div className="lg:w-1/2   h-auto bg-white  rounded-lg">
+                            <EditApartment
+                              setIsEditApartmentForm={setIsEditApartmentForm}
+                              tenant={tenant}
+                            />
                           </div>
                         </div>
-                      ))}
+                      )}
+
+                      <div className=" mb-4 text-sm mt-3 ml-2 ">
+                        <div className="flex gap-14">
+                          <div className="lg:text-lg ">
+                            <p>Apartment Unit</p>
+                            <p>Deposit</p>
+                            <p>Date of Move-in</p>
+                          </div>
+                          <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
+                            <p className="">Unit - {tenant?.unit_id?.unit_no}</p>
+                            <p className="">
+                              {tenant?.deposit?.toLocaleString('en-PH', {
+                                style: 'currency',
+                                currency: 'PHP',
+                              })}
+                            </p>
+                            <p className="">
+                              {new Date(
+                                tenant?.monthly_due,
+                              )?.toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  {isEditFamilyMemForm && (
-                    <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
-                      <div className="lg:w-9/12 bg-white  rounded-lg relative">
-                        <EditFamMemTable
-                          id={tenant.user_id._id}
-                          setIsEditFamilyMemForm={setIsEditFamilyMemForm}
+                  {/* Right profile */}
+                  <div className="lg:w-1/2   lg:overflow-y-auto lg:origin-left lg:border-l-4 lg:border-dark-blue ">
+                    {/*Family Members */}
+                    <div className="relative lg:h-[20rem] h-[15rem] lg:mb-3">
+                      <div className="lg:p-3 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
+                        <h1 className="lg:text-xl font-bold">
+                          Household Details
+                        </h1>
+                        <RxDotsVertical
+                          className="lg:text-2xl text-lg cursor-pointer"
+                          onClick={() => toggleDropdown('household')}
                         />
                       </div>
-                    </div>
-                  )}
-
-                  {isAddHouseholdForm && (
-                    <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
-                      <div className="lg:w-1/2 h-auto bg-white rounded-md relative">
-                        <AddHousehold
-                          id={tenant.user_id._id}
-                          setIsAddHouseholdForm={setIsAddHouseholdForm}
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {/*Pets */}
-                  <div className="lg:overflow-y-auto relative">
-                    <div className="lg:p-3 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <h1 className="lg:text-xl font-bold ">Pet Details</h1>
-                      <RxDotsVertical
-                        className="lg:text-2xl text-lg  cursor-pointer"
-                        onClick={() => setIsPetDotOpen(!isPetdotOpen)}
-                      />
-                    </div>
-                    {isPetdotOpen && (
-                      <div
-                        ref={dropdownRef}
-                        className=" absolute right-0 top-15 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray"
-                      >
+                      {isHousedotOpen && (
                         <div
-                          className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
-                          onClick={() => {
-                            setIsEditPetForm(!isEditPetForm)
-                            setIsPetDotOpen(false)
-                          }}
+                          ref={dropdownRef}
+                          className="absolute right-0 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400"
                         >
-                          <GrFormView size={25} />
-                          View
-                        </div>
-                        <div
-                          className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
-                          onClick={() => {
-                            setIsAddPetForm(!isAddPetForm)
-                            setIsPetDotOpen(false)
-                          }}
-                        >
-                          <GrFormAdd size={25} />
-                          Add
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="text-sm md:text-base p-3 flex flex-col gap-5 overflow-y-auto h-[14rem] ">
-                      {pets &&
-                        pets.length > 0 &&
-                        pets.map((pet, index) => (
                           <div
-                            key={index}
+                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
+                            onClick={() => {
+                              setIsEditFamilyMemForm(!isEditFamilyMemForm)
+                              setIsHouseDotOpen(false)
+                            }}
+                          >
+                            <GrFormView size={25} />
+                            View
+                          </div>
+                          <div
+                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
+                            onClick={() => {
+                              setIsAddHouseholdForm(!isAddHouseholdForm)
+                              setIsHouseDotOpen(false)
+                            }}
+                          >
+                            <GrFormAdd size={25} />
+                            Add
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="text-sm md:text-base p-3 flex flex-col gap-5 overflow-y-auto h-[12rem] md:h-[16rem] lg:h-[18rem] ">
+                        {households?.map((val, key) => (
+                          <div
+                            key={key}
                             className="w-full flex flex-col md:gap-2"
                           >
                             <div className="flex gap-5">
                               <p className="w-1/4">Name:</p>
-                              <span className="w-3/4">{pet.name}</span>
+                              <span className="w-3/4">{val.name}</span>
                             </div>
                             <div className="flex gap-5">
-                              <p className="w-1/4">Species:</p>
-                              <span className="w-3/4">{pet.species}</span>
+                              <p className="w-1/4">Mobile:</p>
+                              <span className="w-3/4">{val.mobile}</span>
                             </div>
                             <div className="flex gap-5">
                               <p className="w-1/4">Birthday:</p>
                               <span className="w-3/4">
-                                {new Date(pet.birthday).toLocaleDateString()}
+                                {new Date(val.birthday).toLocaleDateString()}
                               </span>
+                            </div>
+                            <div className="flex gap-5">
+                              <p className="w-1/4">Relationship:</p>
+                              <span className="w-3/4">{val.relationship}</span>
                             </div>
                           </div>
                         ))}
-                    </div>
-                  </div>
-                  {isEditPetForm && (
-                    <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
-                      <div className="lg:w-9/12 bg-white rounded-lg relative">
-                        <EditPetTable
-                          id={tenant?.user_id._id}
-                          setIsEditPetForm={setIsEditPetForm}
-                        />
                       </div>
                     </div>
-                  )}
-                  {isAddPetForm && (
-                    <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
-                      <div className="lg:w-1/2 h-fit bg-white rounded-lg relative">
-                        <AddPet
-                          id={tenant.user_id._id}
-                          setIsAddPetForm={setIsAddPetForm}
-                        />
+                    {isEditFamilyMemForm && (
+                      <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
+                        <div className="lg:w-9/12 bg-white  rounded-lg relative">
+                          <EditFamMemTable
+                            id={tenant?.user_id?._id}
+                            setIsEditFamilyMemForm={setIsEditFamilyMemForm}
+                            handleDeleteClick={handleDeleteClick}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+                    )}
 
-        {activeTab === 'transaction' && (
-          <div className="h-full w-full">
-            <div className="lg:block hidden">
-              <TransactionTable tenant={tenant} />
+                    {isAddHouseholdForm && (
+                      <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
+                        <div className="lg:w-1/2 h-auto bg-white rounded-md relative">
+                          <AddHousehold
+                            id={tenant.user_id._id}
+                            setIsAddHouseholdForm={setIsAddHouseholdForm}
+                            fields={fields}
+                            handleInput={handleInput}
+                            handleSubmit={handleSubmit}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/*Pets */}
+                    <div className="lg:overflow-y-auto relative">
+                      <div className="lg:p-3 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
+                        <h1 className="lg:text-xl font-bold ">Pet Details</h1>
+                        <RxDotsVertical
+                          className="lg:text-2xl text-lg  cursor-pointer"
+                          onClick={() => setIsPetDotOpen(!isPetdotOpen)}
+                        />
+                      </div>
+                      {isPetdotOpen && (
+                        <div
+                          ref={dropdownRef}
+                          className=" absolute right-0 top-15 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray"
+                        >
+                          <div
+                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
+                            onClick={() => {
+                              setIsEditPetForm(!isEditPetForm)
+                              setIsPetDotOpen(false)
+                            }}
+                          >
+                            <GrFormView size={25} />
+                            View
+                          </div>
+                          <div
+                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
+                            onClick={() => {
+                              setIsAddPetForm(!isAddPetForm)
+                              setIsPetDotOpen(false)
+                            }}
+                          >
+                            <GrFormAdd size={25} />
+                            Add
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="text-sm md:text-base p-3 flex flex-col gap-5 overflow-y-auto h-[14rem] ">
+                        {pets &&
+                          pets.length > 0 &&
+                          pets.map((pet, index) => (
+                            <div
+                              key={index}
+                              className="w-full flex flex-col md:gap-2"
+                            >
+                              <div className="flex gap-5">
+                                <p className="w-1/4">Name:</p>
+                                <span className="w-3/4">{pet.name}</span>
+                              </div>
+                              <div className="flex gap-5">
+                                <p className="w-1/4">Species:</p>
+                                <span className="w-3/4">{pet.species}</span>
+                              </div>
+                              <div className="flex gap-5">
+                                <p className="w-1/4">Birthday:</p>
+                                <span className="w-3/4">
+                                  {new Date(pet.birthday).toLocaleDateString()}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                    {isEditPetForm && (
+                      <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
+                        <div className="lg:w-9/12 bg-white rounded-lg relative">
+                          <EditPetTable
+                            id={tenant?.user_id._id}
+                            setIsEditPetForm={setIsEditPetForm}
+                          />
+                        </div>
+                      </div>
+                    )}
+                    {isAddPetForm && (
+                      <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
+                        <div className="lg:w-1/2 h-fit bg-white rounded-lg relative">
+                          <AddPet
+                            id={tenant.user_id._id}
+                            setIsAddPetForm={setIsAddPetForm}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="lg:hidden">
-              <TransactionMobile tenant={tenant} />
+          )}
+
+          {activeTab === 'transaction' && (
+            <div className="h-full w-full">
+              <div className="lg:block hidden">
+                <TransactionTable tenant={tenant} />
+              </div>
+              <div className="lg:hidden">
+                <TransactionMobile tenant={tenant} />
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 

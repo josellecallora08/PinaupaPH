@@ -337,11 +337,9 @@ export const createPayment =
       )
       if (!post_payment.ok) {
         const json = await post_payment.json()
-        console.log(json)
         throw new Error(json)
       }
       const data = await post_payment.json()
-      console.log(data)
       socket.emit('send-payment')
       window.open(data.data.attributes.next_action.redirect.url)
       // }

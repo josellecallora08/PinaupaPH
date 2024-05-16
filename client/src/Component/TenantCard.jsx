@@ -3,7 +3,7 @@ import banner from '/banner.svg'
 const TenantCard = ({ data}) => {
   return (
     <Link to={`/tenantprofile/${data?.user_id?._id}`} className="relative">
-      <div className="lg:text-base flex bg-white w-full h-[11rem] rounded-md relative text-xs shadow-sm shadow-light-gray hover:scale-105  hover:z-10  hover:duration-300 ">
+      <div className="lg:text-base flex bg-white w-full h-[10rem] rounded-md relative text-xs shadow-sm shadow-light-gray hover:scale-105  hover:z-10  hover:duration-300 ">
         <div className='lg:ml-2 size-full max-w-28 flex items-center justify-center'>
           <figure className='size-full max-h-20 max-w-20 rounded-full overflow-hidden'>
             <img

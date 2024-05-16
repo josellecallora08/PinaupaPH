@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Calendar from 'react-calendar'
 import './Calendar.css' // Import the default calendar styles
 
-const Calendars = ({ user }) => {
+const Calendars = ({ user, invoice }) => {
   // Define a function to determine the class name for each date tile
   const tileClassName = ({ date, view }) => {
     // Check if the date is a Sunday
@@ -37,12 +37,20 @@ const Calendars = ({ user }) => {
   // Define a function to render content for each tile (emoji for highlighted days)
   const tileContent = ({ date }) => {
     // Check if the date is the 15th day of the month or the last day of the month
-    if (date.getDate() === new Date(user?.monthly_due).getDate()) {
+    if (date.getDate() === new Date(user?.monthly_due).getDate() && invoice?.isPaid) {
       return (
-        <span className='absolute' role="img" aria-label="emoji">
+        <span className='' role="img" aria-label="emoji">
           💸
         </span>
       ) // Emoji for highlighted days
+    } else {
+      if (date.getDate() === new Date(user?.monthly_due).getDate()) {
+        return (
+          <span className='' role="img" aria-label="emoji">
+            💸
+          </span>
+        ) // Em
+      }
     }
     return null
   }

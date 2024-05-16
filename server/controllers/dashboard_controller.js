@@ -5,6 +5,11 @@ const UNITMODEL = require('../models/unit')
 const REPORTMODEL = require('../models/report')
 const httpStatusCodes = require('../constants/constants')
 
+
+module.exports.calendarFetch = async (req,res) => {
+  
+}
+
 module.exports.delayedRents = async (req, res) => {
   try {
     const { year } = req.query

@@ -21,6 +21,7 @@ const CreateTicket = ({
   handleSubmit,
 }) => {
   const modalRef = useRef(null)
+  const [inputKey, setInputKey] = useState(Date.now()) // Add state for input key
 
   const handleClickOutside = (event) => {
     if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -34,8 +35,14 @@ const CreateTicket = ({
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+
+  const handleDeleteImage = () => {
+    setImage(null)
+    setInputKey(Date.now()) // Update input key to force re-render
+  }
+
   return (
-    <div className="fixed top-10 left-1/4 w-1/2 h-auto  flex items-center justify-center bg-opacity-50 z-50">
+    <div className="fixed top-10 left-1/4 w-1/2 h-auto flex items-center justify-center bg-opacity-50 z-50">
       <div ref={modalRef} className="lg:w-9/12 bg-white rounded-lg relative">
         <div className="relative w-full flex py-4 rounded-tl-lg rounded-tr-lg bg-dark-blue text-white items-center">
           <h1 className="lg:text-xl ml-5 text-lg font-bold">Create Ticket</h1>
@@ -45,6 +52,7 @@ const CreateTicket = ({
           className="lg:w-full lg:pt-4 w-[20rem] bg-white h-[30rem] px-4 overflow-y-auto"
         >
           <button
+            type="button"
             className="absolute top-4 right-6"
             onClick={() => setisCreateTicket((prevState) => !prevState)}
           >
@@ -61,6 +69,7 @@ const CreateTicket = ({
               type="text"
               id="title"
               name="title"
+              value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter Title"
               className="text-sm bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -81,7 +90,7 @@ const CreateTicket = ({
               style={{ color: type ? 'black' : 'gray', borderColor: 'black' }}
               className="mt-1 block w-full p-2 bg-white border text-sm rounded-md focus:outline-none focus:ring focus:ring-blue-200"
             >
-              <option value="" disabled selected hidden>
+              <option value="" disabled hidden>
                 Maintenance Request
               </option>
               <option value="plumbing">Plumbing</option>
@@ -108,37 +117,45 @@ const CreateTicket = ({
           <div>
             <label
               htmlFor="addImage"
-              className="mt-4 block text-sm font-medium text-dark-gray"
+              className="mt-4 block text-sm font-medium text-dark-gray "
             >
               Attachment
             </label>
-            <div className="mt-1 flex justify-center items-center">
+            <div className="mt-1 flex justify-center items-center ">
               <label
                 htmlFor="attached_image"
                 className="cursor-pointer bg-white border border-gray-300 p-2 rounded-md w-full"
               >
-                <span className="text-dark-gray flex items-center gap-2">
+                <span className="text-dark-gray flex items-center gap-2 ">
                   <CiImageOn color="black" size={25} />
                   Attach your photo here.
                 </span>
                 <input
+                  key={inputKey} // Use key to force re-render
                   type="file"
                   id="attached_image"
                   name="attached_image"
                   accept="image/*"
                   onChange={handleImageChange}
-                  className="hidden"
+                  className="hidden "
                 />
               </label>
             </div>
           </div>
           {attached_image && (
-            <div className="flex justify-center mt-2">
+            <div className="relative flex flex-col items-center mt-2">
               <img
                 src={URL.createObjectURL(attached_image)}
                 alt="Attached Image"
                 className="w-[10rem] h-auto"
               />
+              <button
+                type="button"
+                onClick={handleDeleteImage}
+                className="text-red text-lg font-bold absolute top-0 right-1/4"
+              >
+                <IoMdClose />
+              </button>
             </div>
           )}
           <div className="flex justify-end mt-5 mb-3 gap-3">
@@ -149,7 +166,8 @@ const CreateTicket = ({
               Submit
             </button>
             <button
-              className="bg-red-500 bg-red text-white font-bold py-2 px-4 rounded"
+              type="button"
+              className="bg-red text-white font-bold py-2 px-4 rounded"
               onClick={() => setisCreateTicket((prevState) => !prevState)}
             >
               Close

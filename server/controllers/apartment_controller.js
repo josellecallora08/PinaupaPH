@@ -1,6 +1,7 @@
 const APARTMENTMODEL = require('../models/apartment')
 const UNITMODEL = require('../models/unit')
 const CCTVMODEL = require('../models/cctv')
+const TENANTMODEL = require('../models/tenant')
 const httpStatusCodes = require('../constants/constants')
 const cloudinary = require('cloudinary').v2
 
@@ -227,6 +228,12 @@ module.exports.edit_apartment = async (req, res) => {
 module.exports.delete_apartment = async (req, res) => {
   try {
     const { apartment_id } = req.params
+
+    const tenant = await TENANTMODEL.find()
+    const isOccupied = tenant.some((item) => item.apartment_id === apartment_id)
+    if (isOccupied) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: "Unable to delete apartment with tenants." })
+    }
     const response = await APARTMENTMODEL.findByIdAndDelete({
       _id: apartment_id,
     })
@@ -400,7 +407,7 @@ module.exports.edit_apartment_unit = async (req, res) => {
     )
     if (unit.unit_no !== unit_no) {
       unitExist = apartment.units.some(
-        (item) => item.unit_no === unit_no, 
+        (item) => item.unit_no === unit_no,
       )
       if (unitExist) {
         return res
