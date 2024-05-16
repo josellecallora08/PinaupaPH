@@ -16,6 +16,8 @@ const LeaseCard = ({ val, handleDelete }) => {
             src={val?.tenant_id?.user_id?.profile_image?.image_url}
             alt="Profile"
           />
+      {/* check */}
+
         </figure>
         <div className="py-6 align-middle">
           <h1 className="text-nowrap">{val?.tenant_id?.user_id?.name}</h1>

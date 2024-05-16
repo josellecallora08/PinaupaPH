@@ -90,6 +90,8 @@ const AddLease = ({ setModal }) => {
               >
                 {loading ? 'Downloading...' : 'Submit'}
               </button>
+      {/* check */}
+
               <button
                 type="button"
                 onClick={() => setModal((prevState) => !prevState)}

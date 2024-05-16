@@ -73,6 +73,7 @@ const Announcement = () => {
 
   return (
     <div className="w-full h-screen bg-white1">
+      {/* check */}
       {/* Top of Announcement Tab */}
       <div className="w-11/12 m-auto h-full ">
         <h1 className="uppercase font-bold py-5">Announcement </h1>

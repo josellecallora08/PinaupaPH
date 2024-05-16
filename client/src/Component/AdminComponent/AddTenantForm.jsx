@@ -50,6 +50,7 @@ const AddTenantForm = ({
             color="white"
           />
         </button>
+      {/* check */}
         {/* <h1 className="lg:mt-5 text-xl font-bold mb-4">Personal Details</h1> */}
         <div className="mb-4">
           <label
