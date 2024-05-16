@@ -43,21 +43,19 @@ const Tenant = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(createTenant(fields))
-    if (error || msg) {
-      setIsAddTenantFormOpen((prevState) => !prevState)
-      setFields({
-        name: '',
-        username: '',
-        birthday: '',
-        mobile_no: '',
-        email: '',
-        password: '',
-        unit_id: '',
-        apartment_id: '',
-        deposit: '',
-        occupancy: '',
-      })
-    }
+    setIsAddTenantFormOpen((prevState) => !prevState)
+    setFields({
+      name: '',
+      username: '',
+      birthday: '',
+      mobile_no: '',
+      email: '',
+      password: '',
+      unit_id: '',
+      apartment_id: '',
+      deposit: '',
+      occupancy: '',
+    })
   }
 
   const toggleAddTenantForm = () => {

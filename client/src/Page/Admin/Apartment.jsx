@@ -54,7 +54,6 @@ const Apartment = () => {
     e.preventDefault()
     dispatch(createApartment(fields))
     setIsAddApartmentFormOpen(prevState => !prevState)
-
   }
 
   return (
