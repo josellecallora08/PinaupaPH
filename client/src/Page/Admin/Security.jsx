@@ -69,7 +69,8 @@ const Security = () => {
 
   return (
     <>
-      <div className="w-11/12 mx-auto">
+      <div className='w-full h-full bg-white1'>
+      <div className="w-11/12 mx-auto ">
         <div className="flex justify-between items-center p-4">
           <div>
             <h1 className="font-bold h-fit m-auto py-5 lg:py-0">
@@ -154,6 +155,7 @@ const Security = () => {
           </div>
         </div>
       )}
+      </div>
     </>
   );
 };
