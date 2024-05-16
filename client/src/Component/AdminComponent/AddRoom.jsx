@@ -51,6 +51,8 @@ const AddRoom = ({ apartment_id, setIsAddRoomFormOpen }) => {
             Add Apartment Unit Details
           </h1>
         </div>
+      {/* check */}
+
         <form onSubmit={handleSubmit} className="lg:w-[30rem] w-[22rem] h-auto pt-8 px-4 ">
           <button className="absolute top-4 right-6">
             <IoMdClose

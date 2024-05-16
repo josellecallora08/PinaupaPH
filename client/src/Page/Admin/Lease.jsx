@@ -37,6 +37,8 @@ const Least = () => {
             <Link to={'/dashboard'} className="hover:underline">
               DOCUMENTS
             </Link>{' '}
+      {/* check */}
+
             /{' '}
             <Link to={`/document/lease-agreement`} className="hover:underline">
               LEASE AGREEMENTS{' '}

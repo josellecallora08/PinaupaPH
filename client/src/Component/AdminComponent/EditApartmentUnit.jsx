@@ -54,6 +54,8 @@ const EditApartmentUnit = ({ apartmentId, val, setIsEditApartmentUnit }) => {
   return (
     <>
       <div className="relative" ref={modalRef}>
+      {/* check */}
+
         <div className="relative w-full flex py-4 rounded-tl-lg rounded-tr-lg bg-dark-blue text-white items-center ">
           <h1 className="lg:text-xl ml-5 text-lg font-bold ">Edit Apartment Unit</h1>
         </div>
