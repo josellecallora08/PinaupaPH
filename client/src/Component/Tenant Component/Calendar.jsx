@@ -39,14 +39,14 @@ const Calendars = ({ user, invoice }) => {
     // Check if the date is the 15th day of the month or the last day of the month
     if (date.getDate() === new Date(user?.monthly_due).getDate() && invoice?.isPaid) {
       return (
-        <span className='absolute' role="img" aria-label="emoji">
+        <span className='' role="img" aria-label="emoji">
           💸
         </span>
       ) // Emoji for highlighted days
     } else {
       if (date.getDate() === new Date(user?.monthly_due).getDate()) {
         return (
-          <span className='absolute' role="img" aria-label="emoji">
+          <span className='' role="img" aria-label="emoji">
             💸
           </span>
         ) // Em

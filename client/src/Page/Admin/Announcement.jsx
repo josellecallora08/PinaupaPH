@@ -140,8 +140,8 @@ const Announcement = () => {
                   key={key}
                   className="relative bg-white p-4 rounded-md shadow-md w-full mb-6"
                 >
-                  <div className="flex ">
-                    <div className="  flex flex-col justify-center md:w-auto  border-r-2 border-gray w-[40%] pr-1  items-center mr-5">
+                  <div className="flex pr-1 ">
+                    <div className="  flex flex-col justify-center md:w-auto  border-r-2 border-gray w-[40%] pr-5  items-center mr-5">
                       <p className="text-light-gray md:text-base text-xs flex text-center">
                         <span>{new Date(val.createdAt).toDateString()}</span>
                       </p>
@@ -153,14 +153,14 @@ const Announcement = () => {
                     </div>
 
                     <div className="flex flex-col w-[80%] ">
-                      <p className="font-semibold text-lg">{val.title}</p>
+                      <p className="font-semibold lg:text-lg ">{val.title}</p>
 
-                      <p className="text-light-gray">{val.description}</p>
+                      <p className="text-light-gray overflow-y-auto h-24 lg:mt-0 mt-3">{val.description}</p>
                     </div>
                   </div>
                   <div
                     onClick={() => toggleDropdown(val._id)}
-                    className="absolute top-3 right-2 text-xl cursor-pointer"
+                    className="absolute top-3 right-1 text-xl cursor-pointer"
                   >
                     <BsThreeDotsVertical className="relative" />
                   </div>

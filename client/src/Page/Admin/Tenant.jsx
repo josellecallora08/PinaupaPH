@@ -16,7 +16,7 @@ const Tenant = () => {
   const [searchItem, setSearchItem] = useState('')
   const [isAddTenantFormOpen, setIsAddTenantFormOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState('')
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   const [fields, setFields] = useState({
     name: '',
@@ -129,9 +129,9 @@ const Tenant = () => {
           </div>
 
           {/* Body of Tenant Tab */}
-          <div className="lg:grid-cols-3  md:grid-cols-1 grid grid-cols-1 md:mr-10 gap-4 ">
+          <div className="lg:grid-cols-3  md:grid-cols-1 grid grid-cols-1 md:mr-10 gap-4 pb-5 ">
             {loading ?
-              <SearchLoading /> : selectedOption !== '' ? tenant?.filter((item) => !item?.user_id?.isDelete && item?.apartment_id?._id === selectedOption).map((val, key) => (
+              <SearchLoading /> : selectedOption !== '' ? tenant?.filter((item) => !item?.user_id?.isDelete && item?.apartment_id._id === selectedOption).map((val, key) => (
                 <TenantCard key={key} data={val} />
               )) : tenant?.filter(item => !item?.user_id?.isDelete).map((val, key) => (
                 <TenantCard key={key} data={val} />

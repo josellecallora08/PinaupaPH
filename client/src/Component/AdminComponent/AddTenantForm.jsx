@@ -50,7 +50,6 @@ const AddTenantForm = ({
             color="white"
           />
         </button>
-      {/* check */}
         {/* <h1 className="lg:mt-5 text-xl font-bold mb-4">Personal Details</h1> */}
         <div className="mb-4">
           <label
@@ -173,7 +172,7 @@ const AddTenantForm = ({
             onChange={handleInput}
             className="w-full py-2 px-3 border-2 border-[#9e9e9e] rounded"
           >
-            <option className="rounded-none" value="">
+            <option className="rounded-none" value="" hidden>
               Select Apartment Building
             </option>
             {apartment?.map((val, key) => (
