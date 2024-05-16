@@ -147,7 +147,7 @@ const ViewConcern = () => {
                 </div>
 
                 {isDotOpen && (
-                  <div className="absolute top-16 right-6 shadow-sm shadow-dark-gray bg-white  ">
+                  <div className="absolute top-9 right-6 shadow-sm shadow-dark-gray bg-white  ">
                     {report?.status === false && (
                       <div
                         onClick={handleComplete}

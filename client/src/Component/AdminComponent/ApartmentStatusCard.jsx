@@ -25,8 +25,8 @@ const ApartmentStatusCard = ({ apartmentId, val }) => {
   return (
     <>
       <div className=" relative flex  overflow-hidden shadow-md shadow-gray rounded-lg">
-        <div className="text-4xl text-white flex items-center justify-center flex-1 px-5 bg-dark-blue">
-          <h1 className='text-4xl font-black'>{val?.unit_no}</h1>
+        <div className=" text-white flex items-center justify-center w-32 px-5 bg-dark-blue">
+          <h1 className='text-2xl font-black'>{val?.unit_no}</h1>
         </div>
 
         <div className="relative pt-8 flex-grow bg-white ">
