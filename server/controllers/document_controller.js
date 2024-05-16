@@ -160,7 +160,7 @@ module.exports.createContract = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'Tenant Not found' })
     }
-    const reference = `Lease_Agreement_${response.unit_id.unit_no}-${response.user_id.name}-${month}${day}${year}`
+    const reference = `Lease_Agreement_${response.unit_id.unit_no}-${response.user_id.name}` //-${month}${day}${year}
     const existingInvoice = await cloudinary.search
       .expression(`public_id:${reference}`)
       .execute()

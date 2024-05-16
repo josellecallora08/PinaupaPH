@@ -40,7 +40,7 @@ module.exports.scheduledInvoice = () => {
           // Calculate the difference in days between current date and due date
           const daysDifference = Math.floor((due - current_date) / DAY_IN_MS)
 
-          if (daysDifference <= 7) {
+          if (daysDifference == 7) {
             // Check if the due date is today
             const ref_user = item.user_id._id.toString().slice(-3)
             const ref_unit = item.unit_id.unit_no
@@ -123,44 +123,10 @@ module.exports.scheduledInvoice = () => {
                 )
                 .end(pdfBuffer)
             })
-            // const intent = await fetch(
-            //   `${process.env.PAYMONGO_CREATE_INTENT}`,
-            //   {
-            //     method: 'POST',
-            //     headers: {
-            //       accept: 'application/json',
-            //       'content-type': 'application/json',
-            //       authorization: `Basic ${Buffer.from(process.env.PAYMONGO_SECRET_KEY).toString('base64')}`,
-            //     },
-            //     body: JSON.stringify({
-            //       data: {
-            //         attributes: {
-            //           amount: item.unit_id.rent,
-            //           payment_method_allowed: ['paymaya', 'gcash', 'grab_pay'],
-            //           payment_method_options: {
-            //             card: { request_three_d_secure: 'any' },
-            //           },
-            //           currency: 'PHP',
-            //           capture_type: 'automatic',
-            //           statement_descriptor: 'Rental Fee',
-            //           description: 'Monthly Rent',
-            //         },
-            //       },
-            //     }),
-            //   },
-            // )
-            // if (!intent) {
-            //   console.log('Error in Creating Paymnt Intent...')
-            //   continue
-            // }
-            // const json = await intent.json()
-
-            await INVOICEMODEL.create({
+            const response = await INVOICEMODEL.create({
               tenant_id: item._id,
               'pdf.public_id': cloudinaryResponse.public_id,
               'pdf.pdf_url': cloudinaryResponse.secure_url,
-              // 'intent.clientKey': json.data.attributes.client_key,
-              // 'intent.paymentIntent': json.data.id,
               'pdf.reference': reference,
               amount,
             })
@@ -188,8 +154,30 @@ module.exports.scheduledInvoice = () => {
             const mailOptions = {
               from: 'pinaupaph@gmail.com',
               to: `${item?.user_id.email}`,
-              subject: 'Invoice',
-              text: 'Email Body',
+              subject: `Urgent: Your Invoice for ${item?.unit_id.unit_no} is Due Soon!`,
+              html: `
+        <html>
+        <body>
+          <p>Dear ${item?.user_id.name},</p>
+          <p>I hope this email finds you well.</p>
+          <p>This is to inform you that an invoice has been sent your way for your <strong>Unit ${item?.unit_id.unit_no}</strong>.</p>
+          <p>Here's what you need to know:</p>
+          <ul>
+            <li>Invoice Number: <strong>${reference} </strong></li>
+            <li>Invoice Date: <strong>${new Date(response.createdAt).toDateString()}</strong></li>
+            <li>Due Date: <strong>${new Date(item?.monthly_due).toDateString()}</strong></li>
+            <li>Total Amount: <strong>${(response?.amount).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
+            <li>Previous Balance: <strong>${(item?.balance - response.amount).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
+          </ul>
+          <p>Attached to this email, you will find the invoice file for your reference and records.</p>
+          <p>If you have any questions or concerns regarding this invoice, please feel free to reach out to me.</p>
+          <p>Thank you for your prompt attention to this matter.</p>
+          <p>Best regards,</p>
+          <strong>Wendell C. Ibias</sitem
+          <strong>Apartment Owner</strong>
+          <strong>09993541054</strong>
+        </body>
+        </html>`,
               attachments: [
                 {
                   filename: 'invoice.pdf',
@@ -207,7 +195,6 @@ module.exports.scheduledInvoice = () => {
               }
             })
             await item.save()
-
           }
         }
       } catch (error) {
@@ -244,4 +231,3 @@ module.exports.deleteOTP = () => {
     }
   })
 }
-

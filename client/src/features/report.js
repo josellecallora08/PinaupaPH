@@ -15,13 +15,14 @@ const reportSlice = createSlice({
     fetchReportStart: (state) => {
       state.loading = true
       state.error = null
+      state.msg = null
     },
-    insertReportSuccess: (state,action) => {
-      state.loading = false
-      state.data = [...state.data, action.payload.response]
-      state.msg = action.payload.msg
+    insertReportSuccess: (state, action) => {
+      state.loading = false;
+      state.data = [...state.data, action.payload.response];
+      state.msg = action.payload.msg;
     },
-    fetchReportsSuccess: (state, action) => {
+  fetchReportsSuccess: (state, action) => {
       state.loading = false
       state.data = action.payload
     },
@@ -92,7 +93,7 @@ export const createReport =
   (user_id, title, description, attached_image, type) => async (dispatch) => {
     try {
       const token = Cookies.get('token')
-      // dispatch(fetchReportStart())
+      dispatch(fetchReportStart())
       const formData = new FormData()
       formData.append('attached_image', attached_image)
       formData.append('title', title)

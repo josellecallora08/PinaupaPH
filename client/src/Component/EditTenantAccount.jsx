@@ -11,10 +11,7 @@ const EditTenantAccount = ({ setIsEditTenantAccountForm, tenant }) => {
     newpassword: '',
     confirmpassword: '',
   })
-  const [isFormOpen, setIsFormOpen] = useState(false)
-  const toggleForm = () => {
-    setIsFormOpen(!isFormOpen)
-  }
+
   const handleInput = (e) => {
     const { name, value } = e.target
     setFields({
@@ -25,7 +22,7 @@ const EditTenantAccount = ({ setIsEditTenantAccountForm, tenant }) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(editUser(tenant?.user_id._id, fields))
-    toggleForm()
+    setIsEditTenantAccountForm((prevState) => !prevState)
   }
   return (
     <div className="relative">

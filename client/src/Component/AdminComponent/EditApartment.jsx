@@ -13,7 +13,7 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
   const msg = useSelector((state) => state.user.msg)
   const [apartmentBldg, setApartmentBldg] = useState('')
   const [fields, setFields] = useState({
-    unit_no: tenant?.unit_id.unit_no || '',
+    unit_no: tenant?.unit_id?.unit_no || '',
     deposit:
       tenant?.deposit !== null && tenant?.deposit !== undefined
         ? String(tenant?.deposit)
@@ -41,13 +41,8 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(editUserApartment(tenant?.user_id?._id, fields))
-    if (msg || error) {
-      console.log(msg)
-      console.log(error)
-      setIsEditApartmentForm((prevState) => !prevState)
-    }
+    setIsEditApartmentForm((prevState) => !prevState)
   }
-
 
   return (
     <>
@@ -86,9 +81,7 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
               onChange={(e) => setApartmentBldg(e.target.value)}
               className="w-full py-2 px-3 border-2 border-[#9e9e9e] rounded"
             >
-              <option className="rounded-none">
-                Select Apartment
-              </option>
+              <option className="rounded-none">Select Apartment</option>
               {apartment
                 // ?.filter((item) => item.occupied === false)
                 ?.map((val, key) => (
@@ -162,7 +155,10 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
             />
           </div>
           <div className="flex justify-end mt-5 gap-3">
-            <button type='submit' className=" bg-dark-blue text-white font-bold py-2 px-4 rounded">
+            <button
+              type="submit"
+              className=" bg-dark-blue text-white font-bold py-2 px-4 rounded"
+            >
               Submit
             </button>
             <button

@@ -1,9 +1,14 @@
 import React, { useState } from 'react'
 import { IoMdClose } from 'react-icons/io'
 // import { useDispatch, useSelector } from 'react-redux'
-const AddHousehold = ({ id, setIsAddHouseholdForm, fields, handleInput, handleSubmit }) => {
+const AddHousehold = ({
+  id,
+  setIsAddHouseholdForm,
+  fields,
+  handleInput,
+  handleSubmit,
+}) => {
   // const error = useSelector((state) => state.household.error)
-
 
   return (
     <div className="relative">
@@ -23,7 +28,7 @@ const AddHousehold = ({ id, setIsAddHouseholdForm, fields, handleInput, handleSu
             color="white"
           />
         </button>
-{/* 
+        {/* 
         {error && (
           <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
             {error}
@@ -41,7 +46,7 @@ const AddHousehold = ({ id, setIsAddHouseholdForm, fields, handleInput, handleSu
             type="text"
             name="name"
             onChange={handleInput}
-            value={fields.name}
+            value={fields?.name}
             placeholder="Enter your name"
             className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />

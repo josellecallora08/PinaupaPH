@@ -17,7 +17,7 @@ import { GrFormView, GrFormAdd } from 'react-icons/gr'
 import Addpet from '../../Component/AddPet'
 import EditPetTable from '../../Component/EditPetTable'
 import { generateDocument } from '../../features/documents'
-import { fetchHousehold, fetchHouseholds } from '../../features/household'
+import { createHousehold, deleteHousehold, fetchHousehold, fetchHouseholds } from '../../features/household'
 import { fetchPets } from '../../features/pet'
 import EditTenantDetails from '../../Component/EditTenantDetails'
 import { isLoggedin } from '../../features/authentication'
@@ -33,6 +33,7 @@ const TenantProfile = () => {
   const [isAddHouseholdForm, setIsAddHouseholdForm] = useState(false)
   const [isAddPetForm, setIsAddPetForm] = useState(false)
   const [isRemovedot, setIsRemovedot] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
   const dispatch = useDispatch()
   const tenant = useSelector((state) => state.auth.user)
   const households = useSelector((state) => state.household.data)
@@ -94,12 +95,41 @@ const TenantProfile = () => {
         selectedFile,
       ),
     )
-    if (msg || error || single) {
-      setChangeModal(false)
-      // setIsVisible((prevState) => !prevState)
+    setChangeModal(false)
+    // setIsVisible((prevState) => !prevState)
+  }
+  const [fields, setFields] = useState({
+    name: '',
+    mobile: '',
+    birthday: '',
+    relationship: '',
+  })
+
+  const handleInput = (e) => {
+    const { name, value } = e.target
+    setFields((states) => ({
+      ...states,
+      [name]: value,
+    }))
+  }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    dispatch(createHousehold(tenant?.user_id._id, fields))
+    setIsVisible((prevState) => !prevState)
+    setIsAddHouseholdForm((prevState) => !prevState)
+    setFields({
+      name: '',
+      mobile: '',
+      birthday: '',
+      relationship: '',
+    })
+  }
+  const handleDeleteClick = async (contactId) => {
+    if (window.confirm('Are you sure you want to delete this household?')) {
+      dispatch(deleteHousehold(tenant?.user_id._id, contactId))
+      setIsVisible((prevState) => !prevState)
     }
   }
-
   useEffect(() => {
     dispatch(isLoggedin())
   }, [handleConfirm])
@@ -398,6 +428,7 @@ const TenantProfile = () => {
                         <EditFamMemTable
                           id={tenant?.user_id._id}
                           setIsEditFamilyMemForm={setIsEditFamilyMemForm}
+                          handleDeleteClick={handleDeleteClick}
                         />
                       </div>
                     </div>
@@ -409,6 +440,9 @@ const TenantProfile = () => {
                         <AddHousehold
                           id={tenant.user_id._id}
                           setIsAddHouseholdForm={setIsAddHouseholdForm}
+                          fields={fields}
+                          handleInput={handleInput}
+                          handleSubmit={handleSubmit}
                         />
                       </div>
                     </div>

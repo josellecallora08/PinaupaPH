@@ -188,6 +188,7 @@ export const editUser = (userId, credentials) => async (dispatch) => {
 
     if (!response.ok) {
       const json = await response.json()
+      console.log(json)
       throw new Error(json.error)
     }
 
@@ -222,7 +223,7 @@ export const editUserApartment = (userId, credentials) => async (dispatch) => {
     }
 
     const json = await response.json()
-    console.log("asdas",json)
+    console.log('asdas', json)
     dispatch(editSingleUser(json))
     // dispatch(fetchUser(userId))
   } catch (err) {

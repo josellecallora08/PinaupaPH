@@ -213,6 +213,7 @@ export const deleteApartment = (apartment_id) => async (dispatch) => {
     )
     if (!response.ok) {
       const json = await response.json()
+      console.log(json)
       throw new Error(json.error)
     }
     const json = await response.json()

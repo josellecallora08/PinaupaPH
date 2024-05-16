@@ -10,8 +10,15 @@ const Calendars = ({ user, invoice }) => {
       return 'sunday' // Apply the 'sunday' class name for Sundays
     }
     // Check if the date is the 15th day of the month or the last day of the month
-    if (date.getDate() === new Date(user?.monthly_due).getDate()) {
+    if (date.getDate() === new Date(invoice?.due).getDate()) {
       return 'border-2 rounded-md bg-primary-color/50 shadow-lg' // Apply the 'highlighted-day' class name for the specified days
+    }
+
+    if (
+      date.getDate() === new Date(invoice?.datePaid).getDate() &&
+      date.getMonth() === new Date(invoice?.datePaid).getMonth()
+    ) {
+      return `border-2 rounded-md ${new Date(invoice?.datePaid) > new Date(invoice?.due) && 'bg-red/20'} shadow-lg` // Apply the 'highlighted-day' class name for the specified days
     }
     // Return an empty string for other dates
     return ''
@@ -37,20 +44,27 @@ const Calendars = ({ user, invoice }) => {
   // Define a function to render content for each tile (emoji for highlighted days)
   const tileContent = ({ date }) => {
     // Check if the date is the 15th day of the month or the last day of the month
-    if (date.getDate() === new Date(user?.monthly_due).getDate() && invoice?.isPaid) {
+    if (
+      date.getDate() === new Date(invoice?.datePaid).getDate() &&
+      date.getMonth() === new Date(invoice?.datePaid).getMonth()
+    ) {
+      return <span className="xl:absolute" role="img" aria-label="emoji">
+        💸
+      </span> // Emoji for highlighted days
+    }
+    if (date.getDate() === new Date(user?.monthly_due).getDate()) {
       return (
-        <span className='' role="img" aria-label="emoji">
+        <span className="" role="img" aria-label="emoji">
+          
+        </span>
+      ) // Em
+    }
+    if (date.getDate() === new Date(invoice?.due).getDate()) {
+      return (
+        <span className="" role="img" aria-label="emoji">
           💸
         </span>
-      ) // Emoji for highlighted days
-    } else {
-      if (date.getDate() === new Date(user?.monthly_due).getDate()) {
-        return (
-          <span className='' role="img" aria-label="emoji">
-            💸
-          </span>
-        ) // Em
-      }
+      ) // Em // Apply the 'highlighted-day' class name for the specified days
     }
     return null
   }
