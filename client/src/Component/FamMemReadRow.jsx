@@ -17,7 +17,7 @@ const ReadRow = ({id, contact, handleEditClick,handleDeleteClick }) => {
           >
             <RiEditBoxFill />
           </button>
-          <button type='button' onClick={() => handleDeleteClick(id,contact._id)} className=' text-2xl text-red'> <AiFillCloseSquare/></button>
+          <button type='button' onClick={() => handleDeleteClick(contact._id)} className=' text-2xl text-red'> <AiFillCloseSquare/></button>
         </td>
       </tr>
    

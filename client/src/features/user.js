@@ -217,12 +217,14 @@ export const editUserApartment = (userId, credentials) => async (dispatch) => {
 
     if (!response.ok) {
       const json = await response.json()
+      console.log(json)
       throw new Error(json.error)
     }
 
-    // const json = await user.json()
-    // dispatch(editUserSuccess(userId))
-    dispatch(fetchUser(userId))
+    const json = await response.json()
+    console.log("asdas",json)
+    dispatch(editSingleUser(json))
+    // dispatch(fetchUser(userId))
   } catch (err) {
     dispatch(actionUserFailed(err.message))
   }

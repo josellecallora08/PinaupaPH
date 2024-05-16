@@ -5,14 +5,17 @@ import { FaPlus } from 'react-icons/fa6'
 import AddLease from '../../Component/AdminComponent/AddLease'
 import { Link } from 'react-router-dom'
 import 'react-datepicker/dist/react-datepicker.css'
+import Loading from '../../Component/LoadingComponent/Loading'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteDocument, fetchDocuments, searchContract } from '../../features/documents'
+import { createDocument, deleteDocument, fetchDocuments, searchContract } from '../../features/documents'
 
 const Least = () => {
   const dispatch = useDispatch()
+  const loading = useSelector((state) => state.docs.loading)
   const contracts = useSelector((state) => state.docs.data)
   const [modal, setModal] = useState(false)
   const [searchItem, setSearchItem] = useState('')
+  const [selectedUser, setSelectedUser] = useState(null)
   const toggleModal = () => {
     setModal(!modal)
   }
@@ -20,6 +23,12 @@ const Least = () => {
 
   const handleSearch = (e) => {
     setSearchItem(e.target.value)
+  }
+
+  const handleLease = (e) => {
+    e.preventDefault()
+    dispatch(createDocument(selectedUser.value))
+    setModal((state) => !state)
   }
 
   const handleDelete = (id) => {
@@ -39,7 +48,8 @@ const Least = () => {
 
   return (
     <>
-      {modal && <AddLease setModal={setModal} />}
+      {loading && <Loading />}
+      {modal && <AddLease setModal={setModal} selectedUser={selectedUser} setSelectedUser={setSelectedUser} handleLease={handleLease} />}
       <div className="w-full m-auto h-full flex flex-col bg-white1  ">
         <div className="w-11/12 h-full m-auto">
           <div className="lg:text-base pt-5 font-bold">

@@ -147,6 +147,7 @@ export const fetchUnitsApartment = (apartment_id) => async (dispatch) => {
     )
     if (!response.ok) {
       const error = await response.json()
+      console.log(error)
       throw new Error(error.error)
     }
     const json = await response.json()

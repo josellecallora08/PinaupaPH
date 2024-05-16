@@ -141,8 +141,8 @@ const ConcernList = () => {
                   selected === 'all'
                     ? item?.sender_id?.user_id?._id === user?.user_id?._id
                     : item?.sender_id?.user_id?._id === user?.user_id?._id &&
-                      selected !== 'all' &&
-                      item.status.toString() === selected.toString(),
+                    selected !== 'all' &&
+                    item.status.toString() === selected.toString(),
                 )
                 .map((val, key) => (
                   <ConcernCard key={key} val={val} num={key} />

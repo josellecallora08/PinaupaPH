@@ -187,7 +187,7 @@ const TenantHome = () => {
                 Calendar
               </div>
               <div className="w-full h-full">
-                <Calendar user={user} />
+                <Calendar user={user} invoice={invoice} />
               </div>
             </div>
 

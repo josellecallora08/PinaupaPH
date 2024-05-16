@@ -53,54 +53,56 @@ const Apartment = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     dispatch(createApartment(fields))
-    if (error || msg) {
-      setIsAddApartmentFormOpen(prevState => !prevState)
-    }
-    
-  } 
+    setIsAddApartmentFormOpen(prevState => !prevState)
+
+  }
 
   return (
-    <div className="w-full h-screen bg-white1">
-      {/* Top of Apartment Tab */}
-      <div className="w-11/12 m-auto h-full ">
-        <h1 className="uppercase font-bold py-5">Apartments Listing </h1>
-        <div className="lg:justify-between md:justify-between flex-wrap justify-end flex items-center gap-2 w-full">
-          <div className="w-full md:max-w-60">
-            <SearchBar onSearch={handleSearch} />
+    <>
+      {loading &&
+        <Loading />}
+      <div className="w-full h-screen bg-white1">
+        {/* Top of Apartment Tab */}
+        <div className="w-11/12 m-auto h-full ">
+          <h1 className="uppercase font-bold py-5">Apartments Listing </h1>
+          <div className="lg:justify-between md:justify-between flex-wrap justify-end flex items-center gap-2 w-full">
+            <div className="w-full md:max-w-60">
+              <SearchBar onSearch={handleSearch} />
+            </div>
+            <button
+              onClick={toggleAddApartmentForm}
+              className="btn md:btn-wide w-full bg-primary-color text-white hover:text-primary-color"
+            >
+              <FaPlus />
+              Add Apartment
+            </button>
           </div>
-          <button
-            onClick={toggleAddApartmentForm}
-            className="btn md:btn-wide w-full bg-primary-color text-white hover:text-primary-color"
-          >
-            <FaPlus />
-            Add Apartment
-          </button>
+          {/* Body of Tenant Tab */}
+          <div className="lg:grid-cols-2 2xl:grid-cols-3 grid 2xl:grid-rows-4 grid-cols-1 gap-4 py-5">
+            {loading ? (
+              <Loading />
+            ) : (
+              apartment?.map((val, key) => (
+                <ApartmentCard key={key} val={val} num={key} />
+              ))
+            )}
+          </div>
         </div>
-        {/* Body of Tenant Tab */}
-        <div className="lg:grid-cols-2 2xl:grid-cols-3 grid 2xl:grid-rows-4 grid-cols-1 gap-4 py-5">
-          {loading ? (
-            <Loading />
-          ) : (
-            apartment?.map((val, key) => (
-              <ApartmentCard key={key} val={val} num={key} />
-            ))
-          )}
-        </div>
+        {isAddApartmentFormOpen && (
+          <div className="lg:top-9 fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+            <div className="lg:w-auto h-auto  lg:mt-2 mt-14 w-10/12 bg-white  rounded-md">
+              <AddApartment
+                setIsAddApartmentFormOpen={setIsAddApartmentFormOpen}
+                fields={fields}
+                handleInput={handleInput}
+                handleSubmit={handleSubmit}
+                error={error}
+              />
+            </div>
+          </div>
+        )}
       </div>
-      {isAddApartmentFormOpen && (
-        <div className="lg:top-9 fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-          <div className="lg:w-auto h-auto  lg:mt-2 mt-14 w-10/12 bg-white  rounded-md">
-            <AddApartment
-              setIsAddApartmentFormOpen={setIsAddApartmentFormOpen}
-              fields={fields}
-              handleInput={handleInput}
-              handleSubmit={handleSubmit}
-              error={error}
-            />
-          </div>
-        </div>
-      )}
-    </div>
+    </>
   )
 }
 

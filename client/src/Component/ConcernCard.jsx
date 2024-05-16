@@ -15,10 +15,10 @@ const ConcernCard = ({ val, num }) => {
             className={` h-28 w-4 rounded-tl-lg rounded-bl-lg ${val?.status ? 'bg-lime' : 'bg-red'}`}
           ></div>
           <div className=" flex justify-evenly w-full ">
-            <figure className="w-full h-full max-w-20 max-h-20 overflow-hidden rounded-full">
+            <figure className="w-20 h-20 overflow-hidden rounded-full">
               <img
                 src={val?.sender_id?.user_id?.profile_image.image_url}
-                className="size-full object-contain"
+                className="size-full "
                 alt=""
               />
             </figure>

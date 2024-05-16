@@ -288,7 +288,7 @@ console.log(totalPaid)
                               Good Payer
                             </p>
                             <p className="font-bold text-center text-base xl:text-2xl">
-                              {totalPayer?.percentage?.toFixed(2)}%
+                              {totalPayer?.totalGoodPayer} / {totalPayer?.totalBadPayer}
                             </p>
                           </div>
                           <p

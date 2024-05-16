@@ -574,6 +574,11 @@ module.exports.update_unit_info = async (req, res) => {
       newUnit.occupied = true // Assuming "true" means occupied
       await newUnit.save()
     }
+
+    const response = await TENANTMODEL.findOne({ user_id }).populate('user_id unit_id apartment_id')
+    if(!response){
+      return res.status(httpStatusCodes.BAD_REQUEST).json({error: "User not found"})
+    }
     if (deposit) {
       tenant.deposit = deposit
     }
@@ -585,7 +590,7 @@ module.exports.update_unit_info = async (req, res) => {
 
     return res.status(httpStatusCodes.OK).json({
       message: 'Tenant information updated successfully',
-      response: tenant,
+      response,
     })
   } catch (err) {
     console.error({ error: err.message })
@@ -636,7 +641,7 @@ module.exports.update_profile_picture = async (req, res) => {
         .json({ error: 'Failed to change image' })
     }
     console.log(response._id)
-    const tenant = await TENANTMODEL.findOne({user_id}).populate(
+    const tenant = await TENANTMODEL.findOne({ user_id }).populate(
       'user_id unit_id apartment_id',
     )
     console.log(tenant)
