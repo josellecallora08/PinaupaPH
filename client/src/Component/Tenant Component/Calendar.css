@@ -32,7 +32,15 @@
   padding: 10px;
   cursor: pointer;
 }
-
+.weekend {
+  background-color: #f0f0f0;/* Light gray background for weekends */
+  color: #ff0000; /* Red text for weekends */
+}
+.payday {
+  background-color: #000000; /* Light gray background for weekends */
+  border:2px solid black;
+  color: #ff0000; /* Red text for weekends */
+}
 .react-calendar__tile{
   color:black
 }

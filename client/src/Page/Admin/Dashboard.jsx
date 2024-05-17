@@ -220,7 +220,7 @@ const Dashboard = () => {
               </div>
               <div className="col-span-3 row-span-2 grid grid-cols-4 md:grid-cols-3 grid-flow-row md:grid-rows-2 gap-5 pb-7">
                 <div className="col-span-4 md:col-span-2 row-span-2 grid grid-cols-2 grid-rows-2 gap-5">
-                  <div className="col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md">
+                  <div className="col-span-4 md:col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md">
                     <div className="w-full bg-primary-color max-w-20 flex items-center justify-center">
                       <div className="rounded-full p-2 xl:p-3 bg-gray">
                         <figure className="w-full h-full max-w-16 max-h-16">
@@ -234,8 +234,8 @@ const Dashboard = () => {
                     <div className='w-full h-full flex items-center justify-center'>
                       <span className='text-lg md:text-4xl lg:text-5xl font-bold'>9,000</span>
                     </div> */}
-                        <div className=" w-full xl:flex flex-col gap-5 py-2">
-                          <div className="xl:flex justify-between">
+                        <div className=" w-full flex flex-col gap-2 xl:gap-5 py-2">
+                          <div className="w-11/12 m-auto flex justify-between">
                             <p className="text-[#9e9e9e] text-xs text-center xl:text-base font-semibold">
                               Total Paid
                             </p>
@@ -268,7 +268,7 @@ const Dashboard = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md">
+                  <div className="col-span-4 md:col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md">
                     <div className="bg-primary-color w-full max-w-20 flex items-center justify-center">
                       <div className="rounded-full p-2 xl:p-3 bg-gray">
                         <figure className="w-full h-full md:max-w-16 md:max-h-16">
@@ -282,8 +282,8 @@ const Dashboard = () => {
                     <div className='w-full h-full flex items-center justify-center'>
                       <span className='text-lg md:text-4xl lg:text-5xl font-bold'>96%</span>
                     </div> */}
-                        <div className=" w-full xl:flex flex-col gap-5 py-2">
-                          <div className="xl:flex justify-between">
+                        <div className=" w-full flex flex-col gap-2 xl:gap-5 py-2">
+                          <div className="w-11/12 m-auto flex justify-between">
                             <p className="text-[#9e9e9e] text-xs text-center xl:text-base font-semibold">
                               Good Payer
                             </p>
@@ -304,7 +304,7 @@ const Dashboard = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md">
+                  <div className="col-span-4 md:col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md">
                     <div className="bg-primary-color w-full max-w-20 flex items-center justify-center">
                       <div className="rounded-full p-2 xl:p-3 bg-gray">
                         <figure className="w-full h-full max-w-16 max-h-16">
@@ -322,8 +322,8 @@ const Dashboard = () => {
                     <div className='w-full h-full flex items-center justify-center'>
                       <span className='text-lg md:text-4xl lg:text-5xl font-bold'>96%</span>
                     </div> */}
-                        <div className=" w-full xl:flex flex-col gap-5 py-2">
-                          <div className="xl:flex justify-between">
+                        <div className=" w-full flex flex-col gap-2 xl:gap-5 py-2">
+                          <div className="w-11/12 m-auto flex justify-between">
                             <p className="text-[#9e9e9e] text-xs text-center xl:text-base font-semibold">
                               Occupancy Rate
                             </p>
@@ -345,7 +345,7 @@ const Dashboard = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md">
+                  <div className="col-span-4 md:col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md">
                     <div className="bg-primary-color w-full max-w-20 flex items-center justify-center">
                       <div className="rounded-full p-2 xl:p-3 bg-gray">
                         <figure className="w-full h-full max-w-5 xl:max-w-6 xl:max-h-6">
@@ -359,8 +359,8 @@ const Dashboard = () => {
                     <div className='w-full h-full flex items-center justify-center'>
                       <span className='text-lg md:text-4xl lg:text-5xl font-bold'>96%</span>
                     </div> */}
-                        <div className=" w-full xl:flex flex-col gap-5 py-2">
-                          <div className="xl:flex justify-between">
+                        <div className=" w-full flex flex-col gap-2 xl:gap-5 py-2">
+                          <div className="w-11/12 m-auto flex justify-between">
                             <p className="text-[#9e9e9e] text-xs text-center xl:text-base font-semibold">
                               Renewal Rate
                             </p>
