@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import Calendar from 'react-calendar'
 import './Calendar.css' // Import the default calendar styles
-
+import money from '/money.svg'
 const Calendars = ({ user, invoice }) => {
   // Define a function to determine the class name for each date tile
   const tileClassName = ({ date, view }) => {
     // Check if the date is a Sunday
     if (date.getDay() === 0) {
-      return 'sunday' // Apply the 'sunday' class name for Sundays
+      return 'weekend' // Apply the 'sunday' class name for Sundays
     }
-    // Check if the date is the 15th day of the month or the last day of the month
+
     if (date.getDate() === new Date(invoice?.due).getDate()) {
       return 'border-2 rounded-md bg-primary-color/50 shadow-lg' // Apply the 'highlighted-day' class name for the specified days
     }
@@ -48,14 +48,16 @@ const Calendars = ({ user, invoice }) => {
       date.getDate() === new Date(invoice?.datePaid).getDate() &&
       date.getMonth() === new Date(invoice?.datePaid).getMonth()
     ) {
-      return <span className="xl:absolute" role="img" aria-label="emoji">
-        💸
-      </span> // Emoji for highlighted days
+      return (
+        <span className="xl:absolute" role="img" aria-label="emoji">
+          <img src={money} className="w-5" alt="" />
+        </span>
+      ) // Emoji for highlighted days
     }
     if (date.getDate() === new Date(user?.monthly_due).getDate()) {
       return (
         <span className="" role="img" aria-label="emoji">
-          
+          💸
         </span>
       ) // Em
     }
