@@ -14,7 +14,7 @@ const ContactUsAdmin = () => {
     });
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [showPopup, setShowPopup] = useState(false); // State for controlling the popup visibility
+    const [showPopup, setShowPopup] = useState(false); 
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -76,6 +76,7 @@ const ContactUsAdmin = () => {
                             onChange={handleChange}
                             required
                             placeholder='Enter your email'
+                        
                         />
                     </div>
                     <div className="mb-6">
@@ -85,13 +86,13 @@ const ContactUsAdmin = () => {
                             id="message"
                             name="message"
                             value={formData.message}
-                            onChange={handleTextareaChange} // Use handleTextareaChange instead of handleChange
+                            onChange={handleTextareaChange} 
                             required
                             placeholder='Enter your message'
                             rows="1"
-                     // Set initial rows to 1
+                  
                             style={{ minHeight: '90px', maxHeight: '150px', resize: 'none' }}
-                             // Set a minimum height
+                            
                         ></textarea>
                     </div>
                     <div className="flex items-center justify-center">

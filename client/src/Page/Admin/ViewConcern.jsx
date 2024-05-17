@@ -287,7 +287,7 @@ const ViewConcern = () => {
                         </div>
                       </form>
                     )) || (
-                      <h1 className="h-full flex items-center text-white font-regular text-3xl">
+                      <h1 className="h-full flex items-center justify-center text-white font-semibold text-xl">
                         RESOLVED ISSUE
                       </h1>
                     )}
