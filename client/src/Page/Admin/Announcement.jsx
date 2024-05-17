@@ -91,43 +91,43 @@ const Announcement = () => {
         </div>
         {/* Tabs */}
         <div className="flex items-center bg-white gap-7 p-2  pt-5 pl-7 mt-5 rounded-tl-lg rounded-tr-lg w-full  ">
-          <div className='flex gap-7 w-1/3 no-scrollbar overflow-x-auto with-scrollbar'>
-          {/* Filter Tabs */}
-          <button
-            className={`filter-tab ${filter === 'All' ? 'active' : ''}`}
-            onClick={() => setFilter('All')}
-            style={{
-              color: filter === 'All' ? '#000' : '#7e7e7e',
-              borderBottom: filter === 'All' ? '2px solid #000' : 'none',
-              transition: 'color 0.3s ease, border-bottom 0.3s ease',
-            }}
-          >
-            All
-          </button>
-          {announcement &&
-            [
-              ...new Set(
-                announcement.flatMap((obj) => obj?.type?.trim().split(' ')),
-              ),
-            ].map((word, index) => (
-              <button
-                key={index}
-                className={`capitalize filter-tab  ${filter === `${word}` ? 'active' : ''}`}
-                onClick={() => setFilter(word.toUpperCase())}
-                style={{
-                  color:
-                    filter === `${word.toUpperCase()}` ? '#000' : '#7e7e7e',
-                  borderBottom:
-                    filter === `${word.toUpperCase()}`
-                      ? '2px solid #000'
-                      : 'none',
-                  transition: 'color 0.3s ease, border-bottom 0.3s ease',
-                }}
-              >
-                {word}
-              </button>
-            ))}
-            </div>
+          <div className="flex gap-7 w-1/3 no-scrollbar overflow-x-auto with-scrollbar">
+            {/* Filter Tabs */}
+            <button
+              className={`filter-tab ${filter === 'All' ? 'active' : ''}`}
+              onClick={() => setFilter('All')}
+              style={{
+                color: filter === 'All' ? '#000' : '#7e7e7e',
+                borderBottom: filter === 'All' ? '2px solid #000' : 'none',
+                transition: 'color 0.3s ease, border-bottom 0.3s ease',
+              }}
+            >
+              All
+            </button>
+            {announcement &&
+              [
+                ...new Set(
+                  announcement.flatMap((obj) => obj?.type?.trim().split(' ')),
+                ),
+              ].map((word, index) => (
+                <button
+                  key={index}
+                  className={`capitalize filter-tab  ${filter === `${word}` ? 'active' : ''}`}
+                  onClick={() => setFilter(word.toUpperCase())}
+                  style={{
+                    color:
+                      filter === `${word.toUpperCase()}` ? '#000' : '#7e7e7e',
+                    borderBottom:
+                      filter === `${word.toUpperCase()}`
+                        ? '2px solid #000'
+                        : 'none',
+                    transition: 'color 0.3s ease, border-bottom 0.3s ease',
+                  }}
+                >
+                  {word}
+                </button>
+              ))}
+          </div>
         </div>
         {/* Body of Announcement Tab */}
         <div className=" md:h-[25rem] min-[1440px]:h-[45rem] min-[1280px]:h-[45rem] min-[1366px]:h-[19rem] w-full h-[30rem] overflow-x-auto px-8 rounded-bl-lg rounded-br-lg bg-white">
@@ -155,7 +155,9 @@ const Announcement = () => {
                     <div className="flex flex-col w-[80%] ">
                       <p className="font-semibold lg:text-lg ">{val.title}</p>
 
-                      <p className="text-light-gray overflow-y-auto h-24 lg:mt-0 mt-3">{val.description}</p>
+                      <p className="text-light-gray overflow-y-auto h-24 lg:mt-0 mt-3">
+                        {val.description}
+                      </p>
                     </div>
                   </div>
                   <div

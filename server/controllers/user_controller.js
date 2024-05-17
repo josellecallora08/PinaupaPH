@@ -23,7 +23,7 @@ module.exports.createAdminAccount = async (req, res) => {
         .status(httpStatusCodes.UNAUTHORIZED)
         .json({ error: 'Only super admin can create apartment owners' })
     }
-    const { password, username, email } = req.body
+    const { name, password, username, email } = req.body
 
     if (password === '') {
       return res
@@ -61,6 +61,7 @@ module.exports.createAdminAccount = async (req, res) => {
     }
 
     const response = await USERMODEL.create({
+      name,
       username,
       email,
       password: hashed,
@@ -463,6 +464,7 @@ module.exports.update_profile = async (req, res) => {
     mobile_no,
     birthday,
   } = req.body
+  console.log(req.body)
   const salt = await bcrypt.genSalt(10)
   const details = {}
   if (name !== '') details.name = name
@@ -471,21 +473,20 @@ module.exports.update_profile = async (req, res) => {
   if (mobile_no !== '') details.mobile_no = mobile_no
   if (birthday !== '') details.birthday = birthday
   try {
-    let response = await USERMODEL.findByIdAndUpdate(
-      { _id: user_id },
-      details,
-    ).select('name username password email phone birthday role')
-    if (!response)
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Failed to update information(2)' })
-
     if (password && newpassword && confirmpassword) {
       if (newpassword !== confirmpassword)
         return res
           .status(httpStatusCodes.BAD_REQUEST)
           .json({ msg: 'New password does not match' })
     }
+
+    let response = await USERMODEL.findByIdAndUpdate(user_id, details, {
+      new: true,
+    })
+    if (!response)
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Failed to update information(2)' })
 
     if (password && newpassword) {
       if (bcrypt.compareSync(password, response.password)) {
@@ -494,8 +495,8 @@ module.exports.update_profile = async (req, res) => {
           return res
             .status(httpStatusCodes.BAD_REQUEST)
             .json({ error: 'Error hashing the password.' })
-
         response.password = hashed
+        await response.save()
       } else {
         return res
           .status(httpStatusCodes.BAD_REQUEST)
@@ -504,12 +505,16 @@ module.exports.update_profile = async (req, res) => {
     }
 
     await response.save()
-    let tenant = await TENANTMODEL.findById(response._id).populate(
-      'user_id unit_id apartment_id',
-    )
+    let tenant = await TENANTMODEL.findOne(
+      { user_id: response._id },
+      {
+        new: true,
+      },
+    ).populate('user_id unit_id apartment_id')
     if (!tenant) {
       tenant = await USERMODEL.findById(response._id)
     }
+    console.log(tenant)
 
     return res
       .status(httpStatusCodes.OK)
@@ -545,21 +550,23 @@ module.exports.update_unit_info = async (req, res) => {
     }
 
     // Retrieve the current unit assigned to the tenant
-    const currentUnit = await UNITMODEL.findById(tenant.unit_id)
-    if (!currentUnit) {
-      const newUnit = await UNITMODEL.findById(unit_id)
-      if (!newUnit) {
-        return res
-          .status(httpStatusCodes.NOT_FOUND)
-          .json({ error: 'New unit not found' })
+    if (tenant.unit_id) {
+      const currentUnit = await UNITMODEL.findById(tenant.unit_id)
+      if (!currentUnit) {
+        const newUnit = await UNITMODEL.findById(unit_id)
+        if (!newUnit) {
+          return res
+            .status(httpStatusCodes.NOT_FOUND)
+            .json({ error: 'New unit not found' })
+        }
+        newUnit.occupied = true // Assuming "true" means occupied
+        await newUnit.save()
       }
-      newUnit.occupied = true // Assuming "true" means occupied
-      await newUnit.save()
-    }
 
-    // Update the status of the current unit to false
-    currentUnit.occupied = false
-    await currentUnit.save()
+      // Update the status of the current unit to false
+      currentUnit.occupied = false
+      await currentUnit.save()
+    }
 
     // Update tenant information with the new unit
     if (unit_id) {
@@ -575,10 +582,6 @@ module.exports.update_unit_info = async (req, res) => {
       await newUnit.save()
     }
 
-    const response = await TENANTMODEL.findOne({ user_id }).populate('user_id unit_id apartment_id')
-    if(!response){
-      return res.status(httpStatusCodes.BAD_REQUEST).json({error: "User not found"})
-    }
     if (deposit) {
       tenant.deposit = deposit
     }
@@ -587,6 +590,15 @@ module.exports.update_unit_info = async (req, res) => {
       tenant.monthly_due = occupancy
     }
     await tenant.save()
+
+    const response = await TENANTMODEL.findOne({ user_id }).populate(
+      'user_id unit_id apartment_id',
+    )
+    if (!response) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'User not found' })
+    }
 
     return res.status(httpStatusCodes.OK).json({
       message: 'Tenant information updated successfully',
@@ -646,12 +658,10 @@ module.exports.update_profile_picture = async (req, res) => {
     )
     console.log(tenant)
     console.log(response.role)
-    return res
-      .status(httpStatusCodes.OK)
-      .json({
-        msg: 'Profile has been changed',
-        response: response.role == 'Tenant' ? tenant : response,
-      })
+    return res.status(httpStatusCodes.OK).json({
+      msg: 'Profile has been changed',
+      response: response.role == 'Tenant' ? tenant : response,
+    })
   } catch (err) {
     console.error({ err })
     return res

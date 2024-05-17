@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { io } from 'socket.io-client'
 import Cookies from 'js-cookie'
-import { fetchReport } from './report'
 const commentSlice = createSlice({
   name: 'comment',
   initialState: {
@@ -19,7 +17,7 @@ const commentSlice = createSlice({
       state.loading = false
       state.data = action.payload
     },
-    insertCommentSuccess :(state, action) => {
+    insertCommentSuccess: (state, action) => {
       state.data = [...state.data, action.payload]
     },
     editCommentsSuccess: (state, action) => {
@@ -71,7 +69,7 @@ export const createComment =
       }
       const json = await response.json()
       console.log(comment)
-      
+
       // dispatch(fetchReport(reportId))
     } catch (err) {
       dispatch(actionFailed(err.message))

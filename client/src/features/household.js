@@ -159,7 +159,7 @@ export const editHousehold =
 
       if (!response.ok) {
         const json = await response.json()
-        console.log("|upodate", json)
+        console.log('|upodate', json)
         throw new Error(json.error)
       }
 
@@ -192,7 +192,7 @@ export const deleteHousehold = (user_id, household_id) => async (dispatch) => {
     }
 
     const json = await response.json()
-    console.log("hh", json)
+    console.log('hh', json)
     dispatch(deleteHouseholdSuccess(json))
   } catch (err) {
     dispatch(fetchFailed(err.message))

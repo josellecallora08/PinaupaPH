@@ -35,11 +35,9 @@ const Profile = () => {
     dispatch(
       changeProfile(user._id, user?.profile_image.public_id, selectedFile),
     )
-    if (msg || error || data || single) {
-      setUpdate(true)
-      setchangeModal(false)
-      setIsVisible((prevState) => !prevState)
-    }
+    setUpdate(true)
+    setchangeModal(false)
+    setIsVisible((prevState) => !prevState)
   }
 
   const [fields, setFields] = useState({
@@ -59,16 +57,8 @@ const Profile = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(editUser(user?._id, fields))
-    if (error || msg || data) {
-      setIsProfileEditAccount((prevState) => !prevState)
-      setIsVisible(true)
-      setFields({
-        username: user?.username || '',
-        password: '',
-        newpassword: '',
-        confirmpassword: '',
-      })
-    }
+    setIsProfileEditAccount((prevState) => !prevState)
+    setIsVisible(true)
   }
 
   useEffect(() => {

@@ -44,20 +44,21 @@ const LeaseView = () => {
       </Dropdown>
 
       <div className="flex justify-center align-middle">
-
         <div className=" p-6 xl:w-[13.6in] lg:w-[6.8in] xl:min-h-[17.6in] lg:min-h-[8.8in] xl:p-[1in] lg:p-[0.5in] m-[1rem] shadow-lg shadow-light-gray bg-white ">
-          <div className='pb-4 flex justify-between min-pb-4 border-b-4 border-gray-400'>
+          <div className="pb-4 flex justify-between min-pb-4 border-b-4 border-gray-400">
             <figure>
-              <img src={pinaupa} className='h-12 lg:h-20' />
+              <img src={pinaupa} className="h-12 lg:h-20" />
             </figure>
             <p className="pt-2 lg:pt-4 xl:text-4xl lg:text-xl font-bold font-serif  xl:mb-12 lg:mb-2 ">
               KONTRATA SA PAGPAPAUPA
             </p>
           </div>
 
-
           <p className="font-serif lg:text-nowrap xl:mb-12 xl:text-xl lg:text-sm pb-6 pt-6">
-            <span className="font-bold">Lokasyon: </span>{contract?.tenant_id.apartment_id.address}, {contract?.tenant_id.apartment_id.barangay}, {contract?.tenant_id.apartment_id.province}
+            <span className="font-bold">Lokasyon: </span>
+            {contract?.tenant_id.apartment_id.address},{' '}
+            {contract?.tenant_id.apartment_id.barangay},{' '}
+            {contract?.tenant_id.apartment_id.province}
           </p>
           <p className=" xl:text-xl lg:text-sm font-serif xl:mb-2 lg:mb-1 pb-4 font-bold">
             {' '}
@@ -72,7 +73,12 @@ const LeaseView = () => {
           {/* <p className="font-serif text-xl mb-4"></p> */}
           <p className="font-serif xl:text-xl lg:text-sm ml-[2.5rem] xl:mb-6 lg:mb-3">
             1.) Ang upa o renta sa bawat buwan ay nagkakahalaga ng{' '}
-            <span className="font-bold">{(contract?.tenant_id.unit_id.rent)?.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</span>
+            <span className="font-bold">
+              {contract?.tenant_id.unit_id.rent?.toLocaleString('en-PH', {
+                style: 'currency',
+                currency: 'PHP',
+              })}
+            </span>
           </p>
           <p className="font-serif xl:text-xl lg:text-sm ml-[2.5rem] xl:leading-8 lg:leading-5">
             2.) Dapat ay may paunang isang (1) buwan na upa o renta sa isang (1)
@@ -170,23 +176,28 @@ const LeaseView = () => {
 
           <p className="pt-20 xl:mt-60 lg:mt-40 xl:text-xl lg:text-sm font-serif xl:leading-8 lg:leading-5">
             Nilagdaan namin ang kasunduang ito ngayong ________, ng
-            _____________ dito sa {contract?.tenant_id.apartment_id.address}, {contract?.tenant_id.apartment_id.barangay}, {contract?.tenant_id.apartment_id.province}
+            _____________ dito sa {contract?.tenant_id.apartment_id.address},{' '}
+            {contract?.tenant_id.apartment_id.barangay},{' '}
+            {contract?.tenant_id.apartment_id.province}
           </p>
 
           <p className="xl:mt-60 lg:mt-40 xl:text-2xl lg:text-xl font-bold font-serif">
             Petsa ng simula ng kontrata: {new Date()?.toLocaleDateString()}
           </p>
           <p className="xl:mt-10 lg:mt-5 xl:text-2xl lg:text-xl font-bold font-serif">
-            Araw ng bayad: {new Date(contract?.tenant_id.monthly_due).getDate()} of the month
+            Araw ng bayad: {new Date(contract?.tenant_id.monthly_due).getDate()}{' '}
+            of the month
           </p>
           <div className="h-60 lg:h-60"></div>
 
-          {contract?.witnesses >= 1 && <p className="xl:text-2xl lg:text-xlfont-serif font-bold underline">
-            Mga saksi sa kasunduan
-          </p>}
+          {contract?.witnesses >= 1 && (
+            <p className="xl:text-2xl lg:text-xlfont-serif font-bold underline">
+              Mga saksi sa kasunduan
+            </p>
+          )}
           {contract?.witnesses?.map((val, key) => (
             <p className="xl:mt-10 lg:mt-5 xl:text-2xl lg:text-xlfont-serif font-bold underline">
-              1.)  {val.name}
+              1.) {val.name}
             </p>
           ))}
         </div>
