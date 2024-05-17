@@ -8,11 +8,12 @@ const TenantCard = ({ data }) => {
           <figure className="size-full max-h-20 max-w-20 rounded-full overflow-hidden">
             <img
               src={data?.user_id?.profile_image.image_url}
-              className=""
+              className="w-full h-full object-cover"
               alt=""
             />
           </figure>
         </div>
+
         <div className="lg:-ml-2 ml-3 mt-8 flex flex-col gap-1 ">
           <p className="xl:text-lg lg:text-sm md:text-base font-semibold text-lg mr-24">
             <span>{data?.user_id?.name}</span>
