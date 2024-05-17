@@ -16,7 +16,7 @@ const ManualInvoice = ({ setModal }) => {
   const handleInvoice = (e) => {
     e.preventDefault()
     dispatch(createInvoice(selectedUser.value))
-    if ( msg || error) {
+    if (msg || error) {
       setModal((state) => !state)
     }
   }

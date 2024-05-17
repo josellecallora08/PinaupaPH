@@ -72,7 +72,7 @@ const Dashboard = () => {
       },
     ],
   }
-console.log(totalPaid)
+  console.log(totalPaid)
   useEffect(() => {
     const month = new Date(date).getMonth()
     const year = new Date(date).getFullYear()
@@ -259,7 +259,7 @@ console.log(totalPaid)
                           >
                             <span
                               style={{
-                                width: `${totalPaid?.percentage && totalPaid?.percentage || 0}%`,
+                                width: `${(totalPaid?.percentage && totalPaid?.percentage) || 0}%`,
                               }}
                               className={`absolute h-2 bg-primary-color animate-in slide-in-from-left-20 duration-1000`}
                             ></span>
@@ -288,7 +288,8 @@ console.log(totalPaid)
                               Good Payer
                             </p>
                             <p className="font-bold text-center text-base xl:text-2xl">
-                              {totalPayer?.totalGoodPayer} / {totalPayer?.totalBadPayer}
+                              {totalPayer?.totalGoodPayer} /{' '}
+                              {totalPayer?.totalBadPayer}
                             </p>
                           </div>
                           <p
@@ -390,9 +391,9 @@ console.log(totalPaid)
                     <div className="w-full h-full flex items-center bg-white">
                       <CircularProgressbar
                         className="mx-auto lg:w-28 md:mx-auto md:w-40 w-32 mt-4 "
-                        value={percentage}
+                        value={percentage || 0}
                         minValue={0}
-                        text={percentage + '%'}
+                        text={percentage ? percentage + '%' : 0 + '%'}
                         strokeWidth={15}
                         styles={buildStyles({
                           textSize: '1rem',

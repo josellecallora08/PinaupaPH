@@ -7,7 +7,11 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import EditApartmentDetails from '../../Component/AdminComponent/EditApartmentDetails'
 import { fetchUnitsApartment } from '../../features/unit'
-import { deleteApartment, editApartment, fetchApartment } from '../../features/apartment'
+import {
+  deleteApartment,
+  editApartment,
+  fetchApartment,
+} from '../../features/apartment'
 const ApartmentProfile = () => {
   const [update, setUpdate] = useState(false)
   const [isAddRoomFormOpen, setIsAddRoomFormOpen] = useState(false)
@@ -18,15 +22,12 @@ const ApartmentProfile = () => {
   const navigate = useNavigate()
   const units = useSelector((state) => state.unit.data)
 
-
   const toggleAddRoomForm = () => {
     setIsAddRoomFormOpen(!isAddRoomFormOpen)
   }
   const toggleEditApartmentForm = () => {
     setIsEditApartmentFormOpen(!isEditApartmentFormOpen)
   }
-
-
 
   useEffect(() => {
     dispatch(fetchUnitsApartment(id))
@@ -38,21 +39,26 @@ const ApartmentProfile = () => {
   }, [update, setUpdate])
 
   const handleDelete = async () => {
-    if (window.confirm(
-      'Are you sure you want to delete this apartment?',
-    )) {
+    if (window.confirm('Are you sure you want to delete this apartment?')) {
       dispatch(deleteApartment(id))
       navigate('/apartment')
     }
   }
-
 
   return (
     <>
       <div className="w-full h-full  bg-white1">
         <div className="w-[95%] m-auto pb-7">
           {/* Upper part of Apartment Profile */}
-          <h1 className="uppercase font-bold py-5"><span className=' hover:cursor-pointer hover:underline mr-1' onClick={() => window.history.back()}>Apartment</span>/ View Apartment</h1>
+          <h1 className="uppercase font-bold py-5">
+            <span
+              className=" hover:cursor-pointer hover:underline mr-1"
+              onClick={() => window.history.back()}
+            >
+              Apartment
+            </span>
+            / View Apartment
+          </h1>
           <div className=" flex gap-10  py-4 rounded-md md:shadow-md md:shadow-gray ">
             <div className="lg:w-1/2">
               <h1 className="lg:text-3xl md:text-3xl font-semibold text-black text-lg mb-3">

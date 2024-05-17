@@ -1,71 +1,87 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { IoMdAdd } from 'react-icons/io';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import Webcam from 'react-webcam';
-import AddCamera from '../../Component/AdminComponent/AddCamera';
+import React, { useState, useRef, useEffect } from 'react'
+import { IoMdAdd } from 'react-icons/io'
+import { BsThreeDotsVertical } from 'react-icons/bs'
+import Webcam from 'react-webcam'
+import AddCamera from '../../Component/AdminComponent/AddCamera'
 
 const Security = () => {
-  const [isOpenTripleDots, setIsOpenTripleDots] = useState([]);
-  const [showCameraFeed, setShowCameraFeed] = useState([]);
-  const [cameras, setCameras] = useState([]);
-  const [availableCameras, setAvailableCameras] = useState([]);
-  const [isAddCameraForm, setIsAddCameraForm] = useState(false);
-  const [isHovered, setIsHovered] = useState(Array(cameras.length).fill(false));
+  const [isOpenTripleDots, setIsOpenTripleDots] = useState([])
+  const [showCameraFeed, setShowCameraFeed] = useState([])
+  const [cameras, setCameras] = useState([])
+  const [availableCameras, setAvailableCameras] = useState([])
+  const [isAddCameraForm, setIsAddCameraForm] = useState(false)
+  const [isHovered, setIsHovered] = useState(Array(cameras.length).fill(false))
 
-  const webcamRef = useRef(null);
-  const tripleDotsRefs = useRef([]);
+  const webcamRef = useRef(null)
+  const tripleDotsRefs = useRef([])
 
   useEffect(() => {
     const getCameras = async () => {
       try {
-        const cameras = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = cameras.filter(device => device.kind === 'videoinput');
-        setAvailableCameras(videoDevices);
+        const cameras = await navigator.mediaDevices.enumerateDevices()
+        const videoDevices = cameras.filter(
+          (device) => device.kind === 'videoinput',
+        )
+        setAvailableCameras(videoDevices)
       } catch (error) {
-        console.error('Error accessing camera devices:', error);
+        console.error('Error accessing camera devices:', error)
       }
-    };
-    
-    getCameras();
-  }, []);
+    }
+
+    getCameras()
+  }, [])
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      const isOutsideMenu = !tripleDotsRefs.current.some(ref => ref && ref.contains(event.target));
+      const isOutsideMenu = !tripleDotsRefs.current.some(
+        (ref) => ref && ref.contains(event.target),
+      )
       if (isOutsideMenu) {
-        setIsOpenTripleDots(Array(cameras.length).fill(false));
+        setIsOpenTripleDots(Array(cameras.length).fill(false))
       }
-    };
+    }
 
-    document.body.addEventListener('click', handleOutsideClick);
+    document.body.addEventListener('click', handleOutsideClick)
 
     return () => {
-      document.body.removeEventListener('click', handleOutsideClick);
-    };
-  }, [cameras]);
+      document.body.removeEventListener('click', handleOutsideClick)
+    }
+  }, [cameras])
 
   const addCamera = ({ name, deviceId }) => {
-    setCameras(prevCameras => [...prevCameras, { name, deviceId }]);
-    setShowCameraFeed(prevState => [...prevState, true]);
-    setIsOpenTripleDots(prevState => [...prevState, false]);
-  };
+    setCameras((prevCameras) => [...prevCameras, { name, deviceId }])
+    setShowCameraFeed((prevState) => [...prevState, true])
+    setIsOpenTripleDots((prevState) => [...prevState, false])
+  }
 
   const handleToggleCamera = (index) => {
-    setIsOpenTripleDots(prevState => prevState.map((item, i) => (i === index ? true : item)));
-  };
+    setIsOpenTripleDots((prevState) =>
+      prevState.map((item, i) => (i === index ? true : item)),
+    )
+  }
 
   const handleCloseCamera = (index) => {
-    setShowCameraFeed(prevState => prevState.map((item, i) => (i === index ? !item : item)));
-    setIsOpenTripleDots(prevState => prevState.map((item, i) => (i === index ? false : item)));
-  };
+    setShowCameraFeed((prevState) =>
+      prevState.map((item, i) => (i === index ? !item : item)),
+    )
+    setIsOpenTripleDots((prevState) =>
+      prevState.map((item, i) => (i === index ? false : item)),
+    )
+  }
 
   const handleDeleteCamera = (index) => {
-    const isConfirmed = window.confirm('Are you sure you want to delete this camera?');
+    const isConfirmed = window.confirm(
+      'Are you sure you want to delete this camera?',
+    )
     if (isConfirmed) {
-      setCameras(prevCameras => prevCameras.filter((camera, i) => i !== index));
-      setShowCameraFeed(prevState => prevState.filter((feed, i) => i !== index));
+      setCameras((prevCameras) =>
+        prevCameras.filter((camera, i) => i !== index),
+      )
+      setShowCameraFeed((prevState) =>
+        prevState.filter((feed, i) => i !== index),
+      )
     }
-  };
+  }
 
   return (
     <>
@@ -77,7 +93,10 @@ const Security = () => {
             </h1>
           </div>
           <div>
-            <button onClick={() => setIsAddCameraForm(true)} className="btn text-white lg:px-5 lg:py-3 px-2 py-1 text-xs uppercase bg-primary-color">
+            <button
+              onClick={() => setIsAddCameraForm(true)}
+              className="btn text-white lg:px-5 lg:py-3 px-2 py-1 text-xs uppercase bg-primary-color"
+            >
               <IoMdAdd size={15} /> Add CCTV
             </button>
           </div>
@@ -89,8 +108,16 @@ const Security = () => {
             <div
               key={index}
               className="col-span-2 relative"
-              onMouseEnter={() => setIsHovered(prevState => prevState.map((item, i) => (i === index ? true : item)))}
-              onMouseLeave={() => setIsHovered(prevState => prevState.map((item, i) => (i === index ? false : item)))}
+              onMouseEnter={() =>
+                setIsHovered((prevState) =>
+                  prevState.map((item, i) => (i === index ? true : item)),
+                )
+              }
+              onMouseLeave={() =>
+                setIsHovered((prevState) =>
+                  prevState.map((item, i) => (i === index ? false : item)),
+                )
+              }
             >
               <div className="relative h-full">
                 {/* Camera Feed */}
@@ -107,11 +134,13 @@ const Security = () => {
                     {/* Name and Triple Dots */}
                     <div
                       className={`absolute top-0 right-0 p-2 flex justify-between items-center bg-primary-color text-white rounded-tr-md `}
-                      ref={el => tripleDotsRefs.current[index] = el}
+                      ref={(el) => (tripleDotsRefs.current[index] = el)}
                     >
-                      <div className='mr-2 text-sm'>{camera.name}</div>
+                      <div className="mr-2 text-sm">{camera.name}</div>
                       <div className="cursor-pointer">
-                        <BsThreeDotsVertical onClick={() => handleToggleCamera(index)} />
+                        <BsThreeDotsVertical
+                          onClick={() => handleToggleCamera(index)}
+                        />
                       </div>
                     </div>
                   </div>
@@ -150,12 +179,16 @@ const Security = () => {
       {isAddCameraForm && (
         <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
           <div className="lg:w-1/2 h-[30rem] bg-white rounded-lg relative">
-            <AddCamera addCamera={addCamera} setIsAddCameraForm={setIsAddCameraForm} availableCameras={availableCameras} />
+            <AddCamera
+              addCamera={addCamera}
+              setIsAddCameraForm={setIsAddCameraForm}
+              availableCameras={availableCameras}
+            />
           </div>
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
-export default Security;
+export default Security

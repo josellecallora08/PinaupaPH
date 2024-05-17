@@ -1,14 +1,13 @@
 import React from 'react'
 import { MdOutlineClose, MdOutlineRemoveRedEye } from 'react-icons/md'
-import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { deleteDocument } from '../features/documents'
 
 const LeaseCard = ({ val, handleDelete }) => {
-  const dispatch = useDispatch()
-
   return (
-    <Link to={`/agreement/${val._id}/${val.pdf.reference}`} className="relative hover:scale-105 hover:duration-300 cursor-pointer flex flex-row shadow-sm shadow-light-gray rounded-md items-center bg-white">
+    <Link
+      to={`/agreement/${val._id}/${val.pdf.reference}`}
+      className="relative hover:scale-105 hover:duration-300 cursor-pointer flex flex-row shadow-sm shadow-light-gray rounded-md items-center bg-white"
+    >
       <div className="w-[95%] flex gap-2 items-center m-auto">
         <figure className="w-[70px] items-center">
           <img
@@ -25,9 +24,9 @@ const LeaseCard = ({ val, handleDelete }) => {
         <div className="w-full flex gap-5 justify-end">
           <button
             onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleDelete(val._id);
+              e.preventDefault()
+              e.stopPropagation()
+              handleDelete(val._id)
             }}
             className="bg-red inline-flex p-2 rounded-md top-8 right-4 hover:bg-red/55"
           >

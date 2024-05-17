@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { io } from 'socket.io-client';
-import { fetchReport } from './report';
-import { createComment } from './comment';
+import { io } from 'socket.io-client'
+import { fetchReport } from './report'
+import { createComment } from './comment'
 
 const socketSlice = createSlice({
   name: 'socket',
@@ -21,7 +21,7 @@ const socketSlice = createSlice({
 export const { fetchConnected, fetchDisconnected } = socketSlice.actions
 
 export const fetchComments = (id) => async (dispatch) => {
-    console.log(id)
+  console.log(id)
   const socket = io(`${import.meta.env.VITE_URL}/`)
 
   socket.on('connect', () => {
@@ -34,16 +34,16 @@ export const fetchComments = (id) => async (dispatch) => {
   })
 
   socket.on('receive-message', () => {
-    console.log('Received a message');
+    console.log('Received a message')
     // Dispatch the fetch_message action with updated token and chatId
-    
-      try {
-        dispatch(fetchReport(id));
-      } catch (error) {
-        console.error("Error fetching messages:", error);
-        // Handle the error as needed
-      }
-  });
+
+    try {
+      dispatch(fetchReport(id))
+    } catch (error) {
+      console.error('Error fetching messages:', error)
+      // Handle the error as needed
+    }
+  })
 }
 
 export default socketSlice.reducer

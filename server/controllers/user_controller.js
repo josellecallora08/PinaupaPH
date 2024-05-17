@@ -23,7 +23,7 @@ module.exports.createAdminAccount = async (req, res) => {
         .status(httpStatusCodes.UNAUTHORIZED)
         .json({ error: 'Only super admin can create apartment owners' })
     }
-    const { password, username, email } = req.body
+    const { name, password, username, email } = req.body
 
     if (password === '') {
       return res
@@ -61,6 +61,7 @@ module.exports.createAdminAccount = async (req, res) => {
     }
 
     const response = await USERMODEL.create({
+      name,
       username,
       email,
       password: hashed,
@@ -463,6 +464,7 @@ module.exports.update_profile = async (req, res) => {
     mobile_no,
     birthday,
   } = req.body
+  console.log(req.body)
   const salt = await bcrypt.genSalt(10)
   const details = {}
   if (name !== '') details.name = name
@@ -478,9 +480,9 @@ module.exports.update_profile = async (req, res) => {
           .json({ msg: 'New password does not match' })
     }
 
-    let response = await USERMODEL.findById(user_id).select(
-      'name username password email phone birthday role',
-    )
+    let response = await USERMODEL.findByIdAndUpdate(user_id, details, {
+      new: true,
+    })
     if (!response)
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -493,15 +495,8 @@ module.exports.update_profile = async (req, res) => {
           return res
             .status(httpStatusCodes.BAD_REQUEST)
             .json({ error: 'Error hashing the password.' })
-        details.password = hashed
-        let response = await USERMODEL.findByIdAndUpdate(
-          { _id: user_id },
-          details,
-        ).select('name username password email phone birthday role')
-        if (!response)
-          return res
-            .status(httpStatusCodes.BAD_REQUEST)
-            .json({ error: 'Failed to update information(2)' })
+        response.password = hashed
+        await response.save()
       } else {
         return res
           .status(httpStatusCodes.BAD_REQUEST)

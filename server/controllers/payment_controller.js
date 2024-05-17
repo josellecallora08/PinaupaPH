@@ -4,7 +4,7 @@ const INVOICEMODEL = require('../models/invoice')
 const httpStatusCodes = require('../constants/constants')
 const NOTIFMODEL = require('../models/notification')
 const pdf = require('html-pdf')
-const cloudinary = require('cloudinary').v2 // Import Cloudinary SDK
+const cloudinary = require('cloudinary').v2
 const pdf_template = require('../template/invoice')
 const nodemailer = require('nodemailer')
 const axios = require('axios')
@@ -198,7 +198,6 @@ module.exports.createIntent = async (req, res) => {
   try {
     const { invoice_id } = req.query
     const { amount } = req.body
-    console.log(amount)
     const response = await fetch(`${process.env.PAYMONGO_CREATE_INTENT}`, {
       method: 'POST',
       headers: {
@@ -249,6 +248,10 @@ module.exports.createIntent = async (req, res) => {
         .json({ error: 'Invoice cannot be updated.' })
     }
 
+    const updateBalance = await TENANTMODEL.findById(user.tenant_id)
+    updateBalance.balance -= responseInvoice.payment.amountPaid
+    await updateBalance.save()
+
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: 'Created intent...', response: responseInvoice })
@@ -258,63 +261,3 @@ module.exports.createIntent = async (req, res) => {
       .json({ error: err.message })
   }
 }
-
-// FOR WITH UI
-// module.exports.checkout = async (req, res) => {
-//   const { user_id } = req.query
-//   try {
-//     const url = 'https://api.paymongo.com/v1/checkout_sessions'
-//     const options = {
-//       method: 'POST',
-//       headers: {
-//         accept: 'application/json',
-//         'Content-Type': 'application/json',
-//         authorization: `Basic ${Buffer.from(process.env.PAYMONGO_SECRET_KEY).toString('base64')}`,
-//       },
-//       body: JSON.stringify({
-//         data: {
-//           attributes: {
-//             send_email_receipt: true,
-//             show_description: true,
-//             show_line_items: true,
-//             cancel_url: `${process.env.CLIENT_URL}`,
-//             description: 'Apartment Rental Fee',
-//             line_items: [
-//               {
-//                 currency: 'PHP',
-//                 amount: 600000,
-//                 description: 'Rent',
-//                 name: 'Rent Fee',
-//                 quantity: 1,
-//               },
-//             ],
-//             success_url: 'http://localhost:5173/dashboard',
-//             payment_method_types: [
-//               'gcash',
-//               'paymaya',
-//               'grab_pay',
-//               'dob',
-//               'card',
-//               'billease',
-//               'dob_ubp',
-//             ],
-//           },
-//         },
-//       }),
-//     }
-
-//     const response = await fetch(url, options)
-//     const json = await response.json()
-
-//     // Handle the JSON response (e.g., log specific details)
-//     console.log('Payment Method Response:', json)
-
-//     // Send a response to the client if needed
-//     res.status(httpStatusCodes.OK).json(json)
-//   } catch (err) {
-//     console.error({ error: err.message })
-//     return res
-//       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-//       .json({ error: 'Server Error' })
-//   }
-// }

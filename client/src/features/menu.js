@@ -6,7 +6,7 @@ const menuSlice = createSlice({
     sidebar: false,
     profile: false,
     doc_dropdown: false,
-    notif: false
+    notif: false,
   },
   reducers: {
     toggleSidebar: (state) => {
@@ -38,10 +38,18 @@ const menuSlice = createSlice({
       if (state.sidebar == false) {
         state.sidebar = !state.sidebar
       }
-    }
+    },
   },
 })
 
-export const { toggleSidebar, toggleCloseProfile,toggleCloseNotif, toggleCloseSidebar, toggleNotification, toggleProfile, toggleDocs } = menuSlice.actions
+export const {
+  toggleSidebar,
+  toggleCloseProfile,
+  toggleCloseNotif,
+  toggleCloseSidebar,
+  toggleNotification,
+  toggleProfile,
+  toggleDocs,
+} = menuSlice.actions
 
 export default menuSlice.reducer

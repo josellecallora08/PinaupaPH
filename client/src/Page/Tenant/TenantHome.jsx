@@ -27,7 +27,7 @@ const TenantHome = () => {
 
   return (
     <>
-              <style jsx>{`
+      <style jsx>{`
         .truncate-title {
           display: block;
           max-width: 250px; /* Adjust this value as needed */
@@ -84,7 +84,8 @@ const TenantHome = () => {
                       report
                         ?.filter(
                           (item) =>
-                            item?.sender_id?.user_id?._id === user?.user_id?._id,
+                            item?.sender_id?.user_id?._id ===
+                            user?.user_id?._id,
                         )
                         .map((val, key) => (
                           <tr key={key} className="border-b border-dark-gray">
@@ -161,20 +162,18 @@ const TenantHome = () => {
 
               {/* buttons */}
               <div className="flex flex-col mt-auto">
-                {/* <div className="flex justify-around bg-light-gray p-5 text-white">
-                  <h1>Invoice Payable:</h1>
-                  <p>10,000php</p>
-                </div> */}
-
                 {invoice?.isPaid === true ? (
                   <div>
                     <div className="flex justify-center w-full hover:opacity-80">
                       <div className="bg-primary-color w-full text-white p-5 text-center text-xl">
                         Paid{' '}
-                        {parseInt(invoice?.payment?.amountPaid)?.toLocaleString('en-PH', {
-                          style: 'currency',
-                          currency: 'PHP',
-                        })}{' '}
+                        {parseInt(invoice?.payment?.amountPaid)?.toLocaleString(
+                          'en-PH',
+                          {
+                            style: 'currency',
+                            currency: 'PHP',
+                          },
+                        )}{' '}
                         on {new Date(invoice?.datePaid).toDateString()}
                       </div>
                     </div>

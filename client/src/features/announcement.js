@@ -186,7 +186,6 @@ export const editAnnouncement = (fields, announcement_id) => async (dispatch) =>
         }
 
         const json = await response.json()
-        console.log(json)
         dispatch(editAnnouncementSuccess(json))
     } catch (err) {
         dispatch(fetchAnnouncementFailed(err.message))

@@ -18,11 +18,11 @@ const reportSlice = createSlice({
       state.msg = null
     },
     insertReportSuccess: (state, action) => {
-      state.loading = false;
-      state.data = [...state.data, action.payload.response];
-      state.msg = action.payload.msg;
+      state.loading = false
+      state.data = [...state.data, action.payload.response]
+      state.msg = action.payload.msg
     },
-  fetchReportsSuccess: (state, action) => {
+    fetchReportsSuccess: (state, action) => {
       state.loading = false
       state.data = action.payload
     },
