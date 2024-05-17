@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import City from '/city.svg'
 import renew from '/renew.svg'
+import invoice_img from '/invoice__.svg'
 import pfp from '/pfp.svg'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
@@ -27,6 +28,15 @@ const TenantHome = () => {
 
   return (
     <>
+      <style jsx>{`
+        .truncate-title {
+          display: block;
+          max-width: 250px; /* Adjust this value as needed */
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      `}</style>
       {loading ? (
         <span className="loading loading-bars loading-md"></span>
       ) : (
@@ -75,7 +85,8 @@ const TenantHome = () => {
                       report
                         ?.filter(
                           (item) =>
-                            item?.sender_id?.user_id._id === user?.user_id._id,
+                            item?.sender_id?.user_id?._id ===
+                            user?.user_id?._id,
                         )
                         .map((val, key) => (
                           <tr key={key} className="border-b border-dark-gray">
@@ -84,7 +95,7 @@ const TenantHome = () => {
                                 <div
                                   className={`md:w-2 md:h-2 w-2 h-2 rounded-full ${val?.status ? 'bg-blue' : 'bg-red'}`}
                                 ></div>
-                                <div className="md:text-sm text-xs">
+                                <div className=" truncate-title md:text-sm text-xs">
                                   {val?.title}
                                 </div>
                               </div>
@@ -107,7 +118,7 @@ const TenantHome = () => {
                                   alt="tenantlogo"
                                   className="w-6 h-6 rounded-full "
                                 />
-                                <div className="md:text-sm text-xs text-ellipsis text-nowrap w-52 max-w-[100px] md:max-w-[300px] overflow-hidden">
+                                <div className=" md:text-sm text-xs text-ellipsis text-nowrap w-52 max-w-[100px] md:max-w-[300px] overflow-hidden">
                                   {val?.description}
                                 </div>
                               </div>
@@ -127,58 +138,68 @@ const TenantHome = () => {
             </div>
 
             <div className=" md:order-none col-span-1 row-span-5 h-full bg-white flex flex-col order-3">
-              <div className="w-full h-fit bg-primary-color text-white p-2">
-                Payment
-              </div>
-              <div className="text-primary-color mt-5 px-2">
-                <h1 className="text-lg">Invoice Number</h1>
-                <p className="text-xl font-semibold my-5">
-                  {invoice?.pdf.reference}
-                </p>
-                <div className="flex justify-between my-8 font-thin">
-                  <div>Rent</div>
-                  <div>
-                    {invoice?.amount?.toLocaleString('en-PH', {
-                      style: 'currency',
-                      currency: 'PHP',
-                    })}
+              {invoice ? (
+                <>
+                  {' '}
+                  <div className="w-full h-fit bg-primary-color text-white p-2">
+                    Payment
                   </div>
-                </div>
-                <div className="flex justify-between my-8 font-thin">
-                  <div>Date</div>
-                  <div>{new Date(invoice?.createdAt)?.toDateString()}</div>
-                </div>
-              </div>
-
-              {/* buttons */}
-              <div className="flex flex-col mt-auto">
-                {/* <div className="flex justify-around bg-light-gray p-5 text-white">
-                  <h1>Invoice Payable:</h1>
-                  <p>10,000php</p>
-                </div> */}
-
-                {invoice?.isPaid === true ? (
-                  <div>
-                    <div className="flex justify-center w-full hover:opacity-80">
-                      <div className="bg-primary-color w-full text-white p-5 text-center text-xl">
-                        Paid{' '}
-                        {parseInt(invoice?.payment?.amountPaid)?.toLocaleString('en-PH', {
+                  <div className="text-primary-color mt-5 px-2">
+                    <h1 className="text-lg">Invoice Number</h1>
+                    <p className="text-xl font-semibold my-5">
+                      {invoice?.pdf.reference}
+                    </p>
+                    <div className="flex justify-between my-8 font-thin">
+                      <div>Rent</div>
+                      <div>
+                        {invoice?.amount?.toLocaleString('en-PH', {
                           style: 'currency',
                           currency: 'PHP',
-                        })}{' '}
-                        on {new Date(invoice?.datePaid).toDateString()}
+                        })}
                       </div>
                     </div>
+                    <div className="flex justify-between my-8 font-thin">
+                      <div>Date</div>
+                      <div>{new Date(invoice?.createdAt)?.toDateString()}</div>
+                    </div>
                   </div>
-                ) : (
-                  <Link
-                    to={`/tenant/payment/${invoice?._id}`}
-                    className="bg-primary-color w-full text-white p-5 text-center hover:opacity-80 hover:scale-105 duration-200"
-                  >
-                    Pay Now
-                  </Link>
-                )}
-              </div>
+                  {/* buttons */}
+                  <div className="flex flex-col mt-auto">
+                    {invoice?.isPaid === true ? (
+                      <div>
+                        <div className="flex justify-center w-full hover:opacity-80">
+                          <div className="bg-primary-color w-full text-white p-5 text-center text-xl">
+                            Paid{' '}
+                            {parseInt(
+                              invoice?.payment?.amountPaid,
+                            )?.toLocaleString('en-PH', {
+                              style: 'currency',
+                              currency: 'PHP',
+                            })}{' '}
+                            on {new Date(invoice?.datePaid).toDateString()}
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <Link
+                        to={`/tenant/payment/${invoice?._id}`}
+                        className="bg-primary-color w-full text-white p-5 text-center hover:opacity-80 hover:scale-105 duration-200"
+                      >
+                        Pay Now
+                      </Link>
+                    )}
+                  </div>{' '}
+                </>
+              ) : (
+                <>
+                  <div className='size-full flex items-center flex-col'>
+                    <img className='size-full' src={invoice_img} />
+                    <div className="h-20 text-center w-full font-regular font-semibold">
+                      No existing invoice yet.
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Calendar Card */}
@@ -187,7 +208,7 @@ const TenantHome = () => {
                 Calendar
               </div>
               <div className="w-full h-full">
-                <Calendar user={user} />
+                <Calendar user={user} invoice={invoice} />
               </div>
             </div>
 

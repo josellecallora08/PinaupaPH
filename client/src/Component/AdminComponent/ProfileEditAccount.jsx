@@ -1,7 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { IoMdClose } from 'react-icons/io'
-import { useSelector, useDispatch } from 'react-redux'
-import { editUser } from '../../features/user'
 const ProfileEditAccount = ({
   handleInput,
   handleSubmit,
@@ -10,15 +8,11 @@ const ProfileEditAccount = ({
   error,
   msg,
 }) => {
-  const dispatch = useDispatch()
-
-
-
   return (
     <div className="relative">
       <div className="relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center ">
         <h1 className="lg:text-xl  ml-5 text-lg font-bold ">
-          Edit Tenant Detail
+          Edit Admin Detail
         </h1>
       </div>
       <form

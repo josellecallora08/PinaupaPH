@@ -22,12 +22,10 @@ const AddPet = ({ id, setIsAddPetForm }) => {
     }))
   }
 
-  const handleSubmit = async (e) => {
+  const handleCreatePet = async (e) => {
     e.preventDefault()
     dispatch(createPet(id, fields))
-    if (msg || error) {
-      setIsAddPetForm((prevState) => !prevState)
-    }
+    setIsAddPetForm((prevState) => !prevState)
   }
 
   return (
@@ -36,7 +34,7 @@ const AddPet = ({ id, setIsAddPetForm }) => {
         <h1 className="lg:text-xl  ml-5 text-lg font-bold ">Add Pet</h1>
       </div>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleCreatePet}
         className="lg:w-full lg:pt-4 w-[20rem] h-[22rem] px-4 overflow-y-auto"
       >
         <button className="absolute top-4 right-6">
@@ -109,7 +107,6 @@ const AddPet = ({ id, setIsAddPetForm }) => {
         </div>
         <div className="flex justify-end mt-5 mb-3 gap-3">
           <button
-            onClick={handleSubmit}
             className=" bg-dark-blue text-white font-bold  py-2 px-4 rounded"
           >
             Submit

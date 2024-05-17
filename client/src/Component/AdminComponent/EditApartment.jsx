@@ -1,25 +1,35 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoMdClose } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchUnits } from '../../features/unit'
+import { fetchUnits, fetchUnitsApartment } from '../../features/unit'
+import { fetchApartments } from '../../features/apartment'
 import { editUser, editUserApartment } from '../../features/user'
 
 const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
   const dispatch = useDispatch()
+  const apartment = useSelector((state) => state.apartment.data)
   const unit = useSelector((state) => state.unit.data)
   const error = useSelector((state) => state.user.error)
+  const msg = useSelector((state) => state.user.msg)
+  const [apartmentBldg, setApartmentBldg] = useState('')
   const [fields, setFields] = useState({
-    unit_no: tenant?.unit_id.unit_no || '',
+    unit_no: tenant?.unit_id?.unit_no || '',
     deposit:
       tenant?.deposit !== null && tenant?.deposit !== undefined
         ? String(tenant?.deposit)
         : '',
-    occupancy: new Date(tenant?.monthly_due).toISOString().split('T')[0] || '',
+    occupancy: new Date(tenant?.monthly_due)?.toISOString().split('T')[0] || '',
   })
+
   useEffect(() => {
-    dispatch(fetchUnits(tenant.unit_id._id))
+    // dispatch(fetchUnits(tenant.unit_id._id))
+    // dispatch(fetchUnitsApartment(tenant.apartment_id._id))
+    dispatch(fetchApartments())
   }, [])
+
+  useEffect(() => {
+    dispatch(fetchUnitsApartment(apartmentBldg))
+  }, [apartmentBldg, setApartmentBldg])
 
   const handleInput = (e) => {
     const { name, value } = e.target
@@ -28,13 +38,10 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
       [name]: value,
     }))
   }
-
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(editUserApartment(tenant?.user_id?._id, fields))
-    console.log('asdasasdas')
     setIsEditApartmentForm((prevState) => !prevState)
-    
   }
 
   return (
@@ -66,6 +73,29 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
               htmlFor="apartment_unit"
               className="block text-gray-700 text-sm font-bold mb-2 "
             >
+              Apartment Bldg
+            </label>
+            <select
+              name="apartment"
+              id="apartment"
+              onChange={(e) => setApartmentBldg(e.target.value)}
+              className="w-full py-2 px-3 border-2 border-[#9e9e9e] rounded"
+            >
+              <option className="rounded-none">Select Apartment</option>
+              {apartment
+                // ?.filter((item) => item.occupied === false)
+                ?.map((val, key) => (
+                  <option key={key} className="rounded-none" value={val._id}>
+                    {val.name}
+                  </option>
+                ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="apartment_unit"
+              className="block text-gray-700 text-sm font-bold mb-2 "
+            >
               Apartment Unit
             </label>
             <select
@@ -73,6 +103,7 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
               id="unit_id"
               onChange={handleInput}
               className="w-full py-2 px-3 border-2 border-[#9e9e9e] rounded"
+              disabled={apartmentBldg === '' ? true : false}
             >
               <option className="rounded-none" value={fields.unit_no}>
                 {fields.unit_no}
@@ -124,7 +155,10 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
             />
           </div>
           <div className="flex justify-end mt-5 gap-3">
-            <button onClick={() => setIsEditApartmentForm((prevState) => !prevState)} className=" bg-dark-blue text-white font-bold py-2 px-4 rounded">
+            <button
+              type="submit"
+              className=" bg-dark-blue text-white font-bold py-2 px-4 rounded"
+            >
               Submit
             </button>
             <button

@@ -25,7 +25,7 @@ const invoiceSlice = createSlice({
       state.data = state.data.map((item) =>
         item?.pdf?.reference === action.payload.pdf.reference
           ? action.payload
-          : item
+          : item,
       )
       state.msg = action.payload.msg
     },
@@ -60,13 +60,13 @@ export const tenantInvoice = () => async (dispatch) => {
   try {
     dispatch(fetchStart())
     const token = Cookies.get('token')
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/invoice/`,{
-      method: "GET",
-      headers:{
-        Authorization: `Bearer ${token}`
-      }
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/invoice/`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
-    if(!response.ok){
+    if (!response.ok) {
       const json = await response.json()
       console.log(json)
       throw new Error(json.error)

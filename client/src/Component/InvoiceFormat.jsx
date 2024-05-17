@@ -138,9 +138,9 @@ const InvoiceFormat = () => {
                 <br />
                 Status:{' '}
                 <span
-                  className={`${invoice?.status === false ? 'text-red/70' : 'text-lime'} font-bold`}
+                  className={`${invoice?.isPaid === false ? 'text-red/70' : 'text-lime'} font-bold`}
                 >
-                  {invoice?.status === false ? 'Unpaid' : 'Paid'}
+                  {invoice?.isPaid === false ? 'Unpaid' : 'Paid'}
                 </span>
               </td>
             </tr>

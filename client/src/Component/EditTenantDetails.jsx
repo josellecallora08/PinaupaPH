@@ -1,8 +1,8 @@
 import React from 'react'
 import { useState } from 'react'
-import { IoMdClose } from "react-icons/io";
-import { useSelector, useDispatch } from 'react-redux';
-import { editUser } from '../features/user';
+import { IoMdClose } from 'react-icons/io'
+import { useSelector, useDispatch } from 'react-redux'
+import { editUser } from '../features/user'
 const EditTenantDetails = ({ setIsEditTenantDetailForm, tenant }) => {
   const error = useSelector((state) => state.user.error)
   const dispatch = useDispatch()
@@ -11,38 +11,39 @@ const EditTenantDetails = ({ setIsEditTenantDetailForm, tenant }) => {
     birthday: tenant?.user_id.birthday || '',
     mobile_no: tenant?.user_id.mobile_no || '',
     email: tenant?.user_id.email || '',
-
   })
-  const [isFormOpen, setIsFormOpen] = useState(false)
-
-  const toggleForm = (e) => {
-
-    setIsFormOpen(!isFormOpen);
-  }
   const handleInput = (e) => {
     const { name, value } = e.target
     setFields({
       ...fields,
-      [name]: value
+      [name]: value,
     })
-
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(editUser(tenant?.user_id._id, fields))
-    console.log('Form submitted');
-    setIsEditTenantDetailForm(prevState => !prevState)
+    setIsEditTenantDetailForm((prevState) => !prevState)
   }
 
   return (
-    <div className='relative'>
-      <div className='relative w-full h-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center '>
-        <h1 className="lg:text-xl  ml-5 text-lg font-bold ">Edit Tenant Detail</h1>
+    <div className="relative">
+      <div className="relative w-full h-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center ">
+        <h1 className="lg:text-xl  ml-5 text-lg font-bold ">
+          Edit Tenant Detail
+        </h1>
       </div>
-      <form onSubmit={handleSubmit} className="lg:w-full h-full w-[20rem]  p-3 overflow-y-auto">
-
-        <button className='absolute top-4 right-6'><IoMdClose onClick={() => setIsEditTenantDetailForm(prevState => !prevState)} size={25} color='white' /></button>
+      <form
+        onSubmit={handleSubmit}
+        className="lg:w-full h-full w-[20rem]  p-3 overflow-y-auto"
+      >
+        <button className="absolute top-4 right-6">
+          <IoMdClose
+            onClick={() => setIsEditTenantDetailForm((prevState) => !prevState)}
+            size={25}
+            color="white"
+          />
+        </button>
         {error && (
           <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
             {error}
@@ -50,7 +51,10 @@ const EditTenantDetails = ({ setIsEditTenantDetailForm, tenant }) => {
         )}
         <h1 className="text-xl font-bold mb-2">Personal Details</h1>
         <div className="mb-4">
-          <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2 ">
+          <label
+            htmlFor="name"
+            className="block text-gray-700 text-sm font-bold mb-2 "
+          >
             Name
           </label>
           <input
@@ -66,7 +70,10 @@ const EditTenantDetails = ({ setIsEditTenantDetailForm, tenant }) => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="birthday" className="block text-gray-700 text-sm font-bold mb-2 ">
+          <label
+            htmlFor="birthday"
+            className="block text-gray-700 text-sm font-bold mb-2 "
+          >
             Birthday
           </label>
           <input
@@ -82,7 +89,10 @@ const EditTenantDetails = ({ setIsEditTenantDetailForm, tenant }) => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="contact" className="block text-gray-700 text-sm font-bold mb-2 ">
+          <label
+            htmlFor="contact"
+            className="block text-gray-700 text-sm font-bold mb-2 "
+          >
             Contact
           </label>
           <input
@@ -98,7 +108,10 @@ const EditTenantDetails = ({ setIsEditTenantDetailForm, tenant }) => {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2 ">
+          <label
+            htmlFor="email"
+            className="block text-gray-700 text-sm font-bold mb-2 "
+          >
             Email
           </label>
           <input
@@ -113,19 +126,19 @@ const EditTenantDetails = ({ setIsEditTenantDetailForm, tenant }) => {
           />
         </div>
 
-        <div className='flex justify-end mt-3 gap-3'>
-
-          <button className=' bg-dark-blue text-white font-bold py-2 px-4 rounded'>
+        <div className="flex justify-end mt-3 gap-3">
+          <button className=" bg-dark-blue text-white font-bold py-2 px-4 rounded">
             Submit
           </button>
 
-          <button onClick={() => setIsEditTenantDetailForm(prevState => !prevState)} className='bg-red-500 bg-red text-white font-bold py-2 px-4 rounded'>
+          <button
+            onClick={() => setIsEditTenantDetailForm((prevState) => !prevState)}
+            className="bg-red-500 bg-red text-white font-bold py-2 px-4 rounded"
+          >
             Close
           </button>
-
         </div>
       </form>
-
     </div>
   )
 }

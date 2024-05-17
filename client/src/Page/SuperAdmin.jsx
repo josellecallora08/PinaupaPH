@@ -6,6 +6,7 @@ import Headbar from '../Component/Headbar'
 const CreateAdminPage = () => {
   const token = Cookies.get('token')
   const [formData, setFormData] = useState({
+    name: '',
     username: '',
     password: '',
     email: '',
@@ -21,7 +22,12 @@ const CreateAdminPage = () => {
     setError('')
     setMsg('')
     e.preventDefault()
-    if (!formData.username || !formData.password || !formData.email) {
+    if (
+      !formData.name ||
+      !formData.username ||
+      !formData.password ||
+      !formData.email
+    ) {
       setError('Please fill in all fields.')
       return
     }
@@ -41,9 +47,9 @@ const CreateAdminPage = () => {
         const json = await response.json()
         throw new Error(json.error)
       }
-      console.log('Creating admin:', formData)
       setMsg('Successfully created account for Admin')
       setFormData({
+        name: '',
         username: '',
         password: '',
         email: '',
@@ -88,6 +94,22 @@ const CreateAdminPage = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="w-full mt-2">
+              <label
+                htmlFor="name"
+                className="text-primary-color font-semibold "
+              >
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter name"
+                className="mr-10 rounded-md py-2 font-regular border-2 px-3 border-dark-gray w-full mt-2"
+                required
+              />
               <label
                 htmlFor="username"
                 className="text-primary-color font-semibold "

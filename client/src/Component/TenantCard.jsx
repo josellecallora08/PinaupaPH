@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
 import banner from '/banner.svg'
-const TenantCard = ({ data}) => {
+const TenantCard = ({ data }) => {
   return (
     <Link to={`/tenantprofile/${data?.user_id?._id}`} className="relative">
-      <div className="lg:text-base flex bg-white w-full h-[11rem] rounded-md relative text-xs shadow-sm shadow-light-gray hover:scale-105  hover:z-10  hover:duration-300 ">
-        <div className='lg:ml-2 size-full max-w-28 flex items-center justify-center'>
-          <figure className='size-full max-h-20 max-w-20 rounded-full overflow-hidden'>
+      <div className="lg:text-base flex bg-white w-full h-[10rem] rounded-md relative text-xs shadow-sm shadow-light-gray hover:scale-105  hover:z-10  hover:duration-300 ">
+        <div className="lg:ml-2 size-full max-w-28 flex items-center justify-center">
+          <figure className="size-full max-h-20 max-w-20 rounded-full overflow-hidden">
             <img
               src={data?.user_id?.profile_image.image_url}
               className=""
@@ -15,12 +15,13 @@ const TenantCard = ({ data}) => {
         </div>
         <div className="lg:-ml-2 ml-3 mt-8 flex flex-col gap-1 ">
           <p className="xl:text-lg lg:text-sm md:text-base font-semibold text-lg mr-24">
-            
             <span>{data?.user_id?.name}</span>
           </p>
-          <p className="md:text-base text-sm font-semibold">{data?.user_id?.phone}</p>
+          <p className="md:text-base text-sm font-semibold">
+            {data?.user_id?.phone}
+          </p>
           <p className="bg-primary-color  text-white font-regular text-sm rounded-md p-2 w-36 mt-2 hover:opacity-70">
-            Balance:  ₱ 
+            Balance: ₱
             <span className="font-semibold">
               {data?.balance ? data?.balance : 0}
             </span>
@@ -28,7 +29,7 @@ const TenantCard = ({ data}) => {
         </div>
         <div className="absolute right-2 ">
           <figure className="relative">
-            <img src={banner} className='md:h-24' alt="" />
+            <img src={banner} className="md:h-24" alt="" />
             <figcaption className="absolute top-0 text-white font-regular flex flex-col items-center justify-center w-full h-full pb-5">
               <span className="font-semibold">UNIT</span>
               <span>{data?.unit_id?.unit_no}</span>

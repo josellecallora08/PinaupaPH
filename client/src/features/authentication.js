@@ -38,7 +38,7 @@ const authSlice = createSlice({
     },
     sample: (state) => {
       state.msg = null
-    }
+    },
   },
 })
 
@@ -47,7 +47,7 @@ export const { loginStart, loginSuccess, loginFailed, logout, sample } =
 
 export const isLoggedin = () => async (dispatch) => {
   try {
-    const token = Cookies.get('token') 
+    const token = Cookies.get('token')
     if (!token) {
       return
     }
@@ -65,15 +65,15 @@ export const isLoggedin = () => async (dispatch) => {
     const data = await response.json()
     dispatch(loginSuccess(data))
   } catch (err) {
-      dispatch(loginFailed(err.message))
+    dispatch(loginFailed(err.message))
   }
 }
 
 export const isLogin = (credentials, navigate) => async (dispatch) => {
   try {
     dispatch(loginStart())
-    if(credentials.username === '' || credentials.password === ''){
-      throw new Error("Inputs cannot be empty")
+    if (credentials.username === '' || credentials.password === '') {
+      throw new Error('Inputs cannot be empty')
     }
     const response = await fetch(`${import.meta.env.VITE_URL}/api/user/login`, {
       method: 'POST',
@@ -89,7 +89,7 @@ export const isLogin = (credentials, navigate) => async (dispatch) => {
     }
 
     const data = await response.json()
-    Cookies.set('token', data.token )
+    Cookies.set('token', data.token)
     dispatch(isLoggedin())
     navigate('/dashboard')
   } catch (err) {

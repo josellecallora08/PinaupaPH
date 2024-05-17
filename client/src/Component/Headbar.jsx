@@ -181,27 +181,34 @@ const Headbar = () => {
           {profile && (
             <div
               ref={menuBg}
-              className={`absolute top-full right-2 w-48 mt-2 text-black rounded-md shadow-lg bg-white overflow-hidden transition-all duration-300 transform-gpu ${profile ? 'scale-y-100' : 'scale-y-0'} origin-top ease-in-out`}
+              className={`absolute top-[4.5rem] right-2 w-48 mt-2 text-black rounded-md shadow-lg bg-white overflow-hidden transition-all duration-300 transform-gpu ${profile ? 'scale-y-100' : 'scale-y-0'} origin-top ease-in-out`}
             >
               <ul>
-                <li
-                  className="px-5 py-2 text-base font-regular hover:bg-primary-color cursor-pointer hover:text-white"
-                  onClick={handleProfile}
-                >
-                  <Link to={'/profile'}>Profile</Link>
-                </li>
-                <li
-                  className="px-5 py-2 text-sm font-regular hover:bg-primary-color cursor-pointer hover:text-white"
-                  onClick={handleProfile}
-                >
-                  <Link to={'/terms&condition'}>Terms and Conditions</Link>
-                </li>
-                <li
-                  className="px-5 py-2 text-base font-regular hover:bg-primary-color cursor-pointer hover:text-white"
-                  onClick={handleProfile}
-                >
-                  <Link to={'/contact'}>Contact Us</Link>
-                </li>
+                <Link to={'/profile'}>
+                  <li
+                    className="px-5 py-2 text-base font-regular hover:bg-primary-color cursor-pointer hover:text-white"
+                    onClick={handleProfile}
+                  >
+                    Profile
+                  </li>
+                </Link>
+                <Link to={'/terms&condition'}>
+                  <li
+                    className="px-5 py-2 text-sm font-regular hover:bg-primary-color cursor-pointer hover:text-white"
+                    onClick={handleProfile}
+                  >
+                    Terms and Conditions
+                  </li>
+                </Link>
+                <Link to={'/contact'}>
+                  <li
+                    className="px-5 py-2 text-base font-regular hover:bg-primary-color cursor-pointer hover:text-white"
+                    onClick={handleProfile}
+                  >
+                    Contact Us
+                  </li>
+                </Link>
+
                 <li className="px-5 py-2 text-base font-regular  hover:bg-primary-color cursor-pointer hover:text-white">
                   <button
                     type="button"

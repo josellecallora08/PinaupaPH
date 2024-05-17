@@ -37,7 +37,7 @@ module.exports.fetch_household = async (req, res) => {
     if (!household)
       return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Household not found' })
 
-    return res.status(httpStatusCodes.OK).json({response:household[0]})
+    return res.status(httpStatusCodes.OK).json({ response: household[0] })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -81,7 +81,7 @@ module.exports.create_household = async (req, res) => {
 
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Created household successfully!', response:details  })
+      .json({ msg: 'Created household successfully!', response: details })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -140,7 +140,7 @@ module.exports.update_household = async (req, res) => {
     await response.save()
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Information Updated...', response:household})
+      .json({ msg: 'Information Updated...', response: household })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -151,30 +151,56 @@ module.exports.update_household = async (req, res) => {
 // * Tested API
 module.exports.delete_household = async (req, res) => {
   try {
-    const { user_id } = req.params
-    const { household_id } = req.query
-    const response = await TENANTMODEL.findOne({ user_id: user_id })
+    const { user_id } = req.params;
+    const { household_id } = req.query;
+    const response = await TENANTMODEL.findOne({ user_id: user_id });
+
     if (!response) {
-      return res
-        .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'User not found' })
+      return res.status(httpStatusCodes.NOT_FOUND).json({ error: 'User not found' });
     }
-    const index = response.household.findIndex(
-      (item) => item._id.toString() === household_id,
-    )
+
+    const index = response.household.findIndex(item => item._id.toString() === household_id);
+    
     if (index === -1) {
-      return res
-        .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'Unable to locate household' })
+      return res.status(httpStatusCodes.NOT_FOUND).json({ error: 'Unable to locate household' });
     }
-    console.log(response.household[index])
-    response.household.splice(index, 1)
-    await response.save()
-    return res.status(httpStatusCodes.OK).json({ msg: 'Removed household', response: response.household[index]})
+
+    const removedHousehold = response.household[index];
+    response.household.splice(index, 1);
+    await response.save();
+
+    return res.status(httpStatusCodes.OK).json({ msg: 'Removed household', response: removedHousehold });
   } catch (err) {
-    console.error({ error: err.message })
-    return res
-      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: err.message})
+    console.error({ error: err.message });
+    return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: err.message });
   }
-}
+};
+// module.exports.delete_household = async (req, res) => {
+//   try {
+//     const { user_id } = req.params
+//     const { household_id } = req.query
+//     const response = await TENANTMODEL.findOne({ user_id: user_id })
+//     if (!response) {
+//       return res
+//         .status(httpStatusCodes.NOT_FOUND)
+//         .json({ error: 'User not found' })
+//     }
+//     const index = response.household.findIndex(
+//       (item) => item._id.toString() === household_id,
+//     )
+//     if (index === -1) {
+//       return res
+//         .status(httpStatusCodes.NOT_FOUND)
+//         .json({ error: 'Unable to locate household' })
+//     }
+//     console.log(response.household[index])
+//     response.household.splice(index, 1)
+//     await response.save()
+//     return res.status(httpStatusCodes.OK).json({ msg: 'Removed household', response: response.household[index] })
+//   } catch (err) {
+//     console.error({ error: err.message })
+//     return res
+//       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+//       .json({ error: err.message })
+//   }
+// }

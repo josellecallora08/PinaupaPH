@@ -1,6 +1,7 @@
 const APARTMENTMODEL = require('../models/apartment')
 const UNITMODEL = require('../models/unit')
 const CCTVMODEL = require('../models/cctv')
+const TENANTMODEL = require('../models/tenant')
 const httpStatusCodes = require('../constants/constants')
 const cloudinary = require('cloudinary').v2
 
@@ -206,6 +207,9 @@ module.exports.edit_apartment = async (req, res) => {
     const response = await APARTMENTMODEL.findByIdAndUpdate(
       apartment_id,
       details,
+      {
+        new: true,
+      },
     )
     if (!response) {
       return res
@@ -227,25 +231,35 @@ module.exports.edit_apartment = async (req, res) => {
 module.exports.delete_apartment = async (req, res) => {
   try {
     const { apartment_id } = req.params
-    const response = await APARTMENTMODEL.findByIdAndDelete({
-      _id: apartment_id,
-    })
-    if (!response) {
-      return res
-        .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: `Unable to remove apartment building` })
-    }
-    const cctv = response.cctvs.map(async (item) => {
-      await CCTVMODEL.findByIdAndDelete({ _id: item })
-    })
-    const units = response.units.map(async (item) => {
-      await UNITMODEL.findByIdAndDelete({ _id: item })
-    })
 
-    await Promise.all([...cctv, ...units])
+    const tenant = await TENANTMODEL.find()
+    console.log(tenant)
+    const isOccupied = tenant.some((item) => item.apartment_id.toString() === apartment_id.toString())
+    if (isOccupied) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unable to delete apartment with tenants.' })
+    }
+    console.log(isOccupied)
+    // const response = await APARTMENTMODEL.findByIdAndDelete({
+    //   _id: apartment_id,
+    // })
+    // if (!response) {
+    //   return res
+    //     .status(httpStatusCodes.NOT_FOUND)
+    //     .json({ error: `Unable to remove apartment building` })
+    // }
+    // const cctv = response.cctvs.map(async (item) => {
+    //   await CCTVMODEL.findByIdAndDelete({ _id: item })
+    // })
+    // const units = response.units.map(async (item) => {
+    //   await UNITMODEL.findByIdAndDelete({ _id: item })
+    // })
+
+    // await Promise.all([...cctv, ...units])
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: `Apartment building Deleted`, response })
+      .json({ msg: `Apartment building Deleted`, tenant })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -399,9 +413,7 @@ module.exports.edit_apartment_unit = async (req, res) => {
       (item) => item._id.toString() === unit_id.toString(),
     )
     if (unit.unit_no !== unit_no) {
-      unitExist = apartment.units.some(
-        (item) => item.unit_no === unit_no, 
-      )
+      unitExist = apartment.units.some((item) => item.unit_no === unit_no)
       if (unitExist) {
         return res
           .status(httpStatusCodes.BAD_REQUEST)

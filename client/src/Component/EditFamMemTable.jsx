@@ -3,13 +3,19 @@ import FamMemEditableRow from './FamMemEditableRow'
 import FamMemReadRow from './FamMemReadRow'
 import { IoMdClose } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteHousehold, editHousehold, fetchHouseholds } from '../features/household'
+import {
+  deleteHousehold,
+  editHousehold,
+  fetchHouseholds,
+} from '../features/household'
 
-const Table = ({ id, setIsEditFamilyMemForm }) => {
+const Table = ({ id, setIsEditFamilyMemForm, handleDeleteClick }) => {
   const dispatch = useDispatch()
   const household = useSelector((state) => state.household.data)
   const [error, setError] = useState(null)
+  const [message, setMessage] = useState('')
   const [editContactId, setEditContactId] = useState(null)
+  const [isVisible, setIsVisible] = useState(false)
   const [editFormData, setEditFormData] = useState({
     name: '',
     mobile: '',
@@ -53,15 +59,6 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
     setEditContactId(null)
   }
 
-  const handleDeleteClick = async (id, contactId) => {
-    if (window.confirm(
-      'Are you sure you want to delete this tenant?',
-    )) {
-      dispatch(deleteHousehold(id, contactId))
-      console.log('Tenant deleted')
-    }
-  }
-
   useEffect(() => {
     dispatch(fetchHouseholds(id))
   }, [])
@@ -73,7 +70,8 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
           Edit Family Member Details
         </h1>
       </div>
-      <form onSubmit={handleEditFormSubmit}
+      <form
+        onSubmit={handleEditFormSubmit}
         className="flex flex-col overflow-y-auto h-96 "
       >
         <div className="lg:justify-between lg:flex lg:items-center lg:-mb-1 mb-3">
@@ -118,7 +116,7 @@ const Table = ({ id, setIsEditFamilyMemForm }) => {
             ))}
           </tbody>
         </table>
-       
+
         {/* {household.length <= 4 && (
           <div className="flex justify-end absolute bottom-4 right-0 mb-5 mr-10 gap-3">
             <button

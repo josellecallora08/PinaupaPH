@@ -15,8 +15,8 @@ import NotificationToast from '../../Component/ToastComponent/NotificationToast'
 const Tenant = () => {
   const [searchItem, setSearchItem] = useState('')
   const [isAddTenantFormOpen, setIsAddTenantFormOpen] = useState(false)
-  const [selectedOption, setSelectedOption] = useState('')
-  const [isVisible, setIsVisible] = useState(true);
+  const [selectedOption, setSelectedOption] = useState('all')
+  const [isVisible, setIsVisible] = useState(true)
 
   const [fields, setFields] = useState({
     name: '',
@@ -43,21 +43,19 @@ const Tenant = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(createTenant(fields))
-    if (error || msg) {
-      setIsAddTenantFormOpen((prevState) => !prevState)
-      setFields({
-        name: '',
-        username: '',
-        birthday: '',
-        mobile_no: '',
-        email: '',
-        password: '',
-        unit_id: '',
-        apartment_id: '',
-        deposit: '',
-        occupancy: '',
-      })
-    }
+    setIsAddTenantFormOpen((prevState) => !prevState)
+    setFields({
+      name: '',
+      username: '',
+      birthday: '',
+      mobile_no: '',
+      email: '',
+      password: '',
+      unit_id: '',
+      apartment_id: '',
+      deposit: '',
+      occupancy: '',
+    })
   }
 
   const toggleAddTenantForm = () => {
@@ -73,7 +71,6 @@ const Tenant = () => {
     } else {
       dispatch(fetchUsers())
     }
-
   }, [searchItem])
 
   const handleInput = (e) => {
@@ -85,7 +82,7 @@ const Tenant = () => {
   }
 
   useEffect(() => {
-    if (fields.apartment_id === '') return;
+    if (fields.apartment_id === '') return
     console.log(fields.apartment_id)
     dispatch(fetchUnitsApartment(fields.apartment_id))
   }, [fields.apartment_id])
@@ -93,7 +90,6 @@ const Tenant = () => {
   useEffect(() => {
     dispatch(fetchApartments())
   }, [])
-
 
   return (
     <>
@@ -110,9 +106,13 @@ const Tenant = () => {
             </div>
             <div className="w-full lg:w-fit flex items-center gap-5">
               <div className="w-full lg:text-sm flex items-center justify-center">
-                <select onChange={handleDropdown} className="select capitalize font-semibold select-bordered w-full max-w-xs">
+                <select
+                  onChange={handleDropdown}
+                  className="select capitalize font-semibold select-bordered w-full max-w-xs"
+                >
+                  <option value="all">All Tenants</option>
                   {apartment?.map((val, key) => (
-                    <option key={key} value={val._id} >
+                    <option key={key} value={val._id}>
                       {val.name}
                     </option>
                   ))}
@@ -129,13 +129,22 @@ const Tenant = () => {
           </div>
 
           {/* Body of Tenant Tab */}
-          <div className="lg:grid-cols-3  md:grid-cols-1 grid grid-cols-1 md:mr-10 gap-4 ">
-            {loading ?
-              <SearchLoading /> : selectedOption !== '' ? tenant?.filter((item) => !item?.user_id?.isDelete && item?.apartment_id._id === selectedOption).map((val, key) => (
-                <TenantCard key={key} data={val} />
-              )) : tenant?.filter(item => !item?.user_id?.isDelete).map((val, key) => (
-                <TenantCard key={key} data={val} />
-              ))}
+          <div className="lg:grid-cols-3  md:grid-cols-1 grid grid-cols-1 md:mr-10 gap-4 pb-5 ">
+            {loading ? (
+              <SearchLoading />
+            ) : selectedOption !== 'all' ? (
+              tenant
+                ?.filter(
+                  (item) =>
+                    !item?.user_id?.isDelete &&
+                    item?.apartment_id?._id === selectedOption,
+                )
+                .map((val, key) => <TenantCard key={key} data={val} />)
+            ) : (
+              tenant
+                ?.filter((item) => !item?.user_id?.isDelete)
+                .map((val, key) => <TenantCard key={key} data={val} />)
+            )}
           </div>
           {isAddTenantFormOpen && (
             <div className="fixed top-6 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">

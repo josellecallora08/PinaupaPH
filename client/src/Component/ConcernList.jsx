@@ -10,12 +10,10 @@ const ConcernList = () => {
   const [isCreateTicket, setisCreateTicket] = useState(false)
   const [searchItem, setSearchItem] = useState('')
   const [type, setSelectedType] = useState('')
-  const [update, setUpdate] = useState(false)
   const [description, setDescription] = useState('')
   const [attached_image, setImage] = useState(null)
   const error = useSelector((state) => state.report.error)
   const msg = useSelector((state) => state.report.msg)
-  const data = useSelector((state) => state.report.data)
   const user = useSelector((state) => state.auth.user)
   const loading = useSelector((state) => state.report.loading)
   const dispatch = useDispatch()
@@ -38,10 +36,7 @@ const ConcernList = () => {
     dispatch(
       createReport(user?.user_id._id, title, description, attached_image, type),
     )
-    // Add form submission logic here
-    if (msg || error || data) {
-      setisCreateTicket((prevState) => !prevState)
-    }
+    setisCreateTicket((prevState) => !prevState)
   }
 
   const handleSearch = (e) => {
@@ -53,12 +48,11 @@ const ConcernList = () => {
     } else {
       dispatch(fetchReports())
     }
-
-  }, [searchItem])
+  }, [searchItem, dispatch, msg])
 
   return (
     <>
-      <div className="h-2 px-5 lg:pl-14 py-3">
+      <div className="h-2 px-5 lg:pl-14 py-3 ">
         <h1 className="lg:text-base uppercase text-sm font-bold my-5 ">
           Concern And Issues
         </h1>
@@ -117,7 +111,7 @@ const ConcernList = () => {
           </div>
         </div>
 
-        <div className="lg:grid lg:grid-cols-3 lg:gap-y-2 lg:gap-x-3">
+        <div className="lg:grid lg:grid-cols-3 lg:gap-y-2 lg:gap-x-3 pb-10 ">
           {user && user?.role === 'Admin' ? (
             loading ? (
               <Loading />

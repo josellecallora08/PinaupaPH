@@ -46,14 +46,17 @@ export const createCCTV = (field, apartmentId) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/cctv/${apartmentId}`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/cctv/${apartmentId}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(field),
       },
-      body: JSON.stringify(field),
-    })
+    )
     if (!response.ok) {
       const json = await response.json()
       throw new Error(json.error)
@@ -89,11 +92,14 @@ export const fetchCCTV = (cctvId) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/cctv/${cctvId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/cctv/${cctvId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    })
+    )
     if (!response.ok) {
       const json = await response.json()
       throw new Error(json.error)
@@ -109,14 +115,17 @@ export const editCCTV = (fields, cctvId) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
     dispatch(startLoading())
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/cctv/${cctvId}`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/cctv/${cctvId}`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(fields),
       },
-      body: JSON.stringify(fields),
-    })
+    )
     if (!response.ok) {
       const json = await response.json()
       throw new Error(json.error)

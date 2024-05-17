@@ -17,7 +17,7 @@ import { GrFormView, GrFormAdd } from 'react-icons/gr'
 import Addpet from '../../Component/AddPet'
 import EditPetTable from '../../Component/EditPetTable'
 import { generateDocument } from '../../features/documents'
-import { fetchHousehold, fetchHouseholds } from '../../features/household'
+import { createHousehold, deleteHousehold, fetchHousehold, fetchHouseholds } from '../../features/household'
 import { fetchPets } from '../../features/pet'
 import EditTenantDetails from '../../Component/EditTenantDetails'
 import { isLoggedin } from '../../features/authentication'
@@ -33,6 +33,7 @@ const TenantProfile = () => {
   const [isAddHouseholdForm, setIsAddHouseholdForm] = useState(false)
   const [isAddPetForm, setIsAddPetForm] = useState(false)
   const [isRemovedot, setIsRemovedot] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
   const dispatch = useDispatch()
   const tenant = useSelector((state) => state.auth.user)
   const households = useSelector((state) => state.household.data)
@@ -94,12 +95,41 @@ const TenantProfile = () => {
         selectedFile,
       ),
     )
-    if (msg || error || single) {
-      setChangeModal(false)
-      // setIsVisible((prevState) => !prevState)
+    setChangeModal(false)
+    // setIsVisible((prevState) => !prevState)
+  }
+  const [fields, setFields] = useState({
+    name: '',
+    mobile: '',
+    birthday: '',
+    relationship: '',
+  })
+
+  const handleInput = (e) => {
+    const { name, value } = e.target
+    setFields((states) => ({
+      ...states,
+      [name]: value,
+    }))
+  }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    dispatch(createHousehold(tenant?.user_id._id, fields))
+    setIsVisible((prevState) => !prevState)
+    setIsAddHouseholdForm((prevState) => !prevState)
+    setFields({
+      name: '',
+      mobile: '',
+      birthday: '',
+      relationship: '',
+    })
+  }
+  const handleDeleteClick = async (contactId) => {
+    if (window.confirm('Are you sure you want to delete this household?')) {
+      dispatch(deleteHousehold(tenant?.user_id._id, contactId))
+      setIsVisible((prevState) => !prevState)
     }
   }
-
   useEffect(() => {
     dispatch(isLoggedin())
   }, [handleConfirm])
@@ -200,9 +230,9 @@ const TenantProfile = () => {
                     </div>
                     <button
                       onClick={handleDownload}
-                      className="btn  hover:text-primary-color flex items-center gap-2 absolute right-3 top-0 bg-primary-color text-white p-2 rounded-md "
+                      className=" text-xs lg:p-3 py-2 px-1 pr-2 hover:bg-primary-color/55 duration-300 hover:text-prim bg-primary-color  hover:text-primary-color flex items-center gap-2 absolute right-0 lg:top-1 bg-primary-color text-white  rounded-md "
                     >
-                      <MdOutlineFileDownload size={20} /> Lease Agreement
+                      <MdOutlineFileDownload size={15} /> Lease Agreement
                     </button>
                   </div>
 
@@ -223,7 +253,7 @@ const TenantProfile = () => {
 
                     <div className="mb-4 text-sm mt-3 ml-2 flex flex-col items-start">
                       <p className="lg:text-lg flex gap-[4.8rem] items-center">
-                        Username1
+                        Username
                         <span className="lg:text-base lg:ml-7 ml-6">
                           {tenant?.user_id.username}
                         </span>
@@ -293,7 +323,7 @@ const TenantProfile = () => {
                   {/*Apartment Details */}
                   <div>
                     <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center  w-full justify-between  py-1 bg-dark-blue text-white">
-                      <h1 className="lg:text-xl font-bold ">
+                      <h1 className="lg:text-xl pl-2 font-bold ">
                         Apartment Details
                       </h1>
                     </div>
@@ -398,6 +428,7 @@ const TenantProfile = () => {
                         <EditFamMemTable
                           id={tenant?.user_id._id}
                           setIsEditFamilyMemForm={setIsEditFamilyMemForm}
+                          handleDeleteClick={handleDeleteClick}
                         />
                       </div>
                     </div>
@@ -409,6 +440,9 @@ const TenantProfile = () => {
                         <AddHousehold
                           id={tenant.user_id._id}
                           setIsAddHouseholdForm={setIsAddHouseholdForm}
+                          fields={fields}
+                          handleInput={handleInput}
+                          handleSubmit={handleSubmit}
                         />
                       </div>
                     </div>

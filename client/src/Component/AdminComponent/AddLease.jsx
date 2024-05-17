@@ -4,21 +4,12 @@ import { fetchUsers } from '../../features/user'
 import Select from 'react-select'
 import { createDocument } from '../../features/documents'
 
-const AddLease = ({ setModal }) => {
+const AddLease = ({ setModal, selectedUser, setSelectedUser, handleLease }) => {
   const dispatch = useDispatch()
-  const [selectedUser, setSelectedUser] = useState(null)
   const modal = useRef(null)
-  const loading = useSelector((state) => state.docs.loading)
   const users = useSelector((state) => state.user.data)
+  const loading = useSelector((state) => state.docs.loading)
 
-  const handleLease = (e) => {
-    e.preventDefault()
-    dispatch(createDocument(selectedUser.value))
-    console.log(loading)
-    if (loading) {
-      setModal((state) => !state)
-    }
-  }
 
   useEffect(() => {
     const closeModal = (e) => {
@@ -40,9 +31,9 @@ const AddLease = ({ setModal }) => {
 
   const options = users
     ? users.map((user) => ({
-        value: user.user_id._id,
-        label: user.user_id.name,
-      }))
+      value: user.user_id._id,
+      label: user.user_id.name,
+    }))
     : []
 
   // Custom styles for the Select component
@@ -90,6 +81,8 @@ const AddLease = ({ setModal }) => {
               >
                 {loading ? 'Downloading...' : 'Submit'}
               </button>
+      {/* check */}
+
               <button
                 type="button"
                 onClick={() => setModal((prevState) => !prevState)}
