@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 import Cookies from 'js-cookie'
-import { redirect } from 'react-router-dom'
 
 const documentSlice = createSlice({
   name: 'docs',
@@ -9,7 +8,7 @@ const documentSlice = createSlice({
     error: null,
     data: null,
     msg: null,
-    single: null
+    single: null,
   },
   reducers: {
     startLoading: (state) => {
@@ -243,7 +242,7 @@ export const deleteDocument = (contract_id) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    console.log("docs delete", json)
+    console.log('docs delete', json)
     dispatch(deleteDocumentSuccess(json))
   } catch (err) {
     dispatch(actionDocumentFailed(err.message))

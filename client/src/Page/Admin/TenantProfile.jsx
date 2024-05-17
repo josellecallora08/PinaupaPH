@@ -140,7 +140,7 @@ const TenantProfile = () => {
     }
   }, [])
 
-  const birthday = new Date(tenant?.user_id.birthday).toLocaleDateString()
+  const birthday = tenant?.user_id?.birthday ? new Date(tenant?.user_id?.birthday).toLocaleDateString() : ''
   return (
     <>
       {isVisible && (
@@ -201,14 +201,14 @@ const TenantProfile = () => {
                     <div className="lg:items-center flex gap-3 relative mb-7 ">
                       <figure>
                         <img
-                          src={tenant?.user_id.profile_image.image_url}
+                          src={tenant?.user_id?.profile_image?.image_url}
                           alt="Profile"
                           className="lg:w-24 rounded-full object-fill lg:h-24 w-14 h-14"
                         />
                       </figure>
                       <div>
                         <h2 className="lg:text-2xl text-xl font-bold mb-2">
-                          {tenant?.user_id.name}
+                          {tenant?.user_id?.name}
                         </h2>
                         <h2 className="lg:text-2xl">
                           Unit - {tenant?.unit_id?.unit_no}
@@ -273,7 +273,7 @@ const TenantProfile = () => {
                         <p className="lg:text-lg flex gap-[4.8rem] items-center">
                           Username
                           <span className="lg:text-base lg:ml-7 ml-6">
-                            {tenant?.user_id.username}
+                            {tenant?.user_id?.username}
                           </span>
                         </p>
                         <p className="lg:text-lg flex gap-20 items-center">

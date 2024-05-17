@@ -101,10 +101,12 @@ const Invoice = () => {
                     <th className="text-white p-3">Tenant</th>
                     <th className="text-white p-3">Unpaid Balance</th>
                     <th className="text-white p-3">Due Date</th>
-                     { status == true && <>
+                    {status == true && (
+                      <>
                         <th className="text-white p-3">Date Paid</th>
                         <th className="text-white p-3">Amount Paid</th>
-                      </>}
+                      </>
+                    )}
                     <th className="text-white p-3">Status</th>
                     <th className="text-white py-3 lg:px-5">Action</th>
                   </tr>
@@ -130,7 +132,7 @@ const Invoice = () => {
                             <td className="p-2">
                               {(val?.tenant_id?.balance === 0
                                 ? 0
-                                : val?.tenant_id?.balance - val?.amount
+                                : val?.payment.unpaidBalance
                               )?.toLocaleString('en-PH', {
                                 style: 'currency',
                                 currency: 'PHP',

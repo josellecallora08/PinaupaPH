@@ -32,7 +32,6 @@ const paymentSlice = createSlice({
 export const { startLoading, paymentSuccess, fetchKeySuccess, actionFailed } =
   paymentSlice.actions
 
-
 export const paymentStatus = (invoice_id, navigate) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
@@ -240,7 +239,7 @@ export const cashPayment = () => async (dispatch) => {
     const token = Cookies.get('token')
     const socket = io(`${import.meta.env.VITE_URL}/`)
     const response = await fetch(`${import.meta.env.VITE_URL}/api/payment/cash`)
-  } catch (err) { }
+  } catch (err) {}
 }
 
 export const createPayment =

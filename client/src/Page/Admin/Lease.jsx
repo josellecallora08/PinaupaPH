@@ -7,7 +7,12 @@ import { Link } from 'react-router-dom'
 import 'react-datepicker/dist/react-datepicker.css'
 import Loading from '../../Component/LoadingComponent/Loading'
 import { useDispatch, useSelector } from 'react-redux'
-import { createDocument, deleteDocument, fetchDocuments, searchContract } from '../../features/documents'
+import {
+  createDocument,
+  deleteDocument,
+  fetchDocuments,
+  searchContract,
+} from '../../features/documents'
 
 const Least = () => {
   const dispatch = useDispatch()
@@ -19,7 +24,7 @@ const Least = () => {
   const toggleModal = () => {
     setModal(!modal)
   }
-  console.log("docs contracts", contracts)
+  console.log('docs contracts', contracts)
 
   const handleSearch = (e) => {
     setSearchItem(e.target.value)
@@ -49,16 +54,21 @@ const Least = () => {
   return (
     <>
       {loading && <Loading />}
-      {modal && <AddLease setModal={setModal} selectedUser={selectedUser} setSelectedUser={setSelectedUser} handleLease={handleLease} />}
+      {modal && (
+        <AddLease
+          setModal={setModal}
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+          handleLease={handleLease}
+        />
+      )}
       <div className="w-full m-auto h-full flex flex-col bg-white1  ">
         <div className="w-11/12 h-full m-auto">
           <div className="lg:text-base pt-5 font-bold">
             <Link to={'/dashboard'} className="hover:underline">
               DOCUMENTS
             </Link>{' '}
-      {/* check */}
-
-            /{' '}
+            {/* check */}/{' '}
             <Link to={`/document/lease-agreement`} className="hover:underline">
               LEASE AGREEMENTS{' '}
             </Link>
@@ -78,7 +88,9 @@ const Least = () => {
 
           <div className=" md:grid-cols-3  grid grid-cols-1 gap-5 mt-3">
             {contracts &&
-              contracts?.map((val, key) => <LeaseCard key={key} val={val} handleDelete={handleDelete} />)}
+              contracts?.map((val, key) => (
+                <LeaseCard key={key} val={val} handleDelete={handleDelete} />
+              ))}
           </div>
         </div>
       </div>

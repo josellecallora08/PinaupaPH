@@ -30,7 +30,7 @@ const unitSlice = createSlice({
       state.msg = action.payload.msg
     },
     editUnitSuccess: (state, action) => {
-      state.loading = false 
+      state.loading = false
       state.data = state.data.map((unit) =>
         unit._id === action.payload ? action.payload.response : unit,
       )
@@ -38,7 +38,9 @@ const unitSlice = createSlice({
     },
     deleteUnitSuccess: (state, action) => {
       state.loading = false
-      state.data = state.data.filter((unit) => unit._id !== action.payload.response._id)
+      state.data = state.data.filter(
+        (unit) => unit._id !== action.payload.response._id,
+      )
       state.msg = action.payload.msg
     },
     actionUnitFailed: (state, action) => {

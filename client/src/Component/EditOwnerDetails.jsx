@@ -18,7 +18,9 @@ function EditOwnerDetails({
   const dispatch = useDispatch()
   const [fields, setFields] = useState({
     name: user?.name || '',
-    birthday: user?.birthday || '',
+    birthday: user?.birthday
+      ? new Date(user?.birthday)?.toISOString().split('T')[0]
+      : '',
     mobile_no: user?.mobile_no || '',
     email: user?.email || '',
   })
@@ -33,10 +35,8 @@ function EditOwnerDetails({
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(editUser(user?._id, fields))
-    if (error || msg || data || single) {
-      setIsModalOpen((prevState) => !prevState)
-      setIsVisible(true)
-    }
+    setIsModalOpen((prevState) => !prevState)
+    setIsVisible(true)
   }
   useEffect(() => {
     dispatch(isLoggedin())
@@ -99,7 +99,7 @@ function EditOwnerDetails({
                 <input
                   type="date"
                   name="birthday"
-                  value={new Date(user?.birthday)?.toISOString().split('T')[0]}
+                  value={fields.birthday}
                   onChange={handleInput}
                   className="w-full h-full p-3 outline-none"
                 />

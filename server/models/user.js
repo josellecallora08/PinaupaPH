@@ -4,6 +4,8 @@ const USERMODEL = new mongoose.Schema(
   {
     name: {
       type: String,
+      default: null
+
     },
     username: {
       type: String,
@@ -14,6 +16,7 @@ const USERMODEL = new mongoose.Schema(
       type: String,
       unqiue: true,
       required: true,
+      default: null
     },
     password: {
       type: String,
@@ -22,9 +25,11 @@ const USERMODEL = new mongoose.Schema(
     mobile_no: {
       type: String,
       unique: true,
+      default: null
     },
     birthday: {
       type: Date,
+      default: null
     },
     profile_image: {
       image_url: String,

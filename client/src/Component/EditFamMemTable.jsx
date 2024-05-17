@@ -3,7 +3,11 @@ import FamMemEditableRow from './FamMemEditableRow'
 import FamMemReadRow from './FamMemReadRow'
 import { IoMdClose } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteHousehold, editHousehold, fetchHouseholds } from '../features/household'
+import {
+  deleteHousehold,
+  editHousehold,
+  fetchHouseholds,
+} from '../features/household'
 
 const Table = ({ id, setIsEditFamilyMemForm, handleDeleteClick }) => {
   const dispatch = useDispatch()
@@ -11,7 +15,7 @@ const Table = ({ id, setIsEditFamilyMemForm, handleDeleteClick }) => {
   const [error, setError] = useState(null)
   const [message, setMessage] = useState('')
   const [editContactId, setEditContactId] = useState(null)
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false)
   const [editFormData, setEditFormData] = useState({
     name: '',
     mobile: '',
@@ -49,14 +53,11 @@ const Table = ({ id, setIsEditFamilyMemForm, handleDeleteClick }) => {
     console.log(editFormData)
     dispatch(editHousehold(id, editContactId, editFormData))
     setEditContactId(null)
-    
   }
 
   const handleCancelClick = () => {
     setEditContactId(null)
   }
-
-
 
   useEffect(() => {
     dispatch(fetchHouseholds(id))
@@ -69,7 +70,8 @@ const Table = ({ id, setIsEditFamilyMemForm, handleDeleteClick }) => {
           Edit Family Member Details
         </h1>
       </div>
-      <form onSubmit={handleEditFormSubmit}
+      <form
+        onSubmit={handleEditFormSubmit}
         className="flex flex-col overflow-y-auto h-96 "
       >
         <div className="lg:justify-between lg:flex lg:items-center lg:-mb-1 mb-3">

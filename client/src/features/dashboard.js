@@ -23,13 +23,13 @@ const dashboardSlice = createSlice({
       state.loading = false
       state.goodpayer = action.payload
     },
-    fetchRevenueSuccess: (state,action) => {
+    fetchRevenueSuccess: (state, action) => {
       state.loading = false
       state.chart = action.payload
     },
-    fetchTotalOReportsSuccess:(state, action) => {
-        state.loading = false
-        state.reports = action.payload
+    fetchTotalOReportsSuccess: (state, action) => {
+      state.loading = false
+      state.reports = action.payload
     },
     fetchTotalOccupancySuccess: (state, action) => {
       state.loading = false
@@ -143,26 +143,26 @@ export const fetchTotalOccupancy = (month, year) => async (dispatch) => {
 }
 
 export const fetchReports = () => async (dispatch) => {
-    try {
-      dispatch(fetchRateStart())
-      const token = Cookies.get('token')
-      const response = await fetch(
-        `${import.meta.env.VITE_URL}/api/dashboard/reports`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+  try {
+    dispatch(fetchRateStart())
+    const token = Cookies.get('token')
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/dashboard/reports`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      )
-      if (!response.ok) {
-        const json = await response.json()
-        throw new Error(json.error)
-      }
+      },
+    )
+    if (!response.ok) {
       const json = await response.json()
-      dispatch(fetchTotalOReportsSuccess(json))
-    } catch (err) {
-      dispatch(fetchFailed())
+      throw new Error(json.error)
     }
+    const json = await response.json()
+    dispatch(fetchTotalOReportsSuccess(json))
+  } catch (err) {
+    dispatch(fetchFailed())
+  }
 }
 
 export default dashboardSlice.reducer
