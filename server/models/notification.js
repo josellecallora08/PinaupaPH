@@ -19,28 +19,12 @@ const NOTIFMODEL = new mongoose.Schema(
     url: {
       type: String,
     },
-    title:{
-      type: String
+    title: {
+      type: String,
     },
     description: {
-      type:String
+      type: String,
     },
-    // announcement_id: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: 'announcements',
-    // },
-    // comment_id: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: 'reports.comments',
-    // },
-    // payment_id: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: 'invoice',
-    // },
-    // report_id: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: 'reports',
-    // },
     isRead: {
       type: Boolean,
       default: false,

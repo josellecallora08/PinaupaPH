@@ -182,7 +182,7 @@ module.exports.deliquencyRate = async (req, res) => {
       return datePaid.getFullYear() === parsedYear && datePaid > dueDate
     }).length
 
-    const totalPayer = totalGoodPayer + totalBadPayer
+    const totalPayer = response.length
     const percentage = (totalGoodPayer / totalTenants) * 100
 
     return res.status(httpStatusCodes.OK).json({

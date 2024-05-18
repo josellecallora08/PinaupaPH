@@ -1,18 +1,18 @@
 const httpStatusCodes = require('../constants/constants')
 const TENANTMODEL = require('../models/tenant')
-const USERMODEL = require('../models/user')
 const CONTRACTMODEL = require('../models/contract')
-const UNITMODEL = require('../models/unit')
 const pdf = require('html-pdf')
 const cloudinary = require('cloudinary').v2
 const pdf_template = require('../template/contract')
+const nodemailer = require('nodemailer')
+const axios = require('axios')
 
 module.exports.fetchContracts = async (req, res) => {
   try {
     const response = await CONTRACTMODEL.find({}).populate({
       path: 'tenant_id',
       populate: {
-        path: 'user_id unit_id',
+        path: 'user_id unit_id apartment_id',
       },
     })
 
@@ -192,7 +192,7 @@ module.exports.createContract = async (req, res) => {
           else resolve(buffer)
         })
     })
-
+   
     const cloudinaryResponse = await new Promise((resolve, reject) => {
       cloudinary.uploader
         .upload_stream(
@@ -201,7 +201,7 @@ module.exports.createContract = async (req, res) => {
             format: 'pdf', // Specify resource type as 'raw' for PDF
             folder: 'PinaupaPH/Contracts', // Folder in Cloudinary where PDF will be stored
             overwrite: true,
-            transformation: [{ width: 612, height: 1008, crop: 'fit' }], // Do not overwrite if file with the same name exists
+            // transformation: [{ width: 612, height: 1008, crop: 'fit' }], // Do not overwrite if file with the same name exists
           },
           (error, result) => {
             if (error) reject(error)
@@ -216,6 +216,89 @@ module.exports.createContract = async (req, res) => {
         .status(httpStatusCodes.CONFLICT)
         .json({ error: 'Failed to upload PDF to Cloudinary...' })
     }
+
+    const downloadPdfFromCloudinary = async () => {
+      const response = await axios.get(cloudinaryResponse.secure_url, {
+        responseType: 'stream',
+      })
+      return response.data
+    }
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.GOOGLE_EMAIL,
+        pass: process.env.GOOGLE_PASSWORD,
+      },
+    })
+    const mailOptions = {
+      from: 'pinaupaph@gmail.com',
+      to: response.user_id.email,
+      subject: `Lease Agreement for ${response.user_id.name}`,
+      html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>Contract Agreement</title>
+          <style>
+              body {
+                  font-family: Arial, sans-serif;
+                  background-color: #f4f4f4;
+                  padding: 20px;
+              }
+              .container {
+                  background-color: #ffffff;
+                  padding: 20px;
+                  border-radius: 5px;
+                  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+              }
+              .header {
+                  text-align: center;
+                  margin-bottom: 20px;
+              }
+              .content {
+                  font-size: 16px;
+                  line-height: 1.5;
+              }
+              .footer {
+                  text-align: center;
+                  margin-top: 20px;
+                  font-size: 12px;
+                  color: #888888;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <div class="header">
+                  <h1>Contract Agreement</h1>
+              </div>
+              <div class="content">
+                  <p>Dear ${response?.user_id?.name},</p>
+                  <p>Please find attached your contract agreement.</p>
+              </div>
+              <div class="footer">
+                  <p>&copy; 2024 PinaupaPH. All rights reserved.</p>
+              </div>
+          </div>
+      </body>
+      </html>
+  `,
+      attachments: [
+        {
+          filename: 'Contract.pdf',
+          content: await downloadPdfFromCloudinary(),
+        },
+      ],
+    }
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log('Error:', error)
+      } else {
+        console.log('Email sent:', info.response)
+      }
+    })
 
     const contractResponse = await CONTRACTMODEL.create({
       tenant_id: response?._id,

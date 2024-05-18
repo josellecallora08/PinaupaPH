@@ -47,9 +47,10 @@ module.exports.madePayment = async (req, res) => {
       cloudinary.uploader
         .upload_stream(
           {
+            public_id: response.pdf.public_id,
             resource_type: 'raw',
             format: 'pdf',
-            folder: 'PinaupaPH/Invoices',
+            // folder: 'PinaupaPH/Invoices',
             overwrite: true,
           },
           (error, result) => {
@@ -132,18 +133,20 @@ module.exports.madePayment = async (req, res) => {
           .json({ error: 'Invoice cannot be updated.' })
       }
 
-      const sendNotif = await NOTIFMODEL.create({
-        sender_id: response.tenant_id.user_id._id,
-        receiver_id: admin._id,
-        title: 'Rental Fee',
-        description: 'Rental Payment has been paid.',
-        type: 'Payment',
-      })
+      if (status === succeeded) {
+        const sendNotif = await NOTIFMODEL.create({
+          sender_id: response.tenant_id.user_id._id,
+          receiver_id: admin._id,
+          title: 'Rental Fee',
+          description: 'Rental Payment has been paid.',
+          type: 'Payment',
+        })
 
-      if (!sendNotif) {
-        return res
-          .status(httpStatusCodes.BAD_REQUEST)
-          .json({ error: 'Cannot send Notification' })
+        if (!sendNotif) {
+          return res
+            .status(httpStatusCodes.BAD_REQUEST)
+            .json({ error: 'Cannot send Notification' })
+        }
       }
     }
 
