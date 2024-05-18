@@ -63,7 +63,7 @@ const Apartment = () => {
       <div className="w-full h-screen bg-white1">
         {/* Top of Apartment Tab */}
         <div className="w-11/12 m-auto h-full ">
-          <h1 className="uppercase font-bold py-5">Apartments Listing </h1>
+          <h1 className="uppercase font-bold py-5">List of Apartment</h1>
           <div className="lg:justify-between md:justify-between flex-wrap justify-end flex items-center gap-2 w-full">
             <div className="w-full md:max-w-60">
               <SearchBar onSearch={handleSearch} />

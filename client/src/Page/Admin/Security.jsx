@@ -85,95 +85,97 @@ const Security = () => {
 
   return (
     <>
-      <div className="w-11/12 mx-auto">
-        <div className="flex justify-between items-center p-4">
-          <div>
-            <h1 className="font-bold h-fit m-auto py-5 lg:py-0">
-              Security/CCTV Live Feeds
-            </h1>
-          </div>
-          <div>
-            <button
-              onClick={() => setIsAddCameraForm(true)}
-              className="btn text-white lg:px-5 lg:py-3 px-2 py-1 text-xs uppercase bg-primary-color"
-            >
-              <IoMdAdd size={15} /> Add CCTV
-            </button>
-          </div>
-        </div>
-        {/* Container */}
-        <div className="grid lg:grid-cols-4 gap-2 mb-10">
-          {/* Boxes */}
-          {cameras.map((camera, index) => (
-            <div
-              key={index}
-              className="col-span-2 relative"
-              onMouseEnter={() =>
-                setIsHovered((prevState) =>
-                  prevState.map((item, i) => (i === index ? true : item)),
-                )
-              }
-              onMouseLeave={() =>
-                setIsHovered((prevState) =>
-                  prevState.map((item, i) => (i === index ? false : item)),
-                )
-              }
-            >
-              <div className="relative h-full">
-                {/* Camera Feed */}
-                {showCameraFeed[index] ? (
-                  <div className="w-full h-auto relative">
-                    <Webcam
-                      audio={false}
-                      screenshotFormat="image/jpeg"
-                      width="100%"
-                      height="100%"
-                      ref={webcamRef}
-                      videoConstraints={{ deviceId: camera.deviceId }}
-                    />
-                    {/* Name and Triple Dots */}
-                    <div
-                      className={`absolute top-0 right-0 p-2 flex justify-between items-center bg-primary-color text-white rounded-tr-md `}
-                      ref={(el) => (tripleDotsRefs.current[index] = el)}
-                    >
-                      <div className="mr-2 text-sm">{camera.name}</div>
-                      <div className="cursor-pointer">
-                        <BsThreeDotsVertical
-                          onClick={() => handleToggleCamera(index)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex justify-center items-center h-80">
-                    <span>Camera is closed</span>
-                  </div>
-                )}
-                {/* Triple Dots Menu */}
-                {isOpenTripleDots[index] && (
-                  <div className="absolute right-0 top-3 mt-8 z-10">
-                    <div className="bg-white w-36 cursor-pointer shadow-md shadow-gray">
-                      <div
-                        onClick={() => handleCloseCamera(index)}
-                        className="p-2 cursor-pointer hover:bg-primary-color hover:text-white"
-                      >
-                        {showCameraFeed[index] ? 'Close Camera' : 'Open Camera'}
-                      </div>
-                      <div
-                        onClick={() => handleDeleteCamera(index)}
-                        className="p-2 cursor-pointer hover:bg-primary-color hover:text-white"
-                      >
-                        Delete
-                      </div>
-                      <div className="p-2 cursor-pointer hover:bg-primary-color hover:text-white">
-                        Refresh
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
+      <div className='w-full h-full bg-white1'>
+        <div className="w-11/12 mx-auto">
+          <div className="flex justify-between items-center p-4">
+            <div>
+              <h1 className="font-bold h-fit m-auto py-5 lg:py-0">
+                Security/CCTV Live Feeds
+              </h1>
             </div>
-          ))}
+            <div>
+              <button
+                onClick={() => setIsAddCameraForm(true)}
+                className="btn text-white lg:px-5 lg:py-3 px-2 py-1 text-xs uppercase bg-primary-color"
+              >
+                <IoMdAdd size={15} /> Add CCTV
+              </button>
+            </div>
+          </div>
+          {/* Container */}
+          <div className="grid lg:grid-cols-4 gap-2 mb-10">
+            {/* Boxes */}
+            {cameras.map((camera, index) => (
+              <div
+                key={index}
+                className="col-span-2 relative"
+                onMouseEnter={() =>
+                  setIsHovered((prevState) =>
+                    prevState.map((item, i) => (i === index ? true : item)),
+                  )
+                }
+                onMouseLeave={() =>
+                  setIsHovered((prevState) =>
+                    prevState.map((item, i) => (i === index ? false : item)),
+                  )
+                }
+              >
+                <div className="relative h-full">
+                  {/* Camera Feed */}
+                  {showCameraFeed[index] ? (
+                    <div className="w-full h-auto relative">
+                      <Webcam
+                        audio={false}
+                        screenshotFormat="image/jpeg"
+                        width="100%"
+                        height="100%"
+                        ref={webcamRef}
+                        videoConstraints={{ deviceId: camera.deviceId }}
+                      />
+                      {/* Name and Triple Dots */}
+                      <div
+                        className={`absolute top-0 right-0 p-2 flex justify-between items-center bg-primary-color text-white rounded-tr-md `}
+                        ref={(el) => (tripleDotsRefs.current[index] = el)}
+                      >
+                        <div className="mr-2 text-sm">{camera.name}</div>
+                        <div className="cursor-pointer">
+                          <BsThreeDotsVertical
+                            onClick={() => handleToggleCamera(index)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex justify-center items-center h-80">
+                      <span>Camera is closed</span>
+                    </div>
+                  )}
+                  {/* Triple Dots Menu */}
+                  {isOpenTripleDots[index] && (
+                    <div className="absolute right-0 top-3 mt-8 z-10">
+                      <div className="bg-white w-36 cursor-pointer shadow-md shadow-gray">
+                        <div
+                          onClick={() => handleCloseCamera(index)}
+                          className="p-2 cursor-pointer hover:bg-primary-color hover:text-white"
+                        >
+                          {showCameraFeed[index] ? 'Close Camera' : 'Open Camera'}
+                        </div>
+                        <div
+                          onClick={() => handleDeleteCamera(index)}
+                          className="p-2 cursor-pointer hover:bg-primary-color hover:text-white"
+                        >
+                          Delete
+                        </div>
+                        <div className="p-2 cursor-pointer hover:bg-primary-color hover:text-white">
+                          Refresh
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       {isAddCameraForm && (

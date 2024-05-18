@@ -106,10 +106,10 @@ const Profile = () => {
           PROFILE
         </p>
         {/* Profile / landlord */}
-        <div className="w-full h-full ">
-          <div className="flex justify-center w-11/12 h-full m-auto rounded-md shadow-md flex-col md:flex-row">
+        <div className="w-full h-full mt-2 ">
+          <div className="flex justify-center w-11/12 h-full m-auto rounded-md shadow-md flex-col md:flex-row bg-white">
             <div className="flex flex-col w-full h-full">
-              <div className="flex justify-center items-center w-full h-full">
+              <div className="flex justify-center items-center w-full h-full py-4">
                 <figure className=" border-black border-2 cursor-pointer flex justify-center items-center w-full h-full md:max-w-60 md:max-h-60  max-w-40 max-h-40 rounded-full ">
                   <img
                     src={

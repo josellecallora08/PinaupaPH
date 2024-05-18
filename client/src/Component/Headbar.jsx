@@ -151,7 +151,7 @@ const Headbar = () => {
             </button>
           )}
           <div>
-            <span className="text-gray text-sm md:text-regular font-light">
+            <span className="text-gray text-sm md:text-regular font-light ml-4">
               {completeDate}
             </span>
           </div>
@@ -159,7 +159,7 @@ const Headbar = () => {
         <div className="flex items-center">
           {user?.user_id?.role === 'Tenant' && (
             <button onClick={handleNotif} className="relative">
-              <TbBellRinging size={25} color="white" />
+              <TbBellRinging className="mr-2" size={25} color="white" />
 
               <span className="absolute text-white bg-red/80 w-full max-w-[15px] rounded-full text-sm -top-2 -right-1">
                 {filteredNotif && filteredNotif?.length >= 1
