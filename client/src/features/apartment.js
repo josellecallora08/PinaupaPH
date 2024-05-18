@@ -202,6 +202,7 @@ export const editApartment = (fields, apartmentId) => async (dispatch) => {
 export const deleteApartment = (apartment_id) => async (dispatch) => {
   try {
     const token = Cookies.get('token')
+    dispatch(apartmentStart())
     const response = await fetch(
       `${import.meta.env.VITE_URL}/api/apartment/${apartment_id}`,
       {
@@ -217,6 +218,7 @@ export const deleteApartment = (apartment_id) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
+    console.log(json)
     dispatch(deleteApartmentSuccess(json))
   } catch (err) {
     dispatch(actionApartmentFailed(err.message))
