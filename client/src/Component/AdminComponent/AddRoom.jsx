@@ -45,7 +45,7 @@ const AddRoom = ({ apartment_id, setIsAddRoomFormOpen }) => {
       <div className="relative" ref={modalRef}>
         <div className="relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center ">
           <h1 className="lg:text-xl  ml-5 text-lg font-bold ">
-            Add Apartment Unit Details
+            Add Apartment Unit
           </h1>
         </div>
         {/* check */}
