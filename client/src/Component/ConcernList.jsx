@@ -6,6 +6,7 @@ import { createReport, fetchReports, searchReport } from '../features/report'
 import Loading from './LoadingComponent/Loading'
 import { FaPlus } from 'react-icons/fa6'
 import CreateTicket from './Tenant Component/CreateTicket'
+
 const ConcernList = () => {
   const [isCreateTicket, setisCreateTicket] = useState(false)
   const [searchItem, setSearchItem] = useState('')
@@ -20,6 +21,7 @@ const ConcernList = () => {
   const [selected, setSelected] = useState('all')
   const reports = useSelector((state) => state.report.data)
   const [title, setTitle] = useState('')
+  const menu = useSelector((state) => state.toggle.sidebar)
   const handleImageChange = (event) => {
     const file = event.target.files[0]
     setImage(file)
@@ -111,7 +113,10 @@ const ConcernList = () => {
           </div>
         </div>
 
-        <div className="lg:grid lg:grid-cols-3 lg:gap-y-2 lg:gap-x-3 pb-10 ">
+        <div
+            className={`${menu ? 'lg:grid-cols-2' : 'lg:grid-cols-3'}   grid grid-cols-1 md:mr-10 gap-4 pb-5`}
+          >
+
           {user && user?.role === 'Admin' ? (
             loading ? (
               <Loading />

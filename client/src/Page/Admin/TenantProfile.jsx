@@ -7,7 +7,7 @@ import { MdDelete } from 'react-icons/md'
 import { RxDotsVertical } from 'react-icons/rx'
 import { GrFormView, GrFormAdd } from 'react-icons/gr'
 import { MdOutlineFileDownload } from 'react-icons/md'
-
+import PopUp from '../../Component/PopUp';
 import AddHousehold from '../../Component/AddHousehold'
 import EditApartment from '../../Component/AdminComponent/EditApartment'
 import TransactionTable from '../../Component/TransactionTable'
@@ -45,22 +45,40 @@ const TenantProfile = () => {
   const { id } = useParams()
   const tenant = useSelector((state) => state.user.single)
   const [isVisible, setIsVisible] = useState(false)
-
+  const [isPopupVisible, setIsPopupVisible] = useState(false); // State to manage visibility of pop-up
+  const [popupMessage, setPopupMessage] = useState(''); // 
   const error = useSelector((state) => state.user.error)
   const msg = useSelector((state) => state.household.msg)
   const households = useSelector((state) => state.household.data)
   const pets = useSelector((state) => state.pet.data)
   const navigate = useNavigate()
+  
   const dropdownRef = useRef(null)
   const handleDeleteTenant = () => {
     const isConfirmed = window.confirm(
-      'Are you sure you want to delete this tenant?',
-    )
+      'Are you sure you want to delete this tenant?'
+    );
     if (isConfirmed) {
       dispatch(deleteTenant(id))
-      navigate('/tenant')
+        .then(() => {
+          setPopupMessage('Tenant deleted successfully!');
+          setIsPopupVisible(true);
+          setTimeout(() => {
+            setIsPopupVisible(false);
+            navigate('/tenant');
+          }, 3000);
+        })
+        .catch((error) => {
+          console.error(error);
+          setPopupMessage('Failed to delete tenant. Please try again.');
+          setIsError(true);
+          setIsPopupVisible(true);
+          setTimeout(() => {
+            setIsPopupVisible(false);
+          }, 3000);
+        });
     }
-  }
+  };
   const handleClickOutsideDropdown = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsHouseDotOpen(false)
@@ -126,6 +144,7 @@ const TenantProfile = () => {
       setIsVisible((prevState) => !prevState)
     }
   }
+  
 
   useEffect(() => {
     dispatch(fetchHouseholds(id))
@@ -143,14 +162,7 @@ const TenantProfile = () => {
   const birthday = tenant?.user_id?.birthday ? new Date(tenant?.user_id?.birthday).toLocaleDateString() : ''
   return (
     <>
-      {isVisible && (
-        <MessageToast
-          message={msg}
-          error={error}
-          isVisible={isVisible}
-          setIsVisible={setIsVisible}
-        />
-      )}
+       
 
       <div className="bg-white1  h-full ">
         {/* Tenant Profile Header */}
@@ -585,6 +597,13 @@ const TenantProfile = () => {
               </div>
             </div>
           )}
+          {isPopupVisible && (
+        <PopUp
+        className="z-30"
+          message={popupMessage}
+          onClose={() => setIsPopupVisible(false)}
+        />
+      )}
         </div>
       </div>
     </>
