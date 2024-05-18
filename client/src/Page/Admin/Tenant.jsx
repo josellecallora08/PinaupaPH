@@ -11,13 +11,15 @@ import { fetchUnits, fetchUnitsApartment } from '../../features/unit'
 import SearchLoading from '../../Component/LoadingComponent/Loading'
 import MessageToast from '../../Component/ToastComponent/MessageToast'
 import NotificationToast from '../../Component/ToastComponent/NotificationToast'
-
+import Popup from '../../Component/PopUp'
 const Tenant = () => {
   const [searchItem, setSearchItem] = useState('')
   const [isAddTenantFormOpen, setIsAddTenantFormOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState('all')
   const [isVisible, setIsVisible] = useState(true)
-
+  const menu = useSelector((state) => state.toggle.sidebar)
+  const [showPopup, setShowPopup] = useState(false)
+  const [popupMessage, setPopupMessage] = useState('')
   const [fields, setFields] = useState({
     name: '',
     username: '',
@@ -40,22 +42,34 @@ const Tenant = () => {
     setSelectedOption(e.target.value)
   }
   // const [apartmentId, setApartmentId] = useState('')
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    dispatch(createTenant(fields))
-    setIsAddTenantFormOpen((prevState) => !prevState)
-    setFields({
-      name: '',
-      username: '',
-      birthday: '',
-      mobile_no: '',
-      email: '',
-      password: '',
-      unit_id: '',
-      apartment_id: '',
-      deposit: '',
-      occupancy: '',
-    })
+    try {
+      await dispatch(createTenant(fields))
+      console.log('Form submitted:')
+      setIsAddTenantFormOpen((prevState) => !prevState)
+      setFields({
+        name: '',
+        username: '',
+        birthday: '',
+        mobile_no: '',
+        email: '',
+        password: '',
+        unit_id: '',
+        apartment_id: '',
+        deposit: '',
+        occupancy: '',
+      })
+      // Optionally, you can show a success message or handle any other logic here
+    } catch (error) {
+      console.error(error)
+      setPopupMessage('Failed to add tenant. Please try again.')
+      setShowPopup(true)
+      setIsError(true);
+      setTimeout(() => {
+        setShowPopup(false)
+      }, 3000)
+    }
   }
 
   const toggleAddTenantForm = () => {
@@ -129,7 +143,9 @@ const Tenant = () => {
           </div>
 
           {/* Body of Tenant Tab */}
-          <div className="lg:grid-cols-3  md:grid-cols-1 grid grid-cols-1 md:mr-10 gap-4 pb-5 ">
+          <div
+            className={`${menu ? 'lg:grid-cols-2' : 'lg:grid-cols-3'}   grid grid-cols-1 md:mr-10 gap-4 pb-5`}
+          >
             {loading ? (
               <SearchLoading />
             ) : selectedOption !== 'all' ? (
@@ -139,11 +155,15 @@ const Tenant = () => {
                     !item?.user_id?.isDelete &&
                     item?.apartment_id?._id === selectedOption,
                 )
-                .map((val, key) => <TenantCard key={key} data={val} />)
+                .map((val, key) => (
+                  <TenantCard menu={menu} key={key} data={val} />
+                ))
             ) : (
               tenant
                 ?.filter((item) => !item?.user_id?.isDelete)
-                .map((val, key) => <TenantCard key={key} data={val} />)
+                .map((val, key) => (
+                  <TenantCard menu={menu} key={key} data={val} />
+                ))
             )}
           </div>
           {isAddTenantFormOpen && (
@@ -155,9 +175,14 @@ const Tenant = () => {
                   error={error}
                   handleInput={handleInput}
                   setIsAddTenantFormOpen={setIsAddTenantFormOpen}
+                  togglePopup={setShowPopup}
+                  setPopupMessage={setPopupMessage}
                 />
               </div>
             </div>
+          )}
+          {showPopup && (
+            <Popup message={popupMessage} onClose={() => setShowPopup(false)} />
           )}
         </div>
       </div>

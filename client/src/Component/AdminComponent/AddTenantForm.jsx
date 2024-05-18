@@ -28,15 +28,15 @@ const AddTenantForm = ({
   }, [setIsAddTenantFormOpen]);
   return (
     <div className="relative" ref={modalRef}>
-      <div className="w-full flex py-4 rounded-tl-lg rounded-tr-lg px-2  bg-dark-blue text-white items-center ">
-        <h1 className="lg:text-xl relative lg:ml-5 text-base font-bold pl-3 ">
+      <div className="w-[40rem] flex py-4 rounded-tl-lg rounded-tr-lg px-2  bg-dark-blue text-white items-center ">
+        <h1 className="lg:text-xl relative lg:ml-1 text-base font-bold pl-3 ">
           Add Tenant Details
         </h1>
       </div>
       <form
         onSubmit={handleSubmit}
         method="POST"
-        className="lg:w-[30rem] w-[20rem] h-[25rem] p-3 overflow-y-auto"
+        className="lg:w-full w-[20rem] h-[25rem] p-3 mt-2 overflow-y-auto"
       >
         {error && (
           <div className="  w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
@@ -243,7 +243,7 @@ const AddTenantForm = ({
             className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
-        <div className="flex justify-end my-5 gap-3">
+        <div className="flex justify-end my-2 gap-3">
           <button
             type="submit"
             className="active:bg-white active:text-primary active:border-primary border bg-dark-blue text-white font-bold py-2 px-4 rounded"

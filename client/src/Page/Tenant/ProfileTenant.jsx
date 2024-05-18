@@ -10,6 +10,7 @@ import EditTenantAccount from '../../Component/EditTenantAccount'
 import EditFamMemTable from '../../Component/EditFamMemTable'
 import { MdOutlineFileDownload } from 'react-icons/md'
 import AddHousehold from '../../Component/AddHousehold'
+import { IoDownloadOutline } from "react-icons/io5";
 
 import TransactionTable from '../../Component/TransactionTable'
 import TransactionMobile from '../../Component/TransactionMobile'
@@ -17,7 +18,12 @@ import { GrFormView, GrFormAdd } from 'react-icons/gr'
 import Addpet from '../../Component/AddPet'
 import EditPetTable from '../../Component/EditPetTable'
 import { generateDocument } from '../../features/documents'
-import { createHousehold, deleteHousehold, fetchHousehold, fetchHouseholds } from '../../features/household'
+import {
+  createHousehold,
+  deleteHousehold,
+  fetchHousehold,
+  fetchHouseholds,
+} from '../../features/household'
 import { fetchPets } from '../../features/pet'
 import EditTenantDetails from '../../Component/EditTenantDetails'
 import { isLoggedin } from '../../features/authentication'
@@ -32,6 +38,7 @@ const TenantProfile = () => {
   const [isPetdotOpen, setIsPetDotOpen] = useState(false)
   const [isAddHouseholdForm, setIsAddHouseholdForm] = useState(false)
   const [isAddPetForm, setIsAddPetForm] = useState(false)
+ 
   const [isRemovedot, setIsRemovedot] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const dispatch = useDispatch()
@@ -79,6 +86,7 @@ const TenantProfile = () => {
   // const toggleRemoveDot = () => {
   //   setIsRemovedot(!isRemovedot)
   // }
+
   const handleTabClick = (tab) => {
     setActiveTab(tab)
   }
@@ -158,11 +166,15 @@ const TenantProfile = () => {
     }
   }, [])
   const handleDownload = () => {
-    dispatch(generateDocument(tenant.user_id._id))
+
+    const isConfirmed = window.confirm('Download Lease Agreement?');
+    if (isConfirmed) {
+      dispatch(generateDocument(tenant.user_id._id));
+    }
   }
   const birthday = new Date(tenant?.user_id.birthday).toLocaleDateString()
   return (
-    <div className="bg-white1  h-full ">
+    <div className="bg-white1  h-full overflow-y-auto ">
       {/* Tenant Profile Header */}
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="lg:mt-2 lg:ml-10 uppercase font-bold  p-5 mx-4">
@@ -205,13 +217,13 @@ const TenantProfile = () => {
       ) : (
         ''
       )}
-      <div className="w-11/12 m-auto  rounded-md">
+      <div className="lg:w-11/12 m-auto rounded-md">
         {activeTab === 'profile' && (
           <div className=" lg:mt-5 mt-10   ">
             {TenantProfileInfo.map((profile, index) => (
               <div className="lg:flex lg:gap-5 p-5 lg:pb-2" key={index}>
                 <div className="lg:w-1/2  lg:rounded-lg lg:origin-left  ">
-                  <div className="lg:items-center flex gap-3 relative mb-7 ">
+                  <div className=" relative lg:items-center flex gap-3  mb-7 ">
                     <figure>
                       <img
                         src={tenant?.user_id.profile_image.image_url}
@@ -228,9 +240,13 @@ const TenantProfile = () => {
                         Unit - {tenant?.unit_id.unit_no}
                       </h2>
                     </div>
+                    <div onClick={handleDownload} className="sm:hidden absolute right-2 cursor-pointer hover:scale-110">
+                    <IoDownloadOutline size={28} />
+                    </div>
+                
                     <button
                       onClick={handleDownload}
-                      className=" text-xs lg:p-3 py-2 px-1 pr-2 hover:bg-primary-color/55 duration-300 hover:text-prim bg-primary-color  hover:text-primary-color flex items-center gap-2 absolute right-0 lg:top-1 bg-primary-color text-white  rounded-md "
+                      className="sm:flex hidden text-xs lg:p-3 py-2 px-1 pr-2 hover:bg-primary-color/55 duration-300 hover:text-prim   hover:text-primary-color  items-center gap-2 absolute right-0 lg:top-1 bg-primary-color text-white  rounded-md "
                     >
                       <MdOutlineFileDownload size={15} /> Lease Agreement
                     </button>
@@ -292,15 +308,15 @@ const TenantProfile = () => {
                       />
                     </div>
 
-                    <div className="mb-4 text-sm mt-3 ml-2 ">
+                    <div className="mb-4  mt-3 ml-2 ">
                       <div className=" flex gap-20">
-                        <div className="lg:text-lg">
+                        <div className="lg:text-lg text-xs">
                           <p>Name</p>
                           <p>Date of Birth</p>
                           <p>Contact</p>
                           <p>Email</p>
                         </div>
-                        <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
+                        <div className="lg:text-base text-xs lg:flex lg:flex-col lg:gap-1">
                           <p className="">{tenant?.user_id.name}</p>
                           <p className="">{birthday}</p>
                           <p className="">+63{tenant?.user_id.mobile_no}</p>

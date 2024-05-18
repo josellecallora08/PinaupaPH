@@ -40,7 +40,7 @@ const TenantHome = () => {
       {loading ? (
         <span className="loading loading-bars loading-md"></span>
       ) : (
-        <div className="w-full h-full md:h-auto xl:h-full xl:max-h-auto flex flex-col items-start bg-white1">
+        <div className="w-full h-full md:h-auto xl:h-full overflow-y-auto xl:max-h-auto flex flex-col items-start bg-white1">
           <div className="w-11/12 h-fit  m-auto py-5 lg:py-0 ">
             <Link
               to="/dashboard"
@@ -71,8 +71,8 @@ const TenantHome = () => {
             </div>
 
             {/* Issue Card */}
-            <div className="md:order-none col-span-2 row-span-4 bg-white order-3 ">
-              <div className="w-full h-fit py-4 flex items-center gap-3 text-black p-2 ">
+            <div className="md:order-none mt-[0.1px] col-span-2 row-span-4 bg-white order-3 ">
+              <div className="w-full h-fit py-4  flex items-center gap-3 text-black p-2 ">
                 <div>
                   <img src={issue} alt="" className="w-10 h-10" />
                 </div>
@@ -81,25 +81,32 @@ const TenantHome = () => {
               <div className=" overflow-y-auto h-40">
                 <table className="w-full">
                   <tbody className="text-primary-color">
-                    {(report &&
+                    {report &&
+                    report.filter(
+                      (item) =>
+                        item?.sender_id?.user_id?._id === user?.user_id?._id,
+                    ).length > 0 ? (
                       report
-                        ?.filter(
+                        .filter(
                           (item) =>
                             item?.sender_id?.user_id?._id ===
                             user?.user_id?._id,
                         )
                         .map((val, key) => (
-                          <tr key={key} className="border-b border-dark-gray">
-                            <td className=" px-4 py-2   ">
+                         
+                          <tr  className="border-b border-dark-gray">
+                           <Link to={`/view-concern/${val?._id}`}></Link>
+                            <td className="px-4 py-2" key={key}>
                               <div className="flex items-center gap-3 w-fit">
                                 <div
                                   className={`md:w-2 md:h-2 w-2 h-2 rounded-full ${val?.status ? 'bg-blue' : 'bg-red'}`}
                                 ></div>
-                                <div className=" truncate-title md:text-sm text-xs">
+                                <div className="truncate-title md:text-sm text-xs">
                                   {val?.title}
                                 </div>
                               </div>
                             </td>
+                              
                             <td className="px-4 py-2 md:text-sm text-xs">
                               <span className="hidden">
                                 {new Date(val?.createdAt).toDateString()}
@@ -109,25 +116,30 @@ const TenantHome = () => {
                               </span>
                             </td>
                             <td className="px-4 py-2 flex items-center gap-3">
-                              <div className=" flex items-center gap-3 bg-gray rounded-full w-full md:pr-20  p-2">
+                              <div className="flex items-center gap-3 bg-gray rounded-full w-full md:pr-20 p-2">
                                 <img
                                   src={
                                     val?.sender_id?.user_id.profile_image
                                       ?.image_url
                                   }
                                   alt="tenantlogo"
-                                  className="w-6 h-6 rounded-full "
+                                  className="w-6 h-6 rounded-full"
                                 />
-                                <div className=" md:text-sm text-xs text-ellipsis text-nowrap w-52 max-w-[100px] md:max-w-[300px] overflow-hidden">
+                                <div className="md:text-sm text-xs text-ellipsis text-nowrap w-52 max-w-[100px] md:max-w-[300px] overflow-hidden">
                                   {val?.description}
                                 </div>
                               </div>
                             </td>
+                         
                           </tr>
-                        ))) || (
+                       
+                        ))
+                    ) : (
                       <tr>
-                        <td colSpan={3} className="text-center">
-                          {' '}
+                        <td
+                          colSpan={3}
+                          className="text-lg font-semibold text-center"
+                        >
                           No Data Found...
                         </td>
                       </tr>
@@ -140,8 +152,7 @@ const TenantHome = () => {
             <div className=" md:order-none col-span-1 row-span-5 h-full bg-white flex flex-col order-3">
               {invoice ? (
                 <>
-                  {' '}
-                  <div className="w-full h-fit bg-primary-color text-white p-2">
+                  <div className="w-full  bg-primary-color  h-[3.8rem] flex items-center text-lg  text-white p-2">
                     Payment
                   </div>
                   <div className="text-primary-color mt-5 px-2">
@@ -169,13 +180,13 @@ const TenantHome = () => {
                       <div>
                         <div className="flex justify-center w-full hover:opacity-80">
                           <div className="bg-primary-color w-full text-white p-5 text-center text-xl">
-                            Paid{' '}
+                            Paid
                             {parseInt(
                               invoice?.payment?.amountPaid,
                             )?.toLocaleString('en-PH', {
                               style: 'currency',
                               currency: 'PHP',
-                            })}{' '}
+                            })}
                             on {new Date(invoice?.datePaid).toDateString()}
                           </div>
                         </div>
@@ -188,14 +199,22 @@ const TenantHome = () => {
                         Pay Now
                       </Link>
                     )}
-                  </div>{' '}
+                  </div>
                 </>
               ) : (
                 <>
-                  <div className='size-full flex items-center flex-col'>
-                    <img className='size-full' src={invoice_img} />
-                    <div className="h-20 text-center w-full font-regular font-semibold">
-                      No existing invoice yet.
+                  <div className="">
+                    <div className="w-full h-[3.8rem] flex items-center text-lg  bg-primary-color text-white p-2">
+                      Payment
+                    </div>
+                    <div className=" flex items-center py-10 justify-center gap-20 flex-col">
+                      <div>
+                        <img className="size-full " src={invoice_img} />
+                      </div>
+
+                      <div className="h-20 text-center w-full font-regular text-xl font-semibold">
+                        No existing invoice yet.
+                      </div>
                     </div>
                   </div>
                 </>
@@ -203,8 +222,8 @@ const TenantHome = () => {
             </div>
 
             {/* Calendar Card */}
-            <div className="md:order-none col-span-1 row-span-1 bg-white h-full order-last ">
-              <div className="w-full h-10 bg-primary-color text-white p-2">
+            <div className="md:order-none col-span-1 row-span-1 bg-white h-fit order-last ">
+              <div className="flex items-center text-lg   w-full h-[3.8rem] bg-primary-color text-white p-2">
                 Calendar
               </div>
               <div className="w-full h-full">
@@ -213,8 +232,8 @@ const TenantHome = () => {
             </div>
 
             {/* Announcement Card */}
-            <div className="md:order-none col-span-1 row-span-1 bg-white order-2">
-              <div className="w-full h-fit bg-primary-color text-white p-2">
+            <div className="md:order-none col-span-1 row-span-1 h-[24.3rem] bg-white order-2">
+              <div className="w-full flex items-center text-lg bg-primary-color text-white p-2 h-[3.8rem]">
                 Announcement
               </div>
               <div className="w-full h-fit py-4">
@@ -223,21 +242,23 @@ const TenantHome = () => {
                     <img
                       src={announcement?.user_id?.profile_image?.image_url}
                       alt=""
-                      className="w-10 h-10 rounded-full"
+                      className="w-16 h-16 rounded-full"
                     />
-                    <div>
+                    <div className="text-lg">
                       <p>{announcement?.user_id?.name}</p>
                       <p className="text-dark-gray">Landlord</p>
                     </div>
                   </div>
-                  <div>{new Date(announcement?.createdAt).toDateString()}</div>
+                  <div className="text-sm mt-2">
+                    {new Date(announcement?.createdAt).toDateString()}
+                  </div>
                 </div>
                 <div className="text-primary-color  px-5">
-                  <h1 className="text-center mb-2 text-xl">
+                  <h1 className="text-center mb-2 text-2xl">
                     {announcement?.title}
                   </h1>
 
-                  <p className="text-sm overflow-y-auto h-[200px] ">
+                  <p className=" overflow-y-auto h-[200px] ">
                     {announcement?.description}
                   </p>
                 </div>

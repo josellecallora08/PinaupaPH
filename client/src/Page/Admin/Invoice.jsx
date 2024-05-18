@@ -130,8 +130,8 @@ const Invoice = () => {
                               {val?.tenant_id?.user_id.name}
                             </td>
                             <td className="p-2">
-                              {(val?.tenant_id?.balance === 0
-                                ? 0
+                              {(!val?.isPaid 
+                                ? val?.tenant_id.balance
                                 : val?.payment.unpaidBalance
                               )?.toLocaleString('en-PH', {
                                 style: 'currency',

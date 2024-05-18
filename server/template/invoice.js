@@ -1,4 +1,4 @@
-module.exports = ({response}) => {
+module.exports = ({ response }) => {
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -108,12 +108,11 @@ module.exports = ({response}) => {
             <table>
               <tr>
                 <td class="title">
-                  <h3
+                  <h5
                     style="width: 100%; max-width: 300px"
-                    
                   >
                   PinaupaPH
-                  </h3>
+                  </h5>
                 </td>
                 <td>
                   Invoice #: ${response?.pdf.reference}<br />
@@ -153,7 +152,7 @@ module.exports = ({response}) => {
           <td colspan="2">
             House Number: Unit ${response?.tenant_id.unit_id.unit_no}<br />
             House Type: PentHouse<br />
-            Status: <span class="text-lime font-bold">${response?.isPaid  ? 'Paid' : 'Unpaid'}</span>
+            Status: <span class="text-lime font-bold">${response?.isPaid ? 'Paid' : 'Unpaid'}</span>
           </td>
         </tr>
 
@@ -164,7 +163,7 @@ module.exports = ({response}) => {
 
         <tr class="item">
           <td>Monthly Rent</td>
-          <td>${(response?.tenant_id.unit_id.rent)?.toLocaleString('en-PH', {
+          <td>${response?.tenant_id.unit_id.rent?.toLocaleString('en-PH', {
             style: 'currency',
             currency: 'PHP',
           })}</td>
@@ -172,15 +171,20 @@ module.exports = ({response}) => {
 
         <tr class="item">
           <td>Previous Bill</td>
-          <td>${response?.tenant_id.balance !== 0 && (response?.tenant_id.balance - response?.tenant_id.unit_id.rent)?.toLocaleString('en-PH', {
-            style: 'currency',
-            currency: 'PHP',
-          }) || 0}</td>
+          <td>${
+            (!val?.isPaid
+              ? val?.tenant_id.balance
+              : val?.payment.unpaidBalance
+            )?.toLocaleString('en-PH', {
+              style: 'currency',
+              currency: 'PHP',
+            }) || 0
+          }</td>
         </tr>
 
         <tr class="total">
           <td></td>
-          <td>Total: ${(response?.tenant_id.balance)?.toLocaleString('en-PH', {
+          <td>Total: ${response?.tenant_id.balance?.toLocaleString('en-PH', {
             style: 'currency',
             currency: 'PHP',
           })}</td>
@@ -191,5 +195,4 @@ module.exports = ({response}) => {
 </body>
 </html>
 `
-
 }

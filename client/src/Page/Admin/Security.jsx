@@ -85,20 +85,22 @@ const Security = () => {
 
   return (
     <>
-      <div className="w-11/12 mx-auto">
-        <div className="flex justify-between items-center p-4">
-          <div>
-            <h1 className="font-bold h-fit m-auto py-5 lg:py-0">
-              Security/CCTV Live Feeds
-            </h1>
-          </div>
-          <div>
-            <button
-              onClick={() => setIsAddCameraForm(true)}
-              className="btn text-white lg:px-5 lg:py-3 px-2 py-1 text-xs uppercase bg-primary-color"
-            >
-              <IoMdAdd size={15} /> Add CCTV
-            </button>
+      <div className='w-full h-full bg-white1'>
+        <div className="w-11/12 mx-auto">
+          <div className="flex justify-between items-center p-4">
+            <div>
+              <h1 className="font-bold h-fit m-auto py-5 lg:py-0">
+                Security/CCTV Live Feeds
+              </h1>
+            </div>
+            <div>
+              <button
+                onClick={() => setIsAddCameraForm(true)}
+                className="btn text-white lg:px-5 lg:py-3 px-2 py-1 text-xs uppercase bg-primary-color"
+              >
+                <IoMdAdd size={15} /> Add CCTV
+              </button>
+            </div>
           </div>
         </div>
         {/* Container */}
@@ -151,14 +153,9 @@ const Security = () => {
                 )}
                 {/* Triple Dots Menu */}
                 {isOpenTripleDots[index] && (
-                  <div className="absolute right-0 top-3 mt-8 z-10">
+                  <div className="absolute right-0 top-0 mt-8 z-10">
                     <div className="bg-white w-36 cursor-pointer shadow-md shadow-gray">
-                      <div
-                        onClick={() => handleCloseCamera(index)}
-                        className="p-2 cursor-pointer hover:bg-primary-color hover:text-white"
-                      >
-                        {showCameraFeed[index] ? 'Close Camera' : 'Open Camera'}
-                      </div>
+          
                       <div
                         onClick={() => handleDeleteCamera(index)}
                         className="p-2 cursor-pointer hover:bg-primary-color hover:text-white"
@@ -169,13 +166,14 @@ const Security = () => {
                         Refresh
                       </div>
                     </div>
-                  </div>
-                )}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      
       {isAddCameraForm && (
         <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
           <div className="lg:w-1/2 h-[30rem] bg-white rounded-lg relative">
