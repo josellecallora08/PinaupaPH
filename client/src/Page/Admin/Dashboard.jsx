@@ -13,6 +13,7 @@ import pay from '/PayDate.svg'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { isLoggedin } from '../../features/authentication'
+
 import Loading from '../../Component/LoadingComponent/Loading'
 import NotificationToast from '../../Component/ToastComponent/NotificationToast'
 import {
@@ -33,6 +34,7 @@ const Dashboard = () => {
   const totalReports = useSelector((state) => state.dash.reports)
   const notifications = useSelector((state) => state.notif.data)
   const revenue = useSelector((state) => state.dash.chart)
+  const menu = useSelector((state) => state.toggle.sidebar);
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(isLoggedin())
@@ -182,22 +184,23 @@ const Dashboard = () => {
                             (item) => item?.receiver_id?._id === user?._id,
                           )
                           .map((val, key) => (
+                            
                             <div
                               key={key}
                               className="hover:scale-105 p-2 duration-300 cursor-pointer w-full h-auto md:max-h-[200px]"
                             >
                               <div className="flex justify-between p-2 rounded-full md:rounded-md hover:bg-gray">
                                 <article className="flex items-center gap-2">
-                                  <figure className="w-full h-full max-w-10 max-h-10 rounded-full overflow-hidden">
+                                  <figure className={`${menu ? 'hidden' : 'block'} w-full h-full max-w-10 max-h-10 rounded-full overflow-hidden`}>
                                     <img
                                       src={
                                         val?.sender_id?.profile_image?.image_url
                                       }
-                                      className="w-full h-full object-contain"
+                                      className={` w-full h-full object-contain`}
                                       alt=""
                                     />
                                   </figure>
-                                  <div className="flex flex-col">
+                                  <div className="flex flex-col mr-1">
                                     <p className="font-semibold">
                                       {val?.sender_id?.name}
                                     </p>
@@ -207,7 +210,7 @@ const Dashboard = () => {
                                   </div>
                                 </article>
                                 <div>
-                                  <span className="text-xs">
+                                  <span className={`text-xs`}>
                                     {new Date(val?.createdAt).toDateString()}
                                   </span>
                                 </div>

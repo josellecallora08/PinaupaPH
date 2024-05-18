@@ -81,25 +81,32 @@ const TenantHome = () => {
               <div className=" overflow-y-auto h-40">
                 <table className="w-full">
                   <tbody className="text-primary-color">
-                    {(report &&
+                    {report &&
+                    report.filter(
+                      (item) =>
+                        item?.sender_id?.user_id?._id === user?.user_id?._id,
+                    ).length > 0 ? (
                       report
-                        ?.filter(
+                        .filter(
                           (item) =>
                             item?.sender_id?.user_id?._id ===
                             user?.user_id?._id,
                         )
                         .map((val, key) => (
-                          <tr key={key} className="border-b border-dark-gray">
-                            <td className=" px-4 py-2   ">
+                         
+                          <tr  className="border-b border-dark-gray">
+                           <Link to={`/view-concern/${val?._id}`}></Link>
+                            <td className="px-4 py-2" key={key}>
                               <div className="flex items-center gap-3 w-fit">
                                 <div
                                   className={`md:w-2 md:h-2 w-2 h-2 rounded-full ${val?.status ? 'bg-blue' : 'bg-red'}`}
                                 ></div>
-                                <div className=" truncate-title md:text-sm text-xs">
+                                <div className="truncate-title md:text-sm text-xs">
                                   {val?.title}
                                 </div>
                               </div>
                             </td>
+                              
                             <td className="px-4 py-2 md:text-sm text-xs">
                               <span className="hidden">
                                 {new Date(val?.createdAt).toDateString()}
@@ -109,24 +116,30 @@ const TenantHome = () => {
                               </span>
                             </td>
                             <td className="px-4 py-2 flex items-center gap-3">
-                              <div className=" flex items-center gap-3 bg-gray rounded-full w-full md:pr-20  p-2">
+                              <div className="flex items-center gap-3 bg-gray rounded-full w-full md:pr-20 p-2">
                                 <img
                                   src={
                                     val?.sender_id?.user_id.profile_image
                                       ?.image_url
                                   }
                                   alt="tenantlogo"
-                                  className="w-6 h-6 rounded-full "
+                                  className="w-6 h-6 rounded-full"
                                 />
-                                <div className=" md:text-sm text-xs text-ellipsis text-nowrap w-52 max-w-[100px] md:max-w-[300px] overflow-hidden">
+                                <div className="md:text-sm text-xs text-ellipsis text-nowrap w-52 max-w-[100px] md:max-w-[300px] overflow-hidden">
                                   {val?.description}
                                 </div>
                               </div>
                             </td>
+                         
                           </tr>
-                        ))) || (
+                       
+                        ))
+                    ) : (
                       <tr>
-                        <td colSpan={3} className="text-center">
+                        <td
+                          colSpan={3}
+                          className="text-lg font-semibold text-center"
+                        >
                           No Data Found...
                         </td>
                       </tr>

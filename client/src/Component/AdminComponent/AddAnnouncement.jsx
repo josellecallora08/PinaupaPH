@@ -4,8 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import { createAnnouncement } from '../../features/announcement';
 import { fetchUsers } from '../../features/user';
-import Lottie from 'lottie-react';
-import Success from '../../Page/Success.json';
+import Popup from '../../Component/PopUp'; // Import the Popup component
 
 const socket = io(`${import.meta.env.VITE_URL}/`);
 
@@ -65,6 +64,7 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
     } catch (error) {
       setErrorMessage('Failed to create announcement. Please try again later.');
       setSuccessMessage('');
+      setIsError(true);
     }
   };
 
@@ -162,12 +162,10 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
         </div>
       </form>
       {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-8">
-            <Lottie animationData={Success} className="w-48 mx-auto mb-4" />
-            <p className="text-primary-color text-lg font-semibold">{successMessage}</p>
-          </div>
-        </div>
+        <Popup 
+          message={successMessage} 
+          onClose={() => setShowPopup(false)} 
+        />
       )}
     </>
   );

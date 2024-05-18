@@ -3,6 +3,8 @@ import { useState } from 'react'
 import { IoMdClose } from 'react-icons/io'
 import { useSelector, useDispatch } from 'react-redux'
 import { editUser } from '../features/user'
+import Popup from '../Component/PopUp'
+
 const EditTenantDetails = ({ setIsEditTenantDetailForm, tenant }) => {
   const error = useSelector((state) => state.user.error)
   const dispatch = useDispatch()
@@ -19,12 +21,28 @@ const EditTenantDetails = ({ setIsEditTenantDetailForm, tenant }) => {
       [name]: value,
     })
   }
+  const [successMessage, setSuccessMessage] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    dispatch(editUser(tenant?.user_id._id, fields))
-    setIsEditTenantDetailForm((prevState) => !prevState)
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(editUserApartment(tenant?.user_id?._id, fields));
+      setSuccessMessage('Apartment details updated successfully.');
+      setErrorMessage(''); // Change this to setPopupMessage
+      setShowPopup(true);
+      // Automatically hide the pop-up after 3 seconds
+      setTimeout(() => {
+        setShowPopup(false);
+        setIsEditApartmentForm(false); // Close the form after hiding the pop-up
+      }, 3000);
+    } catch (error) {
+      setPopupMessage('Failed to update apartment details. Please try again.');
+      setShowPopup(true);
+      setIsError(true);
+    }
+  };
+  
 
   return (
     <div className="relative">
@@ -138,7 +156,9 @@ const EditTenantDetails = ({ setIsEditTenantDetailForm, tenant }) => {
             Close
           </button>
         </div>
+        
       </form>
+   
     </div>
   )
 }
