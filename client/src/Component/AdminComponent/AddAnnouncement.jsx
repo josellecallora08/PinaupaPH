@@ -101,7 +101,7 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
                   className=" w-full border border-black text-black rounded p-2  cursor-pointer"
                   placeholder="Select announcement type"
                 >
-                  <option hidden>Select Type:</option>
+                  <option hidden>Select Type</option>
                   <option value="announcement">General Announcement</option>
                   <option value="maintenance">Maintenance</option>
                   <option value="rentIncrease">Rent Increase</option>

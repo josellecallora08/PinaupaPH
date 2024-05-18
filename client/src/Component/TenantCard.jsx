@@ -17,6 +17,7 @@ const TenantCard = ({ data }) => {
         <div className="flex-1 lg:ml-1 py-4 px-2 flex flex-col justify-center">
           <p className="xl:text-lg lg:text-base md:text-base font-semibold text-lg">
             {data?.user_id?.name}
+
           </p>
           <p className="md:text-base text-sm font-semibold">
             {data?.user_id?.phone}

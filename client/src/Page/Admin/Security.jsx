@@ -85,20 +85,22 @@ const Security = () => {
 
   return (
     <>
-      <div className="w-11/12 mx-auto">
-        <div className="flex justify-between items-center p-4">
-          <div>
-            <h1 className="font-bold h-fit m-auto py-5 lg:py-0">
-              Security/CCTV Live Feeds
-            </h1>
-          </div>
-          <div>
-            <button
-              onClick={() => setIsAddCameraForm(true)}
-              className="btn text-white lg:px-5 lg:py-3 px-2 py-1 text-xs uppercase bg-primary-color"
-            >
-              <IoMdAdd size={15} /> Add CCTV
-            </button>
+      <div className='w-full h-full bg-white1'>
+        <div className="w-11/12 mx-auto">
+          <div className="flex justify-between items-center p-4">
+            <div>
+              <h1 className="font-bold h-fit m-auto py-5 lg:py-0">
+                Security/CCTV Live Feeds
+              </h1>
+            </div>
+            <div>
+              <button
+                onClick={() => setIsAddCameraForm(true)}
+                className="btn text-white lg:px-5 lg:py-3 px-2 py-1 text-xs uppercase bg-primary-color"
+              >
+                <IoMdAdd size={15} /> Add CCTV
+              </button>
+            </div>
           </div>
         </div>
         {/* Container */}
@@ -164,11 +166,11 @@ const Security = () => {
                         Refresh
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
       {isAddCameraForm && (
