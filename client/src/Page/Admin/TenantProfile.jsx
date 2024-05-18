@@ -48,6 +48,7 @@ const TenantProfile = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false); // State to manage visibility of pop-up
   const [popupMessage, setPopupMessage] = useState(''); // 
   const error = useSelector((state) => state.user.error)
+  const errorDocument = useSelector((state) => state.docs.error)
   const msg = useSelector((state) => state.household.msg)
   const households = useSelector((state) => state.household.data)
   const pets = useSelector((state) => state.pet.data)
@@ -109,6 +110,19 @@ const TenantProfile = () => {
   }
   const handleDownload = (e) => {
     dispatch(generateDocument(id))
+    if(errorDocument){
+      setPopupMessage('Failed to delete generate PDF. Please try again.');
+      setIsPopupVisible(true);
+      setTimeout(() => {
+        setIsPopupVisible(false);
+      }, 3000);
+    } else {
+      setPopupMessage('Lease agreement has been generated.');
+      setIsPopupVisible(true);
+      setTimeout(() => {
+        setIsPopupVisible(false);
+      }, 3000);
+    }
   }
 
   const [fields, setFields] = useState({
@@ -601,6 +615,7 @@ const TenantProfile = () => {
         <PopUp
         className="z-30"
           message={popupMessage}
+          isError={error || errorDocument}
           onClose={() => setIsPopupVisible(false)}
         />
       )}

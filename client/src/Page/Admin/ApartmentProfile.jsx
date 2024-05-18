@@ -4,7 +4,7 @@ import ApartmentStatusCard from '../../Component/AdminComponent/ApartmentStatusC
 import AddRoom from '../../Component/AdminComponent/AddRoom'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import PopUp from '../../Component/PopUp';
+import PopUp from '../../Component/PopUp'
 import EditApartmentDetails from '../../Component/AdminComponent/EditApartmentDetails'
 import { fetchUnitsApartment } from '../../features/unit'
 
@@ -18,12 +18,14 @@ const ApartmentProfile = () => {
   const [isAddRoomFormOpen, setIsAddRoomFormOpen] = useState(false)
   const [isEditApartmentFormOpen, setIsEditApartmentFormOpen] = useState(false)
   const apartment = useSelector((state) => state.apartment.single)
+  const msg = useSelector((state) => state.apartment.msg)
+  const error = useSelector((state) => state.apartment.error)
   const { id } = useParams()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const units = useSelector((state) => state.unit.data)
-  const [isPopupVisible, setIsPopupVisible] = useState(false); // State to manage visibility of pop-up
-  const [popupMessage, setPopupMessage] = useState(''); //
+  const [isPopupVisible, setIsPopupVisible] = useState(false) // State to manage visibility of pop-up
+  const [popupMessage, setPopupMessage] = useState('') //
   const toggleAddRoomForm = () => {
     setIsAddRoomFormOpen(!isAddRoomFormOpen)
   }
@@ -42,30 +44,29 @@ const ApartmentProfile = () => {
 
   const handleDelete = async () => {
     const isConfirmed = window.confirm(
-      'Are you sure you want to delete this apartment?'
-    );
+      'Are you sure you want to delete this apartment?',
+    )
     if (isConfirmed) {
-      try {
-        await dispatch(deleteApartment(id));
-        setPopupMessage('Apartment deleted successfully!');
-        setIsPopupVisible(true);
+      await dispatch(deleteApartment(id))
+      if (msg) {
+        setPopupMessage('Apartment deleted successfully!')
+        setIsPopupVisible(true)
         setTimeout(() => {
-          setIsPopupVisible(false);
-          navigate('/apartment');
-        }, 3000);
-      } catch (error) {
-        console.error(error);
-        setPopupMessage('Failed to delete apartment. Please try again.');
-        setIsPopupVisible(true);
-        setIsError(true);
+          setIsPopupVisible(false)
+          navigate('/apartment')
+        }, 3000)
+      } else {
+        console.error(error)
+        setPopupMessage('Failed to delete apartment. Please try again.')
+        setIsPopupVisible(true)
+        // setIsError(true)
         setTimeout(() => {
-          setIsPopupVisible(false);
-        }, 3000);
-        setIsError(true); // Set isError to true in case of error
+          setIsPopupVisible(false)
+        }, 3000)
+        // setIsError(true) // Set isError to true in case of error
       }
     }
-  };
-  
+  }
 
   return (
     <>
@@ -168,9 +169,10 @@ const ApartmentProfile = () => {
           </div>
         </div>
       )}
-        {isPopupVisible && (
+      {isPopupVisible && (
         <PopUp
           message={popupMessage}
+          isError={error}
           onClose={() => setIsPopupVisible(false)}
         />
       )}

@@ -15,6 +15,29 @@ const createToken = (id, username, role) => {
   })
 }
 
+module.exports.restoreAccounts = async (req, res) => {
+  try {
+    const { user_id } = req.query
+    const response = await USERMODEL.findByIdAndUpdate(user_id, {
+      isDelete: false,
+    })
+
+    if (!response) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Failed to recover tenant account.' })
+    }
+
+    return res
+    .status(httpStatusCodes.OK)
+    .json({ error: 'Tenant account recovered..' })
+  } catch (err) {
+    console.error({ error: err.message })
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
+  }
+}
 module.exports.createAdminAccount = async (req, res) => {
   try {
     const Role = req.user.role

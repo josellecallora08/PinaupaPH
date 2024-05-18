@@ -241,22 +241,22 @@ module.exports.delete_apartment = async (req, res) => {
         .json({ error: 'Unable to delete apartment with tenants.' })
     }
     console.log(isOccupied)
-    // const response = await APARTMENTMODEL.findByIdAndDelete({
-    //   _id: apartment_id,
-    // })
-    // if (!response) {
-    //   return res
-    //     .status(httpStatusCodes.NOT_FOUND)
-    //     .json({ error: `Unable to remove apartment building` })
-    // }
-    // const cctv = response.cctvs.map(async (item) => {
-    //   await CCTVMODEL.findByIdAndDelete({ _id: item })
-    // })
-    // const units = response.units.map(async (item) => {
-    //   await UNITMODEL.findByIdAndDelete({ _id: item })
-    // })
+    const response = await APARTMENTMODEL.findByIdAndDelete({
+      _id: apartment_id,
+    })
+    if (!response) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: `Unable to remove apartment building` })
+    }
+    const cctv = response.cctvs.map(async (item) => {
+      await CCTVMODEL.findByIdAndDelete({ _id: item })
+    })
+    const units = response.units.map(async (item) => {
+      await UNITMODEL.findByIdAndDelete({ _id: item })
+    })
 
-    // await Promise.all([...cctv, ...units])
+    await Promise.all([...cctv, ...units])
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: `Apartment building Deleted`, tenant })
