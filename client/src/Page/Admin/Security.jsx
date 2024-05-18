@@ -166,13 +166,14 @@ const Security = () => {
                         Refresh
                       </div>
                     </div>
+                    </div>
                   )}
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      
       {isAddCameraForm && (
         <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
           <div className="lg:w-1/2 h-[30rem] bg-white rounded-lg relative">

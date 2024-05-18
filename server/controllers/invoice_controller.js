@@ -198,6 +198,7 @@ module.exports.createInvoice = async (req, res) => {
       'pdf.reference': reference,
       amount: tenant.unit_id.rent,
       due: new Date(dueMonth).toISOString(),
+      'payment.unpaidBalance': tenant.balance,
     })
 
     if (!response) {

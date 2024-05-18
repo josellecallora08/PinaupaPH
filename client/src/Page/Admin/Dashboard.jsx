@@ -289,14 +289,16 @@ const Dashboard = () => {
                             </p>
                             <p className="font-bold text-center text-base xl:text-2xl">
                               {totalPayer?.totalGoodPayer} /{' '}
-                              {totalPayer?.totalBadPayer}
+                              {totalPayer?.totalPayer}
                             </p>
                           </div>
                           <p
                             className={`relative w-11/12 m-auto xl:w-full h-2 bg-primary-color/20 rounded-full overflow-hidden shadow-inner`}
                           >
                             <span
-                              style={{ width: `${totalPayer?.percentage}%` }}
+                              style={{
+                                width: `${parseInt((totalPayer?.totalGoodPayer / totalPayer?.totalPayer) * 100)}%`,
+                              }}
                               className={`absolute h-2 bg-primary-color animate-in slide-in-from-left-20 duration-1000`}
                             ></span>
                           </p>
