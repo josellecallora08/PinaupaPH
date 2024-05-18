@@ -151,14 +151,9 @@ const Security = () => {
                 )}
                 {/* Triple Dots Menu */}
                 {isOpenTripleDots[index] && (
-                  <div className="absolute right-0 top-3 mt-8 z-10">
+                  <div className="absolute right-0 top-0 mt-8 z-10">
                     <div className="bg-white w-36 cursor-pointer shadow-md shadow-gray">
-                      <div
-                        onClick={() => handleCloseCamera(index)}
-                        className="p-2 cursor-pointer hover:bg-primary-color hover:text-white"
-                      >
-                        {showCameraFeed[index] ? 'Close Camera' : 'Open Camera'}
-                      </div>
+          
                       <div
                         onClick={() => handleDeleteCamera(index)}
                         className="p-2 cursor-pointer hover:bg-primary-color hover:text-white"

@@ -17,7 +17,7 @@ const Tenant = () => {
   const [isAddTenantFormOpen, setIsAddTenantFormOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState('all')
   const [isVisible, setIsVisible] = useState(true)
-
+  const menu = useSelector((state) => state.toggle.sidebar);
   const [fields, setFields] = useState({
     name: '',
     username: '',
@@ -129,7 +129,7 @@ const Tenant = () => {
           </div>
 
           {/* Body of Tenant Tab */}
-          <div className="lg:grid-cols-3  md:grid-cols-1 grid grid-cols-1 md:mr-10 gap-4 pb-5 ">
+          <div className={`${menu ? 'lg:grid-cols-2' : 'lg:grid-cols-3'}   grid grid-cols-1 md:mr-10 gap-4 pb-5` }>
             {loading ? (
               <SearchLoading />
             ) : selectedOption !== 'all' ? (
@@ -139,11 +139,11 @@ const Tenant = () => {
                     !item?.user_id?.isDelete &&
                     item?.apartment_id?._id === selectedOption,
                 )
-                .map((val, key) => <TenantCard key={key} data={val} />)
+                .map((val, key) => <TenantCard  menu={menu} key={key} data={val}  />)
             ) : (
               tenant
                 ?.filter((item) => !item?.user_id?.isDelete)
-                .map((val, key) => <TenantCard key={key} data={val} />)
+                .map((val, key) => <TenantCard menu={menu} key={key} data={val} />)
             )}
           </div>
           {isAddTenantFormOpen && (
