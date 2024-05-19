@@ -35,10 +35,10 @@ const AddHousehold = ({
           </div>
         )} */}
 
-        <div className="mb-4">
+        <div className="mt-5 lg:mt-0 mb-4">
           <label
             htmlFor="name"
-            className="block  text-sm font-bold mb-2 text-dark-gray"
+            className="block  text-sm font-bold mb-2 text-primary-color"
           >
             Name
           </label>
@@ -55,7 +55,7 @@ const AddHousehold = ({
         <div className="mb-4">
           <label
             htmlFor="contact"
-            className="block  text-sm font-bold mb-2 text-dark-gray"
+            className="block  text-sm font-bold mb-2 text-primary-color"
           >
             Contact
           </label>
@@ -71,7 +71,7 @@ const AddHousehold = ({
         <div className="mb-4">
           <label
             htmlFor="birthday"
-            className="block  text-sm font-bold mb-2 text-dark-gray"
+            className="block  text-sm font-bold mb-2 text-primary-color"
           >
             Birthday
           </label>
@@ -87,7 +87,7 @@ const AddHousehold = ({
         <div className="mb-4">
           <label
             htmlFor="relationship"
-            className="block  text-sm font-bold mb-2 text-dark-gray"
+            className="block  text-sm font-bold mb-2 text-primary-color"
           >
             Relationship
           </label>

@@ -1,4 +1,7 @@
 import React from 'react'
+import { FaCheckSquare } from "react-icons/fa";
+import { MdCancel  } from "react-icons/md";
+
 
 const PetEditableRow = ({
   editFormData,
@@ -9,7 +12,7 @@ const PetEditableRow = ({
     <tr className="">
       <td>
         <input
-          className="lg:w-auto w-24 ml-2 p-1 rounded-md border-2 border-primary-color"
+          className="lg:w-auto w-20 lg:text-base text-xs ml-2 p-1 rounded-md border-2 border-primary-color"
           type="text"
           required="required"
           placeholder="Enter Pet Name"
@@ -20,7 +23,7 @@ const PetEditableRow = ({
       </td>
       <td>
         <input
-          className="lg:w-auto ml-1 p-1 border-2 w-24 rounded-md border-primary-color"
+          className="lg:w-auto w-20 lg:text-base text-xs ml-1 p-1 border-2  rounded-md border-primary-color"
           type="text"
           required="required"
           placeholder="Enter Species"
@@ -31,7 +34,7 @@ const PetEditableRow = ({
       </td>
       <td>
         <input
-          className="lg:w-auto ml-1 w-24 p-1 border-2 rounded-md border-primary-color"
+          className="lg:w-auto lg:text-base ml-1 w-20 text-xs p-1 border-2 rounded-md border-primary-color"
           type="date"
           required="required"
           placeholder="Enter Birthday"
@@ -40,18 +43,18 @@ const PetEditableRow = ({
           onChange={handleEditFormChange}
         />
       </td>
-      <td className="flex text-center text-sm mr-2">
+      <td className="flex justify-center items-center gap-1 mt-2">
         <button
           type="submit"
-          className="lg:mr-2 lg:ml-20 ml-2 bg-primary-color hover:opacity-80 text-white font-bold p-2 rounded "
+           className='text-2xl text-lime cursor-pointer'
         >
-          Save
+          <FaCheckSquare />
         </button>
         <button
           onClick={handleCancelClick}
-          className="bg-red hover:opacity-80 text-white font-bold p-1 rounded"
+          className="text-2xl text-red cursor-pointer"
         >
-          Cancel
+          <MdCancel  />
         </button>
       </td>
     </tr>

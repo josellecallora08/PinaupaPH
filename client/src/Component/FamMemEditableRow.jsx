@@ -1,5 +1,6 @@
 import React from 'react'
-
+import { FaCheckSquare } from "react-icons/fa";
+import { MdCancel  } from "react-icons/md";
 const FamMemEditableRow = ({
   editFormData,
   handleEditFormChange,
@@ -9,7 +10,7 @@ const FamMemEditableRow = ({
     <tr>
       <td className="">
         <input
-          className="lg:w-auto ml-2 p-1 w-24 rounded-md border-2 border-primary-color"
+          className="lg:w-auto  ml-2 p-1 w-[4rem] text-xs rounded-md border-2 border-primary-color"
           type="text"
           placeholder="Enter Name"
           name="name"
@@ -19,7 +20,7 @@ const FamMemEditableRow = ({
       </td>
       <td className="">
         <input
-          className="lg:w-auto ml-2 p-1 w-24 rounded-md border-2 border-primary-color"
+          className="lg:w-auto  ml-2 p-1 w-[4rem] text-xs rounded-md border-2 border-primary-color"
           type="text"
           placeholder="Enter Phone Number"
           name="mobile"
@@ -29,7 +30,7 @@ const FamMemEditableRow = ({
       </td>
       <td>
         <input
-          className="lg:w-auto p-1 border-2 w-24 rounded-md border-primary-color"
+          className="lg:w-auto  p-1 border-w-24 w-[4rem] text-xs rounded-md border-primary-color"
           type="text"
           placeholder="Enter Relationship"
           name="relationship"
@@ -39,7 +40,7 @@ const FamMemEditableRow = ({
       </td>
       <td>
         <input
-          className="lg:w-auto p-1 border-2 w-24 rounded-md border-primary-color"
+          className="lg:w-auto  p-1 border-w-24 w-[4rem] text-xs  rounded-md border-primary-color"
           type="date"
           placeholder="Enter Birthday"
           name="birthday"
@@ -47,18 +48,18 @@ const FamMemEditableRow = ({
           onChange={handleEditFormChange}
         />
       </td>
-      <td className="flex text-center text-sm">
+      <td className="flex justify-center items-center gap-1 mt-2">
         <button
           type="submit"
-          className="lg:mr-2 lg:ml-20 ml-2 bg-primary-color hover:opacity-80 text-white font-bold p-2 rounded "
+          className='text-lg text-lime cursor-pointer'
         >
-          Save
+          <FaCheckSquare />
         </button>
         <button
           onClick={handleCancelClick}
-          className="bg-red hover:opacity-80 text-white font-bold p-1 rounded"
+          className="text-lg text-red cursor-pointer"
         >
-          Cancel
+        <  MdCancel  />
         </button>
       </td>
     </tr>

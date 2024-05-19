@@ -10,7 +10,7 @@ import EditTenantAccount from '../../Component/EditTenantAccount'
 import EditFamMemTable from '../../Component/EditFamMemTable'
 import { MdOutlineFileDownload } from 'react-icons/md'
 import AddHousehold from '../../Component/AddHousehold'
-import { IoDownloadOutline } from "react-icons/io5";
+import { IoDownloadOutline } from 'react-icons/io5'
 
 import TransactionTable from '../../Component/TransactionTable'
 import TransactionMobile from '../../Component/TransactionMobile'
@@ -38,7 +38,7 @@ const TenantProfile = () => {
   const [isPetdotOpen, setIsPetDotOpen] = useState(false)
   const [isAddHouseholdForm, setIsAddHouseholdForm] = useState(false)
   const [isAddPetForm, setIsAddPetForm] = useState(false)
- 
+
   const [isRemovedot, setIsRemovedot] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const dispatch = useDispatch()
@@ -166,15 +166,14 @@ const TenantProfile = () => {
     }
   }, [])
   const handleDownload = () => {
-
-    const isConfirmed = window.confirm('Download Lease Agreement?');
+    const isConfirmed = window.confirm('Download Lease Agreement?')
     if (isConfirmed) {
-      dispatch(generateDocument(tenant.user_id._id));
+      dispatch(generateDocument(tenant.user_id._id))
     }
   }
   const birthday = new Date(tenant?.user_id.birthday).toLocaleDateString()
   return (
-    <div className="bg-white1  h-full overflow-y-auto ">
+    <div className="bg-white1  w-full h-full overflow-y-auto ">
       {/* Tenant Profile Header */}
       <div className="lg:flex lg:items-center lg:justify-between">
         <div className="lg:mt-2 lg:ml-10 uppercase font-bold  p-5 mx-4">
@@ -217,7 +216,7 @@ const TenantProfile = () => {
       ) : (
         ''
       )}
-      <div className="lg:w-11/12 m-auto rounded-md">
+      <div className=" m-auto rounded-md">
         {activeTab === 'profile' && (
           <div className=" lg:mt-5 mt-10   ">
             {TenantProfileInfo.map((profile, index) => (
@@ -240,10 +239,13 @@ const TenantProfile = () => {
                         Unit - {tenant?.unit_id.unit_no}
                       </h2>
                     </div>
-                    <div onClick={handleDownload} className="sm:hidden absolute right-2 cursor-pointer hover:scale-110">
-                    <IoDownloadOutline size={28} />
+                    <div
+                      onClick={handleDownload}
+                      className="sm:hidden absolute right-2 cursor-pointer hover:scale-110"
+                    >
+                      <IoDownloadOutline size={28} />
                     </div>
-                
+
                     <button
                       onClick={handleDownload}
                       className="sm:flex hidden text-xs lg:p-3 py-2 px-1 pr-2 hover:bg-primary-color/55 duration-300 hover:text-prim   hover:text-primary-color  items-center gap-2 absolute right-0 lg:top-1 bg-primary-color text-white  rounded-md "
@@ -267,16 +269,16 @@ const TenantProfile = () => {
                       </div>
                     </div>
 
-                    <div className="mb-4 text-sm mt-3 ml-2 flex flex-col items-start">
-                      <p className="lg:text-lg flex gap-[4.8rem] items-center">
+                    <div className="mb-4  mt-3 ml-2 flex flex-col items-start">
+                      <p className="lg:text-lg text-xs flex gap-[4.8rem] items-center">
                         Username
-                        <span className="lg:text-base lg:ml-7 ml-6">
+                        <span className="lg:text-base text-sm lg:ml-7 ml-6">
                           {tenant?.user_id.username}
                         </span>
                       </p>
-                      <p className="lg:text-lg flex gap-20 items-center">
+                      <p className="lg:text-lg text-xs flex gap-20 items-center">
                         Password
-                        <span className="lg:text-base lg:ml-7 ml-6 ">
+                        <span className="lg:text-base text-xs lg:ml-7 ml-6 ">
                           ******************
                         </span>
                       </p>
@@ -317,10 +319,12 @@ const TenantProfile = () => {
                           <p>Email</p>
                         </div>
                         <div className="lg:text-base text-xs lg:flex lg:flex-col lg:gap-1">
-                          <p className="">{tenant?.user_id.name}</p>
-                          <p className="">{birthday}</p>
-                          <p className="">+63{tenant?.user_id.mobile_no}</p>
-                          <p className="">{tenant?.user_id.email}</p>
+                          <p>{tenant?.user_id.name}</p>
+                          <p>{birthday}</p>
+                          <p>+63{tenant?.user_id.mobile_no}</p>
+                          <p className="overflow-hidden text-ellipsis whitespace-nowrap w-full sm:w-48 md:w-64 lg:w-80">
+                            {tenant?.user_id.email}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -346,12 +350,12 @@ const TenantProfile = () => {
 
                     <div className=" mb-4 text-sm mt-3 ml-2 ">
                       <div className="flex gap-14">
-                        <div className="lg:text-lg ">
+                        <div className="lg:text-lg text-xs ">
                           <p>Apartment Unit</p>
                           <p>Deposit</p>
                           <p>Date of Move-in</p>
                         </div>
-                        <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
+                        <div className="lg:text-base text-xs lg:flex lg:flex-col lg:gap-1">
                           <p className="">Unit - {tenant?.unit_id.unit_no}</p>
                           <p className="">
                             {tenant?.deposit?.toLocaleString('en-PH', {
@@ -372,7 +376,7 @@ const TenantProfile = () => {
                 {/* Right profile */}
                 <div className="lg:w-1/2  lg:overflow-y-auto lg:origin-left lg:border-l-4 lg:border-dark-blue ">
                   {/*Family Members */}
-                  <div className="relative lg:mb-3">
+                  <div className="relative h-[15rem] lg:mb-3">
                     <div className="lg:p-3 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
                       <h1 className="lg:text-xl font-bold">
                         Household Details
@@ -385,7 +389,7 @@ const TenantProfile = () => {
                     {isHousedotOpen && (
                       <div
                         ref={dropdownRef}
-                        className="absolute right-0 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400"
+                        className="absolute right-0  flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400"
                       >
                         <div
                           className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
@@ -410,7 +414,7 @@ const TenantProfile = () => {
                       </div>
                     )}
 
-                    <div className="text-sm md:text-base p-3 flex flex-col gap-5 overflow-y-auto h-[20rem] ">
+                    <div className="text-xs md:text-base p-3 flex flex-col gap-5 overflow-y-auto lg:h-[12.4rem] h-[13rem] ">
                       {households?.map((val, key) => (
                         <div
                           key={key}
@@ -465,7 +469,7 @@ const TenantProfile = () => {
                   )}
 
                   {/*Pets */}
-                  <div className="lg:overflow-y-auto relative">
+                  <div className=" relative">
                     <div className="lg:p-3 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
                       <h1 className="lg:text-xl font-bold ">Pet Details</h1>
                       <RxDotsVertical
@@ -501,7 +505,7 @@ const TenantProfile = () => {
                       </div>
                     )}
 
-                    <div className="text-sm md:text-base p-3 flex flex-col gap-5 overflow-y-auto h-[14rem] ">
+                    <div className="text-xs md:text-base p-3 lg:h-[20rem] h-[10rem]   flex flex-col gap-5 overflow-y-auto  ">
                       {pets &&
                         pets.length > 0 &&
                         pets.map((pet, index) => (
@@ -529,7 +533,7 @@ const TenantProfile = () => {
                   </div>
                   {isEditPetForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
-                      <div className="lg:w-9/12 bg-white rounded-lg relative">
+                      <div className="lg:w-9/12 mx-2 bg-white rounded-lg relative">
                         <EditPetTable
                           id={tenant?.user_id._id}
                           setIsEditPetForm={setIsEditPetForm}

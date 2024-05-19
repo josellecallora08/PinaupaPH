@@ -161,7 +161,7 @@ const Invoice = () => {
                               className={`capitalize font-semibold ${
                                 val?.isPaid === false
                                   ? 'text-red'
-                                  : 'text-primary-color'
+                                  : 'text-lime'
                               } p-2 w-1/5`}
                             >
                               {val?.isPaid === false ? 'Unpaid' : 'Paid'}
