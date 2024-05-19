@@ -175,19 +175,19 @@ const TenantHome = () => {
                     </div>
                   </div>
                   {/* buttons */}
-                  <div className="flex flex-col mt-auto">
+                  <div className="flex flex-col mt-auto cursor-not-allowed">
                     {invoice?.isPaid === true ? (
                       <div>
-                        <div className="flex justify-center w-full hover:opacity-80">
-                          <div className="bg-primary-color w-full text-white p-5 text-center text-xl">
-                            Paid
+                        <div className="flex justify-center  w-full ">
+                          <div className="bg-primary-color justify-center items-center flex flex-col w-full text-white p-5 text-center text-xl">
+                            <span className='flex'><span className='mr-2'>Paid</span>
                             {parseInt(
                               invoice?.payment?.amountPaid,
                             )?.toLocaleString('en-PH', {
                               style: 'currency',
                               currency: 'PHP',
-                            })}
-                            on {new Date(invoice?.datePaid).toDateString()}
+                            })}</span>
+                            <span className='text-sm mt-2'>{new Date(invoice?.datePaid).toDateString()}</span>
                           </div>
                         </div>
                       </div>
@@ -238,27 +238,27 @@ const TenantHome = () => {
               </div>
               <div className="w-full h-fit py-4">
                 <div className="md:mt-2 flex p-3 justify-between text-primary-color mr-5  ">
-                  <div className="flex items-center gap-4">
+                  <div className="flex justify-between  items-center gap-4">
                     <img
                       src={announcement?.user_id?.profile_image?.image_url}
                       alt=""
                       className="w-16 h-16 rounded-full"
                     />
-                    <div className="text-lg">
+                    <div className="lg:text-lg text-base mr-2">
                       <p>{announcement?.user_id?.name}</p>
-                      <p className="text-dark-gray">Landlord</p>
+                      <p className="text-dark-gray text-xs lg:text-base">Landlord</p>
                     </div>
                   </div>
-                  <div className="text-sm mt-2">
+                  <div className="text-sm lg:mt-2 mt-[0.7rem]">
                     {new Date(announcement?.createdAt).toDateString()}
                   </div>
                 </div>
                 <div className="text-primary-color  px-5">
-                  <h1 className="text-center mb-2 text-2xl">
+                  <h1 className="text-center mb-2 lg:text-2xl text-xl lg:mt-0 mt-2">
                     {announcement?.title}
                   </h1>
 
-                  <p className=" overflow-y-auto h-[200px] ">
+                  <p className=" overflow-y-auto h-[200px] lg:text-base text-sm mt-5  ">
                     {announcement?.description}
                   </p>
                 </div>

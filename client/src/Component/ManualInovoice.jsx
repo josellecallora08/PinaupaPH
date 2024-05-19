@@ -44,31 +44,17 @@ const ManualInvoice = ({ setModal }) => {
       }))
     : []
 
-  // Custom styles for the Select component
-  const customStyles = {
-    control: (provided) => ({
-      ...provided,
-      width: '100%',
-    }),
-    menu: (provided) => ({
-      ...provided,
-      width: '100%',
-      maxHeight: '8.5rem',
-      overflowY: 'auto',
-    }),
-  }
-
   return (
     <div className="fixed inset-0 flex items-center justify-center z-10">
       <div
         onClick={() => setModal((state) => !state)}
         className="absolute inset-0 bg-black/20 backdrop-blur-sm"
       ></div>
-      <div className="w-full md:w-1/3 bg-white z-10 rounded-md shadow-md overflow-hidden">
+      <div className="w-full md:w-1/3 bg-white z-20 rounded-md shadow-md overflow-y-auto max-h-[90vh]">
         <h1 className="bg-primary-color uppercase font-bold tracking-wider text-white p-3">
           Prepare Invoice
         </h1>
-        <div className="p-5 h-[13rem]">
+        <div className="p-5">
           <form onSubmit={handleInvoice} className="flex flex-col gap-4">
             <Select
               value={selectedUser}
@@ -76,11 +62,11 @@ const ManualInvoice = ({ setModal }) => {
               options={options}
               isClearable
               className="font-semibold"
-              styles={{
-                ...customStyles,
-                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-              }}
               placeholder="Select Tenant"
+              menuPortalTarget={document.body}
+              styles={{
+                menuPortal: base => ({ ...base, zIndex: 9999 }),
+              }}
             />
             <div className="flex mt-5 gap-2">
               <button

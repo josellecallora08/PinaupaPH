@@ -101,7 +101,7 @@ const Profile = () => {
         />
       )}
 
-      <div className="flex flex-col gap-5 w-full h-full py-5 bg-white1">
+      <div className="flex flex-col gap-5 w-full overflow-y-auto h-full py-5 bg-white1">
         <p className="h-full max-h-5 text-2xl font-bold w-11/12 m-auto py-2">
           PROFILE
         </p>

@@ -63,7 +63,7 @@ const EditPetTable = ({ id, setIsEditPetForm }) => {
 
   return (
     <div>
-      <div className="relative w-full flex  rounded-tl-lg rounded-tr-lg  text-black items-center ">
+      <div className="relative w-full  flex  rounded-tl-lg rounded-tr-lg  text-black items-center ">
         <h1 className="lg:text-xl  ml-5 text-lg font-bold pt-6 pb-2 h-auto ">
           Edit Pet Details
         </h1>
