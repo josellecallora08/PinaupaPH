@@ -219,7 +219,7 @@ module.exports.edit_apartment = async (req, res) => {
     await response.save()
     return res
       .status(httpStatusCodes.CREATED)
-      .json({ msg: `Edited ${name}`, response })
+      .json({ msg: `Apartment has been successfully edited.`, response })
   } catch (err) {
     console.error({ error: err.message })
     return res

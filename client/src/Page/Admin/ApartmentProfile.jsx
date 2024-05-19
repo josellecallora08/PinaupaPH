@@ -12,6 +12,7 @@ import {
   deleteApartment,
   editApartment,
   fetchApartment,
+  resetApartmentStatus,
 } from '../../features/apartment'
 const ApartmentProfile = () => {
   const [update, setUpdate] = useState(false)
@@ -20,14 +21,14 @@ const ApartmentProfile = () => {
   const apartment = useSelector((state) => state.apartment.single)
   const msg = useSelector((state) => state.apartment.msg)
   const error = useSelector((state) => state.apartment.error)
+  const [showPopup, setShowPopup] = useState(false)
+  const [popupMessage, setPopupMessage] = useState('')
   const error_unit = useSelector((state) => state.unit.error)
   const { id } = useParams()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const units = useSelector((state) => state.unit.data)
- 
-  const [showPopup, setShowPopup] = useState(false);
-  const [popupMessage, setPopupMessage] = useState('');
+  const [isPopupVisible, setIsPopupVisible] = useState(false) // State to manage visibility of pop-up
   const toggleAddRoomForm = () => {
     setIsAddRoomFormOpen(!isAddRoomFormOpen)
   }
@@ -50,28 +51,27 @@ const ApartmentProfile = () => {
     );
   
     if (isConfirmed) {
-      try {
-        await dispatch(deleteApartment(id));
-        setPopupMessage('Apartment deleted successfully!');
-        setShowPopup(true);
-        setTimeout(() => {
-          setShowPopup(false);
-          navigate('/apartment');
-        }, 2000);
-      } catch (error) {
-        console.error(error);
-        setPopupMessage('Failed to delete apartment. Please try again.');
-        setShowPopup(true);
-        error(true);
-        setTimeout(() => {
-          setShowPopup(false);
-        }, 2000);
-      }
+      dispatch(deleteApartment(id))
+      navigate('/apartment')
     }
-  };
-  
-  
-  
+  }
+
+  useEffect(() => {
+    if (msg !== null) {
+      setPopupMessage(msg)
+    } else if (error !== null) {
+      setPopupMessage(error)
+    }
+
+    if (msg !== null || error !== null) {
+      setIsPopupVisible(true)
+      setTimeout(() => {
+        setIsPopupVisible(false)
+        dispatch(resetApartmentStatus())
+      }, 3000)
+    }
+  })
+
   return (
     <>
       <div className="w-full h-full  bg-white1">

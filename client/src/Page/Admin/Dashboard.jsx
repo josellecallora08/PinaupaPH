@@ -262,7 +262,7 @@ const Dashboard = () => {
                           >
                             <span
                               style={{
-                                width: `${(totalPaid?.percentage && totalPaid?.percentage) || 0}%`,
+                                width: `${(totalPaid?.percentage ? totalPaid?.percentage < 0 ? 100 : totalPaid?.percentage : 0)}%`,
                               }}
                               className={`absolute h-2 bg-primary-color animate-in slide-in-from-left-20 duration-1000`}
                             ></span>

@@ -35,11 +35,11 @@ const AddApartment = ({
         
         className="lg:w-[40rem] py-2 w-full h-[25rem] px-3 overflow-y-auto  "
       >
-        {error && (
+        {/* {error && (
           <p className="text-red border border-red/50 font-regular mt-5 rounded-xl shadow-md bg-red/10 p-5">
             {error}
           </p>
-        )}
+        )} */}
       <button className="absolute top-4 right-6">
           <IoMdClose
             onClick={() => setIsAddApartmentFormOpen((prevState) => !prevState)}
