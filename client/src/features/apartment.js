@@ -47,7 +47,7 @@ const apartmentSlice = createSlice({
     },
     deleteApartmentSuccess: (state, action) => {
       state.loading = false
-      state.data = state.data.filter((item) => item._id !== action.payload._id)
+      state.data = state.data.filter((item) => item._id !== action.payload.response._id)
       state.msg = action.payload.msg
     },
     actionApartmentFailed: (state, action) => {
@@ -227,6 +227,7 @@ export const deleteApartment = (apartment_id) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
+    console.log(json)
     dispatch(deleteApartmentSuccess(json))
   } catch (err) {
     dispatch(actionApartmentFailed(err.message))

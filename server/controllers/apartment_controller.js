@@ -259,7 +259,7 @@ module.exports.delete_apartment = async (req, res) => {
     await Promise.all([...cctv, ...units])
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: `Apartment building Deleted`, tenant })
+      .json({ msg: `Apartment building Deleted`, response })
   } catch (err) {
     console.error({ error: err.message })
     return res
