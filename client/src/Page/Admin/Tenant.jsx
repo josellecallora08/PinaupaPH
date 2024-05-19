@@ -116,7 +116,7 @@ const Tenant = () => {
       {/* {isVisible && <MessageToast message={msg} error={error} isVisible={isVisible} setIsVisible={setIsVisible} />} */}
       {/* Add condition if unread it wont show as well */}
       {/* <NotificationToast/> */}
-      <div className="w-full h-full bg-white1">
+      <div className="w-full h-full bg-white1 overflow-y-auto">
         <div className="w-11/12 flex flex-col m-auto">
           {/* Top of Tenant Tab */}
           <h1 className="uppercase font-bold pt-5">List of Tenant </h1>
