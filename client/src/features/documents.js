@@ -15,6 +15,10 @@ const documentSlice = createSlice({
       state.loading = true
       state.error = null
     },
+    resetDocumentStatus: (state) => {
+      state.msg = null
+      state.error = null
+    },
     generateSuccess: (state, action) => {
       state.loading = false
       state.msg = action.payload
@@ -60,6 +64,7 @@ const documentSlice = createSlice({
 
 export const {
   startLoading,
+  resetDocumentStatus,
   fetchDocumentsSuccess,
   fetchDocumentSuccess,
   editDocumentSuccess,

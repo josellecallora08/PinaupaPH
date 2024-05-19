@@ -21,14 +21,19 @@ import AddPet from '../../Component/AddPet'
 import EditPetTable from '../../Component/EditPetTable'
 import MessageToast from '../../Component/ToastComponent/MessageToast'
 
-import { deleteTenant, deleteUser, fetchUser } from '../../features/user'
+import {
+  deleteTenant,
+  deleteUser,
+  fetchUser,
+  resetUserStatus,
+} from '../../features/user'
 import {
   createHousehold,
   deleteHousehold,
   fetchHouseholds,
 } from '../../features/household'
 import { fetchPets } from '../../features/pet'
-import { generateDocument } from '../../features/documents'
+import { generateDocument, resetDocumentStatus } from '../../features/documents'
 
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile')
@@ -48,6 +53,7 @@ const TenantProfile = () => {
   const [isVisible, setIsVisible] = useState(false)
   const error = useSelector((state) => state.user.error)
   const errorDocument = useSelector((state) => state.docs.error)
+  const msgDocument = useSelector((state) => state.docs.msg)
   const msg = useSelector((state) => state.household.msg)
   const households = useSelector((state) => state.household.data)
   const pets = useSelector((state) => state.pet.data)
@@ -104,6 +110,22 @@ const TenantProfile = () => {
     birthday: '',
     relationship: '',
   })
+
+  useEffect(() => {
+    if (msgDocument !== null) {
+      setPopupMessage("Successfully generated Agreement")
+    } else if (errorDocument !== null) {
+      setPopupMessage("Failed to generate Agreement")
+    }
+
+    if (msgDocument !== null || errorDocument !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetDocumentStatus())
+      }, 3000)
+    }
+  }, [dispatch, handleDownload])
 
   const handleInput = (e) => {
     const { name, value } = e.target
@@ -242,7 +264,10 @@ const TenantProfile = () => {
                                 <span>Delete</span>
                                 <MdDelete className="text-lg" />
                               </button>
-                              <button onClick={handleDownload} className="flex items-center justify-between gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300">
+                              <button
+                                onClick={handleDownload}
+                                className="flex items-center justify-between gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300"
+                              >
                                 <span>Lease Agreement</span>
                                 <MdOutlineFileDownload size={20} />
                               </button>
@@ -594,7 +619,7 @@ const TenantProfile = () => {
             <Popup
               message={popupMessage}
               onClose={() => setShowPopup(false)}
-              error={error}
+              isError={error || errorDocument}
             />
           )}
         </div>
