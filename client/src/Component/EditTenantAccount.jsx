@@ -1,29 +1,51 @@
-import React, { useState } from 'react'
-import { IoMdClose } from 'react-icons/io'
-import { useSelector, useDispatch } from 'react-redux'
-import { editUser } from '../features/user'
+import React, { useState } from 'react';
+import { IoMdClose } from 'react-icons/io';
+import { useSelector, useDispatch } from 'react-redux';
+import { editUser } from '../features/user';
+import Popup from '../Component/PopUp';
+
 const EditTenantAccount = ({ setIsEditTenantAccountForm, tenant }) => {
-  const error = useSelector((state) => state.user.error)
-  const dispatch = useDispatch()
+  const error = useSelector((state) => state.user.error);
+  const dispatch = useDispatch();
   const [fields, setFields] = useState({
     username: tenant?.user_id.username || '',
     password: '',
     newpassword: '',
     confirmpassword: '',
-  })
+  });
+
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleInput = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFields({
       ...fields,
       [name]: value,
-    })
-  }
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    dispatch(editUser(tenant?.user_id._id, fields))
-    setIsEditTenantAccountForm((prevState) => !prevState)
-  }
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(editUser(tenant?.user_id._id, fields));
+      setSuccessMessage('Tenant Account updated successfully!');
+      setErrorMessage('');
+      setShowPopup(true);
+
+      // Automatically hide the pop-up after 3 seconds
+      setTimeout(() => {
+        setShowPopup(false);
+        setIsError(true);
+        setIsEditTenantAccountForm((prevState) => !prevState);
+      }, 3000);
+    } catch (error) {
+      setErrorMessage('Failed to update tenant details. Please try again later.');
+      setSuccessMessage('');
+    }
+  };
+
   return (
     <div className="relative">
       <div className="relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center ">
@@ -139,8 +161,14 @@ const EditTenantAccount = ({ setIsEditTenantAccountForm, tenant }) => {
           </button>
         </div>
       </form>
+      {showPopup && (
+        <Popup 
+          message={successMessage} 
+          onClose={() => setShowPopup(false)} 
+        />
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default EditTenantAccount
+export default EditTenantAccount;

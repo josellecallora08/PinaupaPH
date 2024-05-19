@@ -1,17 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
-import { createUnit } from '../../features/unit'
-import { IoMdClose } from 'react-icons/io'
+import { useDispatch, useSelector } from 'react-redux';
+import { createUnit } from '../../features/unit';
+import { IoMdClose } from 'react-icons/io';
+import Popup from '../../Component/PopUp';
+
 const AddRoom = ({ apartment_id, setIsAddRoomFormOpen }) => {
-  const dispatch = useDispatch()
-  const error = useSelector((state) => state.unit.error)
-  const msg = useSelector((state) => state.unit.msg)
+  const dispatch = useDispatch();
+  const error = useSelector((state) => state.unit.error);
+  const msg = useSelector((state) => state.unit.msg);
   const modalRef = useRef(null);
   const [fields, setFields] = useState({
     name: '',
     rent: '',
     unit_no: '',
-  })
+  });
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -26,20 +30,36 @@ const AddRoom = ({ apartment_id, setIsAddRoomFormOpen }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [setIsAddRoomFormOpen]);
+
   const handleInput = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFields((components) => ({
       ...components,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(createUnit(fields, apartment_id));
+      setPopupMessage('Apartment unit added successfully!');
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+        setIsAddRoomFormOpen(false);
+      }, 3000);
+    } catch (error) {
+      console.error(error);
+      setPopupMessage('Failed to add apartment unit. Please try again.');
+      setIsError(true);
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
+    }
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    dispatch(createUnit(fields, apartment_id))
-    setIsAddRoomFormOpen(prevState => !prevState)
-  }
   return (
     <>
       <div className="relative" ref={modalRef}>
@@ -48,7 +68,6 @@ const AddRoom = ({ apartment_id, setIsAddRoomFormOpen }) => {
             Add Apartment Unit
           </h1>
         </div>
-        {/* check */}
 
         <form onSubmit={handleSubmit} className="lg:w-[30rem] w-[22rem] h-auto pt-8 px-4 ">
           <button className="absolute top-4 right-6">
@@ -102,8 +121,8 @@ const AddRoom = ({ apartment_id, setIsAddRoomFormOpen }) => {
           </div>
           <div className="flex justify-end mt-5 gap-3">
             <button
+              type="submit"
               className=" bg-dark-blue text-white font-bold py-2 px-4 rounded"
-
             >
               Submit
             </button>
@@ -117,8 +136,11 @@ const AddRoom = ({ apartment_id, setIsAddRoomFormOpen }) => {
           </div>
         </form>
       </div>
+      {showPopup && (
+        <Popup message={popupMessage} onClose={() => setShowPopup(false)} />
+      )}
     </>
-  )
-}
+  );
+};
 
-export default AddRoom
+export default AddRoom;

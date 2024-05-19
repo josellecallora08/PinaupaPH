@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import angle from '/angle.svg'
 import send from '/send.svg'
 import { io } from 'socket.io-client'
+import Popup from '../../Component/PopUp'
 import comments from '/comments.svg'
 import {
   createComment,
@@ -32,6 +33,9 @@ const ViewConcern = () => {
   const messageContainerRef = useRef(null)
   const [isDotOpen, setIsDotOpen] = useState(false)
   const navigate = useNavigate()
+  const [successMessage, setSuccessMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [showPopup, setShowPopup] = useState(false)
   const toggleDot = () => {
     setIsDotOpen(!isDotOpen)
   }
@@ -40,12 +44,42 @@ const ViewConcern = () => {
       'Are you sure you want to delete this Issue?',
     )
     if (isConfirmed) {
-      dispatch(deleteReport(id, navigate))
+  try{
+    setSuccessMessage('Concern and Issue resolved successfully!');
+    setErrorMessage('');
+    setShowPopup(true);
+    dispatch(deleteReport(id, navigate))
+   
+    setTimeout(() => {
+      setShowPopup(false);
+    }, 3000);
+  }catch(error){
+    setErrorMessage('Failed to update tenant account. Please try again later.');
+    setSuccessMessage('');
+    // Handle any additional error handling or logging here if needed
+  }
     }
   }
+
   const handleComplete = async () => {
-    dispatch(resolveReport(id))
-  }
+    try {
+      await dispatch(resolveReport(id));
+      setSuccessMessage('Concern and Issue resolved successfully!');
+      setErrorMessage('');
+      setShowPopup(true); // Show the popup when the issue is resolved
+      
+      // Automatically hide the popup after 3 seconds
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
+    } catch (error) {
+      setErrorMessage('Failed to update tenant account. Please try again later.');
+      setSuccessMessage('');
+      // Handle any additional error handling or logging here if needed
+    }
+  };
+
+  
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (comment === '' || comment === null) {
@@ -110,7 +144,7 @@ const ViewConcern = () => {
   }, [report, comment, handleSubmit])
   return (
     <>
-      <div className="w-full h-full flex flex-col pb-5 xl:bg-gray text-primary-color">
+      <div className=" overflow-y-auto w-full h-full flex flex-col pb-5 xl:bg-gray text-primary-color">
         <div className="w-11/12 m-auto h-fit py-2 gap-5 flex items-center">
           <h1 className="uppercase font-bold">
             <span
@@ -122,7 +156,7 @@ const ViewConcern = () => {
             / View
           </h1>
         </div>
-        <div className="md:w-11/12 h-full  m-auto grid grid-cols-2 grid-flow-row rounded-lg bg-white">
+        <div className="md:w-11/12 h-fit  m-auto grid grid-cols-2 grid-flow-row rounded-lg bg-white">
           <div className="col-span-2 xl:col-span-1 xl:row-span-1  p-5  ">
             <div className="w-full h-full grid grid-flow-4 gap-5 ">
               <div className=" relative row-span-1 grid grid-cols-2 items-center">
@@ -183,7 +217,7 @@ const ViewConcern = () => {
                   <span>{report?.type}</span>
                 </p>
                 <div className="h-full text-sm ">
-                  <p className="text-ellipsis font-regular xl:max-w-auto max-h-[125px] xl:text-wrap overflow-hidden">
+                  <p className=" text-ellipsis font-regular xl:w-96 overflow-y-auto max-h-[125px] xl:text-wrap overflow-hidden">
                     {report?.description}
                   </p>
                 </div>
@@ -290,6 +324,13 @@ const ViewConcern = () => {
                       <h1 className="h-full flex items-center text-white font-regular text-3xl">
                         RESOLVED ISSUE
                       </h1>
+                    )}
+
+                    {showPopup && (
+                      <Popup
+                        message={successMessage}
+                        onClose={() => setShowPopup(false)}
+                      />
                     )}
                   </div>
                 </div>

@@ -51,14 +51,12 @@ const Invoice = () => {
       dispatch(searchInvoice(filter))
     } else {
       dispatch(fetchInvoices())
-      setUpdate(false)
     }
   }, [filter, update, msg, status])
 
   const handleDropdownClick = (id) => {
-    setDropdownIndex(id === dropdownIndex ? null : id)
+  setDropdownIndex(id === dropdownIndex ? null : id)
   }
-
   return (
     <>
       <div className="w-full h-full bg-white1">
@@ -114,10 +112,7 @@ const Invoice = () => {
                 <tbody className="w-full h-full bg-white font-regular">
                   {user && user.role === 'Admin'
                     ? invoices
-                        ?.filter(
-                          (item) =>
-                            item.isPaid.toString() === status.toString(),
-                        )
+                        ?.filter((item) => item?.isPaid === status)
                         .map((val, index) => (
                           <tr
                             key={index}
@@ -130,8 +125,8 @@ const Invoice = () => {
                               {val?.tenant_id?.user_id.name}
                             </td>
                             <td className="p-2">
-                              {(val?.tenant_id?.balance === 0
-                                ? 0
+                              {(!val?.isPaid
+                                ? val?.tenant_id.balance
                                 : val?.payment.unpaidBalance
                               )?.toLocaleString('en-PH', {
                                 style: 'currency',
@@ -222,7 +217,7 @@ const Invoice = () => {
                     : invoices
                         ?.filter(
                           (item) =>
-                            item.status === status &&
+                            item.isPaid === status &&
                             item.tenant_id.user_id._id === user.id,
                         )
                         .map((val, index) => (

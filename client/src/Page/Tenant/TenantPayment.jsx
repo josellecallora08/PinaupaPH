@@ -13,12 +13,13 @@ const TenantPayment = () => {
   const [selectedEwallet, setSelectedEwallet] = useState(null)
   const invoice = useSelector((state) => state.invoice.single)
   const dispatch = useDispatch()
+  console.log(invoice?.tenant_id?.user_id?.name)
   const [formData, setFormData] = useState({
-    name: '',
-    mobile_no: '',
-    email: '',
-    amount: '',
-    method: '',
+    name: invoice?.tenant_id?.user_id?.name || '',
+    mobile_no: invoice?.tenant_id?.user_id?.mobile_no || '',
+    email: invoice?.tenant_id?.user_id?.email || '',
+    amount: invoice?.amount || '',
+    method: invoice?.payment?.method || '',
   })
   useEffect(() => {
     dispatch(fetchInvoice(id))
@@ -51,7 +52,6 @@ const TenantPayment = () => {
       [e.target.name]: e.target.value,
     })
   }
-  console.log(formData.method)
   return (
     <>
       <div className="w-full h-full bg-white1 px-5 overflow-y-scroll">

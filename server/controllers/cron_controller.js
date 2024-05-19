@@ -15,7 +15,7 @@ const DAY_IN_MS = 24 * 60 * 60 * 1000 // Number of milliseconds in a day
 module.exports.scheduledInvoice = () => {
   let hasRun = false // Initialize hasRun flag
 
-  cron.schedule('0 0 * * *', async () => {
+  cron.schedule('0 0 * * * *', async () => {
     // Run every minute, adjust as needed
     if (!hasRun) {
       hasRun = true
@@ -37,10 +37,15 @@ module.exports.scheduledInvoice = () => {
           }
 
           const due = new Date(item.monthly_due)
+          due.setFullYear(
+            current_date.getFullYear(),
+            current_date.getMonth(),
+            due.getDate(),
+          )
           // Calculate the difference in days between current date and due date
           const daysDifference = Math.floor((due - current_date) / DAY_IN_MS)
 
-          if (daysDifference == 7) {
+          if (daysDifference === 7 && !(item.user_id.isDelete)) {
             // Check if the due date is today
             const ref_user = item.user_id._id.toString().slice(-3)
             const ref_unit = item.unit_id.unit_no
@@ -123,11 +128,15 @@ module.exports.scheduledInvoice = () => {
                 )
                 .end(pdfBuffer)
             })
+
+            const dateDue = new Date(item.monthly_due).getDate()
+            const dueMonth = new Date().setDate(dateDue)
             const response = await INVOICEMODEL.create({
               tenant_id: item._id,
               'pdf.public_id': cloudinaryResponse.public_id,
               'pdf.pdf_url': cloudinaryResponse.secure_url,
               'pdf.reference': reference,
+              due: new Date(dueMonth).toISOString(),
               amount,
             })
 

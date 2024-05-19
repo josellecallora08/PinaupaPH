@@ -4,26 +4,48 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteUnit, fetchUnit } from '../../features/unit';
 import EditApartmentUnit from './EditApartmentUnit';
 
-
+import PopUp from '../../Component/PopUp';
 const ApartmentStatusCard = ({ apartmentId, val }) => {
   const [isEditApartmentUnit, setIsEditApartmentUnit] = useState(false)
   const toggleisEditApartmentUnit = () => {
     setIsEditApartmentUnit(!isEditApartmentUnit)
   }
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
   const dispatch = useDispatch()
   const unit = useSelector(state => state.unit.data)
   const loading = useSelector(state => state.unit.loading)
 
-  const handleDelete = (unitId) => {
+  const handleDelete = () => {
     const isConfirmed = window.confirm(
-      'Are you sure you want to delete this apartment?',
-    )
+      'Are you sure you want to delete this apartment?'
+    );
     if (isConfirmed) {
-      dispatch(deleteUnit(apartmentId, unitId))
-    } 
-  }
+      try {
+        dispatch(deleteUnit(apartmentId, unitId));
+        setPopupMessage('Apartment deleted successfully!');
+        setIsPopupVisible(true);
+        // Automatically hide the pop-up after 3 seconds
+        setTimeout(() => {
+          setIsPopupVisible(false);
+        }, 3000);
+      } catch (error) {
+        console.error(error);
+        
+        setPopupMessage('Failed to delete apartment. Please try again.');
+        setIsPopupVisible(true);
+         setIsError(true);
+        // Automatically hide the pop-up after 3 seconds
+        setTimeout(() => {
+          setIsPopupVisible(false);
+        }, 1000);
+      }
+    }
+  };
+
   return (
     <>
+       
       <div className=" relative flex  overflow-hidden shadow-md shadow-gray rounded-lg">
         <div className=" text-white flex items-center justify-center w-32 px-5 bg-dark-blue">
           <h1 className='text-2xl font-black'>{val?.unit_no}</h1>
@@ -51,7 +73,16 @@ const ApartmentStatusCard = ({ apartmentId, val }) => {
             </div>
           </div>
         )}
+        
       </div>
+      {isPopupVisible && (
+        <PopUp
+          message={popupMessage}
+          onClose={() => setIsPopupVisible(false)}
+          isError={true}
+          
+        />
+      )}
     </>
 
   )

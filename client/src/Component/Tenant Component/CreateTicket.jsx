@@ -70,6 +70,7 @@ const CreateTicket = ({
               id="title"
               name="title"
               value={title}
+              maxLength={30}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter Title"
               className="text-sm bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
