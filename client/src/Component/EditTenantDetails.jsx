@@ -1,49 +1,50 @@
-import React from 'react'
-import { useState } from 'react'
-import { IoMdClose } from 'react-icons/io'
-import { useSelector, useDispatch } from 'react-redux'
-import { editUser } from '../features/user'
-import Popup from '../Component/PopUp'
-
+import React, { useState } from 'react';
+import { IoMdClose } from 'react-icons/io';
+import { useSelector, useDispatch } from 'react-redux';
+import { editUser } from '../features/user';
+import Popup from '../Component/PopUp'; 
 const EditTenantDetails = ({ setIsEditTenantDetailForm, tenant }) => {
-  const error = useSelector((state) => state.user.error)
-  const dispatch = useDispatch()
+  const error = useSelector((state) => state.user.error);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
+  const dispatch = useDispatch();
   const [fields, setFields] = useState({
     name: tenant?.user_id.name || '',
     birthday: tenant?.user_id.birthday || '',
     mobile_no: tenant?.user_id.mobile_no || '',
     email: tenant?.user_id.email || '',
-  })
+  });
+
   const handleInput = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFields({
       ...fields,
       [name]: value,
-    })
-  }
-  const [successMessage, setSuccessMessage] = useState('');
-  const [showPopup, setShowPopup] = useState(false);
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(editUserApartment(tenant?.user_id?._id, fields));
-      setSuccessMessage('Apartment details updated successfully.');
-      setErrorMessage(''); // Change this to setPopupMessage
+      await dispatch(editUser(tenant?.user_id?._id, fields));
+      setPopupMessage('Tenant details updated successfully!');
       setShowPopup(true);
-      // Automatically hide the pop-up after 3 seconds
       setTimeout(() => {
+        setIsEditTenantDetailForm((prevState) => !prevState);
         setShowPopup(false);
-        setIsEditApartmentForm(false); // Close the form after hiding the pop-up
-      }, 3000);
+      }, 2000); // Close the pop-up after 2 seconds
     } catch (error) {
-      setPopupMessage('Failed to update apartment details. Please try again.');
-      setShowPopup(true);
+      console.error(error);
+      setPopupMessage('Failed to update tenant details. Please try again.');
       setIsError(true);
+      setShowPopup(true);
+      setTimeout(() => {
+        setIsEditTenantDetailForm(true)
+        setShowPopup(false);
+      }, 2000); // Close the pop-up after 2 seconds
     }
   };
   
-
   return (
     <div className="relative">
       <div className="relative w-full h-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center ">
@@ -158,9 +159,15 @@ const EditTenantDetails = ({ setIsEditTenantDetailForm, tenant }) => {
         </div>
         
       </form>
-   
+      {showPopup && (
+          <Popup 
+            message={popupMessage} 
+            onClose={() => setShowPopup(false)} 
+            error={error}
+          />
+        )}
     </div>
-  )
-}
+  );
+};
 
-export default EditTenantDetails
+export default EditTenantDetails;

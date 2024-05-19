@@ -10,6 +10,10 @@ const userSlice = createSlice({
     msg: null,
   },
   reducers: {
+    resetUserStatus: (state) => {
+      state.msg = null
+      state.error = null
+    },
     fetchUserStart: (state) => {
       state.loading = true
       state.error = null
@@ -60,6 +64,7 @@ const userSlice = createSlice({
 })
 
 export const {
+  resetUserStatus,
   fetchUserStart,
   fetchUserSuccess,
   insertUserSuccess,

@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { MdOutlineRestartAlt } from 'react-icons/md'
 
 import { FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
 import { RxDotsVertical } from 'react-icons/rx'
 import { GrFormView, GrFormAdd } from 'react-icons/gr'
 import { MdOutlineFileDownload } from 'react-icons/md'
-import PopUp from '../../Component/PopUp';
+import Popup from '../../Component/PopUp'
 import AddHousehold from '../../Component/AddHousehold'
 import EditApartment from '../../Component/AdminComponent/EditApartment'
 import TransactionTable from '../../Component/TransactionTable'
@@ -20,14 +21,19 @@ import AddPet from '../../Component/AddPet'
 import EditPetTable from '../../Component/EditPetTable'
 import MessageToast from '../../Component/ToastComponent/MessageToast'
 
-import { deleteTenant, deleteUser, fetchUser } from '../../features/user'
+import {
+  deleteTenant,
+  deleteUser,
+  fetchUser,
+  resetUserStatus,
+} from '../../features/user'
 import {
   createHousehold,
   deleteHousehold,
   fetchHouseholds,
 } from '../../features/household'
 import { fetchPets } from '../../features/pet'
-import { generateDocument } from '../../features/documents'
+import { generateDocument, resetDocumentStatus } from '../../features/documents'
 
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile')
@@ -45,41 +51,27 @@ const TenantProfile = () => {
   const { id } = useParams()
   const tenant = useSelector((state) => state.user.single)
   const [isVisible, setIsVisible] = useState(false)
-  const [isPopupVisible, setIsPopupVisible] = useState(false); // State to manage visibility of pop-up
-  const [popupMessage, setPopupMessage] = useState(''); // 
   const error = useSelector((state) => state.user.error)
   const errorDocument = useSelector((state) => state.docs.error)
+  const msgDocument = useSelector((state) => state.docs.msg)
   const msg = useSelector((state) => state.household.msg)
   const households = useSelector((state) => state.household.data)
   const pets = useSelector((state) => state.pet.data)
   const navigate = useNavigate()
-  
+  const [showPopup, setShowPopup] = useState(false)
+  const [popupMessage, setPopupMessage] = useState('')
+
   const dropdownRef = useRef(null)
   const handleDeleteTenant = () => {
     const isConfirmed = window.confirm(
-      'Are you sure you want to delete this tenant?'
-    );
+      'Are you sure you want to delete this tenant?',
+    )
     if (isConfirmed) {
+      navigate('/tenant')
       dispatch(deleteTenant(id))
-        .then(() => {
-          setPopupMessage('Tenant deleted successfully!');
-          setIsPopupVisible(true);
-          setTimeout(() => {
-            setIsPopupVisible(false);
-            navigate('/tenant');
-          }, 3000);
-        })
-        .catch((error) => {
-          console.error(error);
-          setPopupMessage('Failed to delete tenant. Please try again.');
-          setIsError(true);
-          setIsPopupVisible(true);
-          setTimeout(() => {
-            setIsPopupVisible(false);
-          }, 3000);
-        });
     }
-  };
+  }
+
   const handleClickOutsideDropdown = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsHouseDotOpen(false)
@@ -110,19 +102,6 @@ const TenantProfile = () => {
   }
   const handleDownload = (e) => {
     dispatch(generateDocument(id))
-    if(errorDocument){
-      setPopupMessage('Failed to delete generate PDF. Please try again.');
-      setIsPopupVisible(true);
-      setTimeout(() => {
-        setIsPopupVisible(false);
-      }, 3000);
-    } else {
-      setPopupMessage('Lease agreement has been generated.');
-      setIsPopupVisible(true);
-      setTimeout(() => {
-        setIsPopupVisible(false);
-      }, 3000);
-    }
   }
 
   const [fields, setFields] = useState({
@@ -131,6 +110,22 @@ const TenantProfile = () => {
     birthday: '',
     relationship: '',
   })
+
+  useEffect(() => {
+    if (msgDocument !== null) {
+      setPopupMessage("Successfully generated Agreement")
+    } else if (errorDocument !== null) {
+      setPopupMessage("Failed to generate Agreement")
+    }
+
+    if (msgDocument !== null || errorDocument !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetDocumentStatus())
+      }, 3000)
+    }
+  }, [dispatch, handleDownload])
 
   const handleInput = (e) => {
     const { name, value } = e.target
@@ -141,15 +136,27 @@ const TenantProfile = () => {
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
-    dispatch(createHousehold(id, fields))
-    setIsVisible((prevState) => !prevState)
-    setIsAddHouseholdForm((prevState) => !prevState)
-    setFields({
-      name: '',
-      mobile: '',
-      birthday: '',
-      relationship: '',
-    })
+    try {
+      await dispatch(createHousehold(id, fields))
+      setPopupMessage('Household added successfully!')
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+      }, 2000)
+      setIsVisible((prevState) => !prevState)
+      setIsAddHouseholdForm((prevState) => !prevState)
+      setFields({
+        name: '',
+        mobile: '',
+        birthday: '',
+        relationship: '',
+      })
+    } catch (error) {
+      console.error(error)
+      setPopupMessage('Failed to add household. Please try again.')
+      setShowPopup(true)
+      setIsError(true)
+    }
   }
 
   const handleDeleteClick = async (contactId) => {
@@ -158,7 +165,6 @@ const TenantProfile = () => {
       setIsVisible((prevState) => !prevState)
     }
   }
-  
 
   useEffect(() => {
     dispatch(fetchHouseholds(id))
@@ -173,15 +179,15 @@ const TenantProfile = () => {
     }
   }, [])
 
-  const birthday = tenant?.user_id?.birthday ? new Date(tenant?.user_id?.birthday).toLocaleDateString() : ''
+  const birthday = tenant?.user_id?.birthday
+    ? new Date(tenant?.user_id?.birthday).toLocaleDateString()
+    : ''
   return (
     <>
-       
-
-      <div className="bg-white1  h-full ">
+      <div className="bg-white1  h-full overflow-y-auto ">
         {/* Tenant Profile Header */}
         <div className="lg:flex lg:items-center lg:justify-between">
-          <div className="lg:mt-2 lg:ml-10 uppercase font-bold  p-5 mx-4">
+          <div className="lg:mt-2 lg:ml-10 uppercase items-center flex font-bold  p-5 mx-4">
             <h1>
               <span
                 className=" hover:cursor-pointer hover:underline mr-1"
@@ -240,22 +246,7 @@ const TenantProfile = () => {
                           Unit - {tenant?.unit_id?.unit_no}
                         </h2>
                       </div>
-
-                      <button
-                        onClick={handleDeleteTenant}
-                        className="hidden lg:flex lg:py-2 lg:px-3 absolute top-0 right-3  items-center gap-2 bg-red text-white py-1 px-2 rounded-md hover:bg-red/55"
-                      >
-                        <MdDelete />
-                        Delete
-                      </button>
-                      <button
-                        onClick={handleDownload}
-                        className="btn hidden hover:text-primary-color lg:flex items-center gap-2 absolute right-3 top-12 bg-primary-color text-white p-2 rounded-md "
-                      >
-                        <MdOutlineFileDownload size={20} /> Lease Agreement
-                      </button>
-
-                      <div className="lg:hidden absolute top-1 right-2">
+                      <div className=" absolute top-1 right-2">
                         <button
                           className="relative text-xl rotate-90"
                           onClick={toggleRemoveDot}
@@ -264,17 +255,27 @@ const TenantProfile = () => {
                         </button>
 
                         {isRemovedot && (
-                          <div className="flex flex-col  absolute right-0 w-fit gap-1  bg-white rounded-md ">
-                            <button
-                              onClick={handleDeleteTenant}
-                              className="flex items-center gap-2 bg-red  text-white p-2 rounded-md hover:opacity-80 transition duration-300 ease-in-out"
-                            >
-                              <MdDelete className="text-lg" /> Delete
-                            </button>
-                            <button className=" flex items-center  gap-2  bg-primary-color w-[10.2rem] text-white p-2 rounded-md hover:bg-opacity-80 transition duration-300 ease-in-out">
-                              <MdOutlineFileDownload size={20} /> Lease
-                              Agreement
-                            </button>
+                          <div className="absolute right-0 mt-2 w-max animate-slideIn">
+                            <div className="bg-white rounded-md shadow-md">
+                              <button
+                                onClick={handleDeleteTenant}
+                                className="flex items-center justify-between px-4 py-2 text-red-500 hover:bg-red hover:text-white rounded-t-md w-full focus:outline-none transition duration-300"
+                              >
+                                <span>Delete</span>
+                                <MdDelete className="text-lg" />
+                              </button>
+                              <button
+                                onClick={handleDownload}
+                                className="flex items-center justify-between gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300"
+                              >
+                                <span>Lease Agreement</span>
+                                <MdOutlineFileDownload size={20} />
+                              </button>
+                              <button className="flex items-center justify-between px-4 py-2 text-primary-color hover:bg-lime hover:text-white rounded-b-md w-full focus:outline-none transition duration-300">
+                                <span>Recover</span>
+                                <MdOutlineRestartAlt size={20} />
+                              </button>
+                            </div>
                           </div>
                         )}
                       </div>
@@ -433,10 +434,10 @@ const TenantProfile = () => {
                       {isHousedotOpen && (
                         <div
                           ref={dropdownRef}
-                          className="absolute right-0 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400"
+                          className="absolute right-0 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400 animate-slideIn"
                         >
                           <div
-                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
+                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center transition duration-300"
                             onClick={() => {
                               setIsEditFamilyMemForm(!isEditFamilyMemForm)
                               setIsHouseDotOpen(false)
@@ -446,7 +447,7 @@ const TenantProfile = () => {
                             View
                           </div>
                           <div
-                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
+                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center transition duration-300"
                             onClick={() => {
                               setIsAddHouseholdForm(!isAddHouseholdForm)
                               setIsHouseDotOpen(false)
@@ -524,10 +525,10 @@ const TenantProfile = () => {
                       {isPetdotOpen && (
                         <div
                           ref={dropdownRef}
-                          className=" absolute right-0 top-15 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray"
+                          className="absolute right-0 top-15 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400 animate-slideIn"
                         >
                           <div
-                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
+                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center transition duration-300"
                             onClick={() => {
                               setIsEditPetForm(!isEditPetForm)
                               setIsPetDotOpen(false)
@@ -537,7 +538,7 @@ const TenantProfile = () => {
                             View
                           </div>
                           <div
-                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
+                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center transition duration-300"
                             onClick={() => {
                               setIsAddPetForm(!isAddPetForm)
                               setIsPetDotOpen(false)
@@ -591,6 +592,9 @@ const TenantProfile = () => {
                           <AddPet
                             id={tenant.user_id._id}
                             setIsAddPetForm={setIsAddPetForm}
+                            error={error}
+                            togglePopup={setShowPopup}
+                            setPopupMessage={setPopupMessage}
                           />
                         </div>
                       </div>
@@ -611,14 +615,13 @@ const TenantProfile = () => {
               </div>
             </div>
           )}
-          {isPopupVisible && (
-        <PopUp
-        className="z-30"
-          message={popupMessage}
-          isError={error || errorDocument}
-          onClose={() => setIsPopupVisible(false)}
-        />
-      )}
+          {showPopup && (
+            <Popup
+              message={popupMessage}
+              onClose={() => setShowPopup(false)}
+              isError={error || errorDocument}
+            />
+          )}
         </div>
       </div>
     </>
