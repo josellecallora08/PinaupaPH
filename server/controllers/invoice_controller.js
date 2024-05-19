@@ -226,7 +226,7 @@ module.exports.createInvoice = async (req, res) => {
     const mailOptions = {
       from: 'pinaupaph@gmail.com',
       to: `${tenant?.user_id.email}`,
-      subject: `Urgent: Your Invoice for ${tenant?.unit_id.unit_no} is Due Soon!`,
+      subject: `Urgent: Your Invoice for ${tenant?.user_id.name} is Due Soon!`,
       html: `
         <html>
         <body>
@@ -367,6 +367,11 @@ module.exports.searchInvoice = async (req, res) => {
           amount: 1,
           pdf: 1,
           status: 1,
+          isPaid: 1,
+          datePaid: 1,
+          due:1,
+          payment: 1,
+          intent: 1
         },
       },
     ])
