@@ -86,7 +86,7 @@ const Table = ({ id, setIsEditFamilyMemForm, handleDeleteClick }) => {
 
         <table className=" table-fixed min-w-full border-collapse w-full  ">
           <thead className="  bg-dark-blue  text-white sticky top-0 ">
-            <tr className="text-center text-sm font-semibold  ">
+            <tr className="text-center text-xs font-semibold  ">
               <th className="py-5 ">Name</th>
               <th className="py-5 ">Mobile</th>
               <th className="">Relationship</th>

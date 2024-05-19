@@ -10,9 +10,14 @@ const apartmentSlice = createSlice({
     msg: null,
   },
   reducers: {
+    resetApartmentStatus:(state) => {
+      state.error = null
+      state.msg = null
+    },
     apartmentStart: (state) => {
       state.loading = true
       state.error = null
+      state.msg = null
     },
     fetchApartmentSuccess: (state, action) => {
       state.loading = false
@@ -28,6 +33,7 @@ const apartmentSlice = createSlice({
       state.single = action.payload
     },
     editApartmentSuccess: (state, action) => {
+      state.msg = action.payload.msg
       state.loading = false
       state.data = state.data.map((item) =>
         item._id === action.payload.response._id
@@ -38,21 +44,22 @@ const apartmentSlice = createSlice({
         state.single._id === action.payload.response._id
           ? { ...action.payload.response }
           : state.single
-      state.msg = action.payload.msg
     },
     deleteApartmentSuccess: (state, action) => {
       state.loading = false
-      state.data = state.data.filter((item) => item._id !== action.payload._id)
+      state.data = state.data.filter((item) => item._id !== action.payload.response._id)
       state.msg = action.payload.msg
     },
     actionApartmentFailed: (state, action) => {
       state.loading = false
       state.error = action.payload
+      state.msg = null
     },
   },
 })
 
 export const {
+  resetApartmentStatus,
   apartmentStart,
   fetchApartmentSuccess,
   fetchSingleApartmentSuccess,
@@ -96,7 +103,9 @@ export const createApartment = (fields) => async (dispatch) => {
   ) {
     throw new Error('Please fill all the inputs.')
   }
+
   try {
+    dispatch(apartmentStart())
     const token = Cookies.get('token')
     const response = await fetch(
       `${import.meta.env.VITE_URL}/api/apartment/create_apartment`,

@@ -23,7 +23,7 @@ const invoiceSlice = createSlice({
     },
     editInvoicesSuccess: (state, action) => {
       state.data = state.data.map((item) =>
-        item?.pdf?.reference === action.payload.pdf.reference
+        item?._id === action.payload.response._id
           ? action.payload
           : item,
       )
@@ -212,7 +212,7 @@ export const editInvoices = (id, status) => async (dispatch) => {
     dispatch(fetchStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/invoice/paid?invoice_id=${id}&status=${status}`,
+      `${import.meta.env.VITE_URL}/api/invoice/update?invoice_id=${id}&status=${status}`,
       {
         method: 'PATCH',
         headers: {
@@ -222,9 +222,11 @@ export const editInvoices = (id, status) => async (dispatch) => {
     )
     if (!response.ok) {
       const error = await response.json()
+      console.log(error.error)
       throw new Error(error)
     }
     const json = await response.json()
+    console.log(json)
     dispatch(editInvoicesSuccess(json))
   } catch (err) {
     dispatch(fetchFailed(err.message))

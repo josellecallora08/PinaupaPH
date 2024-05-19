@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import { IoMdClose } from 'react-icons/io';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useRef } from 'react'
+import { IoMdClose } from 'react-icons/io'
+import { useSelector } from 'react-redux'
 
 const AddTenantForm = ({
   fields,
@@ -11,21 +11,21 @@ const AddTenantForm = ({
 }) => {
   const unit = useSelector((state) => state.unit.data)
   const apartment = useSelector((state) => state.apartment.data)
-  const modalRef = useRef(null);
-
+  const modalRef = useRef(null)
+  console.log(apartment)
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setIsAddTenantFormOpen(false);
+        setIsAddTenantFormOpen(false)
       }
-    };
+    }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside)
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [setIsAddTenantFormOpen]);
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [setIsAddTenantFormOpen])
   return (
     <div className="relative" ref={modalRef}>
       <div className="w-[40rem] flex py-4 rounded-tl-lg rounded-tr-lg px-2  bg-dark-blue text-white items-center ">
@@ -175,12 +175,15 @@ const AddTenantForm = ({
             <option className="rounded-none" value="" hidden>
               Select Apartment Building
             </option>
-            {apartment?.map((val, key) => (
-              <option key={key} className="rounded-none" value={`${val._id}`}>
-                {val.name}
-              </option>
-            ))}
-
+            {apartment
+              ?.filter((item) =>
+                item.units.some((unit) => unit.occupied === false),
+              )
+              .map((val, key) => (
+                <option key={key} className="rounded-none" value={`${val._id}`}>
+                  {val.name}
+                </option>
+              ))}
           </select>
         </div>
 
@@ -201,11 +204,13 @@ const AddTenantForm = ({
             <option className="rounded-none" value="someOption" hidden>
               Apartment Unit
             </option>
-            {unit?.filter(item => item.occupied === false).map((val, key) => (
-              <option key={key} className="rounded-none" value={`${val._id}`}>
-                {val.unit_no}
-              </option>
-            ))}
+            {unit
+              ?.filter((item) => item.occupied === false)
+              .map((val, key) => (
+                <option key={key} className="rounded-none" value={`${val._id}`}>
+                  {val.unit_no}
+                </option>
+              ))}
           </select>
         </div>
 

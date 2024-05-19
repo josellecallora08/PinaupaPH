@@ -5,9 +5,28 @@ const UNITMODEL = require('../models/unit')
 const REPORTMODEL = require('../models/report')
 const httpStatusCodes = require('../constants/constants')
 
+module.exports.overPayments = async (req, res) => {
+  try {
+    const response = await INVOICEMODEL.find().populate({
+      path: 'tenant_id',
+      populate: 'user_id unit_id apartment_id',
+    })
+    if (!response) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unable to fetch invoices overpayments' })
+    }
 
-module.exports.calendarFetch = async (req,res) => {
-  
+    const overPayment = response.reduce((acc, curr) => {
+      return (acc = acc + curr.tenant_id.balance)
+    }, 0)
+    console.log(overPayment)
+    return res.status(httpStatusCodes.OK).json({ overPayment })
+  } catch (err) {
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
+  }
 }
 
 module.exports.delayedRents = async (req, res) => {

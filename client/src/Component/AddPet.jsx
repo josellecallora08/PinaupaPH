@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 import { IoMdClose } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
 import { createPet } from '../features/pet'
-
+import Popup from '../Component/PopUp'; 
 const AddPet = ({ id, setIsAddPetForm }) => {
   const dispatch = useDispatch()
   const error = useSelector((state) => state.pet.error)
   const msg = useSelector((state) => state.pet.msg)
-
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
   const [fields, setFields] = useState({
     name: '',
     species: '',
@@ -21,12 +22,31 @@ const AddPet = ({ id, setIsAddPetForm }) => {
       [name]: value,
     }))
   }
-
   const handleCreatePet = async (e) => {
-    e.preventDefault()
-    dispatch(createPet(id, fields))
-    setIsAddPetForm((prevState) => !prevState)
-  }
+    e.preventDefault();
+    try {
+        await dispatch(createPet(id, fields));
+        setPopupMessage('Pet added successfully!');
+        setShowPopup(true);
+        setTimeout(() => {
+            setShowPopup(false);
+            setIsAddPetForm(false);
+        }, 2000);
+  
+        setFields({
+            name: '',
+            species: '',
+            birthday: '',
+        });
+    } catch (error) {
+        console.error(error);
+        
+      setPopupMessage('Failed to add apartment. Please try again.');
+      setIsError(true);
+      setShowPopup(true);
+    }
+};
+
 
   return (
     <div className="relative">
@@ -50,7 +70,7 @@ const AddPet = ({ id, setIsAddPetForm }) => {
             {error}
           </div>
         )}
-        <h1 className="text-base font-bold mb-2">Add Pet Details</h1>
+        <h1 className="text-base font-bold mb-2 lg:mt-0 mt-4">Add Pet Details</h1>
         <div className="mb-4">
           <label
             htmlFor="name"
@@ -120,6 +140,13 @@ const AddPet = ({ id, setIsAddPetForm }) => {
           </button>
         </div>
       </form>
+      {showPopup && (
+          <Popup 
+            message={popupMessage} 
+            onClose={() => setShowPopup(false)} 
+            error={error}
+          />
+        )}
     </div>
   )
 }

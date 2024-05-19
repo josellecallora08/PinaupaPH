@@ -19,7 +19,7 @@ import { io } from 'socket.io-client'
 import { insertAnnouncementNotification } from '../features/announcement'
 
 const socket = io(`${import.meta.env.VITE_URL}/`)
-const Headbar = () => {
+const Headbar = ({ menuBtnRef }) => {
   const sidebar = useSelector((state) => state.toggle.sidebar)
   const profile = useSelector((state) => state.toggle.profile)
   const notif = useSelector((state) => state.toggle.notif)
@@ -31,14 +31,10 @@ const Headbar = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   useEffect(() => {
-    console.log('1')
     const handleReceiveComment = (data) => {
-      console.log(data)
       dispatch(insertAnnouncementNotification(data))
     }
-    // Listen for incoming comments
     socket.on('receive-announcement', handleReceiveComment)
-    // Clean up socket connection when the component unmounts
     return () => {
       socket.off('receive-announcement', handleReceiveComment)
     }
@@ -105,7 +101,6 @@ const Headbar = () => {
   }, [])
 
   useEffect(() => {
-    profile && dispatch(toggleCloseProfile())
     const closeMenu = (e) => {
       if (
         menuBg.current &&
@@ -146,7 +141,11 @@ const Headbar = () => {
       <div className="flex justify-between items-center p-5 w-full relative m-auto">
         <div className="flex items-center gap-5">
           {user?.role !== 'Superadmin' && (
-            <button onClick={handleSidebar} className="flex items-center">
+            <button
+              ref={menuBtnRef}
+              onClick={handleSidebar}
+              className="flex items-center"
+            >
               <img src={sidebar ? close : menu} className="w-5 h-5" alt="" />
             </button>
           )}
@@ -158,7 +157,7 @@ const Headbar = () => {
         </div>
         <div className="flex items-center">
           {user?.user_id?.role === 'Tenant' && (
-            <button onClick={handleNotif} className="relative">
+            <button ref={notifBg} onClick={handleNotif} className="relative">
               <TbBellRinging className="mr-2" size={25} color="white" />
 
               <span className="absolute text-white bg-red/80 w-full max-w-[15px] rounded-full text-sm -top-2 -right-1">

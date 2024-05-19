@@ -11,8 +11,10 @@ import {
   createDocument,
   deleteDocument,
   fetchDocuments,
+  resetDocumentStatus,
   searchContract,
 } from '../../features/documents'
+import PopUp from '../../Component/PopUp'
 
 const Least = () => {
   const dispatch = useDispatch()
@@ -21,6 +23,11 @@ const Least = () => {
   const [modal, setModal] = useState(false)
   const [searchItem, setSearchItem] = useState('')
   const [selectedUser, setSelectedUser] = useState(null)
+  const [popupMessage, setPopupMessage] = useState('')
+  const [showPopup, setShowPopup] = useState(false)
+  const errorDocument = useSelector((state) => state.docs.error)
+  const msgDocument = useSelector((state) => state.docs.msg)
+
   const toggleModal = () => {
     setModal(!modal)
   }
@@ -33,9 +40,25 @@ const Least = () => {
   const handleLease = (e) => {
     e.preventDefault()
     dispatch(createDocument(selectedUser.value))
+    dispatch(resetDocumentStatus())
     setModal((state) => !state)
   }
 
+  useEffect(() => {
+    if (msgDocument !== null) {
+      setPopupMessage(msgDocument)
+    } else if (errorDocument !== null) {
+      setPopupMessage(errorDocument)
+    }
+
+    if (msgDocument !== null || errorDocument !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetDocumentStatus())
+      }, 3000)
+    }
+  }, [dispatch, handleLease])
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this item?')) {
       dispatch(deleteDocument(id))
@@ -53,7 +76,14 @@ const Least = () => {
 
   return (
     <>
-      {loading && <Loading />}
+      {showPopup && (
+        <PopUp
+          message={popupMessage}
+          onClose={() => setShowPopup(false)}
+          isError={errorDocument}
+        />
+      )}
+      {/* {loading && <Loading />} */}
       {modal && (
         <AddLease
           setModal={setModal}

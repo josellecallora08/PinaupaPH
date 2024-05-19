@@ -172,9 +172,9 @@ module.exports = ({ response }) => {
         <tr class="item">
           <td>Previous Bill</td>
           <td>${
-            (!val?.isPaid
-              ? val?.tenant_id.balance
-              : val?.payment.unpaidBalance
+            (!response?.isPaid
+              ? response?.tenant_id.balance
+              : response?.payment.unpaidBalance
             )?.toLocaleString('en-PH', {
               style: 'currency',
               currency: 'PHP',

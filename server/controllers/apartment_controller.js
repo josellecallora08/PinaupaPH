@@ -34,7 +34,7 @@ module.exports.search_apartment = async (req, res) => {
 // ? Tested API
 module.exports.fetch_apartments = async (req, res) => {
   try {
-    const response = await APARTMENTMODEL.find()
+    const response = await APARTMENTMODEL.find().populate('units')
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -219,7 +219,7 @@ module.exports.edit_apartment = async (req, res) => {
     await response.save()
     return res
       .status(httpStatusCodes.CREATED)
-      .json({ msg: `Edited ${name}`, response })
+      .json({ msg: `Apartment has been successfully edited.`, response })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -259,7 +259,7 @@ module.exports.delete_apartment = async (req, res) => {
     await Promise.all([...cctv, ...units])
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: `Apartment building Deleted`, tenant })
+      .json({ msg: `Apartment building Deleted`, response })
   } catch (err) {
     console.error({ error: err.message })
     return res

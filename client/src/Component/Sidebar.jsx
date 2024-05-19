@@ -23,8 +23,7 @@ import logout from '/logout.svg'
 import announcement from '/announcement.svg'
 import announcement_ from '/announcement_.svg'
 
-const Sidebar = () => {
-  const sidebarRef = useRef(null)
+const Sidebar = ({sidebarRef, handleOutsideClick}) => {
   const menu = useSelector((state) => state.toggle.sidebar)
   const docs = useSelector((state) => state.toggle.doc_dropdown)
   const user = useSelector((state) => state.auth.user)
@@ -32,11 +31,7 @@ const Sidebar = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const handleOutsideClick = (event) => {
-    if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-      dispatch(toggleCloseSidebar())
-    }
-  }
+  
 
   useEffect(() => {
     document.addEventListener('mousedown', handleOutsideClick)

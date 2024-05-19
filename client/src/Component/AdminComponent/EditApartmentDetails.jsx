@@ -1,13 +1,20 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { IoMdClose } from 'react-icons/io';
-import { useDispatch, useSelector } from 'react-redux';
-import { editApartment, fetchApartment } from '../../features/apartment';
-import { useParams } from 'react-router-dom';
-
-const EditApartmentDetails = ({ setUpdate, apartmentId, setIsEditApartmentFormOpen }) => {
-  const dispatch = useDispatch();
-  const [error, setError] = useState(null);
+import React, { useEffect, useRef, useState } from 'react'
+import { IoMdClose } from 'react-icons/io'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  editApartment,
+  fetchApartment,
+} from '../../features/apartment'
+import { useParams } from 'react-router-dom'
+const EditApartmentDetails = ({
+  setUpdate,
+  apartmentId,
+  setIsEditApartmentFormOpen,
+}) => {
+  const dispatch = useDispatch()
   const apartment = useSelector((state) => state.apartment.single)
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
   const [fields, setFields] = useState({
     name: apartment?.name || '',
     address: apartment?.address || '',
@@ -15,15 +22,30 @@ const EditApartmentDetails = ({ setUpdate, apartmentId, setIsEditApartmentFormOp
     barangay: apartment?.barangay || '',
   })
   const { id } = useParams()
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const modalRef = useRef(null);
+  const [isFormOpen, setIsFormOpen] = useState(false)
+  const modalRef = useRef(null)
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    dispatch(editApartment(fields, id))
-    setIsEditApartmentFormOpen(false)
-    setUpdate(true)
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(editApartment(fields, id));
+      setPopupMessage('Apartment updated successfully!');
+      setShowPopup(true);
+      setUpdate(true);
+      setTimeout(() => {
+        setShowPopup(false);
+        setIsEditApartmentFormOpen(false);
+      }, 2000);
+    } catch (error) {
+      console.error(error);
+      setPopupMessage('Failed to update apartment. Please try again.');
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 2000);
+    }
+  };
+  
   const handleInput = (e) => {
     const { name, value } = e.target
     setFields((components) => ({
@@ -32,26 +54,24 @@ const EditApartmentDetails = ({ setUpdate, apartmentId, setIsEditApartmentFormOp
     }))
   }
   useEffect(() => {
-    dispatch(fetchApartment(apartmentId));
-  }, [dispatch]);
+    dispatch(fetchApartment(apartmentId))
+  }, [dispatch])
 
   useEffect(() => {
-    setIsFormOpen(true);
+    setIsFormOpen(true)
 
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setIsEditApartmentFormOpen(false);
+        setIsEditApartmentFormOpen(false)
       }
-    };
+    }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside)
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [setIsEditApartmentFormOpen]);
-
-
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [setIsEditApartmentFormOpen])
 
   return (
     <>
@@ -76,11 +96,11 @@ const EditApartmentDetails = ({ setUpdate, apartmentId, setIsEditApartmentFormOp
                 color="white"
               />
             </button>
-            {error && (
+            {/* {error && (
               <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
                 {error}
               </div>
-            )}
+            )} */}
 
             <div className="mb-4">
               <label
@@ -175,10 +195,17 @@ const EditApartmentDetails = ({ setUpdate, apartmentId, setIsEditApartmentFormOp
               </button>
             </div>
           </form>
+          {showPopup && (
+          <Popup 
+            message={popupMessage} 
+            onClose={() => setShowPopup(false)} 
+            error={error}
+          />
+        )}
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
-export default EditApartmentDetails;
+export default EditApartmentDetails
