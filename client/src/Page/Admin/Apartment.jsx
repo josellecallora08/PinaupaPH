@@ -80,8 +80,7 @@ const Apartment = () => {
 
   return (
     <>
-      {/* {loading && <Loading />} */}
-      <div className="w-full h-screen bg-white1">
+      <div className="w-full h-screen bg-white1 overflow-y-auto">
         {/* Top of Apartment Tab */}
         <div className="w-11/12 m-auto h-full ">
           <h1 className="uppercase font-bold py-5">List of Apartment</h1>
