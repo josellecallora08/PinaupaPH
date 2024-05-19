@@ -50,7 +50,7 @@ const EditTenantAccount = ({ setIsEditTenantAccountForm, tenant }) => {
     <div className="relative">
       <div className="relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center ">
         <h1 className="lg:text-xl  ml-5 text-lg font-bold ">
-          Edit Tenant Detail
+          Edit Account Detail
         </h1>
       </div>
       <form
