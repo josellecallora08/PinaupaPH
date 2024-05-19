@@ -191,15 +191,17 @@ module.exports.createInvoice = async (req, res) => {
     const dateDue = new Date(details.tenant_id.monthly_due).getDate()
     const dueMonth = new Date().setDate(dateDue) //test at home
     console.log(dueMonth)
-    const response = await INVOICEMODEL.create({
-      tenant_id: tenant._id,
-      'pdf.public_id': cloudinaryResponse.public_id,
-      'pdf.pdf_url': cloudinaryResponse.secure_url,
-      'pdf.reference': reference,
-      amount: tenant.unit_id.rent,
-      due: new Date(dueMonth).toISOString(),
-      'payment.unpaidBalance': tenant.balance,
-    })
+    const response = await INVOICEMODEL.create(
+      {
+        tenant_id: tenant._id,
+        'pdf.public_id': cloudinaryResponse.public_id,
+        'pdf.pdf_url': cloudinaryResponse.secure_url,
+        'pdf.reference': reference,
+        amount: tenant.unit_id.rent,
+        due: new Date(dueMonth).toISOString(),
+        'payment.unpaidBalance': tenant.balance,
+      },
+    )
 
     if (!response) {
       return res
@@ -239,7 +241,7 @@ module.exports.createInvoice = async (req, res) => {
             <li>Invoice Date: <strong>${new Date(response.createdAt).toDateString()}</strong></li>
             <li>Due Date: <strong>${new Date(tenant?.monthly_due).toDateString()}</strong></li>
             <li>Total Amount: <strong>${(response?.amount).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
-            <li>Previous Balance: <strong>${(tenant?.balance - response.amount).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
+            <li>Previous Balance: <strong>${(response?.isPaid ? tenant?.balance - response.amount : response?.payment?.unpaidBalance ).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
           </ul>
           <p>Attached to this email, you will find the invoice file for your reference and records.</p>
           <p>If you have any questions or concerns regarding this invoice, please feel free to reach out to me.</p>
@@ -369,9 +371,9 @@ module.exports.searchInvoice = async (req, res) => {
           status: 1,
           isPaid: 1,
           datePaid: 1,
-          due:1,
+          due: 1,
           payment: 1,
-          intent: 1
+          intent: 1,
         },
       },
     ])
@@ -497,7 +499,6 @@ module.exports.deleteInvoice = async (req, res) => {
     }
 
     tenant.balance -= response.amount
-
     await tenant.save()
     const pdfPublicId = response.pdf.public_id
 
