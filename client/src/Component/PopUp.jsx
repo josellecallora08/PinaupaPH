@@ -8,11 +8,16 @@ const PopUp = ({ message, isError }) => {
     <div className="fixed z-50 inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg p-8">
         {isError ? (
-          <Lottie animationData={ErrorAnimation} className="w-48 mx-auto mb-4" />
+          <div>
+            <Lottie animationData={ErrorAnimation} className="w-48 mx-auto mb-4" />
+            <p className="text-red-600 text-lg font-semibold">{message}</p>
+          </div>
         ) : (
-          <Lottie animationData={SuccessAnimation} className="w-48 mx-auto mb-4" />
+          <div>
+            <Lottie animationData={SuccessAnimation} className="w-48 mx-auto mb-4" />
+            <p className="text-green-600 text-lg font-semibold">{message}</p>
+          </div>
         )}
-        <p className="text-primary-color text-lg font-semibold">{message}</p>
       </div>
     </div>
   );

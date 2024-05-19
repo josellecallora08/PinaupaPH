@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createUnit, editUnit } from '../../features/unit';
 import { IoMdClose } from 'react-icons/io';
-
+import PopUp from '../../Component/PopUp'
 const EditApartmentUnit = ({ apartmentId, val, setIsEditApartmentUnit }) => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedApartmentOption, setSelectedApartmentOption] = useState('');
-  const [error, setError] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
+  const error=useSelector((state) => state.unit.error)
+  
   const dispatch = useDispatch();
   const [fields, setFields] = useState({
     rent: val?.rent || '',
@@ -22,12 +25,26 @@ const EditApartmentUnit = ({ apartmentId, val, setIsEditApartmentUnit }) => {
   };
   console.log(val)
   // Function to handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    dispatch(editUnit(fields, apartmentId, val._id));
-    console.log('Form submitted');
-    setIsEditApartmentUnit(false);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(editUnit(fields, apartmentId, val._id));
+      setPopupMessage('Unit updated successfully!');
+      setShowPopup(true);
+      setTimeout(() => {
+        setIsEditApartmentUnit(false);
+        setShowPopup(false);
+      }, 2000);
+    } catch (error) {
+      console.error(error);
+      setPopupMessage('Failed to update unit. Please try again.');
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 2000);
+    }
   };
+  
 
   const handleInput = (e) => {
     const { name, value } = e.target
@@ -126,6 +143,13 @@ const EditApartmentUnit = ({ apartmentId, val, setIsEditApartmentUnit }) => {
             </button>
           </div>
         </form>
+        {showPopup && (
+          <PopUp 
+            message={popupMessage} 
+            onClose={() => setShowPopup(false)} 
+            error={error}
+          />
+        )}
       </div>
     </>
   );

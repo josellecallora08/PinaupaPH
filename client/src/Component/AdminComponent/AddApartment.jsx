@@ -123,12 +123,12 @@ const AddApartment = ({
         <div className="flex justify-end mt-2 gap-3">
           <button
             type="submit"
-            className=" bg-dark-blue text-white font-bold py-2 px-4 rounded"
+            className=" bg-dark-blue hover:bg-dark-blue/55 hover:scale-105 text-white font-bold py-2 px-4 rounded"
           >
             Submit
           </button>
           <button
-            className="bg-red-500 bg-red text-white font-bold py-2 px-4 rounded"
+            className=" bg-red hover:bg-red/55 hover:scale-105 text-white font-bold py-2 px-4 rounded"
             onClick={() => setIsAddApartmentFormOpen((prevState) => !prevState)}
           >
             Close

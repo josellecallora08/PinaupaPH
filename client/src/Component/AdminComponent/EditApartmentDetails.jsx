@@ -3,11 +3,15 @@ import { IoMdClose } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
 import { editApartment, fetchApartment } from '../../features/apartment';
 import { useParams } from 'react-router-dom';
-
+import Popup from '../../Component/PopUp'; 
 const EditApartmentDetails = ({ setUpdate, apartmentId, setIsEditApartmentFormOpen }) => {
   const dispatch = useDispatch();
-  const [error, setError] = useState(null);
+
+  const msg = useSelector((state) => state.apartment.msg)
+  const error = useSelector((state) => state.apartment.error)
   const apartment = useSelector((state) => state.apartment.single)
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
   const [fields, setFields] = useState({
     name: apartment?.name || '',
     address: apartment?.address || '',
@@ -18,12 +22,27 @@ const EditApartmentDetails = ({ setUpdate, apartmentId, setIsEditApartmentFormOp
   const [isFormOpen, setIsFormOpen] = useState(false);
   const modalRef = useRef(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    dispatch(editApartment(fields, id))
-    setIsEditApartmentFormOpen(false)
-    setUpdate(true)
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(editApartment(fields, id));
+      setPopupMessage('Apartment updated successfully!');
+      setShowPopup(true);
+      setUpdate(true);
+      setTimeout(() => {
+        setShowPopup(false);
+        setIsEditApartmentFormOpen(false);
+      }, 2000);
+    } catch (error) {
+      console.error(error);
+      setPopupMessage('Failed to update apartment. Please try again.');
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 2000);
+    }
+  };
+  
   const handleInput = (e) => {
     const { name, value } = e.target
     setFields((components) => ({
@@ -175,6 +194,13 @@ const EditApartmentDetails = ({ setUpdate, apartmentId, setIsEditApartmentFormOp
               </button>
             </div>
           </form>
+          {showPopup && (
+          <Popup 
+            message={popupMessage} 
+            onClose={() => setShowPopup(false)} 
+            error={error}
+          />
+        )}
         </div>
       )}
     </>

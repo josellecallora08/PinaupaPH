@@ -38,16 +38,21 @@ const Tenant = () => {
   const error = useSelector((state) => state.user.error)
   const msg = useSelector((state) => state.user.msg)
   const apartment = useSelector((state) => state.apartment.data)
+
   const handleDropdown = (e) => {
     setSelectedOption(e.target.value)
   }
   // const [apartmentId, setApartmentId] = useState('')
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      await dispatch(createTenant(fields))
-      console.log('Form submitted:')
-      setIsAddTenantFormOpen((prevState) => !prevState)
+      await dispatch(createTenant(fields));
+      setPopupMessage('Tenant added successfully!');
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 2000);
+      // Reset form fields
       setFields({
         name: '',
         username: '',
@@ -59,18 +64,19 @@ const Tenant = () => {
         apartment_id: '',
         deposit: '',
         occupancy: '',
-      })
-      // Optionally, you can show a success message or handle any other logic here
+      });
+      // Update form state
+      setIsAddTenantFormOpen(false);
     } catch (error) {
-      console.error(error)
-      setPopupMessage('Failed to add tenant. Please try again.')
-      setShowPopup(true)
-      setIsError(true);
+      console.error(error);
+      setPopupMessage('Failed to add tenant. Please try again.');
+      setShowPopup(true);
       setTimeout(() => {
-        setShowPopup(false)
-      }, 3000)
+        setShowPopup(false);
+      }, 2000);
     }
-  }
+  };
+  
 
   const toggleAddTenantForm = () => {
     setIsAddTenantFormOpen(!isAddTenantFormOpen)
@@ -172,9 +178,9 @@ const Tenant = () => {
                 <AddTenantForm
                   fields={fields}
                   handleSubmit={handleSubmit}
-                  error={error}
                   handleInput={handleInput}
                   setIsAddTenantFormOpen={setIsAddTenantFormOpen}
+                  error={error}
                   togglePopup={setShowPopup}
                   setPopupMessage={setPopupMessage}
                 />
@@ -182,7 +188,11 @@ const Tenant = () => {
             </div>
           )}
           {showPopup && (
-            <Popup message={popupMessage} onClose={() => setShowPopup(false)} />
+            <Popup
+              message={popupMessage}
+              onClose={() => setShowPopup(false)}
+              error={error}
+            />
           )}
         </div>
       </div>

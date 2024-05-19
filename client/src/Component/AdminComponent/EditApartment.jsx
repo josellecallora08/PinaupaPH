@@ -4,13 +4,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchUnits, fetchUnitsApartment } from '../../features/unit'
 import { fetchApartments } from '../../features/apartment'
 import { editUser, editUserApartment } from '../../features/user'
-
+import Popup from '../../Component/PopUp'
 const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
   const dispatch = useDispatch()
   const apartment = useSelector((state) => state.apartment.data)
   const unit = useSelector((state) => state.unit.data)
   const error = useSelector((state) => state.user.error)
   const msg = useSelector((state) => state.user.msg)
+  
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
+
   const [apartmentBldg, setApartmentBldg] = useState('')
   const [fields, setFields] = useState({
     unit_no: tenant?.unit_id?.unit_no || '',
@@ -38,11 +42,26 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
       [name]: value,
     }))
   }
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    dispatch(editUserApartment(tenant?.user_id?._id, fields))
-    setIsEditApartmentForm((prevState) => !prevState)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await dispatch(editUserApartment(tenant?.user_id?._id, fields));
+      setPopupMessage('Apartment added successfully!');
+      setShowPopup(true);
+      setTimeout(() => {
+        setIsEditApartmentForm((prevState) => !prevState);
+        setShowPopup(false);
+      }, 3000);
+    } catch (error) {
+        console.error(error);
+      setPopupMessage('Failed to add apartment. Please try again.');
+      setIsError(true);
+      setShowPopup(true);
+  };
   }
+  
+  
+
 
   return (
     <>
@@ -169,6 +188,12 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
             </button>
           </div>
         </form>
+        {showPopup && (
+          <Popup 
+            message={popupMessage} 
+            onClose={() => setShowPopup(false)} 
+          />
+        )}
       </div>
     </>
   )

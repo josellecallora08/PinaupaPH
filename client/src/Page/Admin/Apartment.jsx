@@ -67,7 +67,7 @@ const Apartment = () => {
       }, 3000);
     } catch (error) {
       console.error(error);
-      setPopupMessage('Failed to add apartment. Please try again.');
+      {message}
       setIsError(true);
       setShowPopup(true);
       setTimeout(() => {

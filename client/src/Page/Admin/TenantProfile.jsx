@@ -7,7 +7,7 @@ import { MdDelete } from 'react-icons/md'
 import { RxDotsVertical } from 'react-icons/rx'
 import { GrFormView, GrFormAdd } from 'react-icons/gr'
 import { MdOutlineFileDownload } from 'react-icons/md'
-import PopUp from '../../Component/PopUp';
+import Popup from '../../Component/PopUp'
 import AddHousehold from '../../Component/AddHousehold'
 import EditApartment from '../../Component/AdminComponent/EditApartment'
 import TransactionTable from '../../Component/TransactionTable'
@@ -45,41 +45,26 @@ const TenantProfile = () => {
   const { id } = useParams()
   const tenant = useSelector((state) => state.user.single)
   const [isVisible, setIsVisible] = useState(false)
-  const [isPopupVisible, setIsPopupVisible] = useState(false); // State to manage visibility of pop-up
-  const [popupMessage, setPopupMessage] = useState(''); // 
   const error = useSelector((state) => state.user.error)
   const errorDocument = useSelector((state) => state.docs.error)
   const msg = useSelector((state) => state.household.msg)
   const households = useSelector((state) => state.household.data)
   const pets = useSelector((state) => state.pet.data)
   const navigate = useNavigate()
-  
+  const [showPopup, setShowPopup] = useState(false)
+  const [popupMessage, setPopupMessage] = useState('')
+
   const dropdownRef = useRef(null)
   const handleDeleteTenant = () => {
     const isConfirmed = window.confirm(
-      'Are you sure you want to delete this tenant?'
-    );
+      'Are you sure you want to delete this tenant?',
+    )
     if (isConfirmed) {
+      navigate('/tenant')
       dispatch(deleteTenant(id))
-        .then(() => {
-          setPopupMessage('Tenant deleted successfully!');
-          setIsPopupVisible(true);
-          setTimeout(() => {
-            setIsPopupVisible(false);
-            navigate('/tenant');
-          }, 3000);
-        })
-        .catch((error) => {
-          console.error(error);
-          setPopupMessage('Failed to delete tenant. Please try again.');
-          setIsError(true);
-          setIsPopupVisible(true);
-          setTimeout(() => {
-            setIsPopupVisible(false);
-          }, 3000);
-        });
     }
-  };
+  }
+
   const handleClickOutsideDropdown = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsHouseDotOpen(false)
@@ -110,19 +95,6 @@ const TenantProfile = () => {
   }
   const handleDownload = (e) => {
     dispatch(generateDocument(id))
-    if(errorDocument){
-      setPopupMessage('Failed to delete generate PDF. Please try again.');
-      setIsPopupVisible(true);
-      setTimeout(() => {
-        setIsPopupVisible(false);
-      }, 3000);
-    } else {
-      setPopupMessage('Lease agreement has been generated.');
-      setIsPopupVisible(true);
-      setTimeout(() => {
-        setIsPopupVisible(false);
-      }, 3000);
-    }
   }
 
   const [fields, setFields] = useState({
@@ -140,17 +112,30 @@ const TenantProfile = () => {
     }))
   }
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    dispatch(createHousehold(id, fields))
-    setIsVisible((prevState) => !prevState)
-    setIsAddHouseholdForm((prevState) => !prevState)
-    setFields({
-      name: '',
-      mobile: '',
-      birthday: '',
-      relationship: '',
-    })
-  }
+    e.preventDefault();
+    try {
+      await dispatch(createHousehold(id, fields));
+      setPopupMessage('Household added successfully!');
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 2000);
+      setIsVisible((prevState) => !prevState);
+      setIsAddHouseholdForm((prevState) => !prevState);
+      setFields({
+        name: '',
+        mobile: '',
+        birthday: '',
+        relationship: '',
+      });
+    } catch (error) {
+      console.error(error);
+      setPopupMessage('Failed to add household. Please try again.');
+      setShowPopup(true);
+      setIsError(true);
+    }
+};
+
 
   const handleDeleteClick = async (contactId) => {
     if (window.confirm('Are you sure you want to delete this household?')) {
@@ -158,7 +143,6 @@ const TenantProfile = () => {
       setIsVisible((prevState) => !prevState)
     }
   }
-  
 
   useEffect(() => {
     dispatch(fetchHouseholds(id))
@@ -173,12 +157,12 @@ const TenantProfile = () => {
     }
   }, [])
 
-  const birthday = tenant?.user_id?.birthday ? new Date(tenant?.user_id?.birthday).toLocaleDateString() : ''
+  const birthday = tenant?.user_id?.birthday
+    ? new Date(tenant?.user_id?.birthday).toLocaleDateString()
+    : ''
   return (
     <>
-       
-
-      <div className="bg-white1  h-full ">
+      <div className="bg-white1  h-full overflow-y-auto ">
         {/* Tenant Profile Header */}
         <div className="lg:flex lg:items-center lg:justify-between">
           <div className="lg:mt-2 lg:ml-10 uppercase font-bold  p-5 mx-4">
@@ -507,6 +491,7 @@ const TenantProfile = () => {
                             fields={fields}
                             handleInput={handleInput}
                             handleSubmit={handleSubmit}
+                            
                           />
                         </div>
                       </div>
@@ -591,6 +576,9 @@ const TenantProfile = () => {
                           <AddPet
                             id={tenant.user_id._id}
                             setIsAddPetForm={setIsAddPetForm}
+                            error={error}
+                            togglePopup={setShowPopup}
+                            setPopupMessage={setPopupMessage}
                           />
                         </div>
                       </div>
@@ -611,14 +599,13 @@ const TenantProfile = () => {
               </div>
             </div>
           )}
-          {isPopupVisible && (
-        <PopUp
-        className="z-30"
-          message={popupMessage}
-          isError={error || errorDocument}
-          onClose={() => setIsPopupVisible(false)}
-        />
-      )}
+          {showPopup && (
+            <Popup
+              message={popupMessage}
+              onClose={() => setShowPopup(false)}
+              error={error}
+            />
+          )}
         </div>
       </div>
     </>

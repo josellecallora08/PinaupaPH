@@ -20,12 +20,14 @@ const ApartmentProfile = () => {
   const apartment = useSelector((state) => state.apartment.single)
   const msg = useSelector((state) => state.apartment.msg)
   const error = useSelector((state) => state.apartment.error)
+  const error_unit = useSelector((state) => state.unit.error)
   const { id } = useParams()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const units = useSelector((state) => state.unit.data)
-  const [isPopupVisible, setIsPopupVisible] = useState(false) // State to manage visibility of pop-up
-  const [popupMessage, setPopupMessage] = useState('') //
+ 
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
   const toggleAddRoomForm = () => {
     setIsAddRoomFormOpen(!isAddRoomFormOpen)
   }
@@ -45,29 +47,31 @@ const ApartmentProfile = () => {
   const handleDelete = async () => {
     const isConfirmed = window.confirm(
       'Are you sure you want to delete this apartment?',
-    )
+    );
+  
     if (isConfirmed) {
-      await dispatch(deleteApartment(id))
-      if (msg) {
-        setPopupMessage('Apartment deleted successfully!')
-        setIsPopupVisible(true)
+      try {
+        await dispatch(deleteApartment(id));
+        setPopupMessage('Apartment deleted successfully!');
+        setShowPopup(true);
         setTimeout(() => {
-          setIsPopupVisible(false)
-          navigate('/apartment')
-        }, 3000)
-      } else {
-        console.error(error)
-        setPopupMessage('Failed to delete apartment. Please try again.')
-        setIsPopupVisible(true)
-        // setIsError(true)
+          setShowPopup(false);
+          navigate('/apartment');
+        }, 2000);
+      } catch (error) {
+        console.error(error);
+        setPopupMessage('Failed to delete apartment. Please try again.');
+        setShowPopup(true);
+        error(true);
         setTimeout(() => {
-          setIsPopupVisible(false)
-        }, 3000)
-        // setIsError(true) // Set isError to true in case of error
+          setShowPopup(false);
+        }, 2000);
       }
     }
-  }
-
+  };
+  
+  
+  
   return (
     <>
       <div className="w-full h-full  bg-white1">
@@ -165,17 +169,19 @@ const ApartmentProfile = () => {
               setUpdate={setUpdate}
               apartmentId={apartment._id}
               setIsEditApartmentFormOpen={setIsEditApartmentFormOpen}
+              
             />
           </div>
         </div>
       )}
-      {isPopupVisible && (
-        <PopUp
-          message={popupMessage}
-          isError={error}
-          onClose={() => setIsPopupVisible(false)}
-        />
-      )}
+     {showPopup && (
+          <PopUp 
+            message={popupMessage} 
+            onClose={() => setShowPopup(false)} 
+            error={error}
+          
+          />
+        )}
     </>
   )
 }
