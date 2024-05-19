@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { MdOutlineRestartAlt } from 'react-icons/md'
 
 import { FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
@@ -112,30 +113,29 @@ const TenantProfile = () => {
     }))
   }
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      await dispatch(createHousehold(id, fields));
-      setPopupMessage('Household added successfully!');
-      setShowPopup(true);
+      await dispatch(createHousehold(id, fields))
+      setPopupMessage('Household added successfully!')
+      setShowPopup(true)
       setTimeout(() => {
-        setShowPopup(false);
-      }, 2000);
-      setIsVisible((prevState) => !prevState);
-      setIsAddHouseholdForm((prevState) => !prevState);
+        setShowPopup(false)
+      }, 2000)
+      setIsVisible((prevState) => !prevState)
+      setIsAddHouseholdForm((prevState) => !prevState)
       setFields({
         name: '',
         mobile: '',
         birthday: '',
         relationship: '',
-      });
+      })
     } catch (error) {
-      console.error(error);
-      setPopupMessage('Failed to add household. Please try again.');
-      setShowPopup(true);
-      setIsError(true);
+      console.error(error)
+      setPopupMessage('Failed to add household. Please try again.')
+      setShowPopup(true)
+      setIsError(true)
     }
-};
-
+  }
 
   const handleDeleteClick = async (contactId) => {
     if (window.confirm('Are you sure you want to delete this household?')) {
@@ -165,7 +165,7 @@ const TenantProfile = () => {
       <div className="bg-white1  h-full overflow-y-auto ">
         {/* Tenant Profile Header */}
         <div className="lg:flex lg:items-center lg:justify-between">
-          <div className="lg:mt-2 lg:ml-10 uppercase font-bold  p-5 mx-4">
+          <div className="lg:mt-2 lg:ml-10 uppercase items-center flex font-bold  p-5 mx-4">
             <h1>
               <span
                 className=" hover:cursor-pointer hover:underline mr-1"
@@ -224,22 +224,7 @@ const TenantProfile = () => {
                           Unit - {tenant?.unit_id?.unit_no}
                         </h2>
                       </div>
-
-                      <button
-                        onClick={handleDeleteTenant}
-                        className="hidden lg:flex lg:py-2 lg:px-3 absolute top-0 right-3  items-center gap-2 bg-red text-white py-1 px-2 rounded-md hover:bg-red/55"
-                      >
-                        <MdDelete />
-                        Delete
-                      </button>
-                      <button
-                        onClick={handleDownload}
-                        className="btn hidden hover:text-primary-color lg:flex items-center gap-2 absolute right-3 top-12 bg-primary-color text-white p-2 rounded-md "
-                      >
-                        <MdOutlineFileDownload size={20} /> Lease Agreement
-                      </button>
-
-                      <div className="lg:hidden absolute top-1 right-2">
+                      <div className=" absolute top-1 right-2">
                         <button
                           className="relative text-xl rotate-90"
                           onClick={toggleRemoveDot}
@@ -248,17 +233,24 @@ const TenantProfile = () => {
                         </button>
 
                         {isRemovedot && (
-                          <div className="flex flex-col  absolute right-0 w-fit gap-1  bg-white rounded-md ">
-                            <button
-                              onClick={handleDeleteTenant}
-                              className="flex items-center gap-2 bg-red  text-white p-2 rounded-md hover:opacity-80 transition duration-300 ease-in-out"
-                            >
-                              <MdDelete className="text-lg" /> Delete
-                            </button>
-                            <button className=" flex items-center  gap-2  bg-primary-color w-[10.2rem] text-white p-2 rounded-md hover:bg-opacity-80 transition duration-300 ease-in-out">
-                              <MdOutlineFileDownload size={20} /> Lease
-                              Agreement
-                            </button>
+                          <div className="absolute right-0 mt-2 w-max animate-slideIn">
+                            <div className="bg-white rounded-md shadow-md">
+                              <button
+                                onClick={handleDeleteTenant}
+                                className="flex items-center justify-between px-4 py-2 text-red-500 hover:bg-red hover:text-white rounded-t-md w-full focus:outline-none transition duration-300"
+                              >
+                                <span>Delete</span>
+                                <MdDelete className="text-lg" />
+                              </button>
+                              <button onClick={handleDownload} className="flex items-center justify-between gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300">
+                                <span>Lease Agreement</span>
+                                <MdOutlineFileDownload size={20} />
+                              </button>
+                              <button className="flex items-center justify-between px-4 py-2 text-primary-color hover:bg-lime hover:text-white rounded-b-md w-full focus:outline-none transition duration-300">
+                                <span>Recover</span>
+                                <MdOutlineRestartAlt size={20} />
+                              </button>
+                            </div>
                           </div>
                         )}
                       </div>
@@ -417,10 +409,10 @@ const TenantProfile = () => {
                       {isHousedotOpen && (
                         <div
                           ref={dropdownRef}
-                          className="absolute right-0 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400"
+                          className="absolute right-0 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400 animate-slideIn"
                         >
                           <div
-                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
+                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center transition duration-300"
                             onClick={() => {
                               setIsEditFamilyMemForm(!isEditFamilyMemForm)
                               setIsHouseDotOpen(false)
@@ -430,7 +422,7 @@ const TenantProfile = () => {
                             View
                           </div>
                           <div
-                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
+                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center transition duration-300"
                             onClick={() => {
                               setIsAddHouseholdForm(!isAddHouseholdForm)
                               setIsHouseDotOpen(false)
@@ -491,7 +483,6 @@ const TenantProfile = () => {
                             fields={fields}
                             handleInput={handleInput}
                             handleSubmit={handleSubmit}
-                            
                           />
                         </div>
                       </div>
@@ -509,10 +500,10 @@ const TenantProfile = () => {
                       {isPetdotOpen && (
                         <div
                           ref={dropdownRef}
-                          className=" absolute right-0 top-15 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray"
+                          className="absolute right-0 top-15 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400 animate-slideIn"
                         >
                           <div
-                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
+                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center transition duration-300"
                             onClick={() => {
                               setIsEditPetForm(!isEditPetForm)
                               setIsPetDotOpen(false)
@@ -522,7 +513,7 @@ const TenantProfile = () => {
                             View
                           </div>
                           <div
-                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center"
+                            className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center transition duration-300"
                             onClick={() => {
                               setIsAddPetForm(!isAddPetForm)
                               setIsPetDotOpen(false)
