@@ -1,84 +1,85 @@
-import React, { useEffect, useState } from 'react';
-import { FaPlus } from 'react-icons/fa6';
-import SearchBar from '../../Component/SearchBar';
-import ApartmentCard from '../../Component/AdminComponent/ApartmentCard';
-import AddApartment from '../../Component/AdminComponent/AddApartment';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react'
+import { FaPlus } from 'react-icons/fa6'
+import SearchBar from '../../Component/SearchBar'
+import ApartmentCard from '../../Component/AdminComponent/ApartmentCard'
+import AddApartment from '../../Component/AdminComponent/AddApartment'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   createApartment,
   fetchApartments,
   handleSearchApartment,
-} from '../../features/apartment';
-import Loading from '../../Component/LoadingComponent/Loading';
-import Popup from '../../Component/PopUp'; 
+  resetApartmentStatus,
+} from '../../features/apartment'
+import Loading from '../../Component/LoadingComponent/Loading'
+import Popup from '../../Component/PopUp'
 
 const Apartment = () => {
-  const dispatch = useDispatch();
-  const error = useSelector((state) => state.apartment.error);
-  const msg = useSelector((state) => state.apartment.msg);
-  const loading = useSelector((state) => state.apartment.loading);
-  const apartment = useSelector((state) => state.apartment.data);
-  const [isAddApartmentFormOpen, setIsAddApartmentFormOpen] = useState(false);
-  const [searchItem, setSearchItem] = useState('');
+  const dispatch = useDispatch()
+  const error = useSelector((state) => state.apartment.error)
+  const msg = useSelector((state) => state.apartment.msg)
+  const loading = useSelector((state) => state.apartment.loading)
+  const apartment = useSelector((state) => state.apartment.data)
+  const [isAddApartmentFormOpen, setIsAddApartmentFormOpen] = useState(false)
+  const [searchItem, setSearchItem] = useState('')
 
-  const [showPopup, setShowPopup] = useState(false);
-  const [popupMessage, setPopupMessage] = useState('');
+  const [showPopup, setShowPopup] = useState(false)
+  const [popupMessage, setPopupMessage] = useState('')
 
   const handleSearch = (e) => {
-    setSearchItem(e.target.value);
-  };
+    setSearchItem(e.target.value)
+  }
 
   const toggleAddApartmentForm = () => {
-    setIsAddApartmentFormOpen(!isAddApartmentFormOpen);
-  };
+    setIsAddApartmentFormOpen(!isAddApartmentFormOpen)
+  }
 
   useEffect(() => {
     if (searchItem && searchItem !== '') {
-      dispatch(handleSearchApartment(searchItem));
+      dispatch(handleSearchApartment(searchItem))
     } else {
-      dispatch(fetchApartments());
+      dispatch(fetchApartments())
     }
-  }, [searchItem]);
+  }, [searchItem])
 
   const [fields, setFields] = useState({
     name: '',
     address: '',
     province: '',
     barangay: '',
-  });
+  })
 
   const handleInput = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setFields((components) => ({
       ...components,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await dispatch(createApartment(fields));
-      setPopupMessage('Apartment added successfully!');
-      setShowPopup(true);
-      setTimeout(() => {
-        setShowPopup(false);
-        setIsAddApartmentFormOpen(false);
-      }, 3000);
-    } catch (error) {
-      console.error(error);
-      {message}
-      setIsError(true);
-      setShowPopup(true);
-      setTimeout(() => {
-        setShowPopup(false);
-      }, 3000);
+    e.preventDefault()
+    dispatch(createApartment(fields))
+    setIsAddApartmentFormOpen((state) => !state)
+  }
+
+  useEffect(() => {
+    if (msg !== null) {
+      setPopupMessage(msg)
+    } else if (error !== null) {
+      setPopupMessage(error)
     }
-  };
+
+    if (msg !== null || error !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetApartmentStatus())
+      }, 3000)
+    }
+  }, [msg, error])
 
   return (
     <>
-      {loading && <Loading />}
       <div className="w-full h-screen bg-white1 overflow-y-auto">
         {/* Top of Apartment Tab */}
         <div className="w-11/12 m-auto h-full ">
@@ -97,13 +98,9 @@ const Apartment = () => {
           </div>
           {/* Body of Tenant Tab */}
           <div className="lg:grid-cols-2 2xl:grid-cols-3 grid 2xl:grid-rows-4 grid-cols-1 gap-4 py-5">
-            {loading ? (
-              <Loading />
-            ) : (
-              apartment?.map((val, key) => (
-                <ApartmentCard key={key} val={val} num={key} />
-              ))
-            )}
+            {apartment?.map((val, key) => (
+              <ApartmentCard key={key} val={val} num={key} />
+            ))}
           </div>
         </div>
         {isAddApartmentFormOpen && (
@@ -115,21 +112,22 @@ const Apartment = () => {
                 handleInput={handleInput}
                 handleSubmit={handleSubmit}
                 error={error}
-                togglePopup={setShowPopup}
-                setPopupMessage={setPopupMessage}
+                // togglePopup={setShowPopup}
+                // setPopupMessage={setPopupMessage}
               />
             </div>
           </div>
         )}
         {showPopup && (
-          <Popup 
-            message={popupMessage} 
-            onClose={() => setShowPopup(false)} 
+          <Popup
+            message={popupMessage}
+            isError={error}
+            onClose={() => setShowPopup(false)}
           />
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Apartment;
+export default Apartment

@@ -1,14 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { IoMdClose } from 'react-icons/io';
-import { useDispatch, useSelector } from 'react-redux';
-import { editApartment, fetchApartment } from '../../features/apartment';
-import { useParams } from 'react-router-dom';
-import Popup from '../../Component/PopUp'; 
-const EditApartmentDetails = ({ setUpdate, apartmentId, setIsEditApartmentFormOpen }) => {
-  const dispatch = useDispatch();
-
-  const msg = useSelector((state) => state.apartment.msg)
-  const error = useSelector((state) => state.apartment.error)
+import React, { useEffect, useRef, useState } from 'react'
+import { IoMdClose } from 'react-icons/io'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  editApartment,
+  fetchApartment,
+} from '../../features/apartment'
+import { useParams } from 'react-router-dom'
+const EditApartmentDetails = ({
+  setUpdate,
+  apartmentId,
+  setIsEditApartmentFormOpen,
+}) => {
+  const dispatch = useDispatch()
   const apartment = useSelector((state) => state.apartment.single)
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
@@ -19,8 +22,8 @@ const EditApartmentDetails = ({ setUpdate, apartmentId, setIsEditApartmentFormOp
     barangay: apartment?.barangay || '',
   })
   const { id } = useParams()
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const modalRef = useRef(null);
+  const [isFormOpen, setIsFormOpen] = useState(false)
+  const modalRef = useRef(null)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,26 +54,24 @@ const EditApartmentDetails = ({ setUpdate, apartmentId, setIsEditApartmentFormOp
     }))
   }
   useEffect(() => {
-    dispatch(fetchApartment(apartmentId));
-  }, [dispatch]);
+    dispatch(fetchApartment(apartmentId))
+  }, [dispatch])
 
   useEffect(() => {
-    setIsFormOpen(true);
+    setIsFormOpen(true)
 
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setIsEditApartmentFormOpen(false);
+        setIsEditApartmentFormOpen(false)
       }
-    };
+    }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside)
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [setIsEditApartmentFormOpen]);
-
-
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [setIsEditApartmentFormOpen])
 
   return (
     <>
@@ -95,11 +96,11 @@ const EditApartmentDetails = ({ setUpdate, apartmentId, setIsEditApartmentFormOp
                 color="white"
               />
             </button>
-            {error && (
+            {/* {error && (
               <div className=" w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
                 {error}
               </div>
-            )}
+            )} */}
 
             <div className="mb-4">
               <label
@@ -204,7 +205,7 @@ const EditApartmentDetails = ({ setUpdate, apartmentId, setIsEditApartmentFormOp
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
-export default EditApartmentDetails;
+export default EditApartmentDetails

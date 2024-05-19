@@ -118,11 +118,50 @@ module.exports.madePayment = async (req, res) => {
         ],
       }
 
+      const adminMailOptions = {
+        from: 'pinaupaph@gmail.com',
+        to: 'pinaupaph@gmail.com', 
+        subject: `Payment received for Unit ${response.tenant_id.unit_id.unit_no}`,
+        html: `
+          <html>
+          <body>
+            <p>Hi Admin,</p>
+            <p>The tenant for Unit ${response.tenant_id.unit_id.unit_no} has successfully made a payment.</p>
+            <p>Here's what you need to know:</p>
+            <ul>
+              <li>Tenant Name: <strong>${response.tenant_id.user_id.name}</strong></li>
+              <li>Invoice Number: <strong>${response.pdf.reference}</strong></li>
+              <li>Invoice Date: <strong>${new Date(response.createdAt).toDateString()}</strong></li>
+              <li>Due Date: <strong>${new Date(response.tenant_id.monthly_due).toDateString()}</strong></li>
+              <li>Total Amount: <strong>${response.payment.amountPaid.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
+              <li>Previous Balance: <strong>${(response.tenant_id.balance - response.payment.amountPaid).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
+            </ul>
+            <p>The invoice file is attached for your reference and records.</p>
+            <p>Best regards,</p>
+            <strong>Pinaupa PH</strong>
+          </body>
+          </html>`,
+        attachments: [
+          {
+            filename: 'invoice.pdf',
+            content: await downloadPdfFromCloudinary(),
+          },
+        ],
+      }
+
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           console.log('Error:', error)
         } else {
           console.log('Email sent:', info.response)
+        }
+      })
+
+      transporter.sendMail(adminMailOptions, (error, info) => {
+        if (error) {
+          console.log('Error:', error)
+        } else {
+          console.log('Email sent to admin:', info.response)
         }
       })
 
