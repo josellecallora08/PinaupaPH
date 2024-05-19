@@ -48,8 +48,8 @@ const ApartmentProfile = () => {
   const handleDelete = async () => {
     const isConfirmed = window.confirm(
       'Are you sure you want to delete this apartment?',
-    );
-  
+    )
+
     if (isConfirmed) {
       dispatch(deleteApartment(id))
       navigate('/apartment')
@@ -169,19 +169,17 @@ const ApartmentProfile = () => {
               setUpdate={setUpdate}
               apartmentId={apartment._id}
               setIsEditApartmentFormOpen={setIsEditApartmentFormOpen}
-              
             />
           </div>
         </div>
       )}
-     {showPopup && (
-          <PopUp 
-            message={popupMessage} 
-            onClose={() => setShowPopup(false)} 
-            error={error}
-          
-          />
-        )}
+      {showPopup && (
+        <PopUp
+          message={popupMessage}
+          onClose={() => setShowPopup(false)}
+          error={error}
+        />
+      )}
     </>
   )
 }
