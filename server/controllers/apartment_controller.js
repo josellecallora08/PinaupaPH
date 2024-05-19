@@ -34,7 +34,7 @@ module.exports.search_apartment = async (req, res) => {
 // ? Tested API
 module.exports.fetch_apartments = async (req, res) => {
   try {
-    const response = await APARTMENTMODEL.find()
+    const response = await APARTMENTMODEL.find().populate('units')
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
