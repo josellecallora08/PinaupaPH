@@ -51,6 +51,7 @@ function App() {
         element={<PaymentStatus />}
       />
       <Route path="/forgot-password" element={<ForgotPass />} />
+      <Route path="/contact" element={<ContactUsAdmin />} />
       <Route path="/otp-verify/:id" element={<OTPVerify />} />
       <Route path="/reset-password/:id" element={<ResetPass />} />
       <Route
@@ -77,6 +78,7 @@ function App() {
           )
         }
       />
+    
       <Route
         path="/dashboard"
         element={
