@@ -1,32 +1,34 @@
-import React, { useState, useEffect } from 'react'
-import gcashlogo from '/Gcashlogo.png'
-import paymayalogo from '/maya-logo.jpg'
-import grabpaylogo from '/Grabpaylogo.png'
-import { useDispatch, useSelector } from 'react-redux'
-import { createPaymentIntent } from '../../features/payment'
-import { useParams } from 'react-router-dom'
-import '../../index.css'
-import { fetchInvoice } from '../../features/invoice'
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
+import React, { useState, useEffect } from 'react';
+import gcashlogo from '/Gcashlogo.png';
+import paymayalogo from '/maya-logo.jpg';
+import grabpaylogo from '/Grabpaylogo.png';
+import { useDispatch, useSelector } from 'react-redux';
+import { createPaymentIntent } from '../../features/payment';
+import { useParams } from 'react-router-dom';
+import '../../index.css';
+import { fetchInvoice } from '../../features/invoice';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import ButtonLoading from '../../Component/LoadingComponent/ButtonLoading';
 
 const TenantPayment = () => {
-  const { id } = useParams()
-  const [selectedEwallet, setSelectedEwallet] = useState(null)
-  const invoice = useSelector((state) => state.invoice.single)
-  const dispatch = useDispatch()
+  const { id } = useParams();
+  const [localLoading, setLocalLoading] = useState(false);
+  const [selectedEwallet, setSelectedEwallet] = useState(null);
+  const invoice = useSelector((state) => state.invoice.single);
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     name: invoice?.tenant_id?.user_id?.name || '',
     mobile_no: invoice?.tenant_id?.user_id?.mobile_no || '',
     email: invoice?.tenant_id?.user_id?.email || '',
     amount: invoice?.amount || '',
     method: invoice?.payment?.method || '',
-  })
-  const [currentIndex, setCurrentIndex] = useState(0)
+  });
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    dispatch(fetchInvoice(id))
-  }, [dispatch, id])
-  
+    dispatch(fetchInvoice(id));
+  }, [dispatch, id]);
+
   useEffect(() => {
     if (invoice) {
       setFormData({
@@ -35,10 +37,9 @@ const TenantPayment = () => {
         email: invoice.tenant_id?.user_id?.email || '',
         amount: invoice.amount || '',
         method: invoice.payment?.method || '',
-      })
+      });
     }
-  }, [invoice])
-  
+  }, [invoice]);
 
   const handleEwalletChange = (event) => {
     const selectedValue = event.target.value;
@@ -48,23 +49,23 @@ const TenantPayment = () => {
       method: selectedValue,
     }));
   };
-  
 
-  const handlePayment = () => {
-    if (formData.method !== null && formData.method !== "") {
-      dispatch(createPaymentIntent(id, formData));
+  const handlePayment = async () => {
+    if (formData.method !== null && formData.method !== '') {
+      setLocalLoading(true);
+      await dispatch(createPaymentIntent(id, formData));
+      setLocalLoading(false);
     } else {
-      console.error("Please select a payment method");
+      console.error('Please select a payment method');
     }
   };
-  
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
   const currentDate = new Date().toLocaleString('en-PH', {
     weekday: 'long',
@@ -74,23 +75,23 @@ const TenantPayment = () => {
     hour: 'numeric',
     minute: 'numeric',
     hour12: true,
-  })
+  });
 
   const ewallets = [
     { value: 'gcash', label: 'GCash', logo: gcashlogo },
     { value: 'paymaya', label: 'Paymaya', logo: paymayalogo },
     { value: 'grab_pay', label: 'GrabPay', logo: grabpaylogo },
-  ]
+  ];
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % ewallets.length)
-  }
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % ewallets.length);
+  };
 
   const prevSlide = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? ewallets.length - 1 : prevIndex - 1,
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -327,12 +328,16 @@ const TenantPayment = () => {
               </div>
               <div className="flex-grow flex flex-col justify-end mb-10 items-center">
                 <div className="w-full px-10">
-                  <button
-                    onClick={handlePayment}
-                    className="lg:mt-0 md:mt-4 w-full lg:mb-8 bg-primary-color text-white mb-5 py-3 rounded-md hover:opacity-80"
-                  >
-                    Pay
-                  </button>
+                  {localLoading ? (
+                    <ButtonLoading msg={'Processing...'} />
+                  ) : (
+                    <button
+                      onClick={handlePayment}
+                      className="lg:mt-0 md:mt-4 w-full lg:mb-8 bg-primary-color text-white mb-5 py-3 rounded-md hover:opacity-80"
+                    >
+                      Pay
+                    </button>
+                  )}
                 </div>
                 <div className="flex flex-col w-full py-10 items-center gap-2 bg-gray">
                   <h1 className="text-primary-color font-bold text-lg">
@@ -351,7 +356,7 @@ const TenantPayment = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default TenantPayment
+export default TenantPayment;
