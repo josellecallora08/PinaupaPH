@@ -178,7 +178,7 @@ module.exports.recentAnnouncement = async (req, res) => {
 
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Fetched Recent Announcement', response })
+      .json({  response })
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)

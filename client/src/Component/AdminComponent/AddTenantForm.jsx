@@ -177,7 +177,7 @@ const AddTenantForm = ({
             </option>
             {apartment
               ?.filter((item) =>
-                item.units.some((unit) => unit.occupied === false),
+                item.units.some((unit) => !unit.occupied),
               )
               .map((val, key) => (
                 <option key={key} className="rounded-none" value={`${val._id}`}>

@@ -364,7 +364,7 @@ module.exports.create_apartment_unit = async (req, res) => {
     if (match_unit) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Unit exists' })
+        .json({ error: 'Apartment Unit exists' })
     }
 
     let response = await UNITMODEL.create(details)
@@ -488,7 +488,7 @@ module.exports.delete_apartment_unit = async (req, res) => {
 
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: `Deleted Unit`, response })
+      .json({ msg: `Apartment Unit has been deleted`, response })
   } catch (err) {
     console.error({ error: err.message })
     return res

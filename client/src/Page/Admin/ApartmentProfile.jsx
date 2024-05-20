@@ -6,7 +6,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import PopUp from '../../Component/PopUp'
 import EditApartmentDetails from '../../Component/AdminComponent/EditApartmentDetails'
-import { fetchUnitsApartment } from '../../features/unit'
+import { fetchUnitsApartment, resetUnitStatus } from '../../features/unit'
 
 import {
   deleteApartment,
@@ -23,12 +23,12 @@ const ApartmentProfile = () => {
   const error = useSelector((state) => state.apartment.error)
   const [showPopup, setShowPopup] = useState(false)
   const [popupMessage, setPopupMessage] = useState('')
-  const error_unit = useSelector((state) => state.unit.error)
+  const msgUnit = useSelector((state) => state.unit.msg)
+  const errorUnit = useSelector((state) => state.unit.error)
   const { id } = useParams()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const units = useSelector((state) => state.unit.data)
-  const [isPopupVisible, setIsPopupVisible] = useState(false) // State to manage visibility of pop-up
   const toggleAddRoomForm = () => {
     setIsAddRoomFormOpen(!isAddRoomFormOpen)
   }
@@ -57,21 +57,20 @@ const ApartmentProfile = () => {
   }
 
   useEffect(() => {
-    if (msg !== null) {
-      setPopupMessage(msg)
-    } else if (error !== null) {
-      setPopupMessage(error)
+    if (msg !== null || msgUnit !== null) {
+      setPopupMessage(msg || msgUnit)
+    } else if (error !== null || errorUnit !== null) {
+      setPopupMessage(error || errorUnit)
     }
 
-    if (msg !== null || error !== null) {
-      setIsPopupVisible(true)
+    if (msg !== null || msgUnit !== null || error !== null || errorUnit !== null) {
+      setShowPopup(true)
       setTimeout(() => {
-        setIsPopupVisible(false)
-        dispatch(resetApartmentStatus())
+        setShowPopup(false)
+        dispatch(msg ? resetApartmentStatus() : resetUnitStatus())
       }, 3000)
     }
-  })
-
+  }, [msg, error, msgUnit, errorUnit])
   return (
     <>
       <div className="w-full h-full  bg-white1">
@@ -177,7 +176,7 @@ const ApartmentProfile = () => {
         <PopUp
           message={popupMessage}
           onClose={() => setShowPopup(false)}
-          error={error}
+          isError={error}
         />
       )}
     </>

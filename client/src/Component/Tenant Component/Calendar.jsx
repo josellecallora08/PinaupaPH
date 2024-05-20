@@ -21,7 +21,7 @@ const Calendars = ({ user, invoice }) => {
     }
 
     if (date.getDate() === invoiceDatePaid.getDate() && date.getMonth() === invoiceDatePaid.getMonth()) {
-      return `border-2 rounded-md ${invoiceDatePaid > invoiceDueDate ? 'bg-lime/50' : ''} shadow-lg`; // Apply styles for the paid date
+      return `border-2 rounded-md ${invoiceDatePaid > invoiceDueDate ? 'bg-red/20' : 'bg-lime/50'} shadow-lg`; // Apply styles for the paid date
     }
 
     return ''; // Return an empty string for other dates
@@ -38,26 +38,26 @@ const Calendars = ({ user, invoice }) => {
     if (date.getDate() === invoiceDatePaid.getDate() && date.getMonth() === invoiceDatePaid.getMonth()) {
       return (
         <span className="" role="img" aria-label="money bag">
-        💵
+        {invoiceDatePaid > invoiceDueDate ? '❗' : '💵'}
         </span>
       ); // Show money bag icon on the paid date
     }
 
-    if (date.getDate() === userMonthlyDue.getDate() && date.getMonth() === userMonthlyDue.getMonth()) {
+    if (date.getDate() === userMonthlyDue.getDate()) {
       return (
         <span className="" role="img" aria-label="money with wings">
-          ❗
+          💵
         </span>
       ); // Show emoji on the monthly due date
     }
 
-    if (date.getDate() === invoiceDueDate.getDate() && date.getMonth() === invoiceDueDate.getMonth()) {
-      return (
-        <span className="" role="img" aria-label="money with wings">
-          ❗
-        </span>
-      ); // Show emoji on the invoice due date
-    }
+    // if (date.getDate() === invoiceDueDate.getDate() && date.getMonth() === invoiceDueDate.getMonth()) {
+    //   return (
+    //     <span className="" role="img" aria-label="money with wings">
+    //       💵
+    //     </span>
+    //   ); // Show emoji on the invoice due date
+    // }
 
     return null; // No content for other dates
   };
