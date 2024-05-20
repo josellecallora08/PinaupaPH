@@ -11,9 +11,9 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
   const unit = useSelector((state) => state.unit.data)
   const error = useSelector((state) => state.user.error)
   const msg = useSelector((state) => state.user.msg)
-  
-  const [showPopup, setShowPopup] = useState(false);
-  const [popupMessage, setPopupMessage] = useState('');
+
+  const [showPopup, setShowPopup] = useState(false)
+  const [popupMessage, setPopupMessage] = useState('')
 
   const [apartmentBldg, setApartmentBldg] = useState('')
   const [fields, setFields] = useState({
@@ -43,25 +43,16 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
     }))
   }
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await dispatch(editUserApartment(tenant?.user_id?._id, fields));
-      setPopupMessage('Apartment added successfully!');
-      setShowPopup(true);
-      setTimeout(() => {
-        setIsEditApartmentForm((prevState) => !prevState);
-        setShowPopup(false);
-      }, 3000);
-    } catch (error) {
-        console.error(error);
-      setPopupMessage('Failed to add apartment. Please try again.');
-      setIsError(true);
-      setShowPopup(true);
-  };
+    e.preventDefault()
+    dispatch(editUserApartment(tenant?.user_id?._id, fields))
+    setIsEditApartmentForm((prevState) => !prevState)
+    // setPopupMessage('Apartment added successfully!')
+    // setShowPopup(true)
+    // setTimeout(() => {
+    //   
+    //   setShowPopup(false)
+    // }, 3000)
   }
-  
-  
-
 
   return (
     <>
@@ -82,11 +73,6 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
               color="white"
             />
           </button>
-          {error && (
-            <div className=" hidden w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
-              {error}
-            </div>
-          )}
           <div className="mb-4">
             <label
               htmlFor="apartment_unit"
@@ -102,7 +88,7 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
             >
               <option className="rounded-none">Select Apartment</option>
               {apartment
-                // ?.filter((item) => item.occupied === false)
+                ?.filter((item) => item.units.some((unit) => !unit.occupied))
                 ?.map((val, key) => (
                   <option key={key} className="rounded-none" value={val._id}>
                     {val.name}
@@ -189,10 +175,7 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
           </div>
         </form>
         {showPopup && (
-          <Popup 
-            message={popupMessage} 
-            onClose={() => setShowPopup(false)} 
-          />
+          <Popup message={popupMessage} onClose={() => setShowPopup(false)} />
         )}
       </div>
     </>

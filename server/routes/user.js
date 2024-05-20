@@ -33,6 +33,7 @@ const {
   createAdminAccount,
   deleteTenant,
   forcedDeleteTenant,
+  restoreAccount,
 } = require('../controllers/user_controller')
 const multer = require('multer')
 
@@ -69,6 +70,7 @@ router.patch(
 )
 
 router.patch('/account/delete', requireAuth, deleteTenant)
+router.patch('/account/recover', requireAuth, restoreAccount)
 router.patch('/account/update', requireAuth, update_profile)
 router.patch('/:user_id/update_household', requireAuth, update_household)
 router.patch('/:user_id/update_pet', requireAuth, update_pet)

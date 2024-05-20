@@ -1,78 +1,44 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { IoMdClose } from 'react-icons/io';
-import { useDispatch, useSelector } from 'react-redux';
-import { io } from 'socket.io-client';
-import { createAnnouncement } from '../../features/announcement';
-import { fetchUsers } from '../../features/user';
-import Popup from '../../Component/PopUp'; // Import the Popup component
+import React, { useState, useEffect, useRef } from 'react'
+import { IoMdClose } from 'react-icons/io'
+import { useDispatch, useSelector } from 'react-redux'
+import { io } from 'socket.io-client'
+import { createAnnouncement } from '../../features/announcement'
+import { fetchUsers } from '../../features/user'
+import Popup from '../../Component/PopUp' // Import the Popup component
 
-const socket = io(`${import.meta.env.VITE_URL}/`);
+const socket = io(`${import.meta.env.VITE_URL}/`)
 
-const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
-  const user = useSelector((state) => state.auth.user);
-  const dispatch = useDispatch();
-  const tenants = useSelector((state) => state.user.data);
-  const modalRef = useRef(null);
-  const [formData, setFormData] = useState({
-    title: '',
-    type: '',
-    description: '',
-  });
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [showPopup, setShowPopup] = useState(false);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+const AnnouncementForm = ({
+  setisAddAnnouncementFormOpen,
+  handleSubmit,
+  formData,
+  setFormData,
+  handleChange,
+}) => {
+  const dispatch = useDispatch()
+  const modalRef = useRef(null)
 
   useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
+    dispatch(fetchUsers())
+  }, [dispatch])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
-        setisAddAnnouncementFormOpen(false);
+        setisAddAnnouncementFormOpen(false)
       }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [setisAddAnnouncementFormOpen]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      console.log(tenants);
-      socket.emit('send-announcement', {
-        sender_id: user,
-        receiver_id: tenants,
-        type: 'Announcement',
-        isRead: false,
-      });
-      await dispatch(createAnnouncement(formData));
-      setSuccessMessage('Announcement created successfully!');
-      setErrorMessage('');
-      setShowPopup(true);
-
-      setTimeout(() => {
-        setShowPopup(false);
-        setisAddAnnouncementFormOpen(false);
-      }, 3000);
-    } catch (error) {
-      setErrorMessage('Failed to create announcement. Please try again later.');
-      setSuccessMessage('');
-      setIsError(true);
     }
-  };
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [setisAddAnnouncementFormOpen])
 
   return (
     <>
       <form onSubmit={handleSubmit} className="w-full" ref={modalRef}>
         <div className="flex justify-between items-center w-full p-4 bg-primary-color text-white">
-          <h1 className='text-xl font-semibold'>Create Announcement</h1>
+          <h1 className="text-xl font-semibold">Create Announcement</h1>
           <IoMdClose
             onClick={() => setisAddAnnouncementFormOpen(false)}
             size={25}
@@ -161,14 +127,8 @@ const AnnouncementForm = ({ setisAddAnnouncementFormOpen }) => {
           </button>
         </div>
       </form>
-      {showPopup && (
-        <Popup 
-          message={successMessage} 
-          onClose={() => setShowPopup(false)} 
-        />
-      )}
     </>
-  );
-};
+  )
+}
 
-export default AnnouncementForm;
+export default AnnouncementForm
