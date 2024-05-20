@@ -747,7 +747,7 @@ module.exports.forcedDeleteTenant = async (req, res) => {
     console.log(response)
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Tenant removed.', response: tenant })
+      .json({ msg: 'Tenant has been permanently deleted.', response: tenant })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -800,12 +800,12 @@ module.exports.deleteTenant = async (req, res) => {
       await TENANTMODEL.findOneAndUpdate(
         { user_id: user_id },
         { $unset: { unit_id: '' } }, // This will remove the unit_id field
-        // { $set: { unit_id: null } }  // This will set the unit_id field to null
+      // { $set: { unit_id: null } }  // This will set the unit_id ield to null
       )
     }
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Tenant removed.', response: tenant })
+      .json({ msg: 'Tenant has been softly deleted', response: tenant })
   } catch (err) {
     console.error({ error: err.message })
     return res

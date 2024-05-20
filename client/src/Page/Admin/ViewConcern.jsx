@@ -210,9 +210,9 @@ const ViewConcern = () => {
                 </div>
               </div>
               {/*  */}
-              <div className="row-span-4 w-full h-full bg-white rounded-xl shadow-md overflow-hidden">
+              <div className="row-span-4 w-full  bg-white rounded-xl shadow-md overflow-hidden">
                 <div className="relative w-full h-full min-h-60">
-                  <figure className="w-full h-full max-w-[200px] lg:max-w-full m-auto max-h-[550px]">
+                  <figure className="w-full h-full max-w-[200px] lg:max-w-full m-auto xl:h-[600px]">
                     <img
                       src={report?.attached_image?.image_url}
                       className="w-full h-full object-contain"
@@ -249,7 +249,7 @@ const ViewConcern = () => {
                     </p>
                   </div>
                 </div>
-                <div className="w-full h-full ">
+                <div className="w-full h-[300px] md:h-full ">
                   <div
                     ref={messageContainerRef}
                     className={`w-full h-auto md:max-h-[300px] lg:max-h-[350px] max-h-[300px]    font-regular  gap-2 px-5 ${report?.comments.length > 5 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}

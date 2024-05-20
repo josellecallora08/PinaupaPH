@@ -35,11 +35,11 @@ const apartmentSlice = createSlice({
     editApartmentSuccess: (state, action) => {
       state.msg = action.payload.msg
       state.loading = false
-      state.data = state.data.map((item) =>
-        item._id === action.payload.response._id
-          ? action.payload.response
-          : item,
-      )
+      // state.data = state.data.map((item) =>
+      //   item._id === action.payload.response._id
+      //     ? action.payload.response
+      //     : item,
+      // )
       state.single =
         state.single._id === action.payload.response._id
           ? { ...action.payload.response }

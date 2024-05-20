@@ -49,7 +49,7 @@ const ContactUsAdmin = () => {
     return (
         <div className="flex flex-col md:flex-row items-center justify-center h-screen lg:overflow-hidden">
              
-            <div className=" bg-white ml-8 rounded-lg shadow-md lg:p-20 px-10 w-full text-center md:w-1/2">
+            <div className=" bg-white ml-8 rounded-lg lg:p-20 px-10 w-full text-center md:w-1/2">
 
             <h1 onClick={() => window.history.back()} className='flex  items-center gap-2 text-left mb-10 text-primary-color hover:underline cursor-pointer'><IoIosArrowBack />Back</h1>
                 <h2 className="text-primary-color font-semibold text-2xl text-left">Contact Us Admin</h2>

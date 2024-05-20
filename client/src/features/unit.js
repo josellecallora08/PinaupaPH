@@ -11,9 +11,14 @@ const unitSlice = createSlice({
     msg: null,
   },
   reducers: {
+    resetUnitStatus: (state) => {
+      state.error = null
+      state.msg = null
+    },
     startUnit: (state) => {
       state.loading = true
       state.error = null
+      state.msg = null
     },
     fetchUnitSuccess: (state, action) => {
       state.loading = false
@@ -51,6 +56,7 @@ const unitSlice = createSlice({
 })
 
 export const {
+  resetUnitStatus,
   startUnit,
   insertUnitSuccess,
   fetchUnitSuccess,
@@ -82,7 +88,7 @@ export const createUnit = (fields, apartmentId) => async (dispatch) => {
     }
     const json = await response.json()
     console.log(json)
-    dispatch(fetchUnitsApartment(apartmentId))
+    dispatch(insertUnitSuccess(json))
   } catch (err) {
     dispatch(actionUnitFailed(err.message))
   }
