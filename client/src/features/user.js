@@ -40,7 +40,7 @@ const userSlice = createSlice({
       state.loading = false
       state.msg = action.payload.msg
       state.data = state.data.filter(
-        (user) => user._id !== action.payload.response._id,
+        (user) => user.user_id._id !== action.payload.response.user_id,
       )
     },
     editUserSuccess: (state, action) => {
@@ -204,7 +204,33 @@ export const editUser = (userId, credentials) => async (dispatch) => {
     dispatch(actionUserFailed(err.message))
   }
 }
+export const recoverTenant = (userId) => async (dispatch) => {
+  try {
+    const token = Cookies.get('token')
+    console.log(userId)
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/user/account/recover?user_id=${userId}`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
 
+    if (!response.ok) {
+      const json = await response.json()
+      console.log(json)
+      throw new Error(json.error)
+    }
+
+    const json = await response.json()
+    console.log(json)
+    dispatch(editSingleUser(json))
+  } catch (err) {
+    dispatch(actionUserFailed(err.message))
+  }
+}
 export const editUserApartment = (userId, credentials) => async (dispatch) => {
   try {
     const token = Cookies.get('token')

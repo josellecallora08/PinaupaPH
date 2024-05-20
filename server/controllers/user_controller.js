@@ -15,7 +15,7 @@ const createToken = (id, username, role) => {
   })
 }
 
-module.exports.restoreAccounts = async (req, res) => {
+module.exports.restoreAccount = async (req, res) => {
   try {
     const { user_id } = req.query
     const response = await USERMODEL.findByIdAndUpdate(user_id, {
@@ -27,10 +27,15 @@ module.exports.restoreAccounts = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to recover tenant account.' })
     }
-
+    const tenant = await TENANTMODEL.findOne({ user_id }).populate('user_id unit_id apartment_id')
+    if (!tenant) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Failed to recover tenant account.' })
+    }
     return res
-    .status(httpStatusCodes.OK)
-    .json({ error: 'Tenant account recovered..' })
+      .status(httpStatusCodes.OK)
+      .json({ msg: 'Tenant account recovered..', response:tenant })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -281,6 +286,11 @@ module.exports.sign_in = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Invalid credentials.' })
 
+    if (response.isDelete) {
+      return res.status(httpStatusCodes.UNAUTHORIZED).json({
+        error: 'Account has been deleted, Contact admin to restore account.',
+      })
+    }
     const token = createToken(response._id, response.username, response.role)
     res.cookie('token', token, { maxAge: 300000 })
 
@@ -624,7 +634,7 @@ module.exports.update_unit_info = async (req, res) => {
     }
 
     return res.status(httpStatusCodes.OK).json({
-      message: 'Tenant information updated successfully',
+      msg: 'Tenant unit information updated',
       response,
     })
   } catch (err) {
@@ -712,10 +722,11 @@ module.exports.forcedDeleteTenant = async (req, res) => {
 
     await cloudinary.uploader.destroy(response.profile_image.public_id)
     console.log('deleted successfully!')
+    let tenant
     if (response.role === 'Tenant') {
-      const tenant = await TENANTMODEL.findOneAndDelete({
+      tenant = await TENANTMODEL.findOneAndDelete({
         user_id: user_id,
-      }).populate('user_id unit_id apartment_id')
+      }).populate('user_id apartment_id')
       if (!tenant)
         return res
           .status(httpStatusCodes.BAD_REQUEST)
@@ -763,12 +774,12 @@ module.exports.deleteTenant = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'User not found...' })
     }
-
+    let tenant
     // await cloudinary.uploader.destroy(response.profile_image.public_id)
     if (response.role === 'Tenant') {
-      const tenant = await TENANTMODEL.findOne({
+      tenant = await TENANTMODEL.findOne({
         user_id: user_id,
-      }).populate('user_id unit_id apartment_id')
+      }).populate('user_id apartment_id')
       if (!tenant)
         return res
           .status(httpStatusCodes.BAD_REQUEST)
@@ -785,6 +796,12 @@ module.exports.deleteTenant = async (req, res) => {
             .status(httpStatusCodes.BAD_REQUEST)
             .json({ error: 'Unable to locate Unit' })
       }
+
+      await TENANTMODEL.findOneAndUpdate(
+        { user_id: user_id },
+        { $unset: { unit_id: '' } }, // This will remove the unit_id field
+        // { $set: { unit_id: null } }  // This will set the unit_id field to null
+      )
     }
     return res
       .status(httpStatusCodes.OK)

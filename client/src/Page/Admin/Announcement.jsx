@@ -6,25 +6,63 @@ import { BsThreeDotsVertical } from 'react-icons/bs'
 import { MdOutlineModeEdit, MdOutlineDeleteOutline } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  createAnnouncement,
   deleteAnnouncement,
   fetchAnnouncements,
+  resetAnnouncementStatus,
   searchAnnouncement,
 } from '../../features/announcement'
 import EditAnnouncementForm from '../../Component/AdminComponent/EditAnnouncement'
+import PopUp from '../../Component/PopUp'
 
 const Announcement = () => {
   const dispatch = useDispatch()
   const announcement = useSelector((state) => state.announcement.data)
   const [update, setUpdate] = useState(false)
   const [searchItem, setSearchItem] = useState('')
+  const error = useSelector((state) => state.announcement.error);
+  const msg = useSelector((state) => state.announcement.msg);
   const [value, setValue] = useState('')
   const [filter, setFilter] = useState('All')
   const [isAddAnnouncementFormOpen, setisAddAnnouncementFormOpen] =
     useState(false)
+  const [popupMessage, setPopupMessage] = useState('')
+  const [showPopup, setShowPopup] = useState(false)
   const [openDropdown, setOpenDropdown] = useState(null) // State to track which dropdown is open
   const [isEditAnnouncementFormOpen, setIsEditAnnouncementFormOpen] =
     useState(false)
   const dropdownRef = useRef(null) // Ref for dropdown container
+  const [formData, setFormData] = useState({
+    title: '',
+    type: '',
+    description: '',
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+      dispatch(createAnnouncement(formData));
+      setisAddAnnouncementFormOpen(false);
+  };
+
+  useEffect(() => {
+    if (msg !== null) {
+      setPopupMessage(msg)
+    } else if (error !== null) {
+      setPopupMessage(error)
+    }
+
+    if (msg !== null || error !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetAnnouncementStatus())
+      }, 3000)
+    }
+  }, [msg, error])
 
   const toggleAddAnnouncementForm = () => {
     setisAddAnnouncementFormOpen(!isAddAnnouncementFormOpen)
@@ -269,6 +307,10 @@ const Announcement = () => {
           <div className="lg:w-1/2 h-auto lg:mt-2 mt-14 w-10/12 bg-white rounded-md">
             <AddAnnouncement
               setisAddAnnouncementFormOpen={setisAddAnnouncementFormOpen}
+              handleSubmit={handleSubmit}
+              formData={formData}
+              setFormData={setFormData}
+              handleChange={handleChange}
             />
           </div>
         </div>
@@ -283,6 +325,13 @@ const Announcement = () => {
             />
           </div>
         </div>
+      )}
+      {showPopup && (
+        <PopUp
+          message={popupMessage}
+          onClose={() => setShowPopup(false)}
+          error={error}
+        />
       )}
     </div>
   )

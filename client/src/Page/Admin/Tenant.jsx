@@ -5,7 +5,12 @@ import { FaPlus } from 'react-icons/fa6'
 import { useState } from 'react'
 import AddTenantForm from '../../Component/AdminComponent/AddTenantForm'
 import { useDispatch, useSelector } from 'react-redux'
-import { createTenant, fetchUsers, handleSearchUser } from '../../features/user'
+import {
+  createTenant,
+  fetchUsers,
+  handleSearchUser,
+  resetUserStatus,
+} from '../../features/user'
 import { fetchApartments } from '../../features/apartment'
 import { fetchUnits, fetchUnitsApartment } from '../../features/unit'
 import SearchLoading from '../../Component/LoadingComponent/Loading'
@@ -44,39 +49,22 @@ const Tenant = () => {
   }
   // const [apartmentId, setApartmentId] = useState('')
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await dispatch(createTenant(fields));
-      setPopupMessage('Tenant added successfully!');
-      setShowPopup(true);
-      setTimeout(() => {
-        setShowPopup(false);
-      }, 2000);
-      // Reset form fields
-      setFields({
-        name: '',
-        username: '',
-        birthday: '',
-        mobile_no: '',
-        email: '',
-        password: '',
-        unit_id: '',
-        apartment_id: '',
-        deposit: '',
-        occupancy: '',
-      });
-      // Update form state
-      setIsAddTenantFormOpen(false);
-    } catch (error) {
-      console.error(error);
-      setPopupMessage('Failed to add tenant. Please try again.');
-      setShowPopup(true);
-      setTimeout(() => {
-        setShowPopup(false);
-      }, 2000);
-    }
-  };
-  
+    e.preventDefault()
+    dispatch(createTenant(fields))
+    setFields({
+      name: '',
+      username: '',
+      birthday: '',
+      mobile_no: '',
+      email: '',
+      password: '',
+      unit_id: '',
+      apartment_id: '',
+      deposit: '',
+      occupancy: '',
+    })
+    setIsAddTenantFormOpen((prevState) => !prevState)
+  }
 
   const toggleAddTenantForm = () => {
     setIsAddTenantFormOpen(!isAddTenantFormOpen)
@@ -92,7 +80,21 @@ const Tenant = () => {
       dispatch(fetchUsers())
     }
   }, [searchItem])
+  useEffect(() => {
+    if (msg !== null) {
+      setPopupMessage(msg)
+    } else if (error !== null) {
+      setPopupMessage(error)
+    }
 
+    if (msg !== null || error !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetUserStatus())
+      }, 3000)
+    }
+  }, [msg, error])
   const handleInput = (e) => {
     const { name, value } = e.target
     setFields((fields) => ({
@@ -106,11 +108,24 @@ const Tenant = () => {
     console.log(fields.apartment_id)
     dispatch(fetchUnitsApartment(fields.apartment_id))
   }, [fields.apartment_id])
+  useEffect(() => {
+    if (msg !== null) {
+      setPopupMessage(msg)
+    } else if (error !== null) {
+      setPopupMessage(error)
+    }
 
+    if (msg !== null || error !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetUserStatus())
+      }, 3000)
+    }
+  }, [msg, error])
   useEffect(() => {
     dispatch(fetchApartments())
   }, [])
-
   return (
     <>
       {/* {isVisible && <MessageToast message={msg} error={error} isVisible={isVisible} setIsVisible={setIsVisible} />} */}
@@ -131,11 +146,14 @@ const Tenant = () => {
                   className="select capitalize font-semibold select-bordered w-full max-w-xs"
                 >
                   <option value="all">All Tenants</option>
-                  {apartment?.map((val, key) => (
-                    <option key={key} value={val._id}>
-                      {val.name}
-                    </option>
-                  ))}
+                  <option value="deleted">Deleted Tenants</option>
+                  {apartment
+                    ?.filter((item) => item.units.some((unit) => unit.occupied))
+                    .map((val, key) => (
+                      <option key={key} value={val._id}>
+                        {val.name}
+                      </option>
+                    ))}
                 </select>
               </div>
               <button
@@ -152,25 +170,27 @@ const Tenant = () => {
           <div
             className={`${menu ? 'lg:grid-cols-2' : 'lg:grid-cols-3'}   grid grid-cols-1 md:mr-10 gap-4 pb-5`}
           >
-            {loading ? (
-              <SearchLoading />
-            ) : selectedOption !== 'all' ? (
-              tenant
-                ?.filter(
+            {(() => {
+              let filteredTenants = []
+              if (selectedOption === 'all') {
+                filteredTenants = tenant?.filter(
+                  (item) => !item?.user_id?.isDelete,
+                )
+              } else if (selectedOption === 'deleted') {
+                filteredTenants = tenant?.filter(
+                  (item) => item?.user_id?.isDelete,
+                )
+              } else {
+                filteredTenants = tenant?.filter(
                   (item) =>
                     !item?.user_id?.isDelete &&
                     item?.apartment_id?._id === selectedOption,
                 )
-                .map((val, key) => (
-                  <TenantCard menu={menu} key={key} data={val} />
-                ))
-            ) : (
-              tenant
-                ?.filter((item) => !item?.user_id?.isDelete)
-                .map((val, key) => (
-                  <TenantCard menu={menu} key={key} data={val} />
-                ))
-            )}
+              }
+              return filteredTenants?.map((val, key) => (
+                <TenantCard menu={menu} key={key} data={val} />
+              ))
+            })()}
           </div>
           {isAddTenantFormOpen && (
             <div className="fixed top-6 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">

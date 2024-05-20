@@ -114,7 +114,7 @@ module.exports.createReport = async (req, res) => {
   try {
     const attached_image = req.file
     const { user_id } = req.query
-    const { title, description, type } = req.body
+    const { title, description, type, url } = req.body
     let imageUpload
     if (title === '' || description === '' || type === '') {
       return res
