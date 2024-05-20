@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import SearchBar from '../Component/SearchBar'
 import ConcernCard from './ConcernCard'
 import { useDispatch, useSelector } from 'react-redux'
-import { createReport, fetchReports, searchReport } from '../features/report'
+import { createReport, fetchReports, resetReportStatus, searchReport } from '../features/report'
 import Loading from './LoadingComponent/Loading'
 import { FaPlus } from 'react-icons/fa6'
 import CreateTicket from './Tenant Component/CreateTicket'
+import PopUp from './PopUp'
 
 const ConcernList = () => {
   const [isCreateTicket, setisCreateTicket] = useState(false)
@@ -22,6 +23,9 @@ const ConcernList = () => {
   const reports = useSelector((state) => state.report.data)
   const [title, setTitle] = useState('')
   const menu = useSelector((state) => state.toggle.sidebar)
+  const [showPopup, setShowPopup] = useState(false)
+  const [popupMessage, setPopupMessage] = useState('')
+
   const handleImageChange = (event) => {
     const file = event.target.files[0]
     setImage(file)
@@ -40,6 +44,23 @@ const ConcernList = () => {
     )
     setisCreateTicket((prevState) => !prevState)
   }
+
+
+  useEffect(() => {
+    if (msg !== null) {
+      setPopupMessage(msg)
+    } else if (error !== null) {
+      setPopupMessage(error)
+    }
+
+    if (msg !== null || error !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetReportStatus())
+      }, 3000)
+    }
+  }, [msg, error])
 
   const handleSearch = (e) => {
     setSearchItem(e.target.value)
@@ -114,13 +135,11 @@ const ConcernList = () => {
         </div>
 
         <div
-            className={`${menu ? 'lg:grid-cols-2' : 'lg:grid-cols-3'}   grid grid-cols-1 md:mr-10 gap-4 pb-5`}
-          >
+          className={`${menu ? 'lg:grid-cols-2' : 'lg:grid-cols-3'}   grid grid-cols-1 md:mr-10 gap-4 pb-5`}
+        >
 
           {user && user?.role === 'Admin' ? (
-            loading ? (
-              <Loading />
-            ) : (
+            (
               reports
                 ?.filter((item) =>
                   selected === 'all'
@@ -132,23 +151,19 @@ const ConcernList = () => {
                 ))
             )
           ) : user?.user_id.role === 'Tenant' ? (
-            loading ? (
-              <Loading />
-            ) : (
+            (
               reports
                 ?.filter((item) =>
                   selected === 'all'
                     ? item?.sender_id?.user_id?._id === user?.user_id?._id
                     : item?.sender_id?.user_id?._id === user?.user_id?._id &&
-                      selected !== 'all' &&
-                      item.status.toString() === selected.toString(),
+                    selected !== 'all' &&
+                    item.status.toString() === selected.toString(),
                 )
                 .map((val, key) => (
                   <ConcernCard key={key} val={val} num={key} />
                 ))
             )
-          ) : loading ? (
-            <Loading />
           ) : (
             reports
               ?.filter((item) => item.status === selected)
@@ -156,6 +171,13 @@ const ConcernList = () => {
           )}
         </div>
       </div>
+      {showPopup && (
+        <PopUp
+          message={popupMessage}
+          isError={error}
+          onClose={() => setShowPopup(false)}
+        />
+      )}
     </>
   )
 }

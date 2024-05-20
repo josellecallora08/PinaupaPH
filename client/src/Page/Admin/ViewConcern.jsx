@@ -44,30 +44,17 @@ const ViewConcern = () => {
       'Are you sure you want to delete this Issue?',
     )
     if (isConfirmed) {
-  try{
-    setSuccessMessage('Concern and Issue resolved successfully!');
-    setErrorMessage('');
-    setShowPopup(true);
-    dispatch(deleteReport(id, navigate))
-   
-    setTimeout(() => {
-      setShowPopup(false);
-    }, 3000);
-  }catch(error){
-    setErrorMessage('Failed to update tenant account. Please try again later.');
-    setSuccessMessage('');
-    // Handle any additional error handling or logging here if needed
-  }
+      dispatch(deleteReport(id, navigate))
     }
   }
 
   const handleComplete = async () => {
     try {
-      await dispatch(resolveReport(id));
+      dispatch(resolveReport(id));
       setSuccessMessage('Concern and Issue resolved successfully!');
       setErrorMessage('');
       setShowPopup(true); // Show the popup when the issue is resolved
-      
+
       // Automatically hide the popup after 3 seconds
       setTimeout(() => {
         setShowPopup(false);
@@ -79,7 +66,7 @@ const ViewConcern = () => {
     }
   };
 
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (comment === '' || comment === null) {
@@ -321,17 +308,17 @@ const ViewConcern = () => {
                         </div>
                       </form>
                     )) || (
-                      <h1 className="h-full flex items-center text-white font-regular text-3xl">
-                        RESOLVED ISSUE
-                      </h1>
-                    )}
+                        <h1 className="h-full flex items-center text-white font-regular text-3xl">
+                          RESOLVED ISSUE
+                        </h1>
+                      )}
 
-                    {showPopup && (
+                    {/* {showPopup && (
                       <Popup
                         message={successMessage}
                         onClose={() => setShowPopup(false)}
                       />
-                    )}
+                    )} */}
                   </div>
                 </div>
               </div>

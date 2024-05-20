@@ -12,6 +12,10 @@ const reportSlice = createSlice({
     msg: null,
   },
   reducers: {
+    resetReportStatus: (state) => {
+      state.error = null
+      state.msg = null
+    },
     fetchReportStart: (state) => {
       state.loading = true
       state.error = null
@@ -39,7 +43,7 @@ const reportSlice = createSlice({
       state.data = state.data.filter(
         (item) => item._id !== action.payload.response._id,
       )
-      state.msg = action.payload.msg1
+      state.msg = action.payload.msg
     },
     editReportSuccess: (state, action) => {
       state.loading = false
@@ -54,6 +58,7 @@ const reportSlice = createSlice({
 })
 
 export const {
+  resetReportStatus,
   fetchReportStart,
   fetchReportsSuccess,
   fetchReportSuccess,
@@ -218,7 +223,7 @@ export const editReport = (report_id, fields) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    dispatch(fetchReports())
+    dispatch(editReportSuccess(json))
   } catch (err) {
     console.log(err.message)
     dispatch(fetchReportFailed(err.message))
@@ -242,7 +247,7 @@ export const deleteReport = (report_id, navigate) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    dispatch(deleteReport())
+    dispatch(deleteReportSuccess(json))
     navigate('/concern&issue')
   } catch (err) {
     console.log(err.message)
