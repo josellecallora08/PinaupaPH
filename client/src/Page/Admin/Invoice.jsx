@@ -126,7 +126,7 @@ const Invoice = () => {
                             </td>
                             <td className="p-2">
                               {(!val?.isPaid
-                                ? val?.tenant_id.balance
+                                ? val?.tenant_id?.balance
                                 : val?.payment.unpaidBalance
                               )?.toLocaleString('en-PH', {
                                 style: 'currency',
