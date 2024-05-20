@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { IoMdClose } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  editApartment,
-  fetchApartment,
-} from '../../features/apartment'
+import { editApartment, fetchApartment, resetApartmentStatus } from '../../features/apartment'
 import { useParams } from 'react-router-dom'
+import PopUp from '../PopUp'
 const EditApartmentDetails = ({
   setUpdate,
   apartmentId,
@@ -13,8 +11,6 @@ const EditApartmentDetails = ({
 }) => {
   const dispatch = useDispatch()
   const apartment = useSelector((state) => state.apartment.single)
-  const [showPopup, setShowPopup] = useState(false);
-  const [popupMessage, setPopupMessage] = useState('');
   const [fields, setFields] = useState({
     name: apartment?.name || '',
     address: apartment?.address || '',
@@ -26,26 +22,11 @@ const EditApartmentDetails = ({
   const modalRef = useRef(null)
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await dispatch(editApartment(fields, id));
-      setPopupMessage('Apartment updated successfully!');
-      setShowPopup(true);
-      setUpdate(true);
-      setTimeout(() => {
-        setShowPopup(false);
-        setIsEditApartmentFormOpen(false);
-      }, 2000);
-    } catch (error) {
-      console.error(error);
-      setPopupMessage('Failed to update apartment. Please try again.');
-      setShowPopup(true);
-      setTimeout(() => {
-        setShowPopup(false);
-      }, 2000);
-    }
-  };
-  
+    e.preventDefault()
+    dispatch(editApartment(fields, id))
+    setIsEditApartmentFormOpen(false)
+  }
+
   const handleInput = (e) => {
     const { name, value } = e.target
     setFields((components) => ({
@@ -195,13 +176,7 @@ const EditApartmentDetails = ({
               </button>
             </div>
           </form>
-          {showPopup && (
-          <Popup 
-            message={popupMessage} 
-            onClose={() => setShowPopup(false)} 
-            error={error}
-          />
-        )}
+        
         </div>
       )}
     </>

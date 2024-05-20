@@ -27,7 +27,7 @@ const announcementSlice = createSlice({
     fetchAnnouncementSuccess: (state, action) => {
       state.loading = false
       state.single = action.payload.response
-      state.msg = action.payload.msg
+      // state.msg = action.payload.msg
     },
     insertAnnouncementNotification: (state, action) => {
       state.data = [...state.data, action.payload]
