@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { useSelector, useDispatch } from 'react-redux';
 import { editUser } from '../features/user';
-import Popup from '../Component/PopUp'; 
+ 
 const EditTenantDetails = ({ setIsEditTenantDetailForm, tenant }) => {
   const error = useSelector((state) => state.user.error);
   const [showPopup, setShowPopup] = useState(false);
@@ -27,23 +27,12 @@ const EditTenantDetails = ({ setIsEditTenantDetailForm, tenant }) => {
     e.preventDefault();
     try {
       await dispatch(editUser(tenant?.user_id?._id, fields));
-      setPopupMessage('Tenant details updated successfully!');
-      setShowPopup(true);
-      setTimeout(() => {
-        setIsEditTenantDetailForm((prevState) => !prevState);
-        setShowPopup(false);
-      }, 2000); // Close the pop-up after 2 seconds
+      setIsEditTenantDetailForm((prevState) => !prevState);
     } catch (error) {
-      console.error(error);
-      setPopupMessage('Failed to update tenant details. Please try again.');
-      setIsError(true);
-      setShowPopup(true);
-      setTimeout(() => {
-        setIsEditTenantDetailForm(true)
-        setShowPopup(false);
-      }, 2000); // Close the pop-up after 2 seconds
+      console.error('Failed to update tenant details. Please try again.', error);
     }
   };
+  
   
   return (
     <div className="relative">

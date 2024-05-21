@@ -29,22 +29,13 @@ const EditTenantAccount = ({ setIsEditTenantAccountForm, tenant }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(editUser(tenant?.user_id._id, fields));
-      setSuccessMessage('Tenant Account updated successfully!');
-      setErrorMessage('');
-      setShowPopup(true);
-
-      // Automatically hide the pop-up after 3 seconds
-      setTimeout(() => {
-        setShowPopup(false);
-        setIsError(true);
+        await dispatch(editUser(tenant?.user_id._id, fields));
         setIsEditTenantAccountForm((prevState) => !prevState);
-      }, 3000);
     } catch (error) {
-      setErrorMessage('Failed to update tenant details. Please try again later.');
-      setSuccessMessage('');
+        console.error('Failed to update tenant details. Please try again later.', error);
+       
     }
-  };
+};
 
   return (
     <div className="relative">

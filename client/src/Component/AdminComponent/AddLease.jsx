@@ -9,7 +9,7 @@ const AddLease = ({ setModal, selectedUser, setSelectedUser, handleLease }) => {
   const modal = useRef(null)
   const users = useSelector((state) => state.user.data)
   const loading = useSelector((state) => state.docs.loading)
-
+  const [isDownloading, setIsDownloading] = useState(false)
 
   useEffect(() => {
     const closeModal = (e) => {
@@ -23,20 +23,28 @@ const AddLease = ({ setModal, selectedUser, setSelectedUser, handleLease }) => {
     return () => {
       document.removeEventListener('keydown', closeModal)
     }
-  }, [])
+  }, [setModal])
 
   useEffect(() => {
     dispatch(fetchUsers())
-  }, [])
+  }, [dispatch])
 
+  useEffect(() => {
+    console.log('Loading state changed:', loading);
+    if (loading) {
+      setIsDownloading(true);
+    } else if (isDownloading && !loading) {
+      setIsDownloading(false);
+    
+    }
+  }, [loading, isDownloading]);
   const options = users
     ? users.map((user) => ({
-      value: user.user_id._id,
-      label: user.user_id.name,
-    }))
+        value: user.user_id._id,
+        label: user.user_id.name,
+      }))
     : []
 
-  // Custom styles for the Select component
   const customStyles = {
     control: (provided) => ({
       ...provided,
@@ -68,9 +76,9 @@ const AddLease = ({ setModal, selectedUser, setSelectedUser, handleLease }) => {
               options={options}
               isClearable
               className="font-semibold"
+              menuPortalTarget={document.body}
               styles={{
-                ...customStyles,
-                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                menuPortal: base => ({ ...base, zIndex: 9999 }),
               }}
               placeholder="Select Tenant"
             />
@@ -78,11 +86,10 @@ const AddLease = ({ setModal, selectedUser, setSelectedUser, handleLease }) => {
               <button
                 type="submit"
                 className="flex-1 border border-primary-color text-white rounded-md bg-primary-color py-2"
+                
               >
                 {loading ? 'Downloading...' : 'Submit'}
               </button>
-      {/* check */}
-
               <button
                 type="button"
                 onClick={() => setModal((prevState) => !prevState)}
