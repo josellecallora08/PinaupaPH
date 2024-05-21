@@ -112,15 +112,18 @@ module.exports.searchReport = async (req, res) => {
 
 module.exports.createReport = async (req, res) => {
   try {
-    const attached_image = req.file
+    const attached_image = req.files
     const { user_id } = req.query
+    console.log(req.files)
     const { title, description, type, url } = req.body
-    let imageUpload
+    let imageUploads = []
+
     if (title === '' || description === '' || type === '') {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Please fill all the blanks.' })
     }
+
     const tenant = await TENANTMODEL.findOne({ user_id: user_id }).populate(
       'user_id unit_id apartment_id',
     )
@@ -130,19 +133,26 @@ module.exports.createReport = async (req, res) => {
         .json({ error: 'Tenant not found' })
     }
 
-    if (attached_image) {
-      const b64 = Buffer.from(attached_image.buffer).toString('base64')
-      let dataURI = 'data:' + attached_image.mimetype + ';base64,' + b64
-      imageUpload = await cloudinary.uploader.upload(dataURI, {
-        quality: 'auto:low',
-        folder: 'PinaupaPH/Reports',
-        resource_type: 'auto',
-      })
+    if (attached_image && attached_image.length > 0) {
+      for (const file of attached_image) {
+        const b64 = Buffer.from(file.buffer).toString('base64')
+        let dataURI = 'data:' + file.mimetype + ';base64,' + b64
+        const imageUpload = await cloudinary.uploader.upload(dataURI, {
+          quality: 'auto:low',
+          folder: 'PinaupaPH/Reports',
+          resource_type: 'auto',
+        })
 
-      if (!imageUpload || !imageUpload.secure_url) {
-        return res
-          .status(httpStatusCodes.BAD_REQUEST)
-          .json({ error: 'Failed to upload profile image.' })
+        if (!imageUpload || !imageUpload.secure_url) {
+          return res
+            .status(httpStatusCodes.BAD_REQUEST)
+            .json({ error: 'Failed to upload one or more images.' })
+        }
+
+        imageUploads.push({
+          public_id: imageUpload.public_id,
+          image_url: imageUpload.secure_url,
+        })
       }
     }
 
@@ -151,8 +161,7 @@ module.exports.createReport = async (req, res) => {
       title,
       description,
       type,
-      'attached_image.public_id': imageUpload?.public_id,
-      'attached_image.image_url': imageUpload?.secure_url,
+      attached_image: imageUploads, // Save all uploaded images
     })
     if (!response) {
       return res
@@ -164,7 +173,7 @@ module.exports.createReport = async (req, res) => {
     if (!isAdmin) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Tenant not found' })
+        .json({ error: 'Admin not found' })
     }
     const sendNotif = await NOTIFMODEL.create({
       sender_id: user_id,
@@ -176,7 +185,7 @@ module.exports.createReport = async (req, res) => {
     if (!sendNotif) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Failed to report an issue' })
+        .json({ error: 'Failed to send notification' })
     }
 
     return res
@@ -187,6 +196,7 @@ module.exports.createReport = async (req, res) => {
     return res.status(500).json({ error: `Server Error: ${err.message}` })
   }
 }
+
 module.exports.editReport = async (req, res) => {
   const { report_id } = req.query
   const { title, description, type, status } = req.body
