@@ -68,7 +68,6 @@ export const fetchTotalPaid = (year) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    console.log(json)
     dispatch(fetchTotalPaymentSuccess(json))
   } catch (err) {
     dispatch(fetchFailed())
@@ -91,7 +90,6 @@ export const fetchRevenue = (month, year) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    console.log(json.response)
     dispatch(fetchRevenueSuccess(json.response))
   } catch (err) {
     dispatch(fetchFailed())

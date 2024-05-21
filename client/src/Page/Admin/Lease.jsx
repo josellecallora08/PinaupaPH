@@ -41,7 +41,7 @@ const Least = () => {
     e.preventDefault()
     dispatch(createDocument(selectedUser.value))
     dispatch(resetDocumentStatus())
-    setModal((state) => !state)
+    
   }
 
   useEffect(() => {
@@ -56,6 +56,7 @@ const Least = () => {
       setTimeout(() => {
         setShowPopup(false)
         dispatch(resetDocumentStatus())
+        setModal(false)
       }, 3000)
     }
   }, [dispatch, handleLease])

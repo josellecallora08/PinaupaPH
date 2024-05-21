@@ -142,28 +142,22 @@ const handleForcedDelete = () => {
     }))
   }
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      dispatch(createHousehold(id, fields))
-      setPopupMessage('Household added successfully!')
-      setShowPopup(true)
-      setTimeout(() => {
-        setShowPopup(false)
-      }, 2000)
-      setIsAddHouseholdForm((prevState) => !prevState)
+      dispatch(createHousehold(id, fields));
+      setIsAddHouseholdForm((prevState) => !prevState);
       setFields({
         name: '',
         mobile: '',
         birthday: '',
         relationship: '',
-      })
+      });
     } catch (error) {
-      console.error(error)
-      setPopupMessage('Failed to add household. Please try again.')
-      setShowPopup(true)
-      setIsError(true)
+      console.error('Failed to add household. Please try again.', error);
+      
     }
-  }
+  };
+  
 
   const handleDeleteClick = async (contactId) => {
     if (window.confirm('Are you sure you want to delete this household?')) {
@@ -194,6 +188,7 @@ const handleForcedDelete = () => {
       setPopupMessage(msg)
     } else if (error !== null) {
       setPopupMessage(error)
+      
     }
 
     if (msg !== null || error !== null) {

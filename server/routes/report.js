@@ -20,7 +20,7 @@ const storage = multer.memoryStorage()
 const upload = multer({ storage })
 
   
-router.post('/create',upload.single('attached_image'), createReport)
+router.post('/create',upload.array('attached_image', 10), createReport)
 router.patch('/update', editReport)
 router.patch('/update/v1', resolveReport)
 router.delete('/v1', deleteReport)

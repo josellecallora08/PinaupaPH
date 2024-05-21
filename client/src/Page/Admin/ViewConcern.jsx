@@ -4,6 +4,10 @@ import angle from '/angle.svg'
 import send from '/send.svg'
 import { io } from 'socket.io-client'
 import Popup from '../../Component/PopUp'
+import noimage from '/noimage.svg'
+import Slider from 'react-slick'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
 import comments from '/comments.svg'
 import {
   createComment,
@@ -11,7 +15,11 @@ import {
   insertCommentSuccess,
 } from '../../features/comment'
 import { useDispatch, useSelector } from 'react-redux'
-import { IoIosCheckboxOutline } from 'react-icons/io'
+import {
+  IoIosArrowBack,
+  IoIosArrowForward,
+  IoIosCheckboxOutline,
+} from 'react-icons/io'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { LuTrash2 } from 'react-icons/lu'
 import { deleteReport, fetchReport, resolveReport } from '../../features/report'
@@ -50,22 +58,23 @@ const ViewConcern = () => {
 
   const handleComplete = async () => {
     try {
-      dispatch(resolveReport(id));
-      setSuccessMessage('Concern and Issue resolved successfully!');
-      setErrorMessage('');
-      setShowPopup(true); // Show the popup when the issue is resolved
+      dispatch(resolveReport(id))
+      setSuccessMessage('Concern and Issue resolved successfully!')
+      setErrorMessage('')
+      setShowPopup(true) // Show the popup when the issue is resolved
 
       // Automatically hide the popup after 3 seconds
       setTimeout(() => {
-        setShowPopup(false);
-      }, 3000);
+        setShowPopup(false)
+      }, 3000)
     } catch (error) {
-      setErrorMessage('Failed to update tenant account. Please try again later.');
-      setSuccessMessage('');
+      setErrorMessage(
+        'Failed to update tenant account. Please try again later.',
+      )
+      setSuccessMessage('')
       // Handle any additional error handling or logging here if needed
     }
-  };
-
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -129,6 +138,30 @@ const ViewConcern = () => {
       container.scrollTop = container.scrollHeight
     }
   }, [report, comment, handleSubmit])
+
+  const PrevArrow = (props) => {
+    const { className, onClick } = props
+    return (
+      <div onClick={onClick}>
+        <IoIosArrowBack
+          size={30}
+          className={`${className} text-white hover:bg-white hover:text-primary-color rounded-full lg:text-black absolute left-5 z-50 visibility-0`}
+        />
+      </div>
+    )
+  }
+
+  const NextArrow = (props) => {
+    const { className, onClick } = props
+    return (
+      <IoIosArrowForward
+        size={50}
+        onClick={onClick}
+        className={`${className} text-white hover:bg-white hover:text-primary-color rounded-full lg:text-black absolute right-5 z-50 border`}
+      />
+    )
+  }
+
   return (
     <>
       <div className=" overflow-y-auto w-full h-full flex flex-col pb-5 xl:bg-gray text-primary-color">
@@ -178,18 +211,21 @@ const ViewConcern = () => {
                 </div>
 
                 {isDotOpen && (
-                  <div className="absolute top-9 right-6 shadow-sm shadow-dark-gray bg-white  ">
+                  <div
+                    className={`absolute top-9 right-6 shadow-sm shadow-dark-gray bg-white rounded-md overflow-hidden animate-slideIn
+                    transition-transform transform origin-top`}
+                  >
                     {report?.status === false && (
                       <div
                         onClick={handleComplete}
-                        className="py-2 px-10 flex items-center gap-3 cursor-pointer hover:bg-dark-gray/20"
+                        className="flex items-center  gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300 cursor-pointer"
                       >
-                        <IoIosCheckboxOutline size={20} color="green" /> Resolve
+                        <IoIosCheckboxOutline size={20} /> Resolve
                       </div>
                     )}
                     <div
                       onClick={handleDelete}
-                      className="py-2 px-10 flex items-center gap-3 cursor-pointer hover:bg-dark-gray/20"
+                      className="flex items-center  gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300 cursor-pointer"
                     >
                       <LuTrash2 size={20} color="red" /> Delete
                     </div>
@@ -210,16 +246,37 @@ const ViewConcern = () => {
                 </div>
               </div>
               {/*  */}
-              <div className="row-span-4 w-full  bg-white rounded-xl shadow-md overflow-hidden">
-                <div className="relative w-full h-full min-h-60">
-                  <figure className="w-full h-full max-w-[200px] lg:max-w-full m-auto xl:h-[600px]">
+              <div className="row-span-4 w-full  bg-white1 rounded-xl shadow-md overflow-hidden">
+                <div className="relative w-full h-full min-h-60 xl:h-[600px]">
+                  {report?.attached_image.length === 0 ? (
                     <img
-                      src={report?.attached_image?.image_url}
+                      src={noimage}
                       className="w-full h-full object-contain"
-                      alt=""
                     />
-                  </figure>
-                  <div className="absolute top-0 left-5 w-fit h-full flex items-center">
+                  ) : (
+                    <Slider
+                      dots={true}
+                      infinite={true}
+                      slidesToShow={1}
+                      slidesToScroll={1}
+                      prevArrow={<PrevArrow />}
+                      nextArrow={<NextArrow />}
+                    >
+                      {report?.attached_image.map((image, index) => (
+                        <figure
+                          className="w-full h-full max-w-[500px] lg:max-w-full m-auto xl:h-[600px]"
+                          key={index}
+                        >
+                          <img
+                            src={image?.image_url}
+                            className="w-full h-full object-contain"
+                            alt=""
+                          />
+                        </figure>
+                      ))}
+                    </Slider>
+                  )}
+                  {/* <div className="absolute top-0 left-0 w-fit h-full flex items-center">
                     <button className="w-full h-full max-w-10 max-h-14 rounded-md hover:bg-gray/40">
                       <img src={angle} className="w-full h-full" alt="" />
                     </button>
@@ -228,7 +285,7 @@ const ViewConcern = () => {
                     <button className="w-full h-full max-w-10  max-h-14 rounded-md hover:bg-gray/40">
                       <img src={angle} className="w-full h-full" alt="" />
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               {/*  */}
@@ -249,10 +306,10 @@ const ViewConcern = () => {
                     </p>
                   </div>
                 </div>
-                <div className="w-full h-[300px] md:h-full ">
+                <div className="w-full h-[300px] lg:h-full ">
                   <div
                     ref={messageContainerRef}
-                    className={`w-full h-auto md:max-h-[300px] lg:max-h-[350px] max-h-[300px]    font-regular  gap-2 px-5 ${report?.comments.length > 5 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}
+                    className={`w-full h-auto md:max-h-[500px] lg:max-h-[350px] max-h-[300px]    font-regular  gap-2 px-5 ${report?.comments.length > 5 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}
                   >
                     {msg?.map((val, key) => (
                       <div
@@ -308,10 +365,10 @@ const ViewConcern = () => {
                         </div>
                       </form>
                     )) || (
-                        <h1 className="h-full flex items-center text-white font-regular text-3xl">
-                          RESOLVED ISSUE
-                        </h1>
-                      )}
+                      <h1 className="h-full flex items-center text-white font-regular text-3xl">
+                        RESOLVED ISSUE
+                      </h1>
+                    )}
 
                     {/* {showPopup && (
                       <Popup

@@ -9,7 +9,8 @@ const AddHousehold = ({
   handleSubmit,
 }) => {
   // const error = useSelector((state) => state.household.error)
-
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
   return (
     <div className="relative">
       <div className="relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center ">
@@ -113,6 +114,13 @@ const AddHousehold = ({
           </button>
         </div>
       </form>
+      {showPopup && (
+          <Popup 
+            message={popupMessage} 
+            onClose={() => setShowPopup(false)} 
+            error={error}
+          />
+        )}
     </div>
   )
 }

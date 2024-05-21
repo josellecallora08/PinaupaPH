@@ -11,6 +11,7 @@ import EditFamMemTable from '../../Component/EditFamMemTable'
 import { MdOutlineFileDownload } from 'react-icons/md'
 import AddHousehold from '../../Component/AddHousehold'
 import { IoDownloadOutline } from 'react-icons/io5'
+import { IoEyeOutline } from "react-icons/io5";
 
 import TransactionTable from '../../Component/TransactionTable'
 import TransactionMobile from '../../Component/TransactionMobile'
@@ -51,6 +52,7 @@ const TenantProfile = () => {
   const dropdownRef = useRef(null)
   const [selectedFile, setSelectedFile] = useState(null)
   const [changeModal, setChangeModal] = useState(false)
+  const [isDropDownOpen, setIsDropDownOpen] = useState(false)
   // const navigate = useNavigate()
   // const handleDeleteTenant = () => {
   //   const isConfirmed = window.confirm(
@@ -190,7 +192,7 @@ const TenantProfile = () => {
                 : ''
             }
           >
-            Documents
+            Profile
           </button>
           <button
             onClick={() => handleTabClick('transaction')}
@@ -239,19 +241,27 @@ const TenantProfile = () => {
                         Unit - {tenant?.unit_id.unit_no}
                       </h2>
                     </div>
-                    <div
-                      onClick={handleDownload}
-                      className="sm:hidden absolute right-2 cursor-pointer hover:scale-110"
-                    >
-                      <IoDownloadOutline size={28} />
+
+                    <div onClick={() => setIsDropDownOpen(!isDropDownOpen)} className='absolute top-1 right-2 text-2xl cursor-pointer'>
+                      <RxDotsVertical />
                     </div>
 
-                    <button
-                      onClick={handleDownload}
-                      className="sm:flex hidden text-xs lg:p-3 py-2 px-1 pr-2 hover:bg-primary-color/55 duration-300 hover:text-prim   hover:text-primary-color  items-center gap-2 absolute right-0 lg:top-1 bg-primary-color text-white  rounded-md "
-                    >
-                      <MdOutlineFileDownload size={15} /> Lease Agreement
-                    </button>
+                    {isDropDownOpen && (
+                      <div className="absolute right-5 mt-10 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 w-max animate-slideIn">
+                      <div className="py-1">
+                        <button className="flex items-center  gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300">
+                         <IoEyeOutline size={20} className="inline mr-2" /> View Lease
+                        </button>
+                        <button
+                          onClick={handleDownload}
+                          className="flex items-center justify-between gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300"
+                        >
+                          <MdOutlineFileDownload size={20} className="inline mr-2" />
+                          Lease Agreement
+                        </button>
+                      </div>
+                    </div>
+                    )}
                   </div>
 
                   {/*Profile Content */}

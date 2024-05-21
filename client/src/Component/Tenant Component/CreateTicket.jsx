@@ -28,6 +28,9 @@ const CreateTicket = ({
       setisCreateTicket((prevState) => !prevState)
     }
   }
+  const handleDeleteImage = (index) => {
+    setImage((prevImages) => prevImages.filter((_, i) => i !== index))
+  }
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside)
@@ -36,10 +39,6 @@ const CreateTicket = ({
     }
   }, [])
 
-  const handleDeleteImage = () => {
-    setImage(null)
-    setInputKey(Date.now()) // Update input key to force re-render
-  }
 
   return (
     <div className="fixed top-10 left-1/4 w-1/2 h-auto flex items-center justify-center bg-opacity-50 z-50">
@@ -115,48 +114,55 @@ const CreateTicket = ({
               rows={5}
             ></textarea>
           </div>
-          <div>
+
+          <label
+            htmlFor="addImage"
+            className="mt-4 block text-sm font-medium text-dark-gray"
+          >
+            Attachment
+          </label>
+          <div className="mt-1 flex justify-center items-center">
             <label
-              htmlFor="addImage"
-              className="mt-4 block text-sm font-medium text-dark-gray "
+              htmlFor="attached_image"
+              className="cursor-pointer bg-white border border-gray-300 p-2 rounded-md w-full"
             >
-              Attachment
-            </label>
-            <div className="mt-1 flex justify-center items-center ">
-              <label
-                htmlFor="attached_image"
-                className="cursor-pointer bg-white border border-gray-300 p-2 rounded-md w-full"
-              >
-                <span className="text-dark-gray flex items-center gap-2 ">
-                  <CiImageOn color="black" size={25} />
-                  Attach your photo here.
-                </span>
-                <input
-                  key={inputKey} // Use key to force re-render
-                  type="file"
-                  id="attached_image"
-                  name="attached_image"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden "
-                />
-              </label>
-            </div>
-          </div>
-          {attached_image && (
-            <div className="relative flex flex-col items-center mt-2">
-              <img
-                src={URL.createObjectURL(attached_image)}
-                alt="Attached Image"
-                className="w-[10rem] h-auto"
+              <span className="text-dark-gray flex items-center gap-2">
+                <CiImageOn color="black" size={25} />
+                Attach your photos here.
+              </span>
+              <input
+                type="file"
+                id="attached_image"
+                name="attached_image"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+                multiple
               />
-              <button
-                type="button"
-                onClick={handleDeleteImage}
-                className="text-red text-lg font-bold absolute top-0 right-1/4"
-              >
-                <IoMdClose />
-              </button>
+            </label>
+          </div>
+
+          {attached_image.length > 0 && (
+            <div className="relative flex items-center mt-2">
+              {attached_image.map((image, index) => (
+                <div
+                  key={index}
+                  className="relative flex w-[6rem] items-center mt-2"
+                >
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt={`Attached Image ${index + 1}`}
+                    className="w-[15rem] h-auto"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteImage(index)}
+                    className="text-red text-lg font-bold absolute top-0 right-0"
+                  >
+                    <IoMdClose />
+                  </button>
+                </div>
+              ))}
             </div>
           )}
           <div className="flex justify-end mt-5 mb-3 gap-3">

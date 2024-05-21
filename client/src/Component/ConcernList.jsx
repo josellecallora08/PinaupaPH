@@ -13,7 +13,7 @@ const ConcernList = () => {
   const [searchItem, setSearchItem] = useState('')
   const [type, setSelectedType] = useState('')
   const [description, setDescription] = useState('')
-  const [attached_image, setImage] = useState(null)
+  const [attached_image, setImage] = useState([])
   const error = useSelector((state) => state.report.error)
   const msg = useSelector((state) => state.report.msg)
   const user = useSelector((state) => state.auth.user)
@@ -27,9 +27,10 @@ const ConcernList = () => {
   const [popupMessage, setPopupMessage] = useState('')
 
   const handleImageChange = (event) => {
-    const file = event.target.files[0]
-    setImage(file)
-  }
+    const files = Array.from(event.target.files); // Convert FileList to an array
+    setImage((prevImages) => [...prevImages, ...files]); // Append new files to the existing array
+  };
+
   const handleDescriptionChange = (event) => {
     setDescription(event.target.value)
   }
