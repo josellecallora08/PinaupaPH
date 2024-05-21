@@ -73,8 +73,8 @@ const Login = () => {
                 {error}
               </p>
             )}
-            <div className="flex flex-col text-primary-color  mt-3">
-              <label htmlFor="email" className="font-bold mb-2">
+            <div className="flex flex-col text-primary-color mt-3">
+              <label htmlFor="email" className="font-bold mb-3">
                 Email / Username
               </label>
               <input
@@ -87,7 +87,7 @@ const Login = () => {
               />
             </div>
             <div className="flex flex-col text-primary-color mt-3">
-              <label htmlFor="password" className="font-bold mb-2">
+              <label htmlFor="password" className="font-bold mb-3">
                 Password
               </label>
               <input

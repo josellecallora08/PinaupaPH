@@ -177,49 +177,46 @@ const Headbar = ({ menuBtnRef }) => {
             className="w-10 h-10 rounded-full ml-2 cursor-pointer profile-img"
             onClick={handleProfile}
           />
-          {profile && (
-            <div
-              ref={menuBg}
-              className={`absolute top-[4.5rem] right-2 w-48 mt-2 text-black rounded-md shadow-lg bg-white overflow-hidden transition-all duration-300 transform-gpu ${profile ? 'scale-y-100' : 'scale-y-0'} origin-top ease-in-out`}
+         {profile && (
+        <div
+          ref={menuBg}
+          className={"absolute right-5 top-20  bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 w-max animate-slideIn transition-transform transform "}
+        >
+          <div className="py-1">
+            <Link to={'/profile'}>
+              <button
+                className="flex items-center gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300"
+                onClick={handleProfile}
+              >
+                Profile
+              </button>
+            </Link>
+            <Link to={'/terms&condition'}>
+              <button
+                className="flex items-center gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300"
+                onClick={handleProfile}
+              >
+                Terms and Conditions
+              </button>
+            </Link>
+            <Link to={'/contact'}>
+              <button
+                className="flex items-center gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300"
+                onClick={handleProfile}
+              >
+                Contact Us
+              </button>
+            </Link>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex items-center gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300"
             >
-              <ul>
-                <Link to={'/profile'}>
-                  <li
-                    className="px-5 py-2 text-base font-regular hover:bg-primary-color cursor-pointer hover:text-white"
-                    onClick={handleProfile}
-                  >
-                    Profile
-                  </li>
-                </Link>
-                <Link to={'/terms&condition'}>
-                  <li
-                    className="px-5 py-2 text-sm font-regular hover:bg-primary-color cursor-pointer hover:text-white"
-                    onClick={handleProfile}
-                  >
-                    Terms and Conditions
-                  </li>
-                </Link>
-                <Link to={'/contact'}>
-                  <li
-                    className="px-5 py-2 text-base font-regular hover:bg-primary-color cursor-pointer hover:text-white"
-                    onClick={handleProfile}
-                  >
-                    Contact Us
-                  </li>
-                </Link>
-
-                <li className="px-5 py-2 text-base font-regular  hover:bg-primary-color cursor-pointer hover:text-white">
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    className="w-full text-left"
-                  >
-                    Logout
-                  </button>
-                </li>
-              </ul>
-            </div>
-          )}
+              Logout
+            </button>
+          </div>
+        </div>
+      )}
         </div>
       </div>
     </div>
