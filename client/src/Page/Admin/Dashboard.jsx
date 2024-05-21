@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Cookies from 'js-cookie'
 import City from '/city.svg'
 import 'chartkick/chart.js'
 import 'react-circular-progressbar/dist/styles.css'
@@ -7,16 +6,14 @@ import renew from '/AvailRoom.svg'
 import { Bar, Line } from 'react-chartjs-2'
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
-import rent from '/Rent.svg'
 import occupancy from '/occupancy.svg'
+import { fetchApartments } from '../../features/apartment'
 import pay from '/PayDate.svg'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { isLoggedin } from '../../features/authentication'
 import Select from 'react-select'
 import Loading from '../../Component/LoadingComponent/Loading'
-
-import NotificationToast from '../../Component/ToastComponent/NotificationToast'
 import {
   fetchReports,
   fetchRevenue,
@@ -24,9 +21,11 @@ import {
   fetchTotalPaid,
   fetchTotalPayer,
 } from '../../features/dashboard'
+import { fetchUnitsApartment } from '../../features/unit'
 
 const Dashboard = () => {
   const apartment = useSelector((state) => state.apartment.data)
+  const units = useSelector((state) => state.unit.data)
   const [date, setDate] = useState(formatDate(new Date()))
   const loading = useSelector((state) => state.auth.loading)
   const user = useSelector((state) => state.auth.user)
@@ -77,7 +76,6 @@ const Dashboard = () => {
       },
     ],
   }
-  console.log(totalPaid)
   useEffect(() => {
     const month = new Date(date).getMonth()
     const year = new Date(date).getFullYear()
@@ -92,30 +90,28 @@ const Dashboard = () => {
     const month = (date.getMonth() + 1).toString().padStart(2, '0')
     return `${year}-${month}`
   }
-  const option = [
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' },
-    { value: 'option4', label: 'Option 4' },
-    { value: 'option5', label: 'Option 5' },
-    { value: 'option7', label: 'Option 7' },
-    { value: 'option8', label: 'Option 8' },
-  ]
-  const availableRoom = apartment?.filter((item) =>
-    item.units.some((unit) => !unit.occupied)
-  );
-  
+  useEffect(() => {
+    dispatch(fetchApartments())
+  }, [])
+
+  const availableRoom = apartment?.filter(item => item.units?.some(unit => !unit.occupied)).map((val, key) => {
+    return {
+      value: val?._id,
+      label: val?.name
+    }
+  })
+  useEffect(() => {
+    if (selectedOption?.value) {
+      dispatch(fetchUnitsApartment(selectedOption.value));
+    }
+  }, [selectedOption, dispatch]);
   return (
     <>
       {loading ? (
         <Loading />
       ) : (
         <>
-          {/* <NotificationToast
-            message={
-              'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident dolores cum quam itaque a sunt.'
-            }
-          /> */}
+
           <div className="w-full h-full md:h-auto xl:h-full xl:max-h-auto flex flex-col items-start bg-white1">
             <div className="w-11/12 h-fit m-auto py-5 lg:py-0">
               <Link
@@ -288,7 +284,7 @@ const Dashboard = () => {
                       </div>
                     </div>
                   </div>
-            
+
                   <div className="col-span-4 md:col-span-1 row-span-1 bg-white flex rounded-md overflow-hidden shadow-md">
                     <div className="bg-primary-color w-full max-w-20 flex items-center justify-center">
                       <div className="rounded-full p-2 xl:p-3 bg-gray">
@@ -305,26 +301,26 @@ const Dashboard = () => {
                     </div> */}
                         <div className=" w-full flex flex-col gap-2">
                           {/* Select Tag That can Search */}
-                      
-                          
-                              <div className="w-11/12 h-full flex flex-col items-center justify-center ">
 
-                                <Select
-                                  value={selectedOption}
-                                  onChange={setSelectedOption}
-                                  options={option}
-                                  isClearable
-                                  className="w-full "
-                                  placeholder="Choose an Apartment"
-                                  menuPortalTarget={document.body}
-                                  styles={{
-                                    menuPortal: base => ({ ...base, zIndex: 9999 }),
-                                  }}
-                                />
-                              </div>
-                              
-                        <p className="text-[#9e9e9e] text-xs ml-1  xl:text-base ">Available Room: </p>
-               
+
+                          <div className="w-11/12 h-full flex flex-col items-center justify-center ">
+
+                            <Select
+                              value={selectedOption}
+                              onChange={setSelectedOption}
+                              options={availableRoom}
+                              isClearable
+                              className="w-full "
+                              placeholder="Choose an Apartment"
+                              menuPortalTarget={document.body}
+                              styles={{
+                                menuPortal: base => ({ ...base, zIndex: 9999 }),
+                              }}
+                            />
+                          </div>
+
+                          <p className="text-[#9e9e9e] text-xs ml-1  xl:text-base ">Available Room: <span>{units?.filter(unit => !unit.occupied).length || 0}</span></p>
+
                         </div>
                       </div>
                     </div>
@@ -411,7 +407,7 @@ const Dashboard = () => {
                       </div>
                     </div>
                   </div>
-                </div>  
+                </div>
                 <div className="col-span-4 md:col-span-1 row-span-2 pb-3 bg-white rounded-md overflow-hidden shadow-md">
                   <div className="w-11/12 h-full m-auto flex flex-col">
                     <h1 className="text-[#9e9e9e] font-semibold py-2 lg:text-lg">

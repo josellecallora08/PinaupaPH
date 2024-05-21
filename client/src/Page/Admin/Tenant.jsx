@@ -13,15 +13,11 @@ import {
 } from '../../features/user'
 import { fetchApartments } from '../../features/apartment'
 import { fetchUnits, fetchUnitsApartment } from '../../features/unit'
-import SearchLoading from '../../Component/LoadingComponent/Loading'
-import MessageToast from '../../Component/ToastComponent/MessageToast'
-import NotificationToast from '../../Component/ToastComponent/NotificationToast'
 import Popup from '../../Component/PopUp'
 const Tenant = () => {
   const [searchItem, setSearchItem] = useState('')
   const [isAddTenantFormOpen, setIsAddTenantFormOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState('all')
-  const [isVisible, setIsVisible] = useState(true)
   const menu = useSelector((state) => state.toggle.sidebar)
   const [showPopup, setShowPopup] = useState(false)
   const [popupMessage, setPopupMessage] = useState('')
