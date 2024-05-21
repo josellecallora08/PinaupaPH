@@ -35,14 +35,16 @@ const REPORTMODEL = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    attached_image: {
-      public_id:{
-        type: String
+    attached_image: [
+      {
+        public_id: {
+          type: String,
+        },
+        image_url: {
+          type: String,
+        },
       },
-      image_url:{
-        type: String
-      }
-    },
+    ],
     comments: [COMMENTMODEL],
   },
   { timestamps: true },

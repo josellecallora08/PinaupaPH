@@ -69,16 +69,12 @@ function App() {
       <Route
         path="/contact"
         element={
-          user ? (
-            <Layout className="bg-white1">
-              <ContactUsAdmin />
-            </Layout>
-          ) : (
-            <Navigate to={'/'} />
-          )
+          <Layout className="bg-white1">
+            <ContactUsAdmin />
+          </Layout>
         }
       />
-    
+
       <Route
         path="/dashboard"
         element={

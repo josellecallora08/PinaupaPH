@@ -15,7 +15,7 @@ const CreateTicket = ({
   setImage,
   type,
   setSelectedType,
-
+  handleImageChange,
   handleDescriptionChange,
   handleTypeChange,
   handleSubmit,
@@ -29,9 +29,9 @@ const CreateTicket = ({
     }
   }
   const handleDeleteImage = (index) => {
-    setAttachedImages((prevImages) => prevImages.filter((_, i) => i !== index));
-  };
-  
+    setImage((prevImages) => prevImages.filter((_, i) => i !== index))
+  }
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside)
     return () => {
@@ -39,13 +39,7 @@ const CreateTicket = ({
     }
   }, [])
 
- 
-  const [attachedImages, setAttachedImages] = useState([]);
-  
-  const handleImageChange = (event) => {
-    const files = Array.from(event.target.files);
-    setAttachedImages((prevImages) => [...prevImages, ...files]);
-  };
+
   return (
     <div className="fixed top-10 left-1/4 w-1/2 h-auto flex items-center justify-center bg-opacity-50 z-50">
       <div ref={modalRef} className="lg:w-9/12 bg-white rounded-lg relative">
@@ -120,48 +114,57 @@ const CreateTicket = ({
               rows={5}
             ></textarea>
           </div>
-    
-          <label htmlFor="addImage" className="mt-4 block text-sm font-medium text-dark-gray">
-        Attachment
-      </label>
-      <div className="mt-1 flex justify-center items-center">
-        <label htmlFor="attached_images" className="cursor-pointer bg-white border border-gray-300 p-2 rounded-md w-full">
-          <span className="text-dark-gray flex items-center gap-2">
-            <CiImageOn color="black" size={25} />
-            Attach your photos here.
-          </span>
-          <input
-            type="file"
-            id="attached_images"
-            name="attached_images"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="hidden"
-            multiple
-          />
-        </label>
-      </div>
 
-      {attachedImages.length > 0 && (
-        <div className="relative flex items-center mt-2">
-          {attachedImages.map((image, index) => (
-            <div key={index} className="relative flex w-[6rem] items-center mt-2">
-              <img
-                src={URL.createObjectURL(image)}
-                alt={`Attached Image ${index + 1}`}
-                className="w-[15rem] h-auto"
+          <label
+            htmlFor="addImage"
+            className="mt-4 block text-sm font-medium text-dark-gray"
+          >
+            Attachment
+          </label>
+          <div className="mt-1 flex justify-center items-center">
+            <label
+              htmlFor="attached_image"
+              className="cursor-pointer bg-white border border-gray-300 p-2 rounded-md w-full"
+            >
+              <span className="text-dark-gray flex items-center gap-2">
+                <CiImageOn color="black" size={25} />
+                Attach your photos here.
+              </span>
+              <input
+                type="file"
+                id="attached_image"
+                name="attached_image"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+                multiple
               />
-              <button
-                type="button"
-                onClick={() => handleDeleteImage(index)}
-                className="text-red text-lg font-bold absolute top-0 right-0"
-              >
-                <IoMdClose />
-              </button>
+            </label>
+          </div>
+
+          {attached_image.length > 0 && (
+            <div className="relative flex items-center mt-2">
+              {attached_image.map((image, index) => (
+                <div
+                  key={index}
+                  className="relative flex w-[6rem] items-center mt-2"
+                >
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt={`Attached Image ${index + 1}`}
+                    className="w-[15rem] h-auto"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteImage(index)}
+                    className="text-red text-lg font-bold absolute top-0 right-0"
+                  >
+                    <IoMdClose />
+                  </button>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      )}
+          )}
           <div className="flex justify-end mt-5 mb-3 gap-3">
             <button
               type="submit"

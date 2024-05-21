@@ -48,10 +48,11 @@ const Login = () => {
               <img src={logo} alt="PinaupaPH logo" className="w-full" />
             </Link>
           </div>
-          <Link to="/contact">
-            <button className="hidden lg:block px-5 py-2 bg-primary-color text-white font-semibold rounded-md shadow-lg hover:bg-primary-dark transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-color">
-              Contact Us
-            </button>
+          <Link
+            to="/contact"
+            className="hidden lg:block px-5 py-2 bg-primary-color text-white font-semibold rounded-md shadow-lg hover:bg-primary-dark transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-color"
+          >
+            Contact Us
           </Link>
         </div>
 
@@ -64,7 +65,11 @@ const Login = () => {
           <p className="lg:hidden text-lg text-dark-gray">
             Sign in your account
           </p>
-          <form className="lg:w-1/3 lg:ml-20 lg:rounded-md lg:p-10 lg:h-fit lg:bg-white1 lg:shadow-md">
+
+          <form
+           
+            className="lg:w-1/3 lg:ml-20 lg:rounded-md lg:p-10 lg:h-fit lg:bg-white1 lg:shadow-md"
+          >
             <h1 className="lg:text-3xl lg:font-semibold lg:block text-primary-color hidden">
               Sign In
             </h1>
@@ -99,29 +104,25 @@ const Login = () => {
                 value={credentials.password}
               />
             </div>
-            <div className='flex items-center justify-between my-3'>
+            <div className="flex items-center justify-between my-3">
               <Link
                 to="forgot-password"
                 className="  text-dark-gray font-regular  cursor-pointer hover:underline hover:text-primary-color"
               >
                 Forgot Password?
               </Link>
-              
-                <Link to="/contact">
-                  <button className="lg:hidden text-dark-gray font-regular  cursor-pointer hover:underline hover:text-primary-color">
-                    Contact Us
-                  </button>
-                </Link>
-            
+
+              <Link to="/contact">
+                <button className="lg:hidden text-dark-gray font-regular  cursor-pointer hover:underline hover:text-primary-color">
+                  Contact Us
+                </button>
+              </Link>
             </div>
 
             {loading ? (
               <ButtonLoading msg={'Logging In...'} />
             ) : (
-              <button
-                onClick={handleSubmit}
-                className="bg-dark-blue w-full p-3 rounded-md mt-4 mb-5 lg:mb-0 text-white tracking-wider font-semibold hover:opacity-80"
-              >
+              <button  onClick={handleSubmit} className="bg-dark-blue w-full p-3 rounded-md mt-4 mb-5 lg:mb-0 text-white tracking-wider font-semibold hover:opacity-80">
                 Sign in
               </button>
             )}

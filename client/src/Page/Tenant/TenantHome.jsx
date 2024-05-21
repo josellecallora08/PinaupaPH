@@ -18,7 +18,6 @@ const TenantHome = () => {
   const announcement = useSelector((state) => state.announcement.single)
   const report = useSelector((state) => state.report.data)
   const dispatch = useDispatch()
-  console.log(report)
   useEffect(() => {
     dispatch(isLoggedin())
     dispatch(tenantInvoice())
