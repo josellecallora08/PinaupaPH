@@ -1,25 +1,25 @@
 const mongoose = require('mongoose')
 
-const PAYMENTMODEL = new mongoose.Schema(
-  {
-    receipt_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'receipt',
-      required: true,
-    },
-    payment_method: {
-      type: String,
-    },
-    payment_status: {
-      type: Boolean,
-      default: false,
-    },
-    date_payment: {
-      type: Date,
-    },
-  },
-  { timestamps: true },
-)
+// const PAYMENTMODEL = new mongoose.Schema(
+//   {
+//     receipt_id: {
+//       type: mongoose.Schema.Types.ObjectId,
+//       ref: 'receipt',
+//       required: true,
+//     },
+//     payment_method: {
+//       type: String,
+//     },
+//     payment_status: {
+//       type: Boolean,
+//       default: false,
+//     },
+//     date_payment: {
+//       type: Date,
+//     },
+//   },
+//   { timestamps: true },
+// )
 
 const HOUSEHOLDMODEL = new mongoose.Schema(
   {
@@ -84,7 +84,7 @@ const TENANTMODEL = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
-    payment: [PAYMENTMODEL],
+    // payment: [PAYMENTMODEL],
     household: [HOUSEHOLDMODEL],
     pet: [PETMODEL]
   },
