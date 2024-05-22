@@ -37,10 +37,10 @@ const ApartmentCard = ({ val, num }) => {
             </p>
           </div>
         </div>
-        <div className="w-full h-full max-w-32 border bg-primary-color">
+        <div className="w-full h-full max-w-28 border bg-primary-color">
           <div className="w-full h-full flex flex-col items-center justify-center">
-            <p className="font-semibold text-2xl text-white font-serif">APT</p>
-            <p className="font-bold text-4xl text-white">00{num + 1}</p>
+            <p className="font-semibold text-xl text-white font-serif">APT</p>
+            <p className="font-bold text-2xl text-white">00{num + 1}</p>
           </div>
         </div>
       </Link>

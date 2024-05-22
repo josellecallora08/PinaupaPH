@@ -4,11 +4,11 @@ import { AiFillCloseSquare } from 'react-icons/ai'
 const ReadRow = ({ id, contact, handleEditClick, handleDeleteClick }) => {
   return (
     <tr className="text-center">
-      <td className="px-4 py-2 lg:text-base md:text-base text-xs">{contact.name}</td>
-      <td className="px-4 py-2 lg:text-base md:text-base text-xs">{contact.mobile}</td>
-      <td className="px-4 py-2 lg:text-base md:text-base text-xs">{contact.relationship}</td>
-      <td className="px-4 py-2 lg:text-base md:text-base text-[10px]">{new Date(contact.birthday).toDateString()}</td>
-      <td className="px-4 py-2 ">
+      <td className="px-4 py-2 lg:text-base md:text-base text-xs pt-2">{contact.name}</td>
+      <td className="px-4 py-2 lg:text-base md:text-base text-xs pt-2">{contact.mobile}</td>
+      <td className="px-4 py-2 lg:text-base md:text-base text-xs pt-2">{contact.relationship}</td>
+      <td className="px-4 py-2 lg:text-base md:text-base text-[10px] pt-2">{new Date(contact.birthday).toDateString()}</td>
+      <td className="px-4 py-2 pt-2 ">
         <button
           type="button"
           onClick={(event) => handleEditClick(event, contact)}

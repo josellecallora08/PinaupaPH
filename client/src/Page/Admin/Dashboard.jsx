@@ -36,7 +36,7 @@ const Dashboard = () => {
   const notifications = useSelector((state) => state.notif.data)
   const revenue = useSelector((state) => state.dash.chart)
   const menu = useSelector((state) => state.toggle.sidebar)
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(null)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(isLoggedin())
@@ -94,24 +94,25 @@ const Dashboard = () => {
     dispatch(fetchApartments())
   }, [])
 
-  const availableRoom = apartment?.filter(item => item.units?.some(unit => !unit.occupied)).map((val, key) => {
-    return {
-      value: val?._id,
-      label: val?.name
-    }
-  })
+  const availableRoom = apartment
+    ?.filter((item) => item.units?.some((unit) => !unit.occupied))
+    .map((val, key) => {
+      return {
+        value: val?._id,
+        label: val?.name,
+      }
+    })
   useEffect(() => {
     if (selectedOption?.value) {
-      dispatch(fetchUnitsApartment(selectedOption.value));
+      dispatch(fetchUnitsApartment(selectedOption.value))
     }
-  }, [selectedOption, dispatch]);
+  }, [selectedOption, dispatch])
   return (
     <>
       {loading ? (
         <Loading />
       ) : (
         <>
-
           <div className="w-full h-full md:h-auto xl:h-full xl:max-h-auto flex flex-col items-start bg-white1">
             <div className="w-11/12 h-fit m-auto py-5 lg:py-0">
               <Link
@@ -217,7 +218,7 @@ const Dashboard = () => {
                                     <p className="font-semibold">
                                       {val?.sender_id?.name}
                                     </p>
-                                    <p className="text-xs overflow-hidden text-ellipsis text-nowrap">
+                                    <p className="text-xs overflow-hidden w-40 text-ellipsis text-nowrap">
                                       {val?.description}
                                     </p>
                                   </div>
@@ -302,25 +303,54 @@ const Dashboard = () => {
                         <div className=" w-full flex flex-col gap-2">
                           {/* Select Tag That can Search */}
 
-
-                          <div className="w-11/12 h-full flex flex-col items-center justify-center ">
-
+                          <div className="w-11/12 h-full flex flex-col pt-2 items-center justify-center ">
+                          
                             <Select
                               value={selectedOption}
                               onChange={setSelectedOption}
                               options={availableRoom}
                               isClearable
-                              className="w-full "
+                              className="w-full"
                               placeholder="Choose an Apartment"
                               menuPortalTarget={document.body}
                               styles={{
                                 menuPortal: base => ({ ...base, zIndex: 9999 }),
+                                control: (base) => ({
+                                  ...base,
+                                  fontSize: '14px', // adjust the font size as needed
+                                }),
+                                valueContainer: (base) => ({
+                                  ...base,
+                                  padding: '2px', // adjust the padding as needed
+                                  fontSize: '14px', // adjust the font size as needed
+                                }),
+                                menu: (base) => ({
+                                  ...base,
+                                  fontSize: '14px', // adjust the font size as needed
+                                }),
+                                singleValue: (base) => ({
+                                  ...base,
+                                  fontSize: '14px', // adjust the font size as needed
+                                }),
+                                placeholder: (base) => ({
+                                  ...base,
+                                  fontSize: '14px', // adjust the font size as needed
+                                }),
+                                input: (base) => ({
+                                  ...base,
+                                  fontSize: '14px', // adjust the font size as needed
+                                }),
                               }}
                             />
                           </div>
 
-                          <p className="text-[#9e9e9e] text-xs ml-1  xl:text-base ">Available Room: <span>{units?.filter(unit => !unit.occupied).length || 0}</span></p>
-
+                          <p className="text-[#9e9e9e] text-sm ml-1 mb-1  xl:text-base ">
+                            Available Room:{' '}
+                            <span>
+                              {units?.filter((unit) => !unit.occupied).length ||
+                                0}
+                            </span>
+                          </p>
                         </div>
                       </div>
                     </div>

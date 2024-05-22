@@ -17,7 +17,7 @@ const Calendars = ({ user, invoice }) => {
     }
 
     if (date.getDate() === invoiceDueDate.getDate() && date.getMonth() === invoiceDueDate.getMonth()) {
-      return 'border-2 bg-red rounded-md shadow-lg'; // Apply styles for the due date
+      return 'border-2 border-red bg-red/55 rounded-md shadow-lg'; // Apply styles for the due date
     }
 
     if (date.getDate() === invoiceDatePaid.getDate() && date.getMonth() === invoiceDatePaid.getMonth()) {
@@ -46,7 +46,7 @@ const Calendars = ({ user, invoice }) => {
     if (date.getDate() === userMonthlyDue.getDate()) {
       return (
         <span className="" role="img" aria-label="money with wings">
-          💵
+          🔔
         </span>
       ); // Show emoji on the monthly due date
     }

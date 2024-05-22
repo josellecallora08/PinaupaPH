@@ -43,6 +43,10 @@ const householdSlice = createSlice({
       )
       state.msg = action.payload.msg
     },
+    resetHouseholdStatus: (state) => {
+      state.error = null
+      state.msg = null
+    },
     fetchFailed: (state, action) => {
       state.loading = false
       state.error = action.payload
@@ -57,6 +61,7 @@ export const {
   fetchFailed,
   deleteHouseholdSuccess,
   editHouseholdSuccess,
+  resetHouseholdStatus,
   insertHouseholdsSuccess,
 } = householdSlice.actions
 
