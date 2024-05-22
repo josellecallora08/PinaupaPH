@@ -10,6 +10,10 @@ const householdSlice = createSlice({
     msg: null,
   },
   reducers: {
+    resetHouseholdStatus: (state) => {
+      state.error = null
+      state.msg = null
+    },
     fetchHouseholdStart: (state) => {
       state.loading = true
       state.error = null
@@ -112,7 +116,6 @@ export const fetchHousehold = (user_id, household_id) => async (dispatch) => {
     }
 
     const json = await response.json()
-    console.log(json)
     dispatch(fetchHouseholdSuccess(json.response))
   } catch (err) {
     dispatch(fetchFailed(err.message))
@@ -164,12 +167,10 @@ export const editHousehold =
 
       if (!response.ok) {
         const json = await response.json()
-        console.log('|upodate', json)
         throw new Error(json.error)
       }
 
       const json = await response.json()
-      console.log(json)
       dispatch(fetchHouseholds(user_id))
     } catch (err) {
       dispatch(fetchFailed(err.message))
@@ -192,12 +193,10 @@ export const deleteHousehold = (user_id, household_id) => async (dispatch) => {
 
     if (!response.ok) {
       const json = await response.json()
-      console.log(json)
       throw new Error(json.error)
     }
 
     const json = await response.json()
-    console.log('hh', json)
     dispatch(deleteHouseholdSuccess(json))
   } catch (err) {
     dispatch(fetchFailed(err.message))

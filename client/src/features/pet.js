@@ -8,6 +8,7 @@ const petSlice = createSlice({
     error: null,
     data: null,
     single: null,
+    msg: null
   },
   reducers: {
     fetchPetStart: (state, action) => {
@@ -39,6 +40,7 @@ const petSlice = createSlice({
       state.data = state.data.filter(
         (pet) => pet._id !== action.payload.response._id,
       )
+      state.msg = action.payload.msg
     },
     resetPetStatus: (state) => {
       state.error = null
@@ -172,7 +174,6 @@ export const editPet = (user_id, pet_id, fields) => async (dispatch) => {
     const json = await response.json()
     dispatch(fetchPets(user_id))
   } catch (err) {
-    console.log('Unable to update pet')
     dispatch(actionPetFailed(err.message))
   }
 }
@@ -193,13 +194,14 @@ export const deletePet = (user_id, pet_id) => async (dispatch) => {
     )
     if (!response.ok) {
       const json = await response.json()
+      console.log(json)
       throw new Error(json.error)
     }
 
     const json = await response.json()
+    console.log(json)
     dispatch(deletePetSuccess(json))
   } catch (err) {
-    console.log('Unable to delete pet')
     dispatch(actionPetFailed(err.message))
   }
 }

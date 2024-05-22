@@ -45,6 +45,11 @@ const reportSlice = createSlice({
       )
       state.msg = action.payload.msg
     },
+    resolveReportSuccess: (state, action) => {
+      state.loading = false
+      state.single = {...state.single, ...action.payload.response}
+      state.msg = action.payload.msg
+    },
     editReportSuccess: (state, action) => {
       state.loading = false
       state.data = state.data.map((item) =>
@@ -52,7 +57,7 @@ const reportSlice = createSlice({
           ? action.payload.response
           : item,
       )
-      state.msg = action.payload.msg1
+      state.msg = action.payload.msg
     },
   },
 })
@@ -64,6 +69,7 @@ export const {
   fetchReportSuccess,
   insertReportSuccess,
   fetchReportFailed,
+  resolveReportSuccess,
   deleteReportSuccess,
   editReportSuccess,
 } = reportSlice.actions
@@ -208,7 +214,7 @@ export const resolveReport = (report_id) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    dispatch(fetchReports())
+    dispatch(resolveReportSuccess(json))
   } catch (err) {
     console.log(err.message)
     dispatch(fetchReportFailed(err.message))
