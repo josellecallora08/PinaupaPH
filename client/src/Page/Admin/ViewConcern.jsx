@@ -2,26 +2,19 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import send from '/send.svg'
 import { io } from 'socket.io-client'
-import Popup from '../../Component/PopUp'
 import noimage from '/noimage.svg'
 import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loader
 import { Carousel } from 'react-responsive-carousel'
 import comments from '/comments.svg'
-import {
-  createComment,
-  insertCommentSuccess,
-} from '../../features/comment'
+import { createComment, insertCommentSuccess } from '../../features/comment'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  IoIosArrowBack,
-  IoIosArrowForward,
-  IoIosCheckboxOutline,
-} from 'react-icons/io'
+import { IoIosCheckboxOutline } from 'react-icons/io'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { LuTrash2 } from 'react-icons/lu'
-import { deleteReport, fetchReport, resolveReport } from '../../features/report'
+import { deleteReport, fetchReport, resetReportStatus, resolveReport } from '../../features/report'
 import { fetchComments } from '../../features/comment'
 import { isLoggedin } from '../../features/authentication'
+import PopUp from '../../Component/PopUp'
 
 const socket = io(`${import.meta.env.VITE_URL}/`)
 
@@ -37,12 +30,15 @@ const ViewConcern = () => {
   const messageContainerRef = useRef(null)
   const [isDotOpen, setIsDotOpen] = useState(false)
   const navigate = useNavigate()
-  const [successMessage, setSuccessMessage] = useState('')
+  const [popupMessage, setPopupMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [showPopup, setShowPopup] = useState(false)
+  const msgReport = useSelector((state) => state.report.msg)
+  const errorReport = useSelector((state) => state.report.error)
   const toggleDot = () => {
     setIsDotOpen(!isDotOpen)
   }
+
   const handleDelete = async () => {
     const isConfirmed = window.confirm(
       'Are you sure you want to delete this Issue?',
@@ -53,23 +49,7 @@ const ViewConcern = () => {
   }
 
   const handleComplete = async () => {
-    try {
-      dispatch(resolveReport(id))
-      setSuccessMessage('Concern and Issue resolved successfully!')
-      setErrorMessage('')
-      setShowPopup(true) // Show the popup when the issue is resolved
-
-      // Automatically hide the popup after 3 seconds
-      setTimeout(() => {
-        setShowPopup(false)
-      }, 3000)
-    } catch (error) {
-      setErrorMessage(
-        'Failed to update tenant account. Please try again later.',
-      )
-      setSuccessMessage('')
-      // Handle any additional error handling or logging here if needed
-    }
+    dispatch(resolveReport(id))
   }
 
   const handleSubmit = async (e) => {
@@ -134,9 +114,21 @@ const ViewConcern = () => {
       container.scrollTop = container.scrollHeight
     }
   }, [report, comment, handleSubmit])
+  useEffect(() => {
+    if (msgReport !== null) {
+      setPopupMessage(msgReport)
+    } else if (errorReport !== null) {
+      setPopupMessage(errorReport)
+    }
 
-
-
+    if (msgReport !== null || errorReport !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetReportStatus())
+      }, 3000)
+    }
+  }, [msgReport, errorReport])
   return (
     <>
       <div className=" overflow-y-auto w-full h-full flex flex-col pb-5 xl:bg-gray text-primary-color">
@@ -229,10 +221,7 @@ const ViewConcern = () => {
                       className="w-full h-full object-contain"
                     />
                   ) : (
-                    
-                    <Carousel
-                    infiniteLoop={true}
-                    swipeable={true}>
+                    <Carousel infiniteLoop={true} swipeable={true}>
                       {report?.attached_image.map((image, index) => (
                         <figure
                           className="w-full h-full max-w-[500px] lg:max-w-full m-auto xl:h-[600px]"
@@ -341,12 +330,13 @@ const ViewConcern = () => {
                       </h1>
                     )}
 
-                    {/* {showPopup && (
-                      <Popup
-                        message={successMessage}
+                    {showPopup && (
+                      <PopUp
+                        message={popupMessage}
                         onClose={() => setShowPopup(false)}
+                        isError={errorReport}
                       />
-                    )} */}
+                    )}
                   </div>
                 </div>
               </div>

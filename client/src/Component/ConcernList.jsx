@@ -9,6 +9,7 @@ import CreateTicket from './Tenant Component/CreateTicket'
 import PopUp from './PopUp'
 
 const ConcernList = () => {
+  // /view-concern/:id
   const [isCreateTicket, setisCreateTicket] = useState(false)
   const [searchItem, setSearchItem] = useState('')
   const [type, setSelectedType] = useState('')

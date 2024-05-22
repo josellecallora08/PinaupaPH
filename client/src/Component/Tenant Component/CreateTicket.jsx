@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from 'react'
 import { CiImageOn } from 'react-icons/ci'
 import { IoMdClose } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
-import { createReport } from '../../features/report'
-
+import { createReport, resetReportStatus } from '../../features/report'
+import PopUp from '../../Component/PopUp'
 const CreateTicket = ({
   id,
   setisCreateTicket,
@@ -22,7 +22,10 @@ const CreateTicket = ({
 }) => {
   const modalRef = useRef(null)
   const [inputKey, setInputKey] = useState(Date.now()) // Add state for input key
-
+  const [popupMessage, setPopupMessage] = useState('')
+  const [showPopup, setShowPopup] = useState(false)
+  const error = useSelector((state) => state.report.error);
+  const msg = useSelector((state) => state.report.msg);
   const handleClickOutside = (event) => {
     if (modalRef.current && !modalRef.current.contains(event.target)) {
       setisCreateTicket((prevState) => !prevState)
@@ -38,7 +41,22 @@ const CreateTicket = ({
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+  
+  useEffect(() => {   
+    if (msg !== null) {
+      setPopupMessage(msg)
+    } else if (error !== null) {
+      setPopupMessage(error)
+    }
 
+    if (msg !== null || error !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetReportStatus())
+      }, 3000)
+    }
+  }, [msg, error])
 
   return (
     <div className="fixed top-10 left-1/4 w-1/2 h-auto flex items-center justify-center bg-opacity-50 z-50">
@@ -93,9 +111,12 @@ const CreateTicket = ({
               <option value="" disabled hidden>
                 Maintenance Request
               </option>
-              <option value="plumbing">Plumbing</option>
-              <option value="electrical">Electrical</option>
-              <option value="general">General</option>
+              <option value="Plumbing Request">Plumbing</option>
+              <option value="Electrical Request">Electrical</option>
+              <option value="General Request">General</option>
+              <option value="Painting Request">Painting</option>
+              <option value="Roofing Request">Roofing   </option>
+              <option value=" Safety And Security Request"> Safety and Security</option>
             </select>
           </div>
           <div className="mt-4">
@@ -181,6 +202,13 @@ const CreateTicket = ({
             </button>
           </div>
         </form>
+        {showPopup && (
+        <PopUp
+          message={popupMessage}
+          onClose={() => setShowPopup(false)}
+          error={error}
+        />
+      )}
       </div>
     </div>
   )

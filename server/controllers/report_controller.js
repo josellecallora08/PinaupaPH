@@ -11,15 +11,17 @@ module.exports.resolveReport = async (req, res) => {
   try {
     const report = await REPORTMODEL.findByIdAndUpdate(report_id, {
       status,
+    }).populate({
+      path: 'sender_id',
+      populate: 'user_id unit_id apartment_id'
     })
     if (!report)
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to edit report' })
 
-    return res.status(httpStatusCodes.OK).json({ msg: 'Report updated' })
+    return res.status(httpStatusCodes.OK).json({ msg: 'Report has been resolved.', response:report })
   } catch (err) {
-    console.log(err.message)
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: 'Unable to update report due to server error' })
@@ -114,7 +116,6 @@ module.exports.createReport = async (req, res) => {
   try {
     const attached_image = req.files
     const { user_id } = req.query
-    console.log(req.files)
     const { title, description, type, url } = req.body
     let imageUploads = []
 
@@ -216,7 +217,6 @@ module.exports.editReport = async (req, res) => {
       .status(httpStatusCodes.OK)
       .json({ msg: 'Report updated', response })
   } catch (err) {
-    console.log(err.message)
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: 'Unable to update report due to server error' })
@@ -236,7 +236,6 @@ module.exports.deleteReport = async (req, res) => {
       .status(httpStatusCodes.OK)
       .json({ msg: 'Report has been deleted.', response })
   } catch (err) {
-    console.log(err.message)
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: 'Unable to delete report due to server error' })
@@ -259,7 +258,6 @@ module.exports.fetchReports = async (req, res) => {
 
     return res.status(httpStatusCodes.OK).json({ response })
   } catch (err) {
-    console.log(err.message)
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: 'Unable to fetch reports due to server error' })
@@ -284,7 +282,6 @@ module.exports.fetchReport = async (req, res) => {
 
     return res.status(httpStatusCodes.OK).json({ response })
   } catch (err) {
-    console.log(err.message)
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: 'Unable to fetch report due to server error' })
@@ -308,7 +305,6 @@ module.exports.createComment = async (req, res) => {
       .status(httpStatusCodes.OK)
       .json({ msg: 'Comment sent.', response })
   } catch (err) {
-    console.log(err.message)
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: err.message })
@@ -338,7 +334,6 @@ module.exports.editComment = async (req, res) => {
     await response.save()
     return res.status(httpStatusCodes.OK).json({ msg: 'Comment updated' })
   } catch (err) {
-    console.log(err.message)
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: `Server Error: ${err.message}` })
@@ -368,7 +363,6 @@ module.exports.deleteComment = async (req, res) => {
     await report.save()
     return res.status(httpStatusCodes.OK).json({ msg: 'Comment deleted.' })
   } catch (err) {
-    console.log(err.message)
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: `Server Error: ${err.message}` })
@@ -386,7 +380,6 @@ module.exports.fetchComments = async (req, res) => {
 
     return res.status(httpStatusCodes.OK).json({ response: report.comments })
   } catch (err) {
-    console.log(err.message)
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: `Server Error: ${err.message}` })
@@ -411,7 +404,6 @@ module.exports.fetchComment = async (req, res) => {
     }
     return res.status(httpStatusCodes.OK).json(comment)
   } catch (error) {
-    console.log(err.message)
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: `Server Error: ${err.message}` })

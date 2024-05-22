@@ -25,9 +25,7 @@ const TenantHome = () => {
     dispatch(recentAnnouncement())
     dispatch(fetchReports())
   }, [])
-  useEffect(() => {
-    console.log('lol')
-  }, [])
+  
   return (
     <>
       <style jsx>{`
@@ -95,7 +93,7 @@ const TenantHome = () => {
                             user?.user_id?._id,
                         )
                         .map((val, key) => (
-                          <tr className="border-b border-dark-gray">
+                          <tr key={key} className="border-b border-dark-gray">
                             <Link to={`/view-concern/${val?._id}`}></Link>
                             <td className="px-4 py-2" key={key}>
                               <div className="flex items-center gap-3 w-fit">
