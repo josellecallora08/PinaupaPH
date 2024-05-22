@@ -372,7 +372,7 @@ const handleForcedDelete = () => {
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
                           <p className="">{tenant?.user_id?.name}</p>
                           <p className="">{birthday}</p>
-                          <p className="">+63{tenant?.user_id?.mobile_no}</p>
+                          <p className="">{tenant?.user_id?.mobile_no}</p>
                           <p className="">{tenant?.user_id?.email}</p>
                         </div>
                       </div>

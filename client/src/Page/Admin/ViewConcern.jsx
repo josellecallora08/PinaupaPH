@@ -1,17 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import angle from '/angle.svg'
 import send from '/send.svg'
 import { io } from 'socket.io-client'
 import Popup from '../../Component/PopUp'
 import noimage from '/noimage.svg'
-import Slider from 'react-slick'
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
+import 'react-responsive-carousel/lib/styles/carousel.min.css' // requires a loader
+import { Carousel } from 'react-responsive-carousel'
 import comments from '/comments.svg'
 import {
   createComment,
-  deleteComment,
   insertCommentSuccess,
 } from '../../features/comment'
 import { useDispatch, useSelector } from 'react-redux'
@@ -25,7 +22,6 @@ import { LuTrash2 } from 'react-icons/lu'
 import { deleteReport, fetchReport, resolveReport } from '../../features/report'
 import { fetchComments } from '../../features/comment'
 import { isLoggedin } from '../../features/authentication'
-import { RiArrowLeftSLine } from 'react-icons/ri'
 
 const socket = io(`${import.meta.env.VITE_URL}/`)
 
@@ -139,28 +135,7 @@ const ViewConcern = () => {
     }
   }, [report, comment, handleSubmit])
 
-  const PrevArrow = (props) => {
-    const { className, onClick } = props
-    return (
-      <div onClick={onClick}>
-        <IoIosArrowBack
-          size={30}
-          className={`${className} text-white hover:bg-white hover:text-primary-color rounded-full lg:text-black absolute left-5 z-50 visibility-0`}
-        />
-      </div>
-    )
-  }
 
-  const NextArrow = (props) => {
-    const { className, onClick } = props
-    return (
-      <IoIosArrowForward
-        size={50}
-        onClick={onClick}
-        className={`${className} text-white hover:bg-white hover:text-primary-color rounded-full lg:text-black absolute right-5 z-50 border`}
-      />
-    )
-  }
 
   return (
     <>
@@ -254,14 +229,10 @@ const ViewConcern = () => {
                       className="w-full h-full object-contain"
                     />
                   ) : (
-                    <Slider
-                      dots={true}
-                      infinite={true}
-                      slidesToShow={1}
-                      slidesToScroll={1}
-                      prevArrow={<PrevArrow />}
-                      nextArrow={<NextArrow />}
-                    >
+                    
+                    <Carousel
+                    infiniteLoop={true}
+                    swipeable={true}>
                       {report?.attached_image.map((image, index) => (
                         <figure
                           className="w-full h-full max-w-[500px] lg:max-w-full m-auto xl:h-[600px]"
@@ -274,7 +245,7 @@ const ViewConcern = () => {
                           />
                         </figure>
                       ))}
-                    </Slider>
+                    </Carousel>
                   )}
                   {/* <div className="absolute top-0 left-0 w-fit h-full flex items-center">
                     <button className="w-full h-full max-w-10 max-h-14 rounded-md hover:bg-gray/40">
