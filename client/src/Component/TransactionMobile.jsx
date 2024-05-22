@@ -55,7 +55,7 @@ const TransactionMobile = ({ tenant }) => {
                     {new Date(val?.tenant_id.monthly_due).toLocaleDateString()}
                   </div>
                   <div className="font-bold text-sm">
-                    {val?.amount?.toLocaleString('en-PH', {
+                    {val?.payment?.amountPaid?.toLocaleString('en-PH', {
                       style: 'currency',
                       currency: 'PHP',
                     })}

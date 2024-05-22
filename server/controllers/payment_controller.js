@@ -240,6 +240,7 @@ module.exports.createIntent = async (req, res) => {
   try {
     const { invoice_id } = req.query
     const { amount } = req.body
+    const invoice = await INVOICEMODEL.findById(invoice_id)
     const response = await fetch(`${process.env.PAYMONGO_CREATE_INTENT}`, {
       method: 'POST',
       headers: {
@@ -250,7 +251,7 @@ module.exports.createIntent = async (req, res) => {
       body: JSON.stringify({
         data: {
           attributes: {
-            amount: amount * 100,
+            amount: (amount - invoice.payment.unpaidBalance) * 100,
             payment_method_allowed: ['paymaya', 'gcash', 'grab_pay'],
             payment_method_options: { card: { request_three_d_secure: 'any' } },
             currency: 'PHP',

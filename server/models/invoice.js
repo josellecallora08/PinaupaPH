@@ -41,9 +41,11 @@ const INVOICEMODEL = new mongoose.Schema(
       },
       amountPaid: {
         type: Number,
+        default:0
       },
       unpaidBalance: {
         type: Number,
+        default:0
       },
     },
     status: {

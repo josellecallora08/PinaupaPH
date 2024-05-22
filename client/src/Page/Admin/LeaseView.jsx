@@ -6,7 +6,7 @@ import { Link, useParams } from 'react-router-dom'
 //optional
 import 'rsuite/Dropdown/styles/index.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchDocument, generateDocument } from '../../features/documents'
+import { fetchDocument, generateDocument, resetDocumentStatus } from '../../features/documents'
 
 const LeaseView = () => {
   const { contract_id } = useParams()
@@ -14,6 +14,7 @@ const LeaseView = () => {
   const dispatch = useDispatch()
   const handleDownload = () => {
     dispatch(generateDocument(contract_id))
+    dispatch(resetDocumentStatus())
   }
   useEffect(() => {
     dispatch(fetchDocument(contract_id))
@@ -46,9 +47,6 @@ const LeaseView = () => {
       <div className="flex justify-center align-middle">
         <div className=" p-6 xl:w-[13.6in] lg:w-[6.8in] xl:min-h-[17.6in] lg:min-h-[8.8in] xl:p-[1in] lg:p-[0.5in] m-[1rem] shadow-lg shadow-light-gray bg-white ">
           <div className="pb-4 flex justify-between min-pb-4 border-b-4 border-gray-400">
-            <figure>
-              <img src={pinaupa} className="h-12 lg:h-20" />
-            </figure>
             <p className="pt-2 lg:pt-4 xl:text-4xl lg:text-xl font-bold font-serif  xl:mb-12 lg:mb-2 ">
               KONTRATA SA PAGPAPAUPA
             </p>

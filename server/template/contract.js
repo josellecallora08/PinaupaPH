@@ -20,7 +20,7 @@ module.exports = ({ response }) => {
     <body style="display:flex;align-items: center; justify-content:center;width:700px;margin:20px auto auto auto; height:100vh">
       <div style="width:100%;margin:auto;height:100%;" >
         <div style="width: 90%; display: flex; justify-content:space-between; align-items:center;">
-          <span style="width: fit-content; font-size:30px;font-style:bold  ">
+          <span style="width:fit-content; font-size:30px;font-style:bold  ">
          KONTRATA NG PAGPAPAUPA</span>
         </div>
         <hr style="border: 1px solid #000;" />

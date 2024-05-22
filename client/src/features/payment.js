@@ -63,6 +63,7 @@ export const paymentStatus = (invoice_id, navigate) => async (dispatch) => {
     )
     if (!statusPayment.ok) {
       const json = await statusPayment.json()
+      console.log(json)
       throw new Error(json)
     }
 

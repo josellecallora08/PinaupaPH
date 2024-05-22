@@ -53,7 +53,7 @@ const TransactionTable = ({ tenant }) => {
                     {val?.payment?.method}
                   </td>
                   <td className="border px-4 py-2">
-                    {(val?.amount).toLocaleString('en-PH', {
+                    {(val?.payment?.amountPaid).toLocaleString('en-PH', {
                       style: 'currency',
                       currency: 'PHP',
                     })}
