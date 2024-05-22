@@ -11,6 +11,7 @@ const apartmentSlice = createSlice({
   },
   reducers: {
     resetApartmentStatus:(state) => {
+      state.loading= false
       state.error = null
       state.msg = null
     },
@@ -90,7 +91,7 @@ export const handleSearchApartment = (filter) => async (dispatch) => {
     const json = await response.json()
     dispatch(fetchApartmentSuccess(json))
   } catch (err) {
-    dispatch(actionApartmentFailed(err.message))
+    dispatch(resetApartmentStatus())
   }
 }
 

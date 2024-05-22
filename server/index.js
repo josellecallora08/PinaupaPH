@@ -66,14 +66,14 @@ mongoose
   .then(() => {
     // Start server after successful MongoDB connection
     io.on('connection', (socket) => {
-      console.log('Connected to Socket.io')
+      // console.log('Connected to Socket.io')
 
       socket.on('setup', (userData) => {
         socket.join(userData._id)
         socket.emit('connected')
       })
       socket.on('disconnect', () => {
-        console.log('Disconnected')
+        // console.log('Disconnected')
       })
 
       socket.on('send-comment', (message) => {
@@ -91,7 +91,7 @@ mongoose
         if (Array.isArray(data.receiver_id)) {
           // If receiver_id is an array, emit to multiple recipients
           data.receiver_id.forEach((recipientId) => {
-            console.log(recipientId.user_id._id)
+            // console.log(recipientId.user_id._id)
             io.to(recipientId.user_id._id).emit('receive-announcement', {
               sender_id: data.sender_id,
               receiver_id: recipientId.user_id._id,

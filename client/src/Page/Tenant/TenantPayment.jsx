@@ -35,7 +35,7 @@ const TenantPayment = () => {
         name: invoice.tenant_id?.user_id?.name || '',
         mobile_no: invoice.tenant_id?.user_id?.mobile_no || '',
         email: invoice.tenant_id?.user_id?.email || '',
-        amount: invoice.amount || '',
+        amount: invoice.tenant_id?.balance || '',
         method: invoice.payment?.method || '',
       });
     }
@@ -301,8 +301,8 @@ const TenantPayment = () => {
                   <div className="flex justify-between text-lg pb-10 border-b-2 border-dark-gray">
                     <p>Rent</p>
                     <p>
-                      {(invoice?.amount &&
-                        invoice?.amount.toLocaleString('en-PH', {
+                      {(invoice?.tenant_id.balance &&
+                        invoice?.tenant_id.balance.toLocaleString('en-PH', {
                           style: 'currency',
                           currency: 'PHP',
                         })) ||

@@ -13,23 +13,23 @@ function Main() {
         navigator.serviceWorker
           .register('/service-worker.js')
           .then((registration) => {
-            console.log('Service Worker registered');
+            // console.log('Service Worker registered');
           })
           .catch((error) => {
-            console.log('Service Worker registration failed:', error);
+            // console.log('Service Worker registration failed:', error);
           });
       });
     }
   }, []);
 
   return (
-    <React.StrictMode>
+    // <React.StrictMode>
       <Provider store={store}>
         <BrowserRouter>
           <App />
         </BrowserRouter>
       </Provider>
-    </React.StrictMode>
+    // </React.StrictMode>
   );
 }
 

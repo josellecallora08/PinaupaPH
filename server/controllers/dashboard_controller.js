@@ -264,9 +264,9 @@ module.exports.reportRate = async (req, res) => {
     const totalReport = response.reduce((acc, sum) => {
       return (acc = acc + (sum.status === true ? 1 : 0))
     }, 0)
-
+    const total = response.length
     const percentage = (totalReport / response.length) * 100
-    return res.status(httpStatusCodes.OK).json({ totalReport, percentage })
+    return res.status(httpStatusCodes.OK).json({ totalReport, percentage, total })
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
