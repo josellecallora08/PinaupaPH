@@ -4,10 +4,11 @@ import { BiEdit } from 'react-icons/bi'
 import EditOwnerDetails from '../../Component/EditOwnerDetails'
 import ChangePd from '../../Component/ChangePd'
 import { isLoggedin } from '../../features/authentication'
-import { changeProfile, editUser } from '../../features/user'
+import { changeProfile, editUser, resetUserStatus } from '../../features/user'
 import { fetchApartments } from '../../features/apartment'
 import ProfileEditAccount from '../../Component/AdminComponent/ProfileEditAccount'
 import MessageToast from '../../Component/ToastComponent/MessageToast'
+import PopUp from '../../Component/PopUp'
 
 const Profile = () => {
   const [update, setUpdate] = useState(false)
@@ -15,6 +16,8 @@ const Profile = () => {
   const [changeModal, setchangeModal] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
   const [isVisible, setIsVisible] = useState(false)
+  const [showPopup, setShowPopup] = useState(false)
+  const [popupMessage, setPopupMessage] = useState('')
   const user = useSelector((state) => state.auth.user)
   const data = useSelector((state) => state.user.data)
   const single = useSelector((state) => state.user.single)
@@ -68,14 +71,38 @@ const Profile = () => {
   useEffect(() => {
     dispatch(fetchApartments())
   }, [])
+
+  useEffect(() => {
+    if (msg !== null) {
+      setPopupMessage(msg)
+    } else if (error !== null) {
+      setPopupMessage(error)
+    }
+
+    if (msg !== null || error !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetUserStatus())
+      }, 3000)
+    }
+  }, [msg, error])
+
   return (
     <>
-      {isVisible && (
+      {/* {isVisible && (
         <MessageToast
           message={msg}
           error={error}
           isVisible={isVisible}
           setIsVisible={setIsVisible}
+        />
+      )} */}
+      {showPopup && (
+        <PopUp
+          message={popupMessage}
+          onClose={() => setShowPopup(false)}
+          error={error}
         />
       )}
       {modal && (

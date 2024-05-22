@@ -20,7 +20,6 @@ module.exports.madePayment = async (req, res) => {
     let response = await INVOICEMODEL.findByIdAndUpdate(
       invoice_id,
       invoiceUpdate,
-      { new: true },
     ).populate({
       path: 'tenant_id',
       populate: 'user_id unit_id apartment_id',
@@ -68,6 +67,18 @@ module.exports.madePayment = async (req, res) => {
     }
 
     if (status === 'succeeded') {
+      const tenant = await TENANTMODEL.findByIdAndUpdate(
+        response.tenant_id._id,
+        { $inc: { balance: -response.payment.amountPaid } }, // Atomic decrement
+        { new: true },
+      )
+
+      if (!tenant) {
+        return res
+          .status(httpStatusCodes.BAD_REQUEST)
+          .json({ error: 'Unable to update tenant balance...' })
+      }
+
       const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -120,7 +131,7 @@ module.exports.madePayment = async (req, res) => {
 
       const adminMailOptions = {
         from: 'pinaupaph@gmail.com',
-        to: 'pinaupaph@gmail.com', 
+        to: 'pinaupaph@gmail.com',
         subject: `Payment received for Unit ${response.tenant_id.unit_id.unit_no}`,
         html: `
           <html>
@@ -151,17 +162,17 @@ module.exports.madePayment = async (req, res) => {
 
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-          console.log('Error:', error)
+          // console.log('Error:', error)
         } else {
-          console.log('Email sent:', info.response)
+          // console.log('Email sent:', info.response)
         }
       })
 
       transporter.sendMail(adminMailOptions, (error, info) => {
         if (error) {
-          console.log('Error:', error)
+          // console.log('Error:', error)
         } else {
-          console.log('Email sent to admin:', info.response)
+          // console.log('Email sent to admin:', info.response)
         }
       })
 
@@ -172,7 +183,7 @@ module.exports.madePayment = async (req, res) => {
           .json({ error: 'Invoice cannot be updated.' })
       }
 
-      if (status === succeeded) {
+      if (status === 'succeeded') {
         const sendNotif = await NOTIFMODEL.create({
           sender_id: response.tenant_id.user_id._id,
           receiver_id: admin._id,
@@ -201,25 +212,18 @@ module.exports.madePayment = async (req, res) => {
 
 module.exports.createPayment = async (req, res) => {
   try {
-    const { method, method_id } = req.query
-    const user_id = req.user.id
-    console.log(user_id)
-    const user = await TENANTMODEL.findOne({ user_id })
-    if (!user) {
-      return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Tenant not found.' })
-    }
-    const response = await INVOICEMODEL.findOneAndUpdate(
-      { tenant_id: user._id },
+    const { method, method_id, invoice_id } = req.query
+    const response = await INVOICEMODEL.findByIdAndUpdate(
+      invoice_id,
       {
-        'payment.method_id': method_id,
-        'payment.method': method,
+        $set: {
+          'payment.method_id': method_id,
+          'payment.method': method,
+        },
       },
-      {
-        new: true,
-      },
+      { new: true }, // This option returns the updated document
     )
+
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -240,6 +244,7 @@ module.exports.createIntent = async (req, res) => {
   try {
     const { invoice_id } = req.query
     const { amount } = req.body
+    const invoice = await INVOICEMODEL.findById(invoice_id)
     const response = await fetch(`${process.env.PAYMONGO_CREATE_INTENT}`, {
       method: 'POST',
       headers: {
@@ -289,10 +294,6 @@ module.exports.createIntent = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Invoice cannot be updated.' })
     }
-
-    const updateBalance = await TENANTMODEL.findById(user.tenant_id)
-    updateBalance.balance -= responseInvoice.payment.amountPaid
-    await updateBalance.save()
 
     return res
       .status(httpStatusCodes.OK)

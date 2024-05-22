@@ -34,6 +34,7 @@ export const { startLoading, paymentSuccess, fetchKeySuccess, actionFailed } =
 
 export const paymentStatus = (invoice_id, navigate) => async (dispatch) => {
   try {
+    console.log("asdoiasjdoisa")
     const token = Cookies.get('token')
     dispatch(startLoading())
     const responseIntent = await fetch(
@@ -63,6 +64,7 @@ export const paymentStatus = (invoice_id, navigate) => async (dispatch) => {
     )
     if (!statusPayment.ok) {
       const json = await statusPayment.json()
+      console.log(json)
       throw new Error(json)
     }
 
@@ -149,9 +151,9 @@ export const createPaymentIntent = (invoice_id, fields) => async (dispatch) => {
 
     // if(fields.payment_method === "gcash" || fields.payment_method === "paymaya" || fields.payment_method === "grabpay"){
     const isPayment = await fetch(
-      `${import.meta.env.VITE_URL}/api/payment/create?method=${json?.data.attributes.type}&method_id=${json?.data.id}`,
+      `${import.meta.env.VITE_URL}/api/payment/create?method=${json?.data.attributes.type}&method_id=${json?.data.id}&invoice_id=${invoice_id}`,
       {
-        method: 'POST',
+        method: 'PATCH',
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -193,7 +195,7 @@ export const createPaymentIntent = (invoice_id, fields) => async (dispatch) => {
     const data = await post_payment.json()
     console.log(data)
     socket.emit('send-payment')
-    window.open(data.data.attributes.next_action.redirect.url, '_blank')
+    window.location.href = (data.data.attributes.next_action.redirect.url)
     // }
 
     const statusPayment = await fetch(
@@ -232,14 +234,6 @@ export const createPaymentIntent = (invoice_id, fields) => async (dispatch) => {
   } catch (err) {
     dispatch(actionFailed(err.message))
   }
-}
-
-export const cashPayment = () => async (dispatch) => {
-  try {
-    const token = Cookies.get('token')
-    const socket = io(`${import.meta.env.VITE_URL}/`)
-    const response = await fetch(`${import.meta.env.VITE_URL}/api/payment/cash`)
-  } catch (err) {}
 }
 
 export const createPayment =

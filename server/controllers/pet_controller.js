@@ -12,7 +12,6 @@ module.exports.fetch_all_pets = async (req, res) => {
 
     return res.status(httpStatusCodes.OK).json({ response: tenant.pet })
   } catch (err) {
-    console.log(err.message)
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: err.message })
@@ -37,7 +36,6 @@ module.exports.fetch_pet = async (req, res) => {
 
     return res.status(httpStatusCodes.OK).json(pet)
   } catch (err) {
-    console.log(err.message)
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: err.message })
@@ -117,10 +115,14 @@ module.exports.update_pet = async (req, res) => {
         response.pet[index][item] = details[item]
       }
     })
+
+    const pet = response.pet.filter(
+      (item) => item.id.toString() === pet_id,
+    )
     await response.save()
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Information Updated...' })
+      .json({ msg: 'Information Updated...', response:pet })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -134,7 +136,6 @@ module.exports.delete_pet = async (req, res) => {
     const { user_id } = req.params
     const { pet_id } = req.query
 
-    console.log(req.params)
     const response = await TENANTMODEL.findOne({ user_id: user_id })
     if (!response) {
       return res

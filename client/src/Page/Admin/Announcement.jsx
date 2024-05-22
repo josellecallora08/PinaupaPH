@@ -128,8 +128,8 @@ const Announcement = () => {
           </button>
         </div>
         {/* Tabs */}
-        <div className="flex items-center bg-white gap-7 p-2  pt-5 pl-7 mt-5 rounded-tl-lg rounded-tr-lg w-full  ">
-          <div className="flex gap-7 w-1/3 no-scrollbar overflow-x-auto with-scrollbar">
+        <div className="flex items-center bg-white gap-7 p-2  pt-5 pl-7 mt-5 rounded-tl-lg rounded-tr-lg   ">
+          <div className="flex gap-7 lg:w-1/2 no-scrollbar overflow-x-auto with-scrollbar w-full px-2 ">
             {/* Filter Tabs */}
             <button
               className={`filter-tab ${filter === 'All' ? 'active' : ''}`}
@@ -183,7 +183,7 @@ const Announcement = () => {
                       <p className="text-light-gray md:text-base text-xs flex text-center">
                         <span>{new Date(val.createdAt).toDateString()}</span>
                       </p>
-                      <p className="text-light-gray md:text-sm text-xs">
+                      <p className="text-light-gray md:text-sm text-xs text-center">
                         <span>
                           {new Date(val.createdAt).toLocaleTimeString()}
                         </span>

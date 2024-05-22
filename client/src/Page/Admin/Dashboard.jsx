@@ -36,7 +36,7 @@ const Dashboard = () => {
   const notifications = useSelector((state) => state.notif.data)
   const revenue = useSelector((state) => state.dash.chart)
   const menu = useSelector((state) => state.toggle.sidebar)
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(null)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(isLoggedin())
@@ -85,6 +85,7 @@ const Dashboard = () => {
     dispatch(fetchReports(year))
     dispatch(fetchRevenue(month, year))
   }, [date, setDate])
+  console.log(totalPayer)
   function formatDate(date) {
     const year = date.getFullYear()
     const month = (date.getMonth() + 1).toString().padStart(2, '0')
@@ -94,24 +95,25 @@ const Dashboard = () => {
     dispatch(fetchApartments())
   }, [])
 
-  const availableRoom = apartment?.filter(item => item.units?.some(unit => !unit.occupied)).map((val, key) => {
-    return {
-      value: val?._id,
-      label: val?.name
-    }
-  })
+  const availableRoom = apartment
+    ?.filter((item) => item.units?.some((unit) => !unit.occupied))
+    .map((val, key) => {
+      return {
+        value: val?._id,
+        label: val?.name,
+      }
+    })
   useEffect(() => {
     if (selectedOption?.value) {
-      dispatch(fetchUnitsApartment(selectedOption.value));
+      dispatch(fetchUnitsApartment(selectedOption.value))
     }
-  }, [selectedOption, dispatch]);
+  }, [selectedOption, dispatch])
   return (
     <>
       {loading ? (
         <Loading />
       ) : (
         <>
-
           <div className="w-full h-full md:h-auto xl:h-full xl:max-h-auto flex flex-col items-start bg-white1">
             <div className="w-11/12 h-fit m-auto py-5 lg:py-0">
               <Link
@@ -217,7 +219,7 @@ const Dashboard = () => {
                                     <p className="font-semibold">
                                       {val?.sender_id?.name}
                                     </p>
-                                    <p className="text-xs overflow-hidden text-ellipsis text-nowrap">
+                                    <p className="text-xs overflow-hidden w-40 text-ellipsis text-nowrap">
                                       {val?.description}
                                     </p>
                                   </div>
@@ -302,25 +304,54 @@ const Dashboard = () => {
                         <div className=" w-full flex flex-col gap-2">
                           {/* Select Tag That can Search */}
 
-
-                          <div className="w-11/12 h-full flex flex-col items-center justify-center ">
-
+                          <div className="w-11/12 h-full flex flex-col pt-2 items-center justify-center ">
+                          
                             <Select
                               value={selectedOption}
                               onChange={setSelectedOption}
                               options={availableRoom}
                               isClearable
-                              className="w-full "
+                              className="w-full"
                               placeholder="Choose an Apartment"
                               menuPortalTarget={document.body}
                               styles={{
                                 menuPortal: base => ({ ...base, zIndex: 9999 }),
+                                control: (base) => ({
+                                  ...base,
+                                  fontSize: '14px', // adjust the font size as needed
+                                }),
+                                valueContainer: (base) => ({
+                                  ...base,
+                                  padding: '2px', // adjust the padding as needed
+                                  fontSize: '14px', // adjust the font size as needed
+                                }),
+                                menu: (base) => ({
+                                  ...base,
+                                  fontSize: '14px', // adjust the font size as needed
+                                }),
+                                singleValue: (base) => ({
+                                  ...base,
+                                  fontSize: '14px', // adjust the font size as needed
+                                }),
+                                placeholder: (base) => ({
+                                  ...base,
+                                  fontSize: '14px', // adjust the font size as needed
+                                }),
+                                input: (base) => ({
+                                  ...base,
+                                  fontSize: '14px', // adjust the font size as needed
+                                }),
                               }}
                             />
                           </div>
 
-                          <p className="text-[#9e9e9e] text-xs ml-1  xl:text-base ">Available Room: <span>{units?.filter(unit => !unit.occupied).length || 0}</span></p>
-
+                          <p className="text-[#9e9e9e] text-sm ml-1 mb-1  xl:text-base ">
+                            Available Room:{' '}
+                            <span>
+                              {units?.filter((unit) => !unit.occupied).length ||
+                                0}
+                            </span>
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -387,10 +418,10 @@ const Dashboard = () => {
                         <div className=" w-full flex flex-col gap-2 xl:gap-5 py-2">
                           <div className="w-11/12 m-auto flex justify-between">
                             <p className="text-[#9e9e9e] text-xs text-center xl:text-base font-semibold">
-                              Occupancy Rate
+                              Good Payer
                             </p>
                             <p className="font-bold text-center text-base xl:text-2xl">
-                              {totalOccupancy?.occupied}/{totalOccupancy?.total}
+                              {totalPayer?.totalGoodPayer}/{totalPayer?.totalPayer}
                             </p>
                           </div>
                           <p
@@ -398,7 +429,7 @@ const Dashboard = () => {
                           >
                             <span
                               style={{
-                                width: `${totalOccupancy?.percentage}%`,
+                                width: `${(totalPayer?.totalGoodPayer / totalPayer?.totalPayer) * 100 }%`,
                               }}
                               className={`absolute h-2 bg-primary-color animate-in slide-in-from-left-20 duration-1000`}
                             ></span>
@@ -418,7 +449,7 @@ const Dashboard = () => {
                         className="mx-auto lg:w-28 md:mx-auto md:w-40 w-32 mt-4 "
                         value={percentage || 0}
                         minValue={0}
-                        text={percentage ? percentage + '%' : 0 + '%'}
+                        text={percentage ? totalReports.totalReport + '/' + totalReports.total : 0 }
                         strokeWidth={15}
                         styles={buildStyles({
                           textSize: '1rem',

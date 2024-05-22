@@ -31,8 +31,9 @@ import {
   createHousehold,
   deleteHousehold,
   fetchHouseholds,
+  resetHouseholdStatus,
 } from '../../features/household'
-import { fetchPets } from '../../features/pet'
+import { fetchPets, resetPetStatus } from '../../features/pet'
 import { generateDocument, resetDocumentStatus } from '../../features/documents'
 
 const TenantProfile = () => {
@@ -54,6 +55,9 @@ const TenantProfile = () => {
   const errorDocument = useSelector((state) => state.docs.error)
   const msgDocument = useSelector((state) => state.docs.msg)
   const msgHousehold = useSelector((state) => state.household.msg)
+  const errorHousehold = useSelector((state) => state.household.error)
+  const msgPet = useSelector((state) => state.pet.msg)
+  const errorPet = useSelector((state) => state.pet.error)
   const msg = useSelector((state) => state.user.msg)
   const households = useSelector((state) => state.household.data)
   const pets = useSelector((state) => state.pet.data)
@@ -71,14 +75,14 @@ const TenantProfile = () => {
       dispatch(deleteTenant(id))
     }
   }
-const handleForcedDelete = () => {
-  const isConfirmed = window.confirm(
-    'Are you sure you want to permanently delete this tenant?',
-  )
-  if (isConfirmed) {
-    dispatch(deleteUser(id, navigate))
+  const handleForcedDelete = () => {
+    const isConfirmed = window.confirm(
+      'Are you sure you want to permanently delete this tenant?',
+    )
+    if (isConfirmed) {
+      dispatch(deleteUser(id, navigate))
+    }
   }
-}
   const handleClickOutsideDropdown = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsHouseDotOpen(false)
@@ -142,22 +146,16 @@ const handleForcedDelete = () => {
     }))
   }
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      dispatch(createHousehold(id, fields));
-      setIsAddHouseholdForm((prevState) => !prevState);
-      setFields({
-        name: '',
-        mobile: '',
-        birthday: '',
-        relationship: '',
-      });
-    } catch (error) {
-      console.error('Failed to add household. Please try again.', error);
-      
-    }
-  };
-  
+    e.preventDefault()
+    dispatch(createHousehold(id, fields))
+    setIsAddHouseholdForm((prevState) => !prevState)
+    setFields({
+      name: '',
+      mobile: '',
+      birthday: '',
+      relationship: '',
+    })
+  }
 
   const handleDeleteClick = async (contactId) => {
     if (window.confirm('Are you sure you want to delete this household?')) {
@@ -188,7 +186,6 @@ const handleForcedDelete = () => {
       setPopupMessage(msg)
     } else if (error !== null) {
       setPopupMessage(error)
-      
     }
 
     if (msg !== null || error !== null) {
@@ -199,6 +196,39 @@ const handleForcedDelete = () => {
       }, 3000)
     }
   }, [msg, error])
+
+  useEffect(() => {
+    if (msgPet !== null) {
+      setPopupMessage(msgPet)
+    } else if (errorPet !== null) {
+      setPopupMessage(errorPet)
+    }
+
+    if (msgPet !== null || errorPet !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetPetStatus())
+      }, 3000)
+    }
+  }, [msgPet, errorPet])
+
+  useEffect(() => {
+    if (msgHousehold !== null) {
+      setPopupMessage(msgHousehold)
+    } else if (errorHousehold !== null) {
+      setPopupMessage(errorHousehold)
+    }
+
+    if (msgHousehold !== null || errorHousehold !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetHouseholdStatus())
+      }, 3000)
+    }
+  }, [msgHousehold, errorHousehold])
+
   const birthday = tenant?.user_id?.birthday
     ? new Date(tenant?.user_id?.birthday).toLocaleDateString()
     : ''
@@ -277,7 +307,11 @@ const handleForcedDelete = () => {
                         <div className="absolute right-0 mt-2 w-max animate-slideIn">
                           <div className="bg-white rounded-md shadow-md">
                             <button
-                              onClick={tenant?.user_id?.isDelete ? handleForcedDelete : handleDeleteTenant}
+                              onClick={
+                                tenant?.user_id?.isDelete
+                                  ? handleForcedDelete
+                                  : handleDeleteTenant
+                              }
                               className="flex items-center justify-between px-4 py-2 text-red-500 hover:bg-red hover:text-white rounded-t-md w-full focus:outline-none transition duration-300"
                             >
                               <span>Delete</span>
@@ -372,7 +406,7 @@ const handleForcedDelete = () => {
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
                           <p className="">{tenant?.user_id?.name}</p>
                           <p className="">{birthday}</p>
-                          <p className="">+63{tenant?.user_id?.mobile_no}</p>
+                          <p className="">{tenant?.user_id?.mobile_no}</p>
                           <p className="">{tenant?.user_id?.email}</p>
                         </div>
                       </div>
@@ -638,7 +672,7 @@ const handleForcedDelete = () => {
             <Popup
               message={popupMessage}
               onClose={() => setShowPopup(false)}
-              isError={error || errorDocument}
+              isError={error || errorDocument || errorHousehold || errorPet}
             />
           )}
         </div>

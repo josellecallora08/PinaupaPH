@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { IoMdClose } from 'react-icons/io'
-// import { useDispatch, useSelector } from 'react-redux'
+ import { useDispatch, useSelector } from 'react-redux'
+import { resetHouseholdStatus } from '../features/household'
+import Popup from '../Component/PopUp'
 const AddHousehold = ({
   id,
   setIsAddHouseholdForm,
@@ -9,8 +11,28 @@ const AddHousehold = ({
   handleSubmit,
 }) => {
   // const error = useSelector((state) => state.household.error)
+  
+  const error = useSelector((state) => state.apartment.error)
+  const msg = useSelector((state) => state.apartment.msg)
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
+  useEffect(() => {
+    if (msg !== null) {
+      setPopupMessage(msg)
+    } else if (error !== null) {
+      setPopupMessage(error)
+      
+    }
+
+    if (msg !== null || error !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        resetHouseholdStatus
+        dispatch(resetHouseholdStatus())
+      }, 3000)
+    }
+  }, [msg, error])
   return (
     <div className="relative">
       <div className="relative w-full flex py-4 rounded-tl-lg rounded-tr-lg  bg-dark-blue text-white items-center ">
@@ -115,12 +137,8 @@ const AddHousehold = ({
         </div>
       </form>
       {showPopup && (
-          <Popup 
-            message={popupMessage} 
-            onClose={() => setShowPopup(false)} 
-            error={error}
-          />
-        )}
+        <Popup message={popupMessage} onClose={handleClosePopup} isError={error} />
+      )}
     </div>
   )
 }

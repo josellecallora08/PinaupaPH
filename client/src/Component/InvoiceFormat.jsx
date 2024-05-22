@@ -160,13 +160,14 @@ const InvoiceFormat = () => {
                   })}
               </td>
             </tr>
+            <br />
             <tr className="item font-regular">
-              <td>Previous Balance</td>
+              <td>Total Payment</td>
               <td>
                 {invoice &&
                   (
-                    invoice?.tenant_id?.balance - invoice?.amount
-                  ).toLocaleString('en-PH', {
+                    invoice?.payment?.amountPaid !== 0 ? invoice?.payment?.amountPaid : 0
+                  )?.toLocaleString('en-PH', {
                     style: 'currency',
                     currency: 'PHP',
                   })}
@@ -176,9 +177,20 @@ const InvoiceFormat = () => {
             <tr className="total">
               <td></td>
               <td>
-                Total Amount:{' '}
+                Total:{' '}
                 {invoice &&
-                  (invoice?.tenant_id?.balance).toLocaleString('en-PH', {
+                  (invoice?.amount - (invoice?.payment?.amountPaid === null ? 0 : invoice?.payment?.amountPaid) < 0 ? 0 : invoice?.amount - invoice?.payment?.amountPaid).toLocaleString('en-PH', {
+                    style: 'currency',
+                    currency: 'PHP',
+                  })}
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                Advance Rental:{' '}
+                {invoice &&
+                  (invoice?.payment?.unpaidBalance < 0 ? invoice?.payment?.unpaidBalance : 0).toLocaleString('en-PH', {
                     style: 'currency',
                     currency: 'PHP',
                   })}

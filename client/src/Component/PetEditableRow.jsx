@@ -9,8 +9,8 @@ const PetEditableRow = ({
   handleCancelClick,
 }) => {
   return (
-    <tr className="">
-      <td>
+    <tr className="text-center">
+      <td className="pt-2">
         <input
           className="lg:w-auto w-20 lg:text-base text-xs ml-2 p-1 rounded-md border-2 border-primary-color"
           type="text"
@@ -21,7 +21,7 @@ const PetEditableRow = ({
           onChange={handleEditFormChange}
         />
       </td>
-      <td>
+      <td className="pt-2">
         <input
           className="lg:w-auto w-20 lg:text-base text-xs ml-1 p-1 border-2  rounded-md border-primary-color"
           type="text"
@@ -32,7 +32,7 @@ const PetEditableRow = ({
           onChange={handleEditFormChange}
         />
       </td>
-      <td>
+      <td className="pt-2">
         <input
           className="lg:w-auto lg:text-base ml-1 w-20 text-xs p-1 border-2 rounded-md border-primary-color"
           type="date"
@@ -43,7 +43,7 @@ const PetEditableRow = ({
           onChange={handleEditFormChange}
         />
       </td>
-      <td className="flex justify-center items-center gap-1 mt-2">
+      <td className="flex justify-center items-center gap-1 mt-2 pt-2 ">
         <button
           type="submit"
            className='text-2xl text-lime cursor-pointer'
