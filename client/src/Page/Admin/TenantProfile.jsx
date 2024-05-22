@@ -26,13 +26,15 @@ import {
   fetchUser,
   recoverTenant,
   resetUserStatus,
+  
+  
 } from '../../features/user'
 import {
   createHousehold,
   deleteHousehold,
-  fetchHouseholds,
+  fetchHouseholds,resetHouseholdStatus
 } from '../../features/household'
-import { fetchPets } from '../../features/pet'
+import { fetchPets, resetPetStatus } from '../../features/pet'
 import { generateDocument, resetDocumentStatus } from '../../features/documents'
 
 const TenantProfile = () => {
@@ -54,6 +56,9 @@ const TenantProfile = () => {
   const errorDocument = useSelector((state) => state.docs.error)
   const msgDocument = useSelector((state) => state.docs.msg)
   const msgHousehold = useSelector((state) => state.household.msg)
+  const errorHousehold = useSelector((state) => state.household.error)
+  const msgPet = useSelector((state) => state.pet.msg)
+  const errorPet = useSelector((state) => state.pet.error)
   const msg = useSelector((state) => state.user.msg)
   const households = useSelector((state) => state.household.data)
   const pets = useSelector((state) => state.pet.data)
@@ -196,9 +201,49 @@ const handleForcedDelete = () => {
       setTimeout(() => {
         setShowPopup(false)
         dispatch(resetUserStatus())
+        
       }, 3000)
     }
   }, [msg, error])
+
+  
+  useEffect(() => {
+    if (msgPet !== null) {
+      setPopupMessage(msgPet)
+    } else if (errorPet !== null) {
+      setPopupMessage(errorPet)
+      
+    }
+
+    if (msgPet !== null || errorPet !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetPetStatus())
+        
+      }, 3000)
+    }
+  }, [msgPet, errorPet])
+
+  
+  useEffect(() => {
+    if (msgHousehold !== null) {
+      setPopupMessage(msgHousehold)
+    } else if (errorHousehold !== null) {
+      setPopupMessage(errorHousehold)
+      
+    }
+
+    if (msgHousehold !== null || errorHousehold !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetHouseholdStatus())
+      }, 3000)
+    }
+  }, [msgHousehold, errorHousehold])
+
+
   const birthday = tenant?.user_id?.birthday
     ? new Date(tenant?.user_id?.birthday).toLocaleDateString()
     : ''
@@ -528,6 +573,7 @@ const handleForcedDelete = () => {
                           fields={fields}
                           handleInput={handleInput}
                           handleSubmit={handleSubmit}
+                  
                         />
                       </div>
                     </div>

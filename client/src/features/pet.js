@@ -40,6 +40,10 @@ const petSlice = createSlice({
         (pet) => pet._id !== action.payload.response._id,
       )
     },
+    resetPetStatus: (state) => {
+      state.error = null
+      state.msg = null
+    },
     actionPetFailed: (state, action) => {
       state.loading = false
       state.error = action.payload
@@ -52,6 +56,7 @@ export const {
   fetchPetSuccess,
   fetchPetsSuccess,
   editPetSuccess,
+  resetPetStatus,
   deletePetSuccess,
   actionPetFailed,
 } = petSlice.actions

@@ -85,8 +85,8 @@ const Table = ({ id, setIsEditFamilyMemForm, handleDeleteClick }) => {
         </div>
 
         <table className=" table-fixed min-w-full border-collapse w-full  ">
-          <thead className="  bg-dark-blue  text-white sticky top-0 ">
-            <tr className="text-center text-xs font-semibold  ">
+          <thead className="  bg-dark-blue   text-white sticky top-0 ">
+            <tr className="md:text-base text-center text-xs font-semibold mb-10  ">
               <th className="py-5 ">Name</th>
               <th className="py-5 ">Mobile</th>
               <th className="">Relationship</th>
@@ -94,7 +94,7 @@ const Table = ({ id, setIsEditFamilyMemForm, handleDeleteClick }) => {
               <th className="">Actions</th>
             </tr>
           </thead>
-          <tbody className="pt-10">
+          <tbody className="pt-10 ">
             {household.map((contact, key) => (
               <Fragment key={key}>
                 {editContactId === contact._id ? (

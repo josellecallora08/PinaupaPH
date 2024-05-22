@@ -10,6 +10,7 @@ import comments from '/comments.svg'
 import {
   createComment,
   insertCommentSuccess,
+  resetReportStatus
 } from '../../features/comment'
 import { useDispatch, useSelector } from 'react-redux'
 import {
@@ -40,9 +41,27 @@ const ViewConcern = () => {
   const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [showPopup, setShowPopup] = useState(false)
+  const msgReport = useSelector((state) =>  state.report.msg)
+  const msgError = useSelector((state) =>  state.report.error)
   const toggleDot = () => {
     setIsDotOpen(!isDotOpen)
   }
+  useEffect(() => {
+    if (msgReport !== null) {
+      setPopupMessage(msgReport)
+    } else if (msgError !== null) {
+      setPopupMessage(msgError)
+      
+    }
+
+    if (msgReport !== null || msgError !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetReportStatus())
+      }, 3000)
+    }
+  }, [msgHousehold, errorHousehold])
   const handleDelete = async () => {
     const isConfirmed = window.confirm(
       'Are you sure you want to delete this Issue?',
@@ -341,12 +360,13 @@ const ViewConcern = () => {
                       </h1>
                     )}
 
-                    {/* {showPopup && (
-                      <Popup
-                        message={successMessage}
+                    {showPopup && (
+                      <PopUp
+                        message={popupMessage}
                         onClose={() => setShowPopup(false)}
+                        error={error}
                       />
-                    )} */}
+                    )}
                   </div>
                 </div>
               </div>
