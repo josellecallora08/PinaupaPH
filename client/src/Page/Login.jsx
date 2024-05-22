@@ -7,14 +7,14 @@ import { useNavigate, Link } from 'react-router-dom'
 import ButtonLoading from '../Component/LoadingComponent/ButtonLoading'
 import { fetchUser } from '../features/user'
 import MessageToast from '../Component/ToastComponent/MessageToast'
-
+import Cookies from 'js-cookie'
 const Login = () => {
   const navigate = useNavigate()
   const loading = useSelector((state) => state.auth.loading)
   const error = useSelector((state) => state.auth.error)
   const msg = useSelector((state) => state.auth.msg)
   const [isVisible, setIsVisible] = useState(true)
-
+  const token = Cookies.get('token')
   const dispatch = useDispatch()
   const [credentials, setCredentials] = useState({
     username: '',
@@ -35,7 +35,9 @@ const Login = () => {
   }
 
   useEffect(() => {
-    dispatch(isLoggedin())
+    if (token) {
+      dispatch(isLoggedin())
+    }
   }, [])
 
   return (
@@ -67,7 +69,7 @@ const Login = () => {
           </p>
 
           <form
-           
+
             className="lg:w-1/3 lg:ml-20 lg:rounded-md lg:p-10 lg:h-fit lg:bg-white1 lg:shadow-md"
           >
             <h1 className="lg:text-3xl lg:font-semibold lg:block text-primary-color hidden">
@@ -112,17 +114,14 @@ const Login = () => {
                 Forgot Password?
               </Link>
 
-              <Link to="/contact">
-                <button className="lg:hidden text-dark-gray font-regular  cursor-pointer hover:underline hover:text-primary-color">
-                  Contact Us
-                </button>
+              <Link to="/contact" className="lg:hidden text-dark-gray font-regular  cursor-pointer hover:underline hover:text-primary-color">
               </Link>
             </div>
 
             {loading ? (
               <ButtonLoading msg={'Logging In...'} />
             ) : (
-              <button  onClick={handleSubmit} className="bg-dark-blue w-full p-3 rounded-md mt-4 mb-5 lg:mb-0 text-white tracking-wider font-semibold hover:opacity-80">
+              <button onClick={handleSubmit} className="bg-dark-blue w-full p-3 rounded-md mt-4 mb-5 lg:mb-0 text-white tracking-wider font-semibold hover:opacity-80">
                 Sign in
               </button>
             )}
