@@ -193,7 +193,7 @@ const Announcement = () => {
                     <div className="flex flex-col w-[80%] ">
                       <p className="font-semibold lg:text-lg ">{val.title}</p>
 
-                      <p className="text-light-gray overflow-y-auto h-24 lg:mt-0 mt-3">
+                      <p className="text-light-gray overflow-y-auto max-h-24 lg:mt-0 mt-3">
                         {val.description}
                       </p>
                     </div>

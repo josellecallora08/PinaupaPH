@@ -28,7 +28,7 @@ const AddTenantForm = ({
   }, [setIsAddTenantFormOpen])
   return (
     <div className="relative" ref={modalRef}>
-      <div className="w-[40rem] flex py-4 rounded-tl-lg rounded-tr-lg px-2  bg-dark-blue text-white items-center ">
+      <div className="lg:w-[500px] flex py-4 rounded-tl-lg rounded-tr-lg px-2  bg-dark-blue text-white items-center ">
         <h1 className="lg:text-xl relative lg:ml-1 text-base font-bold pl-3 ">
           Add Tenant Details
         </h1>
