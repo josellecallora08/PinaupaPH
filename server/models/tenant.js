@@ -58,7 +58,7 @@ const TENANTMODEL = new mongoose.Schema(
   {
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
+      ref: 'users',
     },
     unit_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -66,7 +66,7 @@ const TENANTMODEL = new mongoose.Schema(
     },
     apartment_id:{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'apartment'
+      ref: 'apartments'
     },
     deposit: {
       type: Number,
@@ -91,4 +91,4 @@ const TENANTMODEL = new mongoose.Schema(
   { timestamps: true },
 )
 
-module.exports = mongoose.model('tenant', TENANTMODEL)
+module.exports = mongoose.model('tenants', TENANTMODEL)

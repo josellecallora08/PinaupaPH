@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const ANNOUCEMENTMODEL = new mongoose.Schema({
     user_id:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
+        ref: 'users'
     },
     title: {
         type: String,

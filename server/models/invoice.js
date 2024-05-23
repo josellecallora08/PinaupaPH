@@ -4,7 +4,7 @@ const INVOICEMODEL = new mongoose.Schema(
   {
     tenant_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'tenant',
+      ref: 'tenants',
       required: true,
     },
     amount: {
@@ -68,4 +68,4 @@ const INVOICEMODEL = new mongoose.Schema(
   { timestamps: true },
 )
 
-module.exports = mongoose.model('invoice', INVOICEMODEL)
+module.exports = mongoose.model('invoices', INVOICEMODEL)

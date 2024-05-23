@@ -113,6 +113,7 @@ const AddTenantForm = ({
           </label>
           <input
             type="tel"
+            maxLength={11}
             id="mobile_no"
             name="mobile_no"
             onChange={handleInput}

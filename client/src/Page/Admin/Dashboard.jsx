@@ -449,7 +449,7 @@ const Dashboard = () => {
                         className="mx-auto lg:w-28 md:mx-auto md:w-40 w-32 mt-4 "
                         value={percentage || 0}
                         minValue={0}
-                        text={percentage ? totalReports.totalReport + '/' + totalReports.total : 0 }
+                        text={percentage ? totalReports.totalReport + '/' + totalReports.total : 0 + '/' + 0  }
                         strokeWidth={15}
                         styles={buildStyles({
                           textSize: '1rem',

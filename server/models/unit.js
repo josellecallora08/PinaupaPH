@@ -12,6 +12,26 @@ const UNITMODEL = new mongoose.Schema(
     unit_no: {
       type: String,
     },
+    tenants: [
+      {
+        tenant_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'tenants',
+        },
+        moveIn: {
+          type: Date,
+          default: null,
+        },
+        moveOut: {
+          type: Date,
+          default: null,
+        },
+        isCurrent: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
   },
   { timestamps: true },
 )
