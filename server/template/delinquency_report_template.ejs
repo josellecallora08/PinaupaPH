@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delinquency Tenants Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Delinquency Tenants Report</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Tenant Name</th>
+                <th>Unit</th>
+                <th>Apartment</th>
+                <th>Amount</th>
+                <th>Due Date</th>
+                <th>Date Paid</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% response.forEach(function(item) { %>
+                <tr>
+                    <td><%= item.tenant_id.user_id.name %></td>
+                    <td><%= item.tenant_id.unit_id.unit_no %></td>
+                    <td><%= item.tenant_id.apartment_id.name %></td>
+                    <td><%= item.amount %></td>
+                    <td><%= item.due.toDateString() %></td>
+                    <td><%= item.datePaid.toDateString() %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+    <p>Total Delinquent Tenants: <%= num %></p>
+</body>
+</html>

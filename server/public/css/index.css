@@ -17,6 +17,13 @@
   font-family: 'Poppins-light';
   src: url(/fonts/Poppins-Light.ttf);
 }
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  color:red;
+}
 body {
   font-family: 'Poppins-regular';
   margin: auto auto;
@@ -72,4 +79,31 @@ body {
   top: -1px;
   height: 2px;
   background: black;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+.container {
+  width: 700px;
+  margin: 20px auto;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header span {
+  font-size: 30px;
+  font-weight: bold;
+}
+.content {
+  margin-top: 20px;
+}
+.content p {
+  font-size: 16px;
+}
+.content ul {
+  list-style-type: disc;
+  padding-left: 20px;
 }

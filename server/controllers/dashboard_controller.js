@@ -2,7 +2,7 @@ const TENANTMODEL = require('../models/tenant')
 const INVOICEMODEL = require('../models/invoice')
 const APARTMENTMODEL = require('../models/apartment')
 const UNITMODEL = require('../models/unit')
-const REPORTMODEL = require('../models/report')
+const REPORTMODEL = require('../models/concern')
 const httpStatusCodes = require('../constants/constants')
 
 module.exports.overPayments = async (req, res) => {

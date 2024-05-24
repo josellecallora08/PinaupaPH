@@ -13,7 +13,7 @@ const NOTIFMODEL = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['Payment', 'Comment', 'Announcement', 'Report'],
+      enum: ['Payment', 'Comment', 'Announcement', 'Concern'],
       default: null,
     },
     url: {

@@ -708,18 +708,14 @@ module.exports.update_profile_picture = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to change image' })
     }
-    console.log(response._id)
     const tenant = await TENANTMODEL.findOne({ user_id }).populate(
       'user_id unit_id apartment_id',
     )
-    console.log(tenant)
-    console.log(response.role)
     return res.status(httpStatusCodes.OK).json({
       msg: 'Profile has been changed',
       response: response.role == 'Tenant' ? tenant : response,
     })
   } catch (err) {
-    console.error({ err })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: `Server Error: ${err.message}` })

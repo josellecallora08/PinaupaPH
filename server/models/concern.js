@@ -4,7 +4,7 @@ const COMMENTMODEL = new mongoose.Schema(
   {
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
+      ref: 'users',
     },
     comment: {
       type: String,

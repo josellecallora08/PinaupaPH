@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import SearchBar from '../Component/SearchBar'
 import ConcernCard from './ConcernCard'
 import { useDispatch, useSelector } from 'react-redux'
-import { createReport, fetchReports, resetReportStatus, searchReport } from '../features/report'
+import { createConcern, fetchConcerns, resetConcernStatus, searchConcern } from '../features/concern'
 import Loading from './LoadingComponent/Loading'
 import { FaPlus } from 'react-icons/fa6'
 import CreateTicket from './Tenant Component/CreateTicket'
@@ -15,13 +15,13 @@ const ConcernList = () => {
   const [type, setSelectedType] = useState('')
   const [description, setDescription] = useState('')
   const [attached_image, setImage] = useState([])
-  const error = useSelector((state) => state.report.error)
-  const msg = useSelector((state) => state.report.msg)
+  const error = useSelector((state) => state.concern.error)
+  const msg = useSelector((state) => state.concern.msg)
   const user = useSelector((state) => state.auth.user)
-  const loading = useSelector((state) => state.report.loading)
+  const loading = useSelector((state) => state.concern.loading)
   const dispatch = useDispatch()
   const [selected, setSelected] = useState('all')
-  const reports = useSelector((state) => state.report.data)
+  const concerns = useSelector((state) => state.concern.data)
   const [title, setTitle] = useState('')
   const menu = useSelector((state) => state.toggle.sidebar)
   const [showPopup, setShowPopup] = useState(false)
@@ -42,7 +42,7 @@ const ConcernList = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(
-      createReport(user?.user_id._id, title, description, attached_image, type),
+      createConcern(user?.user_id._id, title, description, attached_image, type),
     )
     setisCreateTicket((prevState) => !prevState)
   }
@@ -59,7 +59,7 @@ const ConcernList = () => {
       setShowPopup(true)
       setTimeout(() => {
         setShowPopup(false)
-        dispatch(resetReportStatus())
+        dispatch(resetConcernStatus())
       }, 3000)
     }
   }, [msg, error])
@@ -69,9 +69,9 @@ const ConcernList = () => {
   }
   useEffect(() => {
     if (searchItem && searchItem !== '') {
-      dispatch(searchReport(searchItem))
+      dispatch(searchConcern(searchItem))
     } else {
-      dispatch(fetchReports())
+      dispatch(fetchConcerns())
     }
   }, [searchItem, dispatch, msg])
 
@@ -104,7 +104,7 @@ const ConcernList = () => {
                   className="btn lg:btn-wide bg-primary-color font-bold uppercase text-white hover:text-primary-color"
                 >
                   <FaPlus />
-                  Add Report
+                  Add Concern
                 </button>
 
                 {isCreateTicket && (
@@ -142,7 +142,7 @@ const ConcernList = () => {
 
           {user && user?.role === 'Admin' ? (
             (
-              reports
+              concerns
                 ?.filter((item) =>
                   selected === 'all'
                     ? item.status.toString()
@@ -154,7 +154,7 @@ const ConcernList = () => {
             )
           ) : user?.user_id.role === 'Tenant' ? (
             (
-              reports
+              concerns
                 ?.filter((item) =>
                   selected === 'all'
                     ? item?.sender_id?.user_id?._id === user?.user_id?._id
@@ -167,7 +167,7 @@ const ConcernList = () => {
                 ))
             )
           ) : (
-            reports
+            concerns
               ?.filter((item) => item.status === selected)
               .map((val, key) => <ConcernCard key={key} val={val} num={key} />)
           )}
