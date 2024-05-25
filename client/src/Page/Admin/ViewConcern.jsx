@@ -15,7 +15,8 @@ import { deleteConcern, fetchConcern, resetConcernStatus, resolveConcern } from 
 import { fetchComments } from '../../features/comment'
 import { isLoggedin } from '../../features/authentication'
 import PopUp from '../../Component/PopUp'
-
+import { FaEdit } from "react-icons/fa";
+import EditReportForm from '../../Component/Tenant Component/EditReportForm'
 const socket = io(`${import.meta.env.VITE_URL}/`)
 
 const ViewConcern = () => {
@@ -35,9 +36,13 @@ const ViewConcern = () => {
   const [showPopup, setShowPopup] = useState(false)
   const msgConcern = useSelector((state) => state.concern.msg)
   const errorConcern = useSelector((state) => state.concern.error)
+  const [showEditForm, setShowEditForm] = useState(false);
   const toggleDot = () => {
     setIsDotOpen(!isDotOpen)
   }
+  const handleEditButtonClick = () => {
+    setShowEditForm(!showEditForm);
+  };
 
   const handleDelete = async () => {
     const isConfirmed = window.confirm(
@@ -86,6 +91,7 @@ const ViewConcern = () => {
       document.removeEventListener('keydown', sendMessage)
     }
   }, [handleSubmit])
+  
 
   useEffect(() => {
     const handleReceiveComment = (message) => {
@@ -179,7 +185,7 @@ const ViewConcern = () => {
 
                 {isDotOpen && (
                   <div
-                    className={`absolute top-9 right-6 shadow-sm shadow-dark-gray bg-white rounded-md overflow-hidden animate-slideIn
+                    className={`absolute top-9 z-50 right-6 shadow-sm shadow-dark-gray bg-white rounded-md overflow-hidden animate-slideIn
                     transition-transform transform origin-top`}
                   >
                     {concern?.status === false && (
@@ -196,9 +202,17 @@ const ViewConcern = () => {
                     >
                       <LuTrash2 size={20} color="red" /> Delete
                     </div>
+                    
+                    <div
+                       onClick={handleEditButtonClick}
+                      className="flex items-center  gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300 cursor-pointer"
+                    >
+                      <FaEdit size={20}  /> Edit
+                    </div>
                   </div>
                 )}
               </div>
+              {showEditForm && <EditReportForm setShowEditForm={setShowEditForm}  />}
               {/*  */}
               <div className="row-auto flex flex-col gap-5">
                 <p className="font-bold h-fit">
