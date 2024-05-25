@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-
+import { MdOutlineFileDownload } from 'react-icons/md'
 const PayerReport = () => {
   // Sample data for Good Payers, Delinquency Payers, and Tenant Payment Report
   const goodPayers = [
@@ -75,7 +75,6 @@ const PayerReport = () => {
       datePaid: '2024-05-10',
       amount: 1100,
     },
-    
   ]
 
   // Function to calculate total amount
@@ -90,7 +89,6 @@ const PayerReport = () => {
   // Function to generate report
   const generateReport = (title, payers) => {
     // Logic to generate report
-    console.log(`Generating report for ${title}...`, payers)
   }
 
   // State for date pickers for each table
@@ -111,8 +109,8 @@ const PayerReport = () => {
   const renderTable = (title, payers, totalAmount, dateRange, setDateRange) => (
     <div className="mb-8 cursor-default">
       <div className="flex items-center gap-5 mb-2">
-        <h2 className="text-lg font-semibold">{title}</h2>
-        <div className="flex items-center gap-2">
+        <h2 className="lg:text-lg lg:w-auto lg:mr-0 text-xs font-semibold w-[24%] mr-1">{title}</h2>
+        <div className="flex lg:w-auto w-full items-center gap-2">
           <label>From:</label>
           <DatePicker
             selected={dateRange.from}
@@ -134,21 +132,24 @@ const PayerReport = () => {
         </div>
         <button
           onClick={() => generateReport(title, payers)}
-          className="bg-primary-color hover:bg-primary-color/50 duration-200 text-white px-3 py-2 rounded-md"
+          className="lg:block hidden bg-primary-color hover:bg-primary-color/50 duration-200 text-white px-3 py-2 rounded-md"
         >
           Generate Report
         </button>
+        <div className="lg:hidden mr-5">
+          <MdOutlineFileDownload size={25} />
+        </div>
       </div>
-      <div className="overflow-auto" style={{ maxHeight: '300px' }}>
-        <table className="min-w-full bg-white">
-          <thead className="bg-primary-color text-white border-b-2 border-white sticky top-0">
+      <div className="overflow-x-auto">
+        <table className="w-full table-auto border-collapse border  border-gray-300">
+          <thead className="bg-primary-color text-white">
             <tr>
-              <th className="py-2 px-4 border-white">Tenant Name</th>
-              <th className="py-2 px-4 border-white">Unit No.</th>
-              <th className="py-2 px-4 border-white">Apartment Name</th>
-              <th className="py-2 px-4 border-white">Due Date</th>
-              <th className="py-2 px-4 border-white">Date Paid</th>
-              <th className="py-2 px-4 border-white">Amount</th>
+              <th className="border px-4 py-2">Tenant Name</th>
+              <th className="border px-4 py-2">Unit No.</th>
+              <th className="border px-4 py-2">Apartment Name</th>
+              <th className="border px-4 py-2">Due Date</th>
+              <th className="border px-4 py-2">Date Paid</th>
+              <th className="border px-4 py-2">Amount</th>
             </tr>
           </thead>
           <tbody>
@@ -163,7 +164,7 @@ const PayerReport = () => {
               </tr>
             ))}
           </tbody>
-          <tfoot className="bg-white sticky bottom-0">
+          <tfoot>
             <tr>
               <td colSpan="5" className="border px-4 py-2 text-left">
                 <strong>Total</strong>
@@ -179,36 +180,39 @@ const PayerReport = () => {
   )
 
   return (
-    <div className="container w-11/12 m-auto">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
       <div className="my-5 font-bold cursor-default">
         <span onClick={() => window.history.back()} className="cursor-pointer">
           Dashboard
         </span>{' '}
         / Payer Report
       </div>
-      {renderTable(
-        'Tenant Payment Report',
-        tenantPaymentReport,
-        tenantPaymentReportTotal,
-        tenantPaymentDateRange,
-        setTenantPaymentDateRange,
-      )}
-      {renderTable(
-        'Good Payers',
-        goodPayers,
-        goodPayersTotal,
-        goodPayersDateRange,
-        setGoodPayersDateRange,
-      )}
-      {renderTable(
-        'Delinquency Payers',
-        delinquencyPayers,
-        delinquencyPayersTotal,
-        delinquencyPayersDateRange,
-        setDelinquencyPayersDateRange,
-      )}
+      <div className='lg:text-base text-xs'>
+        {renderTable(
+          'Tenant Payment Report',
+          tenantPaymentReport,
+          tenantPaymentReportTotal,
+          tenantPaymentDateRange,
+          setTenantPaymentDateRange,
+        )}
+        {renderTable(
+          'Good Payers',
+          goodPayers,
+          goodPayersTotal,
+          goodPayersDateRange,
+          setGoodPayersDateRange,
+        )}
+        {renderTable(
+          'Delinquency Payers',
+          delinquencyPayers,
+          delinquencyPayersTotal,
+          delinquencyPayersDateRange,
+          setDelinquencyPayersDateRange,
+        )}
+      </div>
     </div>
   )
 }
 
 export default PayerReport
+;``
