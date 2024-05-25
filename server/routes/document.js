@@ -10,6 +10,7 @@ const {
 } = require('../controllers/document_controller')
 
 const router = Router()
+
 router.post('/create', createContract)
 router.get('/generate', generateContract)
 router.get('/search', searchContract)

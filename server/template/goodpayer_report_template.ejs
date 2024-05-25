@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Delinquency Tenants Report</title>
+    <title>Good Payer Tenants Report</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,11 +31,11 @@
 </head>
 <body class="">
     <p style="text-align: end;">Date Generated: <%= generationDate %></p>
-    <h1>Delinquency Tenants Report</h1>
+    <h2>Good Payer Tenants Report</h2>
     <table>
         <thead>
             <tr>
-                <th>Tenant Name</th>
+                <th>Tenant</th>
                 <th>Unit</th>
                 <th>Apartment</th>
                 <th>Due Date</th>
@@ -66,7 +66,7 @@
             </tr>
         </tbody>
     </table>
-    <p>Total Delinquent Tenants: <%= num %></p>
+    <p>Total Good Payer Tenants: <%= num %></p>
     <div class="signature">
         <p>__________________________</p>
         <p>Owner's Signature</p>

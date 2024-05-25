@@ -2,6 +2,9 @@ const APARTMENTMODEL = require('../models/apartment')
 const UNITMODEL = require('../models/unit')
 const httpStatusCodes = require('../constants/constants')
 const cloudinary = require('cloudinary').v2
+const pdf = require('html-pdf')
+const ejs = require('ejs')
+const path = require('path')
 
 module.exports.fetch_previous_tenants = async (req, res) => {
   try {
@@ -15,8 +18,51 @@ module.exports.fetch_previous_tenants = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to view previous tenants.' })
     }
+    const previousTenants = response.tenants
+      .filter((tenant) => tenant.moveOut) // Only include tenants who have moved out
+      .map((tenant) => {
+        const moveInDate = new Date(tenant.moveIn)
+        const moveOutDate = new Date(tenant.moveOut)
+        const stayDuration = Math.round(
+          (moveOutDate - moveInDate) / (1000 * 60 * 60 * 24),
+        ) // Duration in days
+        return {
+          ...tenant._doc,
+          stayDuration,
+          tenantName: tenant.tenant_id.user_id.name, // Assuming this field exists
+        }
+      })
 
-    return res.status(httpStatusCodes.OK).json({ response })
+    const totalTenants = previousTenants.length
+    const unitNo = response.unit_no
+    const generationDate = new Date().toLocaleDateString();
+    const templatePath = path.join(
+      __dirname,
+      '../template',
+      'previous_tenants_template.ejs',
+    )
+    const htmlContent = await ejs.renderFile(templatePath, {
+      previousTenants,
+      totalTenants,
+      unitNo,
+      generationDate
+    })
+    pdf.create(htmlContent).toBuffer((err, buffer) => {
+      if (err) {
+        console.log(err.message)
+        return res
+          .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ error: err.message })
+      }
+      res.setHeader('Content-Type', 'application/pdf')
+      res.setHeader(
+        'Content-Disposition',
+        'attachment; filename=previous_tenants_report.pdf',
+      )
+      res.send(buffer)
+    })
+
+    // return res.status(httpStatusCodes.OK).json({ response })
   } catch (err) {
     console.error({ error: err.message })
     return res

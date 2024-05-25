@@ -9,7 +9,7 @@ const Server = require('socket.io').Server
 const Socket = require('socket.io').Socket
 const helmet = require('helmet')
 const compression = require('compression')
-const path = require('path');
+const path = require('path')
 // import routes
 const user_route = require('./routes/user')
 const cctv_route = require('./routes/cctv')
@@ -24,9 +24,10 @@ const dashboard_route = require('./routes/dashboard')
 const report_route = require('./routes/report')
 
 const { scheduledInvoice, deleteOTP } = require('./controllers/cron_controller')
+const { createContract } = require('./controllers/document_controller')
 
 const app = express()
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs')
 app.use(helmet())
 app.use(compression())
 // Middleware to parse JSON bodies
@@ -129,10 +130,9 @@ app.use('/api/announcement', announcement_route)
 app.use('/api/notification', notification_route)
 app.use('/api/dashboard', dashboard_route)
 app.use('/api/report', report_route)
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname, '/public')))
 // Default route
 app.get('/', (req, res) => {
-  res.json('PinaupaPH Backend')
+  res.render('index')
 })
-
 module.exports = app
