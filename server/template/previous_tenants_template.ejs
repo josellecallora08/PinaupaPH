@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Previous Tenants</title>
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      width: 80%;
+      margin:  auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    .signature {
+      margin-top: 50px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <p style="text-align: end;">Date Generated: <%= generationDate %></p>
+  <h1>Previous Tenants of Unit <%= unitNo %></h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Tenant</th>
+        <th>Move In Date</th>
+        <th>Move Out Date</th>
+        <th>Stay Duration (days)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% previousTenants.forEach(tenant => { %>
+        <tr>
+          <td><%= tenant.tenantName %></td>
+          <td><%= new Date(tenant.moveIn).toLocaleDateString() %></td>
+          <td><%= new Date(tenant.moveOut).toLocaleDateString() %></td>
+          <td><%= tenant.stayDuration %></td>
+        </tr>
+      <% }) %>
+      <tr>
+        <td colspan="3">No. of Tenants</td>
+        <td><%= totalTenants %></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="signature">
+    <p>__________________________</p>
+    <p>Owner's Signature</p>
+  </div>
+</body>
+</html>

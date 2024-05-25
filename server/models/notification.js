@@ -4,16 +4,16 @@ const NOTIFMODEL = new mongoose.Schema(
   {
     sender_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
+      ref: 'users',
       required: true,
     },
     receiver_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
+      ref: 'users',
     },
     type: {
       type: String,
-      enum: ['Payment', 'Comment', 'Announcement', 'Report'],
+      enum: ['Payment', 'Comment', 'Announcement', 'Concern'],
       default: null,
     },
     url: {

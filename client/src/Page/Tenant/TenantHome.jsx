@@ -11,19 +11,19 @@ import Calendar from '../../Component/Tenant Component/Calendar'
 import issue from '/Issue.svg'
 import { tenantInvoice } from '../../features/invoice'
 import { recentAnnouncement } from '../../features/announcement'
-import { fetchReports } from '../../features/report'
+import { fetchConcerns } from '../../features/concern'
 const TenantHome = () => {
   const loading = useSelector((state) => state.auth.loading)
   const user = useSelector((state) => state.auth.user)
   const invoice = useSelector((state) => state.invoice.single)
   const announcement = useSelector((state) => state.announcement.single)
-  const report = useSelector((state) => state.report.data)
+  const concern = useSelector((state) => state.concern.data)
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(isLoggedin())
     dispatch(tenantInvoice())
     dispatch(recentAnnouncement())
-    dispatch(fetchReports())
+    dispatch(fetchConcerns())
   }, [])
   
   return (
@@ -81,12 +81,12 @@ const TenantHome = () => {
               <div className=" overflow-y-auto h-40">
                 <table className="w-full">
                   <tbody className="text-primary-color">
-                    {report &&
-                    report.filter(
+                    {concern &&
+                    concern.filter(
                       (item) =>
                         item?.sender_id?.user_id?._id === user?.user_id?._id,
                     ).length > 0 ? (
-                      report
+                      concern
                         .filter(
                           (item) =>
                             item?.sender_id?.user_id?._id ===

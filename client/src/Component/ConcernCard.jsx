@@ -10,7 +10,7 @@ const ConcernCard = ({ val, num }) => {
 
   return (
     <>
-          <style jsx>{`
+      <style jsx>{`
         .truncate-title {
           display: block;
           max-width: 200px; /* Adjust this value as needed */
@@ -33,8 +33,12 @@ const ConcernCard = ({ val, num }) => {
               />
             </figure>
             <div className="">
-              <div className="font-bold text-lg">{val?.sender_id?.user_id.name}</div>
-              <div className="text-sm w-fit text-dark-gray truncate-title">{val.title}</div>
+              <div className="font-bold text-lg">
+                {val?.sender_id?.user_id.name}
+              </div>
+              <div className="text-sm w-fit text-dark-gray truncate-title">
+                {val.title}
+              </div>
               <div className="text-sm">
                 Unit - <span>{val?.sender_id?.unit_id.unit_no}</span>
               </div>

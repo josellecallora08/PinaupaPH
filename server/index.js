@@ -9,11 +9,11 @@ const Server = require('socket.io').Server
 const Socket = require('socket.io').Socket
 const helmet = require('helmet')
 const compression = require('compression')
-
+const path = require('path')
 // import routes
 const user_route = require('./routes/user')
 const cctv_route = require('./routes/cctv')
-const report_route = require('./routes/report')
+const concern_route = require('./routes/concern')
 const apartment_route = require('./routes/apartment')
 const document_route = require('./routes/document')
 const invoice_route = require('./routes/invoice')
@@ -21,11 +21,13 @@ const payment_route = require('./routes/payment')
 const announcement_route = require('./routes/announcement')
 const notification_route = require('./routes/notification')
 const dashboard_route = require('./routes/dashboard')
+const report_route = require('./routes/report')
 
 const { scheduledInvoice, deleteOTP } = require('./controllers/cron_controller')
+const { createContract } = require('./controllers/document_controller')
 
 const app = express()
-
+app.set('view engine', 'ejs')
 app.use(helmet())
 app.use(compression())
 // Middleware to parse JSON bodies
@@ -119,7 +121,7 @@ scheduledInvoice()
 // Routes
 app.use('/api/user', user_route)
 app.use('/api/cctv', cctv_route)
-app.use('/api/report', report_route)
+app.use('/api/concern', concern_route)
 app.use('/api/apartment', apartment_route)
 app.use('/api/document', document_route)
 app.use('/api/invoice', invoice_route)
@@ -127,10 +129,10 @@ app.use('/api/payment', payment_route)
 app.use('/api/announcement', announcement_route)
 app.use('/api/notification', notification_route)
 app.use('/api/dashboard', dashboard_route)
-
+app.use('/api/report', report_route)
+app.use(express.static(path.join(__dirname, '/public')))
 // Default route
 app.get('/', (req, res) => {
-  res.json('PinaupaPH Backend')
+  res.render('index')
 })
-
 module.exports = app

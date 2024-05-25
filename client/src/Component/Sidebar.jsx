@@ -15,8 +15,8 @@ import security from '/Cctv_black.svg'
 import security_ from '/Cctv_white.svg'
 import documents from '/Document_black.svg'
 import document_ from '/document_white.svg'
-import report from '/concern.svg'
-import report_ from '/concern_white.svg'
+import concern from '/concern.svg'
+import concern_ from '/concern_white.svg'
 import down from '/down.svg'
 
 import logout from '/logout.svg'
@@ -315,7 +315,7 @@ const Sidebar = ({sidebarRef, handleOutsideClick}) => {
                     className={`${menu ? '' : 'flex justify-center'} max-w-5 max-h-5 w-full h-full`}
                   >
                     <img
-                      src={isActive('/concern&issue') ? report_ : report}
+                      src={isActive('/concern&issue') ? concern_ : concern}
                       alt=""
                       className="size-full object-contain"
                     />
@@ -324,7 +324,7 @@ const Sidebar = ({sidebarRef, handleOutsideClick}) => {
                     <span
                       className={`lg:font-semibold text-primary-color ${isActive('/concern&issue') ? 'text-white' : ''}`}
                     >
-                      Reports and Concern
+                      Concern and Issues
                     </span>
                   ) : (
                     ''

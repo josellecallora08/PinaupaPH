@@ -166,6 +166,10 @@ module.exports.createInvoice = async (req, res) => {
     const dateDue = new Date(details.tenant_id.monthly_due).getDate()
     const dueMonth = new Date().setDate(dateDue) //test at home
     console.log(dueMonth)
+    // const invoice = await INVOICEMODEL.findOne({ tenant_id: tenant._id })
+    // if(invoice.some(item => new Date(item.due) === dueMonth)){
+
+    // }
     const unpaid = tenant.balance + tenant.unit_id.rent
     const response = await INVOICEMODEL.create({
       tenant_id: tenant._id,
@@ -174,7 +178,7 @@ module.exports.createInvoice = async (req, res) => {
       'pdf.reference': reference,
       amount: tenant.unit_id.rent,
       due: new Date(dueMonth).toISOString(),
-      'payment.unpaidBalance':  unpaid,
+      'payment.unpaidBalance': unpaid,
     })
 
     if (!response) {

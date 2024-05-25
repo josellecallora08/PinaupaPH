@@ -10,7 +10,7 @@ const CONTRACTMODEL = new mongoose.Schema(
   {
     tenant_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'tenant',
+      ref: 'tenants',
     },
     pdf: {
       public_id: {
@@ -28,4 +28,4 @@ const CONTRACTMODEL = new mongoose.Schema(
   { timestamps: true },
 )
 
-module.exports = mongoose.model('contract', CONTRACTMODEL)
+module.exports = mongoose.model('contracts', CONTRACTMODEL)
