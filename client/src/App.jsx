@@ -30,6 +30,7 @@ import Announcement from './Page/Admin/Announcement'
 import LeaseView from './Page/Admin/LeaseView'
 import SuperAdmin from './Page/SuperAdmin'
 import PaymentStatus from './Component/LoadingComponent/PaymentStatus'
+import PayerReport from './Component/AdminComponent/PayerReport'
 function App() {
   const user = useSelector((state) => state.auth.isAuthenticated)
   const role = useSelector((state) => state.auth.user)
@@ -54,6 +55,7 @@ function App() {
       <Route path="/contact" element={<ContactUsAdmin />} />
       <Route path="/otp-verify/:id" element={<OTPVerify />} />
       <Route path="/reset-password/:id" element={<ResetPass />} />
+ 
       <Route
         path="/terms&condition"
         element={
@@ -75,6 +77,7 @@ function App() {
         }
       />
 
+     
       <Route
         path="/dashboard"
         element={
@@ -87,6 +90,18 @@ function App() {
           ) : role?.user_id.role === 'Tenant' ? (
             <Layout className="bg-white1">
               <TenantHome />
+            </Layout>
+          ) : (
+            <Navigate to="/" />
+          )
+        }
+      />
+           <Route
+        path="/reportpayer"
+        element={
+          role?.role === 'Admin' ? (
+            <Layout className="bg-white1">
+              <PayerReport />
             </Layout>
           ) : (
             <Navigate to="/" />
@@ -215,6 +230,7 @@ function App() {
           )
         }
       />
+
 
       {/* Tenant Side */}
 
