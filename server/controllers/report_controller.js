@@ -27,8 +27,8 @@ module.exports.report_deliquency_tenants = async (req, res) => {
       .filter((item) =>
         from && to
           ? new Date(item.due) >= fromDate &&
-            new Date(item.due) <= toDate &&
-            item.isPaid
+          new Date(item.due) <= toDate &&
+          item.isPaid
           : item.isPaid,
       )
       .filter((item) => new Date(item.datePaid) > new Date(item.due))
@@ -47,7 +47,13 @@ module.exports.report_deliquency_tenants = async (req, res) => {
     })
 
     // Generate PDF from HTML content
-    pdf.create(htmlContent).toBuffer((err, buffer) => {
+    pdf.create(htmlContent, {
+      childProcessOptions: {
+        env: {
+          OPENSSL_CONF: '/dev/null',
+        },
+      },
+    }).toBuffer((err, buffer) => {
       if (err) {
         return res
           .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
@@ -91,8 +97,8 @@ module.exports.report_goodpayer_tenants = async (req, res) => {
       .filter((item) =>
         from && to
           ? new Date(item.due) >= fromDate &&
-            new Date(item.due) <= toDate &&
-            item.isPaid
+          new Date(item.due) <= toDate &&
+          item.isPaid
           : item.isPaid,
       )
       .filter((item) => new Date(item.datePaid) <= new Date(item.due))
@@ -109,7 +115,13 @@ module.exports.report_goodpayer_tenants = async (req, res) => {
     })
 
     // Generate PDF from HTML content
-    pdf.create(htmlContent).toBuffer((err, buffer) => {
+    pdf.create(htmlContent, {
+      childProcessOptions: {
+        env: {
+          OPENSSL_CONF: '/dev/null',
+        },
+      },
+    }).toBuffer((err, buffer) => {
       if (err) {
         return res
           .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
@@ -161,8 +173,8 @@ module.exports.report_rental_revenue = async (req, res) => {
     const totalRevenue = response.filter((item) =>
       from && to
         ? new Date(item.due) >= fromDate &&
-          new Date(item.due) <= toDate &&
-          item.isPaid
+        new Date(item.due) <= toDate &&
+        item.isPaid
         : item.isPaid,
     )
     // .filter((item) => new Date(item.datePaid) <= new Date(item.due));
@@ -184,7 +196,13 @@ module.exports.report_rental_revenue = async (req, res) => {
       fromDate: from && fromDate.toDateString(),
       toDate: to && toDate.toDateString(),
     })
-    pdf.create(htmlContent).toBuffer((err, buffer) => {
+    pdf.create(htmlContent, {
+      childProcessOptions: {
+        env: {
+          OPENSSL_CONF: '/dev/null',
+        },
+      },
+    }).toBuffer((err, buffer) => {
       if (err) {
         console.log(err.message)
         return res
