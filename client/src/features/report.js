@@ -23,29 +23,104 @@ const reportSlice = createSlice({
       state.loading = false
       state.error = action.payload
     },
+    fetchReportSuccess: (state, action) => {
+      state.loading = false
+      state.data = action.payload.response
+    },
   },
 })
-export const { reportStart, generateReportSuccess, generateReportFailed } =
-  reportSlice.actions
-export const generateRevenueReport = (date) => async (dispatch) => {
+export const {
+  reportStart,
+  generateReportSuccess,
+  generateReportFailed,
+  fetchReportSuccess,
+} = reportSlice.actions
+
+export const fetchRevenueReport = (date) => async (dispatch) => {
   try {
     dispatch(reportStart())
     const token = Cookies.get('token')
-    console.log(date)
-    // const from = date.from !== null && new Date(date.from).toLocaleDateString()
-    // const to = date.to !== null && new Date(date.to).toLocaleDateString()
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/report/revenue?from=${date.from}&to=${date.to}`,{
-        headers:{
-          Authorization: `Bearer ${token}`
-        }
-      }
+      `${import.meta.env.VITE_URL}/api/report/revenue/list?from=${date.from}&to=${date.to}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     )
     if (!response.ok) {
       const json = await response.json()
       throw new Error(json.error)
     }
-    dispatch(generateReportSuccess("Success! Generated revenue report."))
+    const json = await response.json()
+    dispatch(fetchReportSuccess(json))
+  } catch (err) {
+    dispatch(generateReportFailed(err.message))
+  }
+}
+
+export const fetchDelinquencyReport = (date) => async (dispatch) => {
+  try {
+    dispatch(reportStart())
+    const token = Cookies.get('token')
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/report/delinquency/list?from=${date.from}&to=${date.to}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
+    }
+    const json = await response.json()
+    dispatch(fetchReportSuccess(json))
+  } catch (err) {
+    dispatch(generateReportFailed(err.message))
+  }
+}
+export const fetchGoodpayerReport = (date) => async (dispatch) => {
+  try {
+    dispatch(reportStart())
+    const token = Cookies.get('token')
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/report/goodpayer/list?from=${date.from}&to=${date.to}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
+    }
+    const json = await response.json()
+    dispatch(fetchReportSuccess(json))
+  } catch (err) {
+    dispatch(generateReportFailed(err.message))
+  }
+}
+
+export const generateRevenueReport = (date) => async (dispatch) => {
+  try {
+    dispatch(reportStart())
+    const token = Cookies.get('token')
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/report/revenue?from=${date.from}&to=${date.to}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
+    }
+    dispatch(generateReportSuccess('Success! Generated revenue report.'))
     const blob = await response.blob()
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -65,17 +140,18 @@ export const generateDelinquencyReport = (date) => async (dispatch) => {
     dispatch(reportStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/report/delinquency?from=${date.from}&to=${date.to}`,{
-        headers:{
-          Authorization: `Bearer ${token}`
-        }
-      }
+      `${import.meta.env.VITE_URL}/api/report/delinquency?from=${date.from}&to=${date.to}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     )
     if (!response.ok) {
       const json = await response.json()
       throw new Error(json.error)
     }
-    dispatch(generateReportSuccess("Success! Generated delinquency report."))
+    dispatch(generateReportSuccess('Success! Generated delinquency report.'))
     const blob = await response.blob()
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -94,17 +170,18 @@ export const generateGoodpayerReport = (date) => async (dispatch) => {
     dispatch(reportStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/report/goodpayer?from=${date.from}&to=${date.to}`,{
-        headers:{
-          Authorization: `Bearer ${token}`
-        }
-      }
+      `${import.meta.env.VITE_URL}/api/report/goodpayer?from=${date.from}&to=${date.to}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     )
     if (!response.ok) {
       const json = await response.json()
       throw new Error(json.error)
     }
-    dispatch(generateReportSuccess("Success! Generated good payer report."))
+    dispatch(generateReportSuccess('Success! Generated good payer report.'))
     const blob = await response.blob()
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement('a')
