@@ -4,7 +4,7 @@ const COMMENTMODEL = new mongoose.Schema(
   {
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
+      ref: 'users',
     },
     comment: {
       type: String,
@@ -18,7 +18,7 @@ const REPORTMODEL = new mongoose.Schema(
   {
     sender_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'tenant',
+      ref: 'tenants',
       required: true,
     },
     title: {

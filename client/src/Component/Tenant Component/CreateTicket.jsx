@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { CiImageOn } from 'react-icons/ci'
 import { IoMdClose } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
-import { createReport, resetReportStatus } from '../../features/report'
+import { createConcern, resetConcernStatus } from '../../features/concern'
 import PopUp from '../../Component/PopUp'
 const CreateTicket = ({
   id,
@@ -24,8 +24,8 @@ const CreateTicket = ({
   const [inputKey, setInputKey] = useState(Date.now()) // Add state for input key
   const [popupMessage, setPopupMessage] = useState('')
   const [showPopup, setShowPopup] = useState(false)
-  const error = useSelector((state) => state.report.error);
-  const msg = useSelector((state) => state.report.msg);
+  const error = useSelector((state) => state.concern.error);
+  const msg = useSelector((state) => state.concern.msg);
   const handleClickOutside = (event) => {
     if (modalRef.current && !modalRef.current.contains(event.target)) {
       setisCreateTicket((prevState) => !prevState)
@@ -53,7 +53,7 @@ const CreateTicket = ({
       setShowPopup(true)
       setTimeout(() => {
         setShowPopup(false)
-        dispatch(resetReportStatus())
+        dispatch(resetConcernStatus())
       }, 3000)
     }
   }, [msg, error])

@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import City from '/city.svg'
-import 'chartkick/chart.js'
-import 'react-circular-progressbar/dist/styles.css'
-import renew from '/AvailRoom.svg'
-import { Bar, Line } from 'react-chartjs-2'
-import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
-import 'react-circular-progressbar/dist/styles.css'
-import occupancy from '/occupancy.svg'
-import { fetchApartments } from '../../features/apartment'
-import pay from '/PayDate.svg'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+
+import { Line } from 'react-chartjs-2'
+
+import { fetchApartments } from '../../features/apartment'
 import { isLoggedin } from '../../features/authentication'
-import Select from 'react-select'
-import Loading from '../../Component/LoadingComponent/Loading'
 import {
   fetchReports,
   fetchRevenue,
@@ -23,10 +15,22 @@ import {
 } from '../../features/dashboard'
 import { fetchUnitsApartment } from '../../features/unit'
 
+import City from '/city.svg'
+import renew from '/AvailRoom.svg'
+import occupancy from '/occupancy.svg'
+import pay from '/PayDate.svg'
+import Loading from '../../Component/LoadingComponent/Loading'
+
+import 'chartkick/chart.js'
+import 'react-circular-progressbar/dist/styles.css'
+import 'react-circular-progressbar/dist/styles.css'
+import Select from 'react-select'
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar'
+
 const Dashboard = () => {
+  const dispatch = useDispatch()
   const apartment = useSelector((state) => state.apartment.data)
   const units = useSelector((state) => state.unit.data)
-  const [date, setDate] = useState(formatDate(new Date()))
   const loading = useSelector((state) => state.auth.loading)
   const user = useSelector((state) => state.auth.user)
   const totalPaid = useSelector((state) => state.dash.totalpaid)
@@ -37,9 +41,11 @@ const Dashboard = () => {
   const revenue = useSelector((state) => state.dash.chart)
   const menu = useSelector((state) => state.toggle.sidebar)
   const [selectedOption, setSelectedOption] = useState(null)
-  const dispatch = useDispatch()
+  const [date, setDate] = useState(formatDate(new Date()))
+
   useEffect(() => {
     dispatch(isLoggedin())
+    dispatch(fetchApartments())
   }, [])
 
   const percentage = totalReports?.percentage?.toFixed(2)
@@ -85,15 +91,12 @@ const Dashboard = () => {
     dispatch(fetchReports(year))
     dispatch(fetchRevenue(month, year))
   }, [date, setDate])
-  console.log(totalPayer)
+
   function formatDate(date) {
     const year = date.getFullYear()
     const month = (date.getMonth() + 1).toString().padStart(2, '0')
     return `${year}-${month}`
   }
-  useEffect(() => {
-    dispatch(fetchApartments())
-  }, [])
 
   const availableRoom = apartment
     ?.filter((item) => item.units?.some((unit) => !unit.occupied))
@@ -305,7 +308,6 @@ const Dashboard = () => {
                           {/* Select Tag That can Search */}
 
                           <div className="w-11/12 h-full flex flex-col pt-2 items-center justify-center ">
-                          
                             <Select
                               value={selectedOption}
                               onChange={setSelectedOption}
@@ -315,7 +317,10 @@ const Dashboard = () => {
                               placeholder="Choose an Apartment"
                               menuPortalTarget={document.body}
                               styles={{
-                                menuPortal: base => ({ ...base, zIndex: 9999 }),
+                                menuPortal: (base) => ({
+                                  ...base,
+                                  zIndex: 9999,
+                                }),
                                 control: (base) => ({
                                   ...base,
                                   fontSize: '14px', // adjust the font size as needed
@@ -350,6 +355,7 @@ const Dashboard = () => {
                             <span>
                               {units?.filter((unit) => !unit.occupied).length ||
                                 0}
+                              / {units?.length}
                             </span>
                           </p>
                         </div>
@@ -421,7 +427,8 @@ const Dashboard = () => {
                               Good Payer
                             </p>
                             <p className="font-bold text-center text-base xl:text-2xl">
-                              {totalPayer?.totalGoodPayer}/{totalPayer?.totalPayer}
+                              {totalPayer?.totalGoodPayer}/
+                              {totalPayer?.totalPayer}
                             </p>
                           </div>
                           <p
@@ -429,7 +436,7 @@ const Dashboard = () => {
                           >
                             <span
                               style={{
-                                width: `${(totalPayer?.totalGoodPayer / totalPayer?.totalPayer) * 100 }%`,
+                                width: `${(totalPayer?.totalGoodPayer / totalPayer?.totalPayer) * 100}%`,
                               }}
                               className={`absolute h-2 bg-primary-color animate-in slide-in-from-left-20 duration-1000`}
                             ></span>
@@ -449,7 +456,13 @@ const Dashboard = () => {
                         className="mx-auto lg:w-28 md:mx-auto md:w-40 w-32 mt-4 "
                         value={percentage || 0}
                         minValue={0}
-                        text={percentage ? totalReports.totalReport + '/' + totalReports.total : 0 }
+                        text={
+                          percentage
+                            ? totalReports.totalReport +
+                              '/' +
+                              totalReports.total
+                            : 0 + '/' + 0
+                        }
                         strokeWidth={15}
                         styles={buildStyles({
                           textSize: '1rem',

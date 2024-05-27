@@ -674,4 +674,21 @@ input[type=number] {
   animation: slideIn 0.3s ease forwards;
 }
 
+/* Datepicker */
+.react-datepicker-wrapper {
+  width: auto;
+}
 
+.react-datepicker__input-container {
+  display: inline-block;
+}
+
+.react-datepicker__input-container input {
+  width: 90%; /* Adjust width as needed */
+  padding: 3px 5px; /* Adjust padding for smaller input */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  font-size: 0.8rem; /* Adjust font size for smaller text */
+}

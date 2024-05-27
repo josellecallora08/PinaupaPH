@@ -45,14 +45,14 @@ export const {
 } = commentSlice.actions
 
 export const createComment =
-  (userId, reportId, comment, url) => async (dispatch) => {
+  (userId, concernId, comment, url) => async (dispatch) => {
     try {
       console.log(userId)
       dispatch(fetchCommentStart())
       const token = Cookies.get('token')
       // const socket = io(`${import.meta.env.VITE_URL}/`)
       const response = await fetch(
-        `${import.meta.env.VITE_URL}/api/report/create/comment?user_id=${userId}&report_id=${reportId}`,
+        `${import.meta.env.VITE_URL}/api/concern/create/comment?user_id=${userId}&concern_id=${concernId}`,
         {
           method: 'POST',
           headers: {
@@ -70,17 +70,17 @@ export const createComment =
       const json = await response.json()
       console.log(comment)
 
-      // dispatch(fetchReport(reportId))
+      // dispatch(fetchconcern(concernId))
     } catch (err) {
       dispatch(actionFailed(err.message))
     }
   }
-export const fetchComments = (reportId) => async (dispatch) => {
+export const fetchComments = (concernId) => async (dispatch) => {
   try {
     dispatch(fetchCommentStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/report/list/comments?report_id=${reportId}`,
+      `${import.meta.env.VITE_URL}/api/concern/list/comments?concern_id=${concernId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -98,12 +98,12 @@ export const fetchComments = (reportId) => async (dispatch) => {
   }
 }
 
-export const fetchComment = (reportId, commentId) => async (dispatch) => {
+export const fetchComment = (concernId, commentId) => async (dispatch) => {
   try {
     dispatch(fetchCommentStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/report/?report_id=${reportId}&comment_id=${commentId}`,
+      `${import.meta.env.VITE_URL}/api/concern/?concern_id=${concernId}&comment_id=${commentId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -122,12 +122,12 @@ export const fetchComment = (reportId, commentId) => async (dispatch) => {
 }
 
 export const editComment =
-  (reportId, commentId, comment) => async (dispatch) => {
+  (concernId, commentId, comment) => async (dispatch) => {
     try {
       dispatch(fetchCommentStart())
       const token = Cookies.get('token')
       const response = await fetch(
-        `${import.meta.env.VITE_URL}/api/report/?report_id=${reportId}&comment_id=${commentId}`,
+        `${import.meta.env.VITE_URL}/api/concern/?concern_id=${concernId}&comment_id=${commentId}`,
         {
           method: 'PATCH',
           headers: {
@@ -142,18 +142,18 @@ export const editComment =
         throw new Error(json.error)
       }
       const json = await response.json()
-      dispatch(fetchReports())
+      dispatch(fetchconcerns())
     } catch (err) {
       dispatch(actionFailed(err.message))
     }
   }
 
-export const deleteComment = (reportId) => async (dispatch) => {
+export const deleteComment = (concernId) => async (dispatch) => {
   try {
     dispatch(fetchCommentStart())
     const token = Cookies.get('token')
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/report/?report_id=${reportId}`,
+      `${import.meta.env.VITE_URL}/api/concern/?concern_id=${concernId}`,
       {
         method: 'DELETE',
         headers: {
@@ -166,7 +166,7 @@ export const deleteComment = (reportId) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    dispatch(fetchReports())
+    dispatch(fetchconcerns())
   } catch (err) {
     dispatch(actionFailed(err.message))
   }

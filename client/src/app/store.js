@@ -8,14 +8,14 @@ import userReducer from '../features/user'
 import paymentReducer from '../features/payment'
 import menuReducer from '../features/menu'
 import commentReducer from '../features/comment'
-import reportReducer from '../features/report'
+import concernReducer from '../features/concern'
 import householdReducer from '../features/household'
 import invoiceReducer from '../features/invoice'
 import petReducer from '../features/pet'
-import socketReducer from '../features/socket'
 import notifReducer from '../features/notification'
 import announcementReducer from '../features/announcement'
 import dashboardReducer from '../features/dashboard'
+import reportReducer from '../features/report'
 
 
 export const store = configureStore({
@@ -29,13 +29,13 @@ export const store = configureStore({
     payment: paymentReducer,
     toggle: menuReducer,
     comment: commentReducer,
-    report: reportReducer,
+    concern: concernReducer,
     household: householdReducer,
     pet: petReducer,
     invoice: invoiceReducer,
-    socket: socketReducer,
     notif: notifReducer,
     announcement: announcementReducer,
-    dash: dashboardReducer
+    dash: dashboardReducer,
+    report: reportReducer
   },
 })

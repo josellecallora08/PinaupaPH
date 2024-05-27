@@ -1,0 +1,77 @@
+<html>
+<head>
+  <link rel="stylesheet" href="/css/index.css" type="text/css">
+  <style>
+   .width {
+  width: 80%;
+  margin: 20px auto;
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  height: 80%;
+  margin: auto auto; /* Center horizontally */
+}
+
+    body { font-family: Arial, sans-serif; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    .signature { margin-top: 50px; }
+    .signature p { margin-bottom: 5px; }
+  </style>
+</head>
+<body class="width poppins-regular">
+ <div class="container">
+  <p style="text-align: end;">Date Generated: <%= generationDate %></p>
+  <h2 class="">Rental Revenue Report</h2>
+  <% if (fromDate) { %>
+   <p>From: <%= fromDate %></p>
+ <% } %>
+ <% if (toDate) { %>
+   <p>To: <%= toDate %></p>
+ <% } %>
+ <table>
+   <thead>
+     <tr>
+       <th>Tenant</th>
+       <th>Unit</th>
+       <th>Apartment</th>
+       <th>Date Paid</th>
+       <th>Due Date</th>
+       <th>Amount Paid</th>
+     </tr>
+   </thead>
+   <tbody>
+     <% totalRevenue.forEach(item => { %>
+       <tr>
+         <td><%= item.tenant_id.user_id.name %></td>
+         <td><%= item.tenant_id.unit_id.unit_no %></td>
+         <td><%= item.tenant_id.apartment_id.name %></td>
+         <td><%= new Date(item.datePaid).toLocaleDateString() %></td>
+         <td><%= new Date(item.due).toLocaleDateString() %></td>
+         <td><%= (item.payment.amountPaid).toLocaleString('en-PH',{
+          style: 'currency',
+          currency: 'PHP'
+         }) %></td>
+       </tr>
+     <% }); %>
+     <tr>
+       <td colspan="5">Total</td>
+       <td><%= totalAmount.toLocaleString('en-PH',{
+        style: 'currency',
+        currency: 'PHP'
+       }) %></td>
+     </tr>
+   </tbody>
+ </table>
+ <div class="signature">
+  <p>__________________________</p>
+  <p>Owner's Signature</p>
+</div>
+ </div>
+</body>
+</html>

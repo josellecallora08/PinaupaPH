@@ -27,7 +27,9 @@ module.exports.restoreAccount = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to recover tenant account.' })
     }
-    const tenant = await TENANTMODEL.findOne({ user_id }).populate('user_id unit_id apartment_id')
+    const tenant = await TENANTMODEL.findOne({ user_id }).populate(
+      'user_id unit_id apartment_id',
+    )
     if (!tenant) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -35,7 +37,7 @@ module.exports.restoreAccount = async (req, res) => {
     }
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Tenant account recovered..', response:tenant })
+      .json({ msg: 'Tenant account recovered..', response: tenant })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -171,15 +173,15 @@ module.exports.sign_up = async (req, res) => {
         .json({ error: 'Error hashing the password.' })
     }
 
-    const details = {
-      name,
-      username,
-      email,
-      password: hashed,
-      mobile_no,
-      birthday,
-      apartment_id,
-    }
+    // const details = {
+    //   name,
+    //   username,
+    //   email,
+    //   password: hashed,
+    //   mobile_no,
+    //   birthday,
+    //   apartment_id,
+    // }
 
     // Check if user already exists
     const existingUser = await USERMODEL.findOne({
@@ -248,6 +250,14 @@ module.exports.sign_up = async (req, res) => {
           error: 'Failed to update occupancy status at Unit Collection.',
         })
       }
+
+      unit.tenants.push({
+        tenant_id: tenant._id,
+        moveIn: Date.now(),
+        isCurrent: true,
+      })
+
+      await unit.save()
     }
     const userResponse = await TENANTMODEL.findOne({
       user_id: response._id,
@@ -562,88 +572,101 @@ module.exports.update_profile = async (req, res) => {
 // * Tested API
 module.exports.update_unit_info = async (req, res) => {
   try {
-    const role = req.user.role
+    const role = req.user.role;
     if (role !== 'Admin') {
       return res.status(httpStatusCodes.UNAUTHORIZED).json({
         error: 'Unauthorized. Only admin can update tenant information.',
-      })
+      });
     }
 
-    const { user_id } = req.query
-    const { unit_id, deposit, occupancy } = req.body
+    const { user_id } = req.query;
+    const { unit_id, deposit, occupancy } = req.body;
 
     // Find the current tenant
     const tenant = await TENANTMODEL.findOne({ user_id: user_id }).populate(
-      'user_id unit_id apartment_id',
-    )
+      'user_id unit_id apartment_id'
+    );
     if (!tenant) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'User not found' })
+        .json({ error: 'Tenant not found' });
     }
 
     // Retrieve the current unit assigned to the tenant
     if (tenant.unit_id) {
-      const currentUnit = await UNITMODEL.findById(tenant.unit_id)
+      const currentUnit = await UNITMODEL.findById(tenant.unit_id);
       if (!currentUnit) {
-        const newUnit = await UNITMODEL.findById(unit_id)
-        if (!newUnit) {
-          return res
-            .status(httpStatusCodes.NOT_FOUND)
-            .json({ error: 'New unit not found' })
-        }
-        newUnit.occupied = true // Assuming "true" means occupied
-        await newUnit.save()
+        return res
+          .status(httpStatusCodes.NOT_FOUND)
+          .json({ error: 'Current unit not found' });
       }
 
-      // Update the status of the current unit to false
-      currentUnit.occupied = false
-      await currentUnit.save()
+      // Update the status of the current unit to not occupied
+      currentUnit.occupied = false;
+      // Update the tenant's history in the current unit
+      const tenantIndex = currentUnit.tenants.findIndex(
+        (item) => item.tenant_id.toString() === tenant._id.toString() && item.isCurrent
+      );
+      if (tenantIndex !== -1) {
+        currentUnit.tenants[tenantIndex].moveOut = new Date();
+        currentUnit.tenants[tenantIndex].isCurrent = false;
+      }
+
+      await currentUnit.save();
     }
 
     // Update tenant information with the new unit
     if (unit_id) {
-      tenant.unit_id = unit_id
+      tenant.unit_id = unit_id;
 
-      const newUnit = await UNITMODEL.findById(unit_id)
+      const newUnit = await UNITMODEL.findById(unit_id);
       if (!newUnit) {
         return res
           .status(httpStatusCodes.NOT_FOUND)
-          .json({ error: 'New unit not found' })
+          .json({ error: 'New unit not found' });
       }
-      newUnit.occupied = true // Assuming "true" means occupied
-      await newUnit.save()
+      newUnit.occupied = true; // Assuming "true" means occupied
+
+      // Add tenant to the new unit's tenant history
+      newUnit.tenants.push({
+        tenant_id: tenant._id,
+        moveIn: new Date(),
+        isCurrent: true,
+      });
+
+      await newUnit.save();
     }
 
-    if (deposit) {
-      tenant.deposit = deposit
+    if (deposit !== undefined) {
+      tenant.deposit = deposit;
     }
 
-    if (occupancy) {
-      tenant.monthly_due = occupancy
+    if (occupancy !== undefined) {
+      tenant.monthly_due = occupancy;
     }
-    await tenant.save()
+    await tenant.save();
 
     const response = await TENANTMODEL.findOne({ user_id }).populate(
-      'user_id unit_id apartment_id',
-    )
+      'user_id unit_id apartment_id'
+    );
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'User not found' })
+        .json({ error: 'User not found' });
     }
 
     return res.status(httpStatusCodes.OK).json({
       msg: 'Tenant unit information updated',
       response,
-    })
+    });
   } catch (err) {
-    console.error({ error: err.message })
+    console.error('Error during tenant unit info update:', err);
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Server Error' })
+      .json({ error: 'Server Error' });
   }
-}
+};
+
 // * Tested API
 module.exports.update_profile_picture = async (req, res) => {
   try {
@@ -685,18 +708,14 @@ module.exports.update_profile_picture = async (req, res) => {
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Failed to change image' })
     }
-    console.log(response._id)
     const tenant = await TENANTMODEL.findOne({ user_id }).populate(
       'user_id unit_id apartment_id',
     )
-    console.log(tenant)
-    console.log(response.role)
     return res.status(httpStatusCodes.OK).json({
       msg: 'Profile has been changed',
       response: response.role == 'Tenant' ? tenant : response,
     })
   } catch (err) {
-    console.error({ err })
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: `Server Error: ${err.message}` })
@@ -761,11 +780,13 @@ module.exports.deleteTenant = async (req, res) => {
     const role = req.user.role
     if (role !== 'Admin') {
       return res
-        .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Unauthorized. Only admin can add tenants.' })
+        .status(httpStatusCodes.UNAUTHORIZED)
+        .json({ error: 'Unauthorized. Only admin can delete tenants.' })
     }
 
     const { user_id } = req.query
+
+    // Soft delete the user
     const response = await USERMODEL.findByIdAndUpdate(user_id, {
       isDelete: true,
     })
@@ -774,45 +795,131 @@ module.exports.deleteTenant = async (req, res) => {
         .status(httpStatusCodes.NOT_FOUND)
         .json({ error: 'User not found...' })
     }
+
     let tenant
-    // await cloudinary.uploader.destroy(response.profile_image.public_id)
     if (response.role === 'Tenant') {
-      tenant = await TENANTMODEL.findOne({
-        user_id: user_id,
-      }).populate('user_id apartment_id')
-      if (!tenant)
+      tenant = await TENANTMODEL.findOne({ user_id: user_id }).populate(
+        'user_id apartment_id',
+      )
+      if (!tenant) {
         return res
           .status(httpStatusCodes.BAD_REQUEST)
           .json({ error: 'Unable to Locate Tenant' })
+      }
 
       if (tenant.unit_id) {
-        const unit = await UNITMODEL.findByIdAndUpdate(
-          { _id: tenant.unit_id },
-          { occupied: false },
-        )
-
-        if (!unit)
+        const unit = await UNITMODEL.findById(tenant.unit_id)
+        if (!unit) {
           return res
             .status(httpStatusCodes.BAD_REQUEST)
             .json({ error: 'Unable to locate Unit' })
+        }
+
+        // Find tenant in unit's tenants array and update moveOut date
+        const tenantIndex = unit.tenants.findIndex(
+          (item) =>
+            item.tenant_id.toString() === tenant._id.toString() &&
+            item.isCurrent,
+        )
+        if (tenantIndex === -1) {
+          return res
+            .status(httpStatusCodes.BAD_REQUEST)
+            .json({ error: 'Tenant not found in unit.' })
+        }
+
+        unit.tenants[tenantIndex].moveOut = new Date()
+        unit.tenants[tenantIndex].isCurrent = false
+        unit.occupied = false
+
+        await unit.save() // Save the updated unit
+
+        // Logging to verify unit update
+        console.log(`Updated unit: ${JSON.stringify(unit)}`)
       }
 
-      await TENANTMODEL.findOneAndUpdate(
+      // Update tenant's unit_id to null
+      const updatedTenant = await TENANTMODEL.findOneAndUpdate(
         { user_id: user_id },
         { $unset: { unit_id: '' } }, // This will remove the unit_id field
-      // { $set: { unit_id: null } }  // This will set the unit_id ield to null
+        { new: true },
       )
+
+      // Logging to verify tenant update
+      console.log(`Updated tenant: ${JSON.stringify(updatedTenant)}`)
     }
+
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: 'Tenant has been softly deleted', response: tenant })
   } catch (err) {
-    console.error({ error: err.message })
+    console.error('Error during tenant deletion:', err)
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: err.message })
   }
 }
+
+module.exports.reAddTenant = async (req, res) => {
+  try {
+    const role = req.user.role;
+    if (role !== 'Admin') {
+      return res
+        .status(httpStatusCodes.UNAUTHORIZED)
+        .json({ error: 'Unauthorized. Only admin can re-add tenants.' });
+    }
+
+    const { user_id, unit_id, deposit, monthly_due } = req.body;
+
+    // Find the tenant
+    let tenant = await TENANTMODEL.findOne({ user_id: user_id });
+    if (!tenant) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Tenant not found...' });
+    }
+
+    // Check if the unit is occupied
+    const unit = await UNITMODEL.findById(unit_id);
+    if (!unit) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Unit not found...' });
+    }
+
+    if (unit.occupied) {
+      return res
+        .status(httpStatusCodes.CONFLICT)
+        .json({ error: 'Unit is already occupied.' });
+    }
+
+    // Re-add tenant to the unit
+    unit.tenants.push({
+      tenant_id: tenant._id,
+      moveIn: new Date(),
+      isCurrent: true,
+    });
+    unit.occupied = true;
+
+    await unit.save();
+
+    // Update tenant details
+    tenant.unit_id = unit_id;
+    tenant.deposit = deposit;
+    tenant.monthly_due = monthly_due;
+
+    await tenant.save();
+
+    return res
+      .status(httpStatusCodes.OK)
+      .json({ msg: 'Tenant has been re-added to the unit', response: tenant });
+  } catch (err) {
+    console.error('Error during tenant re-adding:', err);
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message });
+  }
+};
+
 
 module.exports.forgot_password = async (req, res) => {
   try {

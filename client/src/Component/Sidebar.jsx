@@ -15,10 +15,11 @@ import security from '/Cctv_black.svg'
 import security_ from '/Cctv_white.svg'
 import documents from '/Document_black.svg'
 import document_ from '/document_white.svg'
-import report from '/concern.svg'
-import report_ from '/concern_white.svg'
+import concern from '/concern.svg'
+import concern_ from '/concern_white.svg'
 import down from '/down.svg'
-
+import Report_ from '/Report-white.svg'
+import Report from '/Report-black.svg'
 import logout from '/logout.svg'
 import announcement from '/announcement.svg'
 import announcement_ from '/announcement_.svg'
@@ -130,6 +131,33 @@ const Sidebar = ({sidebarRef, handleOutsideClick}) => {
                         className={`lg:font-semibold text-primary-color ${isActive('/apartment') && 'text-white'}`}
                       >
                         Apartment
+                      </span>
+                    ) : (
+                      ''
+                    )}
+                  </Link>
+                </li>
+                <li className="w-full h-fit">
+                  <Link
+                    to={'/reportpayer'}
+                    className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5 m-auto h-full hover:bg-primary-color/40 rounded-md ${
+                      menu ? 'p-3 md:p-5' : 'p-3'
+                    } ${isActive('/reportpayer') ? 'bg-primary-color' : ''}`}
+                  >
+                    <figure
+                      className={`${menu ? '' : 'flex justify-center'} max-w-5 max-h-5 w-full h-full`}
+                    >
+                      <img
+                        src={isActive('/reportpayer') ? Report_ : Report}
+                        alt=""
+                        className="size-full object-contain"
+                      />
+                    </figure>
+                    {menu ? (
+                      <span
+                        className={`lg:font-semibold text-primary-color ${isActive('/reportpayer') && 'text-white'}`}
+                      >
+                        Reports
                       </span>
                     ) : (
                       ''
@@ -315,7 +343,7 @@ const Sidebar = ({sidebarRef, handleOutsideClick}) => {
                     className={`${menu ? '' : 'flex justify-center'} max-w-5 max-h-5 w-full h-full`}
                   >
                     <img
-                      src={isActive('/concern&issue') ? report_ : report}
+                      src={isActive('/concern&issue') ? concern_ : concern}
                       alt=""
                       className="size-full object-contain"
                     />
@@ -324,7 +352,7 @@ const Sidebar = ({sidebarRef, handleOutsideClick}) => {
                     <span
                       className={`lg:font-semibold text-primary-color ${isActive('/concern&issue') ? 'text-white' : ''}`}
                     >
-                      Reports and Concern
+                      Concern and Issues
                     </span>
                   ) : (
                     ''
