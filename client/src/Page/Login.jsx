@@ -50,12 +50,7 @@ const Login = () => {
               <img src={logo} alt="PinaupaPH logo" className="w-full" />
             </Link>
           </div>
-          <Link
-            to="/contact"
-            className="hidden lg:block px-5 py-2 bg-primary-color text-white font-semibold rounded-md shadow-lg hover:bg-primary-dark transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-color"
-          >
-            Contact Us
-          </Link>
+          
         </div>
 
         <div className="lg:flex lg:w-full lg:flex-row-reverse items-center lg:justify-between mt-8">

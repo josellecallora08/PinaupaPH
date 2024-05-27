@@ -50,7 +50,7 @@ function App() {
       />
       <Route
         path="/"
-        element={<Home />}
+        element={user ? <Navigate to="/dashboard" /> : <Home />}
       />
       <Route
         path="/verify-payment/status/:invoice_id"

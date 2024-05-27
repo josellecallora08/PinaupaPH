@@ -26,13 +26,16 @@ const Home = () => {
             </ul>
           </div>
           <div className="flex gap-10">
-            <button className="bg-primary-color text-white py-1 px-6 uppercase font-thin rounded-sm">
-              Contact
-            </button>
+            <Link
+              to="/contact"
+              className="bg-primary-color text-white py-1 px-6 uppercase font-thin rounded-sm"
+            >
+              Contact Us
+            </Link>
             <Link to={'/login'}>
-            <button className="border border-primary-color text-primary-color uppercase py-1 px-6 font-thin rounded-sm hover:bg-primary-color hover:text-white duration-300 ">
-              Login
-            </button>
+              <button className="border border-primary-color text-primary-color uppercase py-1 px-6 font-thin rounded-sm hover:bg-primary-color hover:text-white duration-300 ">
+                Login
+              </button>
             </Link>
           </div>
         </div>
@@ -136,13 +139,15 @@ const Home = () => {
         </div>
         {/* End of Third Section */}
         {/* Fourth Section */}
-        <div className='flex px-32 my-20'>
-          <div className='w-1/2'>
+        <div className="flex px-32 my-20">
+          <div className="w-1/2">
             <img src={ThirdLaptop} alt="" />
           </div>
-          <div className='w-1/2 '>
-            <h1 className='text-2xl uppercase  w-1/3 leading-relaxed ml-5 '>Our system support <br /> e-wallets.</h1>
-            <p className='ml-5 mt-6 w-1/2 font-light text-justify text-light-gray'>
+          <div className="w-1/2 ">
+            <h1 className="text-2xl uppercase  w-1/3 leading-relaxed ml-5 ">
+              Our system support <br /> e-wallets.
+            </h1>
+            <p className="ml-5 mt-6 w-1/2 font-light text-justify text-light-gray">
               Simplify payments with cashless options like G-Cash, Maya, and
               Grab, ensuring easy and convenient transactions for residents.
             </p>
