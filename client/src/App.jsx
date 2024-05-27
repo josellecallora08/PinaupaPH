@@ -31,6 +31,7 @@ import LeaseView from './Page/Admin/LeaseView'
 import SuperAdmin from './Page/SuperAdmin'
 import PaymentStatus from './Component/LoadingComponent/PaymentStatus'
 import PayerReport from './Component/AdminComponent/PayerReport'
+import Home from './Page/Home'
 function App() {
   const user = useSelector((state) => state.auth.isAuthenticated)
   const role = useSelector((state) => state.auth.user)
@@ -44,8 +45,12 @@ function App() {
     <Routes>
       <Route path="*" element={<ErrorPage />} />
       <Route
-        path="/"
+        path="/login"
         element={user ? <Navigate to="/dashboard" /> : <Login />}
+      />
+      <Route
+        path="/"
+        element={<Home />}
       />
       <Route
         path="/verify-payment/status/:invoice_id"
