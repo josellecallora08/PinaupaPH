@@ -2,7 +2,30 @@ import React, { useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { MdOutlineFileDownload } from 'react-icons/md'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  generateDelinquencyReport,
+  generateGoodpayerReport,
+  generateRevenueReport,
+} from '../../features/report'
 const PayerReport = () => {
+  const currentYear = new Date().getFullYear()
+  // State for date pickers for each table
+  const [revenueDateRange, setTenantPaymentDateRange] = useState({
+    from: null || `${currentYear}-01-01`,
+    to: null || `${currentYear}-12-31`,
+  })
+  const [goodPayersDateRange, setGoodPayersDateRange] = useState({
+    from: null || `${currentYear}-01-01`,
+    to: null || `${currentYear}-12-31`,
+  })
+  const [delinquencyPayersDateRange, setDelinquencyPayersDateRange] = useState({
+    from: null || `${currentYear}-01-01`,
+    to: null || `${currentYear}-12-31`,
+  })
+
+  const dispatch = useDispatch()
+
   // Sample data for Good Payers, Delinquency Payers, and Tenant Payment Report
   const goodPayers = [
     {
@@ -88,28 +111,22 @@ const PayerReport = () => {
 
   // Function to generate report
   const generateReport = (title, payers) => {
-    // Logic to generate report
+    if (title === 'Revenue Report') {
+      dispatch(generateRevenueReport(revenueDateRange))
+    } else if (title === 'Good Payers') {
+      dispatch(generateGoodpayerReport(goodPayersDateRange))
+    } else if (title === 'Delinquency Payers') {
+      dispatch(generateDelinquencyReport(goodPayersDateRange))
+    }
   }
-
-  // State for date pickers for each table
-  const [tenantPaymentDateRange, setTenantPaymentDateRange] = useState({
-    from: null,
-    to: null,
-  })
-  const [goodPayersDateRange, setGoodPayersDateRange] = useState({
-    from: null,
-    to: null,
-  })
-  const [delinquencyPayersDateRange, setDelinquencyPayersDateRange] = useState({
-    from: null,
-    to: null,
-  })
 
   // Function to render table
   const renderTable = (title, payers, totalAmount, dateRange, setDateRange) => (
     <div className="mb-8 cursor-default">
       <div className="flex items-center gap-5 mb-2">
-        <h2 className="lg:text-lg lg:w-auto lg:mr-0 text-xs font-semibold w-[24%] mr-1">{title}</h2>
+        <h2 className="lg:text-lg lg:w-auto lg:mr-0 text-xs font-semibold w-[24%] mr-1">
+          {title}
+        </h2>
         <div className="flex lg:w-auto w-full items-center gap-2">
           <label>From:</label>
           <DatePicker
@@ -144,7 +161,7 @@ const PayerReport = () => {
         <table className="w-full table-auto border-collapse border  border-gray-300">
           <thead className="bg-primary-color text-white">
             <tr>
-              <th className="border px-4 py-2">Tenant Name</th>
+              <th className="border px-4 py-2">Tenant</th>
               <th className="border px-4 py-2">Unit No.</th>
               <th className="border px-4 py-2">Apartment Name</th>
               <th className="border px-4 py-2">Due Date</th>
@@ -187,12 +204,12 @@ const PayerReport = () => {
         </span>{' '}
         / Payer Report
       </div>
-      <div className='lg:text-base text-xs'>
+      <div className="lg:text-base text-xs">
         {renderTable(
-          'Tenant Payment Report',
+          'Revenue Report',
           tenantPaymentReport,
           tenantPaymentReportTotal,
-          tenantPaymentDateRange,
+          revenueDateRange,
           setTenantPaymentDateRange,
         )}
         {renderTable(

@@ -15,6 +15,7 @@ import petReducer from '../features/pet'
 import notifReducer from '../features/notification'
 import announcementReducer from '../features/announcement'
 import dashboardReducer from '../features/dashboard'
+import reportReducer from '../features/report'
 
 
 export const store = configureStore({
@@ -34,6 +35,7 @@ export const store = configureStore({
     invoice: invoiceReducer,
     notif: notifReducer,
     announcement: announcementReducer,
-    dash: dashboardReducer
+    dash: dashboardReducer,
+    report: reportReducer
   },
 })
