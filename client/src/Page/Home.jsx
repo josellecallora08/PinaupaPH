@@ -17,7 +17,7 @@ const Home = () => {
     <>
       <div className=" ">
         {/* Navbar */}
-        <div className="flex w-full justify-between items-center mt-10 mb-20 px-4 md:px-40">
+        <div id="home" className="flex w-full justify-between items-center mt-10 mb-20 px-4 md:px-40">
           <div className="w-40">
             <img src={logo} alt="PinaupaPh-logo" />
           </div>
@@ -60,7 +60,7 @@ const Home = () => {
         </div>
         {/* End of Navbar */}
         {/* First Section */}
-        <div id="home" className="flex flex-col md:flex-row pl-4 md:pl-40 mb-24 ">
+        <div  className="flex flex-col md:flex-row pl-4 md:pl-40 mb-24 ">
           <div className="w-full md:w-1/2">
             <div className="text-4xl md:text-6xl font-medium text-primary-color leading-relaxed">
               <h1>
