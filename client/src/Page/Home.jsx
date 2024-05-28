@@ -108,7 +108,7 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="flex flex-col md:flex-wrap justify-between items-center mt-10 px-4 md:px-20">
+          <div className="flex lg:flex-row flex-col md:flex-wrap justify-between items-center mt-10 px-4 md:px-20">
             <div className="flex flex-col items-center w-full md:w-1/4 p-4 box-border h-80">
               <img src={Icon1} alt="" className="w-16 h-16" />
               <h1 className="text-lg mb-2 font-semibold mt-4 text-center">
