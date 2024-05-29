@@ -88,7 +88,8 @@ export const generateDocument = (contract_id) => async (dispatch) => {
     )
     if (!response.ok) {
       const json = await response.json()
-      dispatch(fetchFailed(json.error))
+      console.log(json)
+      // dispatch(fetchFailed(json.error))
       throw new Error('Failed to download the invoice')
     }
     const blob = await response.blob()

@@ -99,7 +99,12 @@ const Apartment = () => {
           {/* Body of Tenant Tab */}
           <div className="lg:grid-cols-2 2xl:grid-cols-3 grid 2xl:grid-rows-4 grid-cols-1 gap-4 py-5">
             {apartment?.map((val, key) => (
-              <ApartmentCard key={key} val={val} num={key} />
+              <ApartmentCard
+                key={key}
+                val={val}
+                num={key}
+  
+              />
             ))}
           </div>
         </div>

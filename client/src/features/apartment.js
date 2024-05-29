@@ -11,7 +11,6 @@ const apartmentSlice = createSlice({
   },
   reducers: {
     resetApartmentStatus:(state) => {
-      state.loading= false
       state.error = null
       state.msg = null
     },

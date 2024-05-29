@@ -29,6 +29,7 @@ const ApartmentProfile = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const units = useSelector((state) => state.unit.data)
+
   const toggleAddRoomForm = () => {
     setIsAddRoomFormOpen(!isAddRoomFormOpen)
   }
@@ -146,7 +147,8 @@ const ApartmentProfile = () => {
           </div>
           <div className="lg:grid-cols-3 mt-5 grid grid-cols-1 gap-2 mx-5">
             {units?.map((val, key) => (
-              <ApartmentStatusCard apartmentId={id} val={val} key={key} />
+              <ApartmentStatusCard apartmentId={id} val={val} key={key}               update={update}
+              setUpdate={setUpdate}/>
             ))}
           </div>
         </div>
@@ -176,7 +178,7 @@ const ApartmentProfile = () => {
         <PopUp
           message={popupMessage}
           onClose={() => setShowPopup(false)}
-          isError={error}
+          isError={error || errorUnit}
         />
       )}
     </>

@@ -17,6 +17,7 @@ const {
   create_apartment_unit,
   fetch_unit,
   fetch_previous_tenants,
+  generate_previous_tenants,
 } = require('../controllers/unit_controller')
 
 const storage = multer.memoryStorage()
@@ -43,8 +44,9 @@ router.post('/:apartment_id/create_apartment_unit', create_apartment_unit)
 router.get('/:apartment_id/unit/:unit_id', fetch_unit)
 router.get('/units', fetch_units)
 router.get('/:apartment_id/units', fetch_unit_apartment)
-router.get('/unit', fetch_previous_tenants)
 router.patch('/:apartment_id/edit_apartment_unit/:unit_id', edit_apartment_unit)
 router.delete('/:apartment_id/delete_apartment_unit', delete_apartment_unit)
+router.get('/unit/previoustenants', generate_previous_tenants)
+router.get('/unit/previoustenants/list', fetch_previous_tenants)
 
 module.exports = router
