@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { MdOutlineModeEditOutline, MdOutlineClose } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteUnit, fetchUnit } from '../../features/unit'
 import EditApartmentUnit from './EditApartmentUnit'
+import pdf from '/pdf.svg'
 import { MdInfoOutline } from 'react-icons/md'
-const ApartmentStatusCard = ({ apartmentId, val }) => {
+import { generatePreviousTenants } from '../../features/report'
+const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
   const [isEditApartmentUnit, setIsEditApartmentUnit] = useState(false)
   const toggleisEditApartmentUnit = () => {
     setIsEditApartmentUnit(!isEditApartmentUnit)
@@ -12,8 +14,13 @@ const ApartmentStatusCard = ({ apartmentId, val }) => {
 
   const [isTenantInfoOpen, setIsTenantInfoOpen] = useState(false)
   const dispatch = useDispatch()
-  const unit = useSelector((state) => state.unit.data)
+  const previousTenants = useSelector((state) => state.unit.single)
   const loading = useSelector((state) => state.unit.loading)
+
+  useEffect(() => {
+    dispatch(fetchUnit(apartmentId, val._id))
+    setUpdate(false)
+  }, [dispatch, update])
 
   const handleDelete = (unitId) => {
     const isConfirmed = window.confirm(
@@ -23,62 +30,20 @@ const ApartmentStatusCard = ({ apartmentId, val }) => {
       dispatch(deleteUnit(apartmentId, unitId))
     }
   }
-  const tenants = [
-    {
-      name: 'John Doe',
-      moveInDate: '2023-01-01',
-      moveOutDate: '2023-01-10',
-      stayDuration: 9,
-    },
-    {
-      name: 'Jane Smith',
-      moveInDate: '2023-02-01',
-      moveOutDate: '2023-02-20',
-      stayDuration: 19,
-    },
-    {
-      name: 'Jane Smith',
-      moveInDate: '2023-02-01',
-      moveOutDate: '2023-02-20',
-      stayDuration: 19,
-    },
-    {
-      name: 'Jane Smith',
-      moveInDate: '2023-02-01',
-      moveOutDate: '2023-02-20',
-      stayDuration: 19,
-    },
-    {
-      name: 'Jane Smith',
-      moveInDate: '2023-02-01',
-      moveOutDate: '2023-02-20',
-      stayDuration: 19,
-    },
-    {
-      name: 'Jane Smith',
-      moveInDate: '2023-02-01',
-      moveOutDate: '2023-02-20',
-      stayDuration: 19,
-    },
-    {
-      name: 'Jane Smith',
-      moveInDate: '2023-02-01',
-      moveOutDate: '2023-02-20',
-      stayDuration: 19,
-    },
-    {
-      name: 'Jane Smith',
-      moveInDate: '2023-02-01',
-      moveOutDate: '2023-02-20',
-      stayDuration: 19,
-    },
-    // Add more tenants as needed
-  ]
+
+  const handleTenants = () => {
+    setIsTenantInfoOpen(!isTenantInfoOpen)
+    setUpdate(true)
+  }
+  
+  const generateReport = () => {
+    dispatch(generatePreviousTenants(val._id))
+  }
   return (
     <>
       <div className=" relative flex  overflow-hidden shadow-md shadow-gray rounded-lg">
         <div
-          onClick={() => setIsTenantInfoOpen(!isTenantInfoOpen)}
+          onClick={handleTenants}
           className="relative text-white flex items-center justify-center w-32 px-5 bg-dark-blue  hover:bg-primary-color/85 group cursor-pointer"
         >
           <h1 className="text-2xl font-black group-hover:hidden">
@@ -110,6 +75,9 @@ const ApartmentStatusCard = ({ apartmentId, val }) => {
               className="lg:p-2 hover:scale-105 hover:duration-300 hover:bg-red/55  bg-red p-1 rounded-md"
             >
               <MdOutlineClose size={15} color="white" />
+            </button>
+            <button onClick={generateReport} className="bg-lime rounded hover:bg-lime/55 text-white px-4 py-2 ">
+              <img src={pdf} className='w-5 h-5' alt="" />
             </button>
           </div>
         </div>
@@ -158,17 +126,27 @@ const ApartmentStatusCard = ({ apartmentId, val }) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {tenants.map((tenant, index) => (
+                      {previousTenants?.tenants?.map((tenant, index) => (
                         <tr key={index} className="text-center">
-                          <td className="border px-4 py-2">{tenant.name}</td>
                           <td className="border px-4 py-2">
-                            {tenant.moveInDate}
+                            {tenant?.tenant_id?.user_id?.name}
                           </td>
                           <td className="border px-4 py-2">
-                            {tenant.moveOutDate}
+                            {new Date(tenant?.moveIn).toDateString()}
                           </td>
                           <td className="border px-4 py-2">
-                            {tenant.stayDuration}
+                            {(tenant?.moveOut &&
+                              new Date(tenant?.moveOut).toDateString()) ||
+                              ''}
+                          </td>
+                          <td className="border px-4 py-2">
+                            {Math.floor(
+                              (tenant?.moveOut
+                                ? new Date(tenant?.moveOut) -
+                                  new Date(tenant?.moveIn)
+                                : new Date() - new Date(tenant?.moveIn)) /
+                                (1000 * 60 * 60 * 24), // Convert milliseconds to days
+                            )}
                           </td>
                         </tr>
                       ))}
@@ -177,7 +155,9 @@ const ApartmentStatusCard = ({ apartmentId, val }) => {
                 </div>
               </div>
               <div className="mt-4 mb-2 mx-4 flex justify-between items-center">
-                <div className='text-lg'>Number of tenants: {tenants.length}</div>
+                <div className="text-lg">
+                  Number of tenants: {previousTenants?.tenants?.length}
+                </div>
                 <button
                   onClick={() => setIsTenantInfoOpen((prevState) => !prevState)}
                   className="bg-red rounded hover:bg-red/55 text-white px-4 py-2 "

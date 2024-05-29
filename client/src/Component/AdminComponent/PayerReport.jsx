@@ -86,11 +86,11 @@ const PayerReport = () => {
                   {' '}
                   <label>From:</label>
                   <DatePicker
-                    selected={new Date(dateRange.from)}
+                    selected={new Date(dateRange?.from)}
                     onChange={(date) =>
                       setDateRange((prev) => ({
                         ...prev,
-                        from: date.toISOString().split('T')[0],
+                        from: date?.toISOString()?.split('T')[0] || new Date().toISOString()?.split('T')[0],
                       }))
                     }
                     dateFormat="MM/dd/yyyy"
@@ -105,7 +105,7 @@ const PayerReport = () => {
                     onChange={(date) =>
                       setDateRange((prev) => ({
                         ...prev,
-                        to: date.toISOString().split('T')[0],
+                        to: date?.toISOString()?.split('T')[0] || new Date().toISOString()?.split('T')[0],
                       }))
                     }
                     dateFormat="MM/dd/yyyy"

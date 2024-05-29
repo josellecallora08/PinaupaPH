@@ -170,7 +170,7 @@ module.exports.createContract = async (req, res) => {
     if (existingInvoice.total_count > 0) {
       return res
         .status(httpStatusCodes.FOUND)
-        .json({ error: 'Invoice already exists in Cloudinary.' })
+        .json({ error: 'Agreement already exists in Cloudinary.' })
     }
     const isExisting = await CONTRACTMODEL.findOne({
       'pdf.reference': reference,
@@ -178,7 +178,7 @@ module.exports.createContract = async (req, res) => {
     if (isExisting) {
       return res
         .status(httpStatusCodes.FOUND)
-        .json({ error: 'Invoice exists...' })
+        .json({ error: 'Agreement exists...' })
     }
 
     const templatePath = path.join(
@@ -188,169 +188,179 @@ module.exports.createContract = async (req, res) => {
     )
     const htmlContent = await ejs.renderFile(templatePath, { response })
 
-    pdf.create(htmlContent).toBuffer((err, buffer) => {
-      if (err) {
-        return res
-          .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ error: 'Failed to generate PDF' })
-      }
+    pdf
+      .create(htmlContent, {
+        childProcessOptions: {
+          env: {
+            OPENSSL_CONF: '/dev/null',
+          },
+        },
+      })
+      .toBuffer(async (err, buffer) => {
+        if (err) {
+          return res
+            .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: 'Failed to generate PDF' })
+        }
 
-      // Set the response headers to download the PDF
-      res.setHeader('Content-Type', 'application/pdf')
-      res.setHeader(
-        'Content-Disposition',
-        'attachment; filename=delinquency_report.pdf',
-      )
+        // // Set the response headers to download the PDF
+        // res.setHeader('Content-Type', 'application/pdf')
+        // res.setHeader(
+        //   'Content-Disposition',
+        //   'attachment; filename=delinquency_report.pdf',
+        // )
 
-      // Send the PDF buffer as the response
-      res.send(buffer)
-    })
+        // // Send the PDF buffer as the response
+        // res.send(buffer)
+
+        const cloudinaryResponse = await new Promise((resolve, reject) => {
+          cloudinary.uploader
+            .upload_stream(
+              {
+                resource_type: 'raw',
+                format: 'pdf', // Specify resource type as 'raw' for PDF
+                folder: 'PinaupaPH/Contracts', // Folder in Cloudinary where PDF will be stored
+                overwrite: true,
+                // transformation: [{ width: 612, height: 1008, crop: 'fit' }], // Do not overwrite if file with the same name exists
+              },
+              (error, result) => {
+                if (error) reject(error)
+                else resolve(result)
+              },
+            )
+            .end(buffer)
+        })
+  
+        if (!cloudinaryResponse || !cloudinaryResponse.public_id) {
+          return res
+            .status(httpStatusCodes.CONFLICT)
+            .json({ error: 'Failed to upload PDF to Cloudinary...' })
+        }
+  
+        const downloadPdfFromCloudinary = async () => {
+          const response = await axios.get(cloudinaryResponse.secure_url, {
+            responseType: 'stream',
+          })
+          return response.data
+        }
+  
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: process.env.GOOGLE_EMAIL,
+            pass: process.env.GOOGLE_PASSWORD,
+          },
+        })
+        const mailOptions = {
+          from: 'pinaupaph@gmail.com',
+          to: response.user_id.email,
+          subject: `Lease Agreement for ${response.user_id.name}`,
+          html: `
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>Contract Agreement</title>
+              <style>
+                  body {
+                      font-family: Arial, sans-serif;
+                      background-color: #f4f4f4;
+                      padding: 20px;
+                  }
+                  .container {
+                      background-color: #ffffff;
+                      padding: 20px;
+                      border-radius: 5px;
+                      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                  }
+                  .header {
+                      text-align: center;
+                      margin-bottom: 20px;
+                  }
+                  .content {
+                      font-size: 16px;
+                      line-height: 1.5;
+                  }
+                  .footer {
+                      text-align: center;
+                      margin-top: 20px;
+                      font-size: 12px;
+                      color: #888888;
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <div class="header">
+                      <h1>Contract Agreement</h1>
+                  </div>
+                  <div class="content">
+                      <p>Dear ${response?.user_id?.name},</p>
+                      <p>Please find attached your contract agreement.</p>
+                  </div>
+                  <div class="footer">
+                      <p>&copy; 2024 PinaupaPH. All rights reserved.</p>
+                  </div>
+              </div>
+          </body>
+          </html>
+      `,
+          attachments: [
+            {
+              filename: 'Contract.pdf',
+              content: await downloadPdfFromCloudinary(),
+            },
+          ],
+        }
+  
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.log('Error:', error)
+          } else {
+            console.log('Email sent:', info.response)
+          }
+        })
+  
+        const contractResponse = await CONTRACTMODEL.create({
+          tenant_id: response?._id,
+          'pdf.public_id': cloudinaryResponse.public_id,
+          'pdf.pdf_url': cloudinaryResponse.secure_url,
+          'pdf.reference': reference,
+        })
+        // To Follow up the Push for Witnesses
+  
+        if (!contractResponse)
+          return res
+            .status(httpStatusCodes.NOT_FOUND)
+            .json({ error: 'Contract Not found' })
+  
+        const contract = await CONTRACTMODEL.findById(
+          contractResponse._id,
+        ).populate({
+          path: 'tenant_id',
+          populate: 'user_id unit_id apartment_id',
+        })
+  
+        return res.status(httpStatusCodes.CREATED).json({
+          msg: 'Successfully Created Contract!',
+          response: contract,
+        })
+      })
     //   const pdfBuffer = await new Promise((resolve, reject) => {
     //     pdf
-    //       .create(htmlContent, {
-    //         childProcessOptions: {
-    //           env: {
-    //             OPENSSL_CONF: '/dev/null',
-    //           },
-    //         },
-    //       })
+    // .create(htmlContent, {
+    //   childProcessOptions: {
+    //     env: {
+    //       OPENSSL_CONF: '/dev/null',
+    //     },
+    //   },
+    // })
     //       .toBuffer((err, buffer) => {
     //         if (err) reject(err)
     //         else resolve(buffer)
     //       })
     //   })
 
-    //   const cloudinaryResponse = await new Promise((resolve, reject) => {
-    //     cloudinary.uploader
-    //       .upload_stream(
-    //         {
-    //           resource_type: 'raw',
-    //           format: 'pdf', // Specify resource type as 'raw' for PDF
-    //           folder: 'PinaupaPH/Contracts', // Folder in Cloudinary where PDF will be stored
-    //           overwrite: true,
-    //           // transformation: [{ width: 612, height: 1008, crop: 'fit' }], // Do not overwrite if file with the same name exists
-    //         },
-    //         (error, result) => {
-    //           if (error) reject(error)
-    //           else resolve(result)
-    //         },
-    //       )
-    //       .end(pdfBuffer)
-    //   })
-
-    //   if (!cloudinaryResponse || !cloudinaryResponse.public_id) {
-    //     return res
-    //       .status(httpStatusCodes.CONFLICT)
-    //       .json({ error: 'Failed to upload PDF to Cloudinary...' })
-    //   }
-
-    //   const downloadPdfFromCloudinary = async () => {
-    //     const response = await axios.get(cloudinaryResponse.secure_url, {
-    //       responseType: 'stream',
-    //     })
-    //     return response.data
-    //   }
-
-    //   const transporter = nodemailer.createTransport({
-    //     service: 'gmail',
-    //     auth: {
-    //       user: process.env.GOOGLE_EMAIL,
-    //       pass: process.env.GOOGLE_PASSWORD,
-    //     },
-    //   })
-    //   const mailOptions = {
-    //     from: 'pinaupaph@gmail.com',
-    //     to: response.user_id.email,
-    //     subject: `Lease Agreement for ${response.user_id.name}`,
-    //     html: `
-    //     <!DOCTYPE html>
-    //     <html>
-    //     <head>
-    //         <title>Contract Agreement</title>
-    //         <style>
-    //             body {
-    //                 font-family: Arial, sans-serif;
-    //                 background-color: #f4f4f4;
-    //                 padding: 20px;
-    //             }
-    //             .container {
-    //                 background-color: #ffffff;
-    //                 padding: 20px;
-    //                 border-radius: 5px;
-    //                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    //             }
-    //             .header {
-    //                 text-align: center;
-    //                 margin-bottom: 20px;
-    //             }
-    //             .content {
-    //                 font-size: 16px;
-    //                 line-height: 1.5;
-    //             }
-    //             .footer {
-    //                 text-align: center;
-    //                 margin-top: 20px;
-    //                 font-size: 12px;
-    //                 color: #888888;
-    //             }
-    //         </style>
-    //     </head>
-    //     <body>
-    //         <div class="container">
-    //             <div class="header">
-    //                 <h1>Contract Agreement</h1>
-    //             </div>
-    //             <div class="content">
-    //                 <p>Dear ${response?.user_id?.name},</p>
-    //                 <p>Please find attached your contract agreement.</p>
-    //             </div>
-    //             <div class="footer">
-    //                 <p>&copy; 2024 PinaupaPH. All rights reserved.</p>
-    //             </div>
-    //         </div>
-    //     </body>
-    //     </html>
-    // `,
-    //     attachments: [
-    //       {
-    //         filename: 'Contract.pdf',
-    //         content: await downloadPdfFromCloudinary(),
-    //       },
-    //     ],
-    //   }
-
-    //   transporter.sendMail(mailOptions, (error, info) => {
-    //     if (error) {
-    //       console.log('Error:', error)
-    //     } else {
-    //       console.log('Email sent:', info.response)
-    //     }
-    //   })
-
-    //   const contractResponse = await CONTRACTMODEL.create({
-    //     tenant_id: response?._id,
-    //     'pdf.public_id': cloudinaryResponse.public_id,
-    //     'pdf.pdf_url': cloudinaryResponse.secure_url,
-    //     'pdf.reference': reference,
-    //   })
-    //   // To Follow up the Push for Witnesses
-
-    //   if (!contractResponse)
-    //     return res
-    //       .status(httpStatusCodes.NOT_FOUND)
-    //       .json({ error: 'Contract Not found' })
-
-    //   const contract = await CONTRACTMODEL.findById(
-    //     contractResponse._id,
-    //   ).populate({
-    //     path: 'tenant_id',
-    //     populate: 'user_id unit_id apartment_id',
-    //   })
-
-    //   return res.status(httpStatusCodes.CREATED).json({
-    //     msg: 'Successfully Created Contract!',
-    //     response: contract,
-    //   })
+      
   } catch (err) {
     console.error({ error: err.message })
     return res
