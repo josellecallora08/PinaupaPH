@@ -47,20 +47,28 @@ module.exports.generate_previous_tenants = async (req, res) => {
       unitNo,
       generationDate,
     })
-    pdf.create(htmlContent).toBuffer((err, buffer) => {
-      if (err) {
-        console.log(err.message)
-        return res
-          .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ error: err.message })
-      }
-      res.setHeader('Content-Type', 'application/pdf')
-      res.setHeader(
-        'Content-Disposition',
-        'attachment; filename=previous_tenants_report.pdf',
-      )
-      res.send(buffer)
-    })
+    pdf
+      .create(htmlContent, {
+        childProcessOptions: {
+          env: {
+            OPENSSL_CONF: '/dev/null',
+          },
+        },
+      })
+      .toBuffer((err, buffer) => {
+        if (err) {
+          console.log(err.message)
+          return res
+            .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: err.message })
+        }
+        res.setHeader('Content-Type', 'application/pdf')
+        res.setHeader(
+          'Content-Disposition',
+          'attachment; filename=previous_tenants_report.pdf',
+        )
+        res.send(buffer)
+      })
 
     // return res.status(httpStatusCodes.OK).json({ response })
   } catch (err) {
@@ -119,7 +127,7 @@ module.exports.fetch_unit = async (req, res) => {
     const unit = response.units.filter(
       (item) => item._id.toString() === unit_id,
     )
-    return res.status(httpStatusCodes.OK).json({response:unit[0]})
+    return res.status(httpStatusCodes.OK).json({ response: unit[0] })
   } catch (err) {
     console.error({ error: err.message })
     return res
