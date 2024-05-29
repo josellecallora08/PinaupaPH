@@ -44,10 +44,13 @@ function App() {
   return (
     <Routes>
       <Route path="*" element={<ErrorPage />} />
+
       <Route
         path="/login"
         element={user ? <Navigate to="/dashboard" /> : <Login />}
       />
+
+      
       <Route
         path="/"
         element={<Home />}
