@@ -6,7 +6,7 @@ const pdf = require('html-pdf')
 const ejs = require('ejs')
 const path = require('path')
 
-module.exports.fetch_previous_tenants = async (req, res) => {
+module.exports.generate_previous_tenants = async (req, res) => {
   try {
     const { unit_id } = req.query
     const response = await UNITMODEL.findById(unit_id).populate({
@@ -35,7 +35,7 @@ module.exports.fetch_previous_tenants = async (req, res) => {
 
     const totalTenants = previousTenants.length
     const unitNo = response.unit_no
-    const generationDate = new Date().toLocaleDateString();
+    const generationDate = new Date().toLocaleDateString()
     const templatePath = path.join(
       __dirname,
       '../template',
@@ -45,7 +45,7 @@ module.exports.fetch_previous_tenants = async (req, res) => {
       previousTenants,
       totalTenants,
       unitNo,
-      generationDate
+      generationDate,
     })
     pdf.create(htmlContent).toBuffer((err, buffer) => {
       if (err) {
@@ -71,6 +71,29 @@ module.exports.fetch_previous_tenants = async (req, res) => {
   }
 }
 
+module.exports.fetch_previous_tenants = async (req, res) => {
+  try {
+    const { unit_id } = req.query
+    const response = await UNITMODEL.findById(unit_id).populate({
+      path: 'tenants.tenant_id',
+      populate: 'user_id',
+    })
+    if (!response) {
+      return res
+        .status(httpStatusCodes.BAD_REQUEST)
+        .json({ error: 'Unable to view previous tenants.' })
+    }
+    const previousTenants = response.tenants.filter((tenant) => tenant.moveOut) // Only include tenants who have moved out
+
+    return res.status(httpStatusCodes.OK).json({ response: previousTenants })
+  } catch (err) {
+    console.error({ error: err.message })
+    return res
+      .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: err.message })
+  }
+}
+
 module.exports.fetch_unit = async (req, res) => {
   try {
     const { apartment_id, unit_id } = req.params
@@ -78,8 +101,14 @@ module.exports.fetch_unit = async (req, res) => {
       .populate({
         path: 'units',
         model: UNITMODEL,
-        select: 'rent unit_no',
+        select: 'rent unit_no occupied tenants',
         options: { sort: { unit_no: 1 } },
+        populate: {
+          path: 'tenants.tenant_id',
+          populate: {
+            path: 'user_id',
+          },
+        },
       })
       .select('units')
     if (!response) {
@@ -90,7 +119,7 @@ module.exports.fetch_unit = async (req, res) => {
     const unit = response.units.filter(
       (item) => item._id.toString() === unit_id,
     )
-    return res.status(httpStatusCodes.OK).json(unit)
+    return res.status(httpStatusCodes.OK).json({response:unit[0]})
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -110,6 +139,7 @@ module.exports.fetch_unit_apartment = async (req, res) => {
         options: { sort: { unit_no: 1 } },
       })
       .select('name units')
+
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
@@ -127,7 +157,6 @@ module.exports.fetch_unit_apartment = async (req, res) => {
 module.exports.fetch_units = async (req, res) => {
   try {
     let response = await UNITMODEL.find()
-
     if (!response) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)

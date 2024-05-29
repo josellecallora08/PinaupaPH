@@ -35,7 +35,36 @@ export const {
   generateReportFailed,
   fetchReportSuccess,
 } = reportSlice.actions
-
+export const generatePreviousTenants = (unit_id) => async (dispatch) => {
+  try {
+    dispatch(reportStart())
+    const token = Cookies.get('token')
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/apartment/unit/previoustenants?unit_id=${unit_id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    )
+    if (!response.ok) {
+      const json = await response.json()
+      throw new Error(json.error)
+    }
+    dispatch(generateReportSuccess('Success! Generated revenue report.'))
+    const blob = await response.blob()
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'Previous Tenants Report.pdf'
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    window.URL.revokeObjectURL(url)
+  } catch (err) {
+    dispatch(generateReportFailed(err.message))
+  }
+}
 export const fetchRevenueReport = (date) => async (dispatch) => {
   try {
     dispatch(reportStart())

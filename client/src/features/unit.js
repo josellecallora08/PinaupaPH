@@ -20,6 +20,10 @@ const unitSlice = createSlice({
       state.error = null
       state.msg = null
     },
+    fetchTenantsUnit:(state,action) => {
+      state.loading = false
+      state.tenants = action.payload
+    },
     fetchUnitSuccess: (state, action) => {
       state.loading = false
       state.data = action.payload
@@ -60,11 +64,42 @@ export const {
   startUnit,
   insertUnitSuccess,
   fetchUnitSuccess,
+  fetchTenantsUnit,
+  fetchSingleUnitSuccess,
   editUnitSuccess,
+  generateReportSuccess,
   deleteUnitSuccess,
   actionUnitFailed,
 } = unitSlice.actions
 
+export const fetchPreviousTenants = (apartmentId, unitId) => async (dispatch) => {
+  try {
+    dispatch(startUnit())
+    const token = Cookies.get('token')
+
+    const response = await fetch(
+      `${import.meta.env.VITE_URL}/api/apartment/${apartmentId}/create_apartment_unit`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(fields),
+      },
+    )
+
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.error)
+    }
+    const json = await response.json()
+    console.log(json)
+    dispatch(insertUnitSuccess(json))
+  } catch (err) {
+    dispatch(actionUnitFailed(err.message))
+  }
+}
 export const createUnit = (fields, apartmentId) => async (dispatch) => {
   try {
     dispatch(startUnit())
@@ -123,7 +158,7 @@ export const fetchUnit = (apartmentId, unitId) => async (dispatch) => {
   try {
     dispatch(startUnit())
     const response = await fetch(
-      `${import.meta.env.VITE_URL}/api/apartment/${apartmentId}/units/${unitId}`,
+      `${import.meta.env.VITE_URL}/api/apartment/${apartmentId}/unit/${unitId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -135,7 +170,7 @@ export const fetchUnit = (apartmentId, unitId) => async (dispatch) => {
       throw new Error(error.error)
     }
     const json = await response.json()
-    dispatch(fetchUnitSuccess(json))
+    dispatch(fetchSingleUnitSuccess(json.response))
   } catch (err) {
     dispatch(actionUnitFailed(err.message))
   }
