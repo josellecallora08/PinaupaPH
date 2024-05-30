@@ -34,7 +34,6 @@ export const { startLoading, paymentSuccess, fetchKeySuccess, actionFailed } =
 
 export const paymentStatus = (invoice_id, navigate) => async (dispatch) => {
   try {
-    console.log("asdoiasjdoisa")
     const token = Cookies.get('token')
     dispatch(startLoading())
     const responseIntent = await fetch(

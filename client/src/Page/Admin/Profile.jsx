@@ -102,7 +102,7 @@ const Profile = () => {
         <PopUp
           message={popupMessage}
           onClose={() => setShowPopup(false)}
-          error={error}
+          isError={error}
         />
       )}
       {modal && (

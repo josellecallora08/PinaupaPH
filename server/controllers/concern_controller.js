@@ -13,14 +13,16 @@ module.exports.resolveConcern = async (req, res) => {
       status,
     }).populate({
       path: 'sender_id',
-      populate: 'user_id unit_id apartment_id'
+      populate: 'user_id unit_id apartment_id',
     })
     if (!response)
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to edit concern' })
 
-    return res.status(httpStatusCodes.OK).json({ msg: 'Concern has been resolved.', response })
+    return res
+      .status(httpStatusCodes.OK)
+      .json({ msg: 'Concern has been resolved.', response })
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
@@ -202,17 +204,21 @@ module.exports.editConcern = async (req, res) => {
   const { concern_id } = req.query
   const { title, description, type, status } = req.body
   try {
-    const concern = await CONCERNMODEL.findByIdAndUpdate(concern_id, {
+    const response = await CONCERNMODEL.findByIdAndUpdate(concern_id, {
       title,
       description,
       type,
       status,
+    }).populate({
+      path:'sender_id',
+      populate: 'user_id unit_id apartment_id'
     })
-    if (!concern)
+    if (!response)
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to edit concern' })
 
+        console.log(response)
     return res
       .status(httpStatusCodes.OK)
       .json({ msg: 'Concern updated', response })

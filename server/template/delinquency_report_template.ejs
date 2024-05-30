@@ -2,35 +2,39 @@
 <html>
 <head>
     <title>Delinquency Tenants Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             font-family: Arial, sans-serif;
-            width: 80%;
+            width: 90%;
+            max-width: 1200px;
             margin: auto;
-            height: fit-content;
+            height: auto;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
+            table-layout: fixed;
         }
         table, th, td {
             border: 1px solid #ddd;
         }
         th, td {
-            padding: 10px;
+            padding: 0.5em;
             text-align: left;
+            word-wrap: break-word;
         }
         th {
             background-color: #f2f2f2;
         }
         .signature {
-      margin-top: 50px;
-      text-align: left;
-    }
+            margin-top: 50px;
+            text-align: left;
+        }
     </style>
 </head>
-<body class="">
+<body>
     <p style="text-align: end;">Date Generated: <%= generationDate %></p>
     <h3>Delinquency Tenants Report</h3>
     <table>
@@ -71,6 +75,6 @@
     <div class="signature">
         <p>__________________________</p>
         <p>Owner's Signature</p>
-      </div>
+    </div>
 </body>
 </html>
