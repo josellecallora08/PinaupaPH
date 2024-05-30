@@ -202,13 +202,13 @@ module.exports.editConcern = async (req, res) => {
   const { concern_id } = req.query
   const { title, description, type, status } = req.body
   try {
-    const concern = await CONCERNMODEL.findByIdAndUpdate(concern_id, {
+    const response = await CONCERNMODEL.findByIdAndUpdate(concern_id, {
       title,
       description,
       type,
       status,
     })
-    if (!concern)
+    if (!response)
       return res
         .status(httpStatusCodes.BAD_REQUEST)
         .json({ error: 'Unable to edit concern' })

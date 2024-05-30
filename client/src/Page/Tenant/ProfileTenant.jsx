@@ -24,11 +24,13 @@ import {
   deleteHousehold,
   fetchHousehold,
   fetchHouseholds,
+  resetHouseholdStatus,
 } from '../../features/household'
-import { fetchPets } from '../../features/pet'
+import { fetchPets, resetPetStatus } from '../../features/pet'
 import EditTenantDetails from '../../Component/EditTenantDetails'
 import { isLoggedin } from '../../features/authentication'
-import { changeProfile } from '../../features/user'
+import { changeProfile, resetUserStatus } from '../../features/user'
+import PopUp from '../../Component/PopUp'
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile')
   const [isEditTenantDetailForm, setIsEditTenantDetailForm] = useState(false)
@@ -39,7 +41,12 @@ const TenantProfile = () => {
   const [isPetdotOpen, setIsPetDotOpen] = useState(false)
   const [isAddHouseholdForm, setIsAddHouseholdForm] = useState(false)
   const [isAddPetForm, setIsAddPetForm] = useState(false)
-
+  const errorDocument = useSelector((state) => state.docs.error)
+  const msgDocument = useSelector((state) => state.docs.msg)
+  const msgHousehold = useSelector((state) => state.household.msg)
+  const errorHousehold = useSelector((state) => state.household.error)
+  const msgPet = useSelector((state) => state.pet.msg)
+  const errorPet = useSelector((state) => state.pet.error)
   const [isRemovedot, setIsRemovedot] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
   const dispatch = useDispatch()
@@ -53,6 +60,9 @@ const TenantProfile = () => {
   const [selectedFile, setSelectedFile] = useState(null)
   const [changeModal, setChangeModal] = useState(false)
   const [isDropDownOpen, setIsDropDownOpen] = useState(false)
+  const [showPopup, setShowPopup] = useState(false)
+  const [popupMessage, setPopupMessage] = useState('')
+
   // const navigate = useNavigate()
   // const handleDeleteTenant = () => {
   //   const isConfirmed = window.confirm(
@@ -173,6 +183,55 @@ const TenantProfile = () => {
       dispatch(generateDocument(tenant.user_id._id))
     }
   }
+
+  useEffect(() => {
+    if (msg !== null) {
+      setPopupMessage(msg)
+    } else if (error !== null) {
+      setPopupMessage(error)
+    }
+
+    if (msg !== null || error !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetUserStatus())
+      }, 3000)
+    }
+  }, [msg, error])
+
+  useEffect(() => {
+    if (msgPet !== null) {
+      setPopupMessage(msgPet)
+    } else if (errorPet !== null) {
+      setPopupMessage(errorPet)
+    }
+
+    if (msgPet !== null || errorPet !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetPetStatus())
+      }, 3000)
+    }
+  }, [msgPet, errorPet])
+
+  useEffect(() => {
+    if (msgHousehold !== null) {
+      setPopupMessage(msgHousehold)
+    } else if (errorHousehold !== null) {
+      setPopupMessage(errorHousehold)
+    }
+
+    if (msgHousehold !== null || errorHousehold !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetHouseholdStatus())
+      }, 3000)
+    }
+  }, [msgHousehold, errorHousehold])
+
   const birthday = new Date(tenant?.user_id.birthday).toLocaleDateString()
   return (
     <div className="bg-white1  w-full h-full overflow-y-auto ">
@@ -248,19 +307,19 @@ const TenantProfile = () => {
 
                     {isDropDownOpen && (
                       <div className="absolute right-5 mt-10 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 w-max animate-slideIn">
-                      <div className="py-1">
-                        <button className="flex items-center  gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300">
-                         <IoEyeOutline size={20} className="inline mr-2" /> View Lease
-                        </button>
-                        <button
-                          onClick={handleDownload}
-                          className="flex items-center justify-between gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300"
-                        >
-                          <MdOutlineFileDownload size={20} className="inline mr-2" />
-                          Lease Agreement
-                        </button>
+                        <div className="py-1">
+                          <button className="flex items-center  gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300">
+                            <IoEyeOutline size={20} className="inline mr-2" /> View Lease
+                          </button>
+                          <button
+                            onClick={handleDownload}
+                            className="flex items-center justify-between gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300"
+                          >
+                            <MdOutlineFileDownload size={20} className="inline mr-2" />
+                            Lease Agreement
+                          </button>
+                        </div>
                       </div>
-                    </div>
                     )}
                   </div>
 
@@ -576,6 +635,13 @@ const TenantProfile = () => {
               <TransactionMobile tenant={tenant} />
             </div>
           </div>
+        )}
+        {showPopup && (
+          <PopUp
+            message={popupMessage}
+            onClose={() => setShowPopup(false)}
+            isError={error || errorDocument || errorHousehold || errorPet}
+          />
         )}
       </div>
     </div>

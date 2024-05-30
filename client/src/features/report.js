@@ -147,6 +147,7 @@ export const generateRevenueReport = (date) => async (dispatch) => {
     )
     if (!response.ok) {
       const json = await response.json()
+      console.log(json)
       throw new Error(json.error)
     }
     dispatch(generateReportSuccess('Success! Generated revenue report.'))

@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import send from '/send.svg'
 import { io } from 'socket.io-client'
 import noimage from '/noimage.svg'
-import 'react-responsive-carousel/lib/styles/carousel.min.css' 
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import { Carousel } from 'react-responsive-carousel'
 import comments from '/comments.svg'
 import { createComment, insertCommentSuccess } from '../../features/comment'
@@ -91,7 +91,7 @@ const ViewConcern = () => {
       document.removeEventListener('keydown', sendMessage)
     }
   }, [handleSubmit])
-  
+
 
   useEffect(() => {
     const handleReceiveComment = (message) => {
@@ -202,17 +202,17 @@ const ViewConcern = () => {
                     >
                       <LuTrash2 size={20} color="red" /> Delete
                     </div>
-                    
-                    <div
-                       onClick={handleEditButtonClick}
+
+                    {user?.user_id?.role === "Tenant" && <div
+                      onClick={handleEditButtonClick}
                       className="flex items-center  gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300 cursor-pointer"
                     >
-                      <FaEdit size={20}  /> Edit
-                    </div>
+                      <FaEdit size={20} /> Edit
+                    </div>}
                   </div>
                 )}
               </div>
-              {showEditForm && <EditReportForm setShowEditForm={setShowEditForm}  />}
+              {showEditForm && <EditReportForm concern={concern} setShowEditForm={setShowEditForm} />}
               {/*  */}
               <div className="row-auto flex flex-col gap-5">
                 <p className="font-bold h-fit">
@@ -339,10 +339,10 @@ const ViewConcern = () => {
                         </div>
                       </form>
                     )) || (
-                      <h1 className="h-full flex items-center text-white font-regular text-3xl">
-                        RESOLVED ISSUE
-                      </h1>
-                    )}
+                        <h1 className="h-full flex items-center text-white font-regular text-3xl">
+                          RESOLVED ISSUE
+                        </h1>
+                      )}
 
                     {showPopup && (
                       <PopUp

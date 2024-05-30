@@ -82,7 +82,7 @@ const InvoiceFormat = () => {
                     <td className="title">
                       <img
                         src={Logo}
-                        style={{ width: '100%', maxWidth: '300px' }}
+                        style={{ width: '50%', maxWidth: '300px' }}
                         alt="Logo"
                       />
                     </td>
@@ -104,11 +104,11 @@ const InvoiceFormat = () => {
                 <table>
                   <tr className="font-regular">
                     <td>
-                      <span className="font-semibold">Wendell Ibias</span>
+                      <span className="font-semibold">{invoice?.tenant_id?.apartment_id?.name}</span>
                       <br />
-                      W. Ibias Apartment
+                      {invoice?.tenant_id?.apartment_id?.address}
                       <br />
-                      Saint Anthony Village
+                      {invoice?.tenant_id?.apartment_id?.barangay}
                     </td>
                     <td className="my-5">
                       <span className="font-semibold">Invoice To: </span>
@@ -116,7 +116,7 @@ const InvoiceFormat = () => {
                       {invoice?.tenant_id?.user_id.name}
                       <br />
                       {invoice?.tenant_id?.user_id.email}
-                      <br />0{invoice?.tenant_id?.user_id.mobile_no}
+                      <br />{invoice?.tenant_id?.user_id.mobile_no}
                     </td>
                   </tr>
                 </table>
@@ -133,8 +133,6 @@ const InvoiceFormat = () => {
                 <span className="font-semibold">
                   Unit - {invoice?.tenant_id.unit_id.unit_no}
                 </span>
-                <br />
-                House Type: PentHouse
                 <br />
                 Status:{' '}
                 <span

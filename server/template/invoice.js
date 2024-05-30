@@ -115,7 +115,7 @@ module.exports = ({ response }) => {
                   </h5>
                 </td>
                 <td>
-                  Invoice #: ${response?.pdf.reference}<br />
+                  Reference No.: ${response?.pdf.reference}<br />
                   Created: ${new Date(response?.createdAt)?.toDateString()}<br />
                   Due: ${new Date(response?.tenant_id.monthly_due)?.toDateString()}
                 </td>
@@ -135,9 +135,9 @@ module.exports = ({ response }) => {
                 </td>
                 <td class="my-5">
                   <span>Invoice To: </span><br />
-                  ${response?.tenant_id.user_id.username}<br />
                   ${response?.tenant_id.user_id.name}<br />
-                  ${response?.tenant_id.user_id.email}
+                  ${response?.tenant_id.user_id.email}<br />
+                ${response?.tenant_id.user_id.mobile_no}
                 </td>
               </tr>
             </table>
@@ -151,7 +151,6 @@ module.exports = ({ response }) => {
         <tr>
           <td colspan="2">
             House Number: Unit ${response?.tenant_id.unit_id.unit_no}<br />
-            House Type: PentHouse<br />
             Status: <span class="text-lime font-bold">${response?.isPaid ? 'Paid' : 'Unpaid'}</span>
           </td>
         </tr>

@@ -19,7 +19,7 @@ module.exports.madePayment = async (req, res) => {
 
     let response = await INVOICEMODEL.findByIdAndUpdate(
       invoice_id,
-      invoiceUpdate,
+      invoiceUpdate, { new: true }
     ).populate({
       path: 'tenant_id',
       populate: 'user_id unit_id apartment_id',
@@ -242,9 +242,16 @@ module.exports.createPayment = async (req, res) => {
 
 module.exports.createIntent = async (req, res) => {
   try {
-    const { invoice_id } = req.query
-    const { amount } = req.body
-    const invoice = await INVOICEMODEL.findById(invoice_id)
+    const { invoice_id } = req.query;
+    const { amount } = req.body;
+    const invoice = await INVOICEMODEL.findById(invoice_id);
+
+    if (!invoice) {
+      return res
+        .status(httpStatusCodes.NOT_FOUND)
+        .json({ error: 'Invoice not found.' });
+    }
+
     const response = await fetch(`${process.env.PAYMONGO_CREATE_INTENT}`, {
       method: 'POST',
       headers: {
@@ -265,42 +272,48 @@ module.exports.createIntent = async (req, res) => {
           },
         },
       }),
-    })
+    });
+
     if (!response.ok) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'Failed to create payment intent.' })
+        .json({ error: 'Failed to create payment intent.' });
     }
-    const json = await response.json()
+
+    const json = await response.json();
     const user = await INVOICEMODEL.findById(invoice_id).populate({
       path: 'tenant_id',
       populate: 'user_id unit_id apartment_id',
-    })
-    const responseInvoice = await INVOICEMODEL.findByIdAndUpdate(
+    });
+
+    const newAmountPaid = (invoice.payment.amountPaid || 0) + amount;
+
+    let responseInvoice = await INVOICEMODEL.findByIdAndUpdate(
       invoice_id,
       {
         'intent.clientKey': json.data.attributes.client_key,
         'intent.paymentIntent': json.data.id,
-        'payment.amountPaid': amount,
-        'payment.unpaidBalance': user.tenant_id.balance - amount,
+        'payment.amountPaid': newAmountPaid,
+        'payment.unpaidBalance': user.tenant_id.balance - newAmountPaid,
       },
-      { new: true },
+      { new: true }
     ).populate({
       path: 'tenant_id',
       populate: 'user_id unit_id apartment_id',
-    })
+    });
+
     if (!responseInvoice) {
       return res
         .status(httpStatusCodes.BAD_REQUEST)
-        .json({ error: 'Invoice cannot be updated.' })
+        .json({ error: 'Invoice cannot be updated.' });
     }
 
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Created intent...', response: responseInvoice })
+      .json({ msg: 'Created intent...', response: responseInvoice });
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: err.message })
+      .json({ error: err.message });
   }
-}
+};

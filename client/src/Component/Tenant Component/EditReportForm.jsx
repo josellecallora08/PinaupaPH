@@ -1,16 +1,33 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { editConcern, resolveConcern } from '../../features/concern'
 
 const EditReportForm = ({ concern, setShowEditForm }) => {
-  // State for form fields
-
+  const dispatch = useDispatch()
+  const [fields, setFields] = useState({
+    title: concern?.title || '',
+    type: concern?.type || '',
+    description: concern?.description || '',
+  })
   // Add more state variables for other fields as needed
 
+  console.log(concern)
   // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault()
+    dispatch(editConcern(concern._id, fields))
     // Implement the logic to update the report with the new data
 
     // Close the form
+  }
+
+  const handleInput = (e) => {
+    const { name, value } = e.target
+
+    setFields({
+      ...fields,
+      [name]: value
+    })
   }
 
   return (
@@ -35,6 +52,8 @@ const EditReportForm = ({ concern, setShowEditForm }) => {
               type="text"
               id="title"
               name="title"
+              onChange={handleInput}
+              value={fields.title}
               placeholder="Enter Title"
               className="text-sm bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
@@ -49,12 +68,11 @@ const EditReportForm = ({ concern, setShowEditForm }) => {
             <select
               id="maintenanceType"
               name="type"
-              
-           
+              onChange={handleInput}
               className="mt-1 block w-full p-2 bg-white border text-sm rounded-md focus:outline-none focus:ring focus:ring-blue-200"
             >
-              <option value="" disabled hidden>
-                Maintenance Request
+              <option value={fields.type} disabled>
+                {fields.type}
               </option>
               <option value="Plumbing Request">Plumbing</option>
               <option value="Electrical Request">Electrical</option>
@@ -77,6 +95,8 @@ const EditReportForm = ({ concern, setShowEditForm }) => {
             <textarea
               id="description"
               name="description"
+              onChange={handleInput}
+              value={fields.description}
               className="mt-1 block bg-white w-full p-2 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring focus:ring-blue-200"
               rows={5}
             ></textarea>
