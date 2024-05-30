@@ -18,7 +18,7 @@ import TransactionMobile from '../../Component/TransactionMobile'
 import { GrFormView, GrFormAdd } from 'react-icons/gr'
 import Addpet from '../../Component/AddPet'
 import EditPetTable from '../../Component/EditPetTable'
-import { generateDocument } from '../../features/documents'
+import { generateDocument, resetDocumentStatus } from '../../features/documents'
 import {
   createHousehold,
   deleteHousehold,
@@ -183,7 +183,21 @@ const TenantProfile = () => {
       dispatch(generateDocument(tenant.user_id._id))
     }
   }
+  useEffect(() => {
+    if (msgDocument !== null) {
+      setPopupMessage('Successfully generated Agreement')
+    } else if (errorDocument !== null) {
+      setPopupMessage('Failed to generate Agreement')
+    }
 
+    if (msgDocument !== null || errorDocument !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetDocumentStatus())
+      }, 3000)
+    }
+  }, [dispatch, handleDownload])
   useEffect(() => {
     if (msg !== null) {
       setPopupMessage(msg)

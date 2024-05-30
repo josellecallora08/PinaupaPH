@@ -11,11 +11,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { IoIosCheckboxOutline } from 'react-icons/io'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { LuTrash2 } from 'react-icons/lu'
-import { deleteConcern, fetchConcern, resetConcernStatus, resolveConcern } from '../../features/concern'
+import {
+  deleteConcern,
+  fetchConcern,
+  resetConcernStatus,
+  resolveConcern,
+} from '../../features/concern'
 import { fetchComments } from '../../features/comment'
 import { isLoggedin } from '../../features/authentication'
 import PopUp from '../../Component/PopUp'
-import { FaEdit } from "react-icons/fa";
+import { FaEdit } from 'react-icons/fa'
 import EditReportForm from '../../Component/Tenant Component/EditReportForm'
 const socket = io(`${import.meta.env.VITE_URL}/`)
 
@@ -26,7 +31,7 @@ const ViewConcern = () => {
   const concern = useSelector((state) => state.concern.single)
   const loading = useSelector((state) => state.concern.loading)
   const user = useSelector((state) => state.auth.user)
-  const msg = useSelector((state) => state.comment.data)
+  const convo = useSelector((state) => state.comment.data)
   const [comment, setComments] = useState(null)
   const messageContainerRef = useRef(null)
   const [isDotOpen, setIsDotOpen] = useState(false)
@@ -36,13 +41,13 @@ const ViewConcern = () => {
   const [showPopup, setShowPopup] = useState(false)
   const msgConcern = useSelector((state) => state.concern.msg)
   const errorConcern = useSelector((state) => state.concern.error)
-  const [showEditForm, setShowEditForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false)
   const toggleDot = () => {
     setIsDotOpen(!isDotOpen)
   }
   const handleEditButtonClick = () => {
-    setShowEditForm(!showEditForm);
-  };
+    setShowEditForm(!showEditForm)
+  }
 
   const handleDelete = async () => {
     const isConfirmed = window.confirm(
@@ -75,7 +80,7 @@ const ViewConcern = () => {
     ) // Submit the comment
     setComments(null)
   }
-
+  console.log(concern)
   useEffect(() => {
     const sendMessage = (e) => {
       if (e.key === 'Enter') {
@@ -91,7 +96,6 @@ const ViewConcern = () => {
       document.removeEventListener('keydown', sendMessage)
     }
   }, [handleSubmit])
-
 
   useEffect(() => {
     const handleReceiveComment = (message) => {
@@ -116,7 +120,7 @@ const ViewConcern = () => {
   useEffect(() => {
     const container = messageContainerRef.current
 
-    if (container && concern && concern.comments.length > 0) {
+    if (container && concern && concern.comments?.length > 0) {
       container.scrollTop = container.scrollHeight
     }
   }, [concern, comment, handleSubmit])
@@ -203,16 +207,23 @@ const ViewConcern = () => {
                       <LuTrash2 size={20} color="red" /> Delete
                     </div>
 
-                    {user?.user_id?.role === "Tenant" && <div
-                      onClick={handleEditButtonClick}
-                      className="flex items-center  gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300 cursor-pointer"
-                    >
-                      <FaEdit size={20} /> Edit
-                    </div>}
+                    {user?.user_id?.role === 'Tenant' && (
+                      <div
+                        onClick={handleEditButtonClick}
+                        className="flex items-center  gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300 cursor-pointer"
+                      >
+                        <FaEdit size={20} /> Edit
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
-              {showEditForm && <EditReportForm concern={concern} setShowEditForm={setShowEditForm} />}
+              {showEditForm && (
+                <EditReportForm
+                  concern={concern}
+                  setShowEditForm={setShowEditForm}
+                />
+              )}
               {/*  */}
               <div className="row-auto flex flex-col gap-5">
                 <p className="font-bold h-fit">
@@ -229,14 +240,10 @@ const ViewConcern = () => {
               {/*  */}
               <div className="row-span-4 w-full  bg-white1 rounded-xl shadow-md overflow-hidden">
                 <div className="relative w-full h-full min-h-60 xl:h-[600px]">
-                  {concern?.attached_image.length === 0 ? (
-                    <img
-                      src={noimage}
-                      className="w-full h-full object-contain"
-                    />
-                  ) : (
+                  {concern?.attached_image &&
+                  concern?.attached_image?.length > 0 ? (
                     <Carousel infiniteLoop={true} swipeable={true}>
-                      {concern?.attached_image.map((image, index) => (
+                      {concern?.attached_image?.map((image, index) => (
                         <figure
                           className="w-full h-full max-w-[500px] lg:max-w-full m-auto xl:h-[600px]"
                           key={index}
@@ -249,7 +256,13 @@ const ViewConcern = () => {
                         </figure>
                       ))}
                     </Carousel>
+                  ) : (
+                    <img
+                      src={noimage}
+                      className="w-full h-full object-contain"
+                    />
                   )}
+
                   {/* <div className="absolute top-0 left-0 w-fit h-full flex items-center">
                     <button className="w-full h-full max-w-10 max-h-14 rounded-md hover:bg-gray/40">
                       <img src={angle} className="w-full h-full" alt="" />
@@ -283,9 +296,9 @@ const ViewConcern = () => {
                 <div className="w-full h-[300px] lg:h-full ">
                   <div
                     ref={messageContainerRef}
-                    className={`w-full h-auto md:max-h-[500px] lg:max-h-[350px] max-h-[300px]    font-regular  gap-2 px-5 ${concern?.comments.length > 5 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}
+                    className={`w-full h-auto md:max-h-[500px] lg:max-h-[350px] max-h-[300px]    font-regular  gap-2 px-5 ${concern?.comments?.length > 5 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}
                   >
-                    {msg?.map((val, key) => (
+                    {convo?.map((val, key) => (
                       <div
                         key={key}
                         className={`min-h-12 py-2 h-auto flex ${(val.user_id?._id === user?._id && ' flex-row-reverse') || (val.user_id?._id === user?.user_id?._id && ' flex-row-reverse')} gap-2 overflow-hidden`}
@@ -339,10 +352,10 @@ const ViewConcern = () => {
                         </div>
                       </form>
                     )) || (
-                        <h1 className="h-full flex items-center text-white font-regular text-3xl">
-                          RESOLVED ISSUE
-                        </h1>
-                      )}
+                      <h1 className="h-full flex items-center text-white font-regular text-3xl">
+                        RESOLVED ISSUE
+                      </h1>
+                    )}
 
                     {showPopup && (
                       <PopUp

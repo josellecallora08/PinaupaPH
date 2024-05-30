@@ -52,11 +52,7 @@ const concernSlice = createSlice({
     },
     editConcernSuccess: (state, action) => {
       state.loading = false
-      state.data = state.data.map((item) =>
-        item._id === action.payload.response._id
-          ? action.payload.response
-          : item,
-      )
+      state.single = { ...state.single, ...action.payload.response }
       state.msg = action.payload.msg
     },
   },
@@ -226,9 +222,9 @@ export const editConcern = (concern_id, fields) => async (dispatch) => {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(fields)
+        body: JSON.stringify(fields),
       },
     )
     if (!response.ok) {
@@ -236,6 +232,7 @@ export const editConcern = (concern_id, fields) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
+    console.log(json)
     dispatch(editConcernSuccess(json))
   } catch (err) {
     console.log(err.message)

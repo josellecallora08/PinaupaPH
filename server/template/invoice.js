@@ -163,36 +163,40 @@ module.exports = ({ response }) => {
         <tr class="item">
           <td>Monthly Rent</td>
           <td>${response?.tenant_id.unit_id.rent?.toLocaleString('en-PH', {
-    style: 'currency',
-    currency: 'PHP',
-  })}</td>
+            style: 'currency',
+            currency: 'PHP',
+          })}</td>
         </tr>
         <br/>
         <tr class="item">
           <td>Total Payment</td>
-          <td>${(!response?.isPaid
-      ? response?.payment?.amountPaid
-      : 0
-    )?.toLocaleString('en-PH', {
-      style: 'currency',
-      currency: 'PHP',
-    }) || 0
-    }</td>
+          <td>${
+            response?.payment?.amountPaid?.toLocaleString('en-PH', {
+              style: 'currency',
+              currency: 'PHP',
+            }) || 0
+          }</td>
         </tr>
 
         <tr class="total">
           <td></td>
-          <td>Total: ${(response?.amount - response?.payment?.amountPaid < 0 ? 0 : response?.amount - response?.payment?.amountPaid)?.toLocaleString('en-PH', {
-      style: 'currency',
-      currency: 'PHP',
-    })}</td>
+          <td>Total: ${(response?.amount - response?.payment?.amountPaid < 0
+            ? 0
+            : response?.amount - response?.payment?.amountPaid
+          )?.toLocaleString('en-PH', {
+            style: 'currency',
+            currency: 'PHP',
+          })}</td>
         </tr>
         <tr class="total">
         <td></td>
-        <td>Advance Rental: ${(response?.payment?.unpaidBalance < 0 ? response?.payment?.unpaidBalance : 0)?.toLocaleString('en-PH', {
-      style: 'currency',
-      currency: 'PHP',
-    })}</td>
+        <td>Advance Rental: ${(response?.payment?.unpaidBalance < 0
+          ? response?.payment?.unpaidBalance
+          : 0
+        )?.toLocaleString('en-PH', {
+          style: 'currency',
+          currency: 'PHP',
+        })}</td>
       </tr>
       </table>
     </div>

@@ -286,7 +286,7 @@ module.exports.createIntent = async (req, res) => {
       populate: 'user_id unit_id apartment_id',
     });
 
-    const newAmountPaid = (invoice.payment.amountPaid || 0) + amount;
+    const newAmountPaid = parseInt(invoice.payment.amountPaid || 0) + parseInt(amount);
 
     let responseInvoice = await INVOICEMODEL.findByIdAndUpdate(
       invoice_id,
@@ -294,7 +294,7 @@ module.exports.createIntent = async (req, res) => {
         'intent.clientKey': json.data.attributes.client_key,
         'intent.paymentIntent': json.data.id,
         'payment.amountPaid': newAmountPaid,
-        'payment.unpaidBalance': user.tenant_id.balance - newAmountPaid,
+        'payment.unpaidBalance': user.tenant_id.balance - amount,
       },
       { new: true }
     ).populate({

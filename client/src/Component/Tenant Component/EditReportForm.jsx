@@ -11,7 +11,6 @@ const EditReportForm = ({ concern, setShowEditForm }) => {
   })
   // Add more state variables for other fields as needed
 
-  console.log(concern)
   // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -26,7 +25,7 @@ const EditReportForm = ({ concern, setShowEditForm }) => {
 
     setFields({
       ...fields,
-      [name]: value
+      [name]: value,
     })
   }
 
@@ -71,9 +70,7 @@ const EditReportForm = ({ concern, setShowEditForm }) => {
               onChange={handleInput}
               className="mt-1 block w-full p-2 bg-white border text-sm rounded-md focus:outline-none focus:ring focus:ring-blue-200"
             >
-              <option value={fields.type} disabled>
-                {fields.type}
-              </option>
+              <option value={fields.type}>{fields.type}</option>
               <option value="Plumbing Request">Plumbing</option>
               <option value="Electrical Request">Electrical</option>
               <option value="General Request">General</option>
