@@ -137,11 +137,12 @@ const PayerReport = () => {
                   <th className="border px-4 py-2">Apartment Name</th>
                   <th className="border px-4 py-2">Due Date</th>
                   <th className="border px-4 py-2">Date Paid</th>
-                  <th className="border px-4 py-2">Amount</th>
+                  <th className="border px-4 py-2">Amount To Be Paid</th>
+                  <th className="border px-4 py-2">Amount Paid</th>
                 </tr>
               </thead>
               <tbody>
-                {report?.map((val, index) => (
+                {report?.filter(item => item.isPaid && item.datePaid).map((val, index) => (
                   <tr key={index} className="text-center">
                     <td className="border px-4 py-2">
                       {val.tenant_id.user_id.name}
@@ -156,10 +157,16 @@ const PayerReport = () => {
                       {new Date(val.due).toLocaleDateString()}
                     </td>
                     <td className="border px-4 py-2">
-                      {new Date(val.datePaid).toLocaleDateString()}
+                      {val.datePaid && new Date(val.datePaid).toLocaleDateString()}
                     </td>
                     <td className="border px-4 py-2">
                       {val.amount.toLocaleString('en-PH', {
+                        style: 'currency',
+                        currency: 'PHP',
+                      })}
+                    </td>
+                    <td className="border px-4 py-2">
+                      {val.payment.amountPaid.toLocaleString('en-PH', {
                         style: 'currency',
                         currency: 'PHP',
                       })}
@@ -169,14 +176,14 @@ const PayerReport = () => {
               </tbody>
               <tfoot>
                 <tr>
-                  <td colSpan="5" className="border px-4 py-2 text-left">
+                  <td colSpan="6" className="border px-4 py-2 text-left">
                     <strong>Total</strong>
                   </td>
                   <td className="border px-4 py-2 text-center">
                     <strong>
-                      {report
+                      {report?.filter(item => item?.isPaid && item?.datePaid)
                         ?.reduce(
-                          (acc, curr) => (acc = acc + curr.payment.amountPaid),
+                          (acc, curr) => (acc = acc + curr?.payment?.amountPaid),
                           0,
                         )
                         ?.toLocaleString('en-PH', {

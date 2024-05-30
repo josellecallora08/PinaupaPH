@@ -218,9 +218,9 @@ const TenantHome = () => {
                     <div className="w-full h-[3.8rem] flex items-center text-lg  bg-primary-color text-white p-2">
                       Payment
                     </div>
-                    <div className=" flex items-center py-10 justify-center gap-20 flex-col">
+                    <div className=" flex items-center py-10 justify-center  flex-col">
                       <div>
-                        <img className="size-full " src={invoice_img} />
+                        <img className="size-full w-[40]" src={invoice_img} />
                       </div>
 
                       <div className="h-20 text-center w-full font-regular text-xl font-semibold">

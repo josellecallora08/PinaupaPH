@@ -55,9 +55,23 @@ const EditAnnouncementForm = ({ setUpdate, val, setIsEditAnnouncementFormOpen })
                   className="w-full border border-black text-dark-gray rounded  px-2 py-2 cursor-pointer"
                   placeholder="Select announcement type"
                 >
-                  <option hidden >Select Type:</option>
-                  <option value="news">News</option>
-                  <option value="payment">Payment</option>
+                  <option value={val._id}>{val.type}</option>
+                  <option value="announcement">General Announcement</option>
+                  <option value="maintenance">Maintenance</option>
+                  <option value="rentIncrease">Rent Increase</option>
+                  <option value="policyChange">Policy Change</option>
+                  <option value="event">Event</option>
+                  <option value="emergency">Emergency</option>
+                  <option value="reminder">Reminder</option>
+                  <option value="renovation">Renovation</option>
+                  <option value="inspection">Inspection</option>
+                  <option value="leaseRenewal">Lease Renewal</option>
+                  <option value="noise">Noise</option>
+                  <option value="parking">Parking</option>
+                  <option value="amenities">Amenities</option>
+                  <option value="utilities">Utilities</option>
+                  <option value="security">Security</option>
+                  <option value="community">Community</option>
                 </select>
               ) : name === 'description' ? (
                 <textarea
