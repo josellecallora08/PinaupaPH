@@ -19,6 +19,9 @@ const TenantCard = ({ data }) => {
             {data?.user_id?.name}
 
           </p>
+          <p className='text-xs'>
+            DTI Apartment
+          </p>
           <p className="md:text-base text-sm font-semibold">
             {data?.user_id?.phone}
           </p>
