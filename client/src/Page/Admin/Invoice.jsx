@@ -31,7 +31,7 @@ const Invoice = () => {
   const invoices = useSelector((state) => state.invoice.data);
   const errorInvoice = useSelector((state) => state.invoice.error);
   const msgInvoice = useSelector((state) => state.invoice.msg);
-
+ 
   const handleDelete = async (id) => {
     const confirmed = window.confirm('Are you sure you want to delete this item?');
     if (confirmed) {
