@@ -143,10 +143,16 @@ module.exports.fetch_unit_apartment = async (req, res) => {
       .populate({
         path: 'units',
         model: UNITMODEL,
-        select: 'rent unit_no occupied',
+        select: 'rent unit_no occupied tenants',
         options: { sort: { unit_no: 1 } },
+        populate: {
+          path: 'tenants.tenant_id',
+          populate: {
+            path: 'user_id',
+          },
+        },
       })
-      .select('name units')
+      .select('units')
 
     if (!response) {
       return res

@@ -21,6 +21,11 @@ const invoiceSlice = createSlice({
       state.loading = false
       state.data = action.payload
     },
+    insertInvoiceSuccess: (state,action) => {
+      state.loading = false
+      state.data = [...state.data, action.payload.response]
+      state.msg = action.payload.msg
+    },
     editInvoicesSuccess: (state, action) => {
       state.data = state.data.map((item) =>
         item?._id === action.payload.response._id
@@ -36,7 +41,7 @@ const invoiceSlice = createSlice({
     },
     deleteInvoiceSuccess: (state, action) => {
       state.data = state.data.filter(
-        (item) => item?.pdf?.reference !== action.payload.pdf.reference,
+        (item) => item?.pdf?.reference !== action.payload.response.pdf.reference,
       )
       state.msg = action.payload?.msg
     },
@@ -250,6 +255,7 @@ export const deleteInvoices = (id) => async (dispatch) => {
       throw new Error(error)
     }
     const json = await response.json()
+    console.log(json)
     dispatch(deleteInvoiceSuccess(json))
   } catch (err) {
     dispatch(fetchFailed(err.message))
