@@ -351,7 +351,7 @@ const Dashboard = () => {
 
                           {/* Conditionally render based on whether a room is selected */}
                           {selectedOption ? (
-                            <p className="text-[#9e9e9e] text-sm ml-1 mb-1  xl:text-base ">
+                            <p className="text-[#9e9e9e] text-sm ml-1 mb-1   ">
                               Available Room:{' '}
                               <span>
                                 {units?.filter((unit) => !unit.occupied)
@@ -360,7 +360,7 @@ const Dashboard = () => {
                               </span>
                             </p>
                           ) : (
-                            <p className="text-[#9e9e9e] text-sm ml-1 mb-1  xl:text-base ">
+                            <p className="text-[#9e9e9e] text-sm ml-1 mb-1  ">
                               No room selected
                             </p>
                           )}
