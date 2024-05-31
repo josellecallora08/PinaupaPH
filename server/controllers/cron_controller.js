@@ -15,7 +15,7 @@ const DAY_IN_MS = 24 * 60 * 60 * 1000 // Number of milliseconds in a day
 module.exports.scheduledInvoice = () => {
   let hasRun = false // Initialize hasRun flag
 
-  cron.schedule('0 0 * * * *', async () => {
+  cron.schedule('* * * * * *', async () => {
     // Run every minute, adjust as needed
     if (!hasRun) {
       hasRun = true
