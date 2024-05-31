@@ -1,68 +1,91 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import InvoiceFormat from '../../Component/InvoiceFormat'
-import { RiDeleteBin6Line } from 'react-icons/ri'
-import search from '/search.svg'
-import { BsThreeDotsVertical } from 'react-icons/bs'
-import { FaRegEye, FaCheck } from 'react-icons/fa6'
-import { FaPlus } from 'react-icons/fa6'
-import ManualInovoice from '../../Component/ManualInovoice'
-import SearchBar from '../../Component/SearchBar'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import InvoiceFormat from '../../Component/InvoiceFormat';
+import { RiDeleteBin6Line } from 'react-icons/ri';
+import search from '/search.svg';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { FaRegEye, FaCheck, FaPlus } from 'react-icons/fa';
+import ManualInovoice from '../../Component/ManualInovoice'; // Correct component name
+import SearchBar from '../../Component/SearchBar';
+import { useDispatch, useSelector } from 'react-redux';
+import PopUp from '../../Component/PopUp';
 import {
   deleteInvoices,
   editInvoices,
   fetchInvoices,
   searchInvoice,
-} from '../../features/invoice'
+  resetInvoiceStatus,
+} from '../../features/invoice';
 
 const Invoice = () => {
-  const [update, setUpdate] = useState(false)
-  const [filter, setFilter] = useState('')
-  const [status, setStatus] = useState(false)
-  const user = useSelector((state) => state.auth.user)
-  const msg = useSelector((state) => state.invoice.msg)
-  const [modal, setModal] = useState(false)
-  const [dropdownIndex, setDropdownIndex] = useState(null) // To keep track of which dropdown is open for each item
-  const dispatch = useDispatch()
-  const invoices = useSelector((state) => state.invoice.data)
+  const [update, setUpdate] = useState(false);
+  const [filter, setFilter] = useState('');
+  const [status, setStatus] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+  const user = useSelector((state) => state.auth.user);
+  const msg = useSelector((state) => state.invoice.msg);
+  const [modal, setModal] = useState(false);
+  const [dropdownIndex, setDropdownIndex] = useState(null);
+  const dispatch = useDispatch();
+  const invoices = useSelector((state) => state.invoice.data);
+  const errorInvoice = useSelector((state) => state.invoice.error);
+  const msgInvoice = useSelector((state) => state.invoice.msg);
 
   const handleDelete = async (id) => {
-    const confirmed = window.confirm(
-      'Are you sure you want to delete this item?',
-    )
+    const confirmed = window.confirm('Are you sure you want to delete this item?');
     if (confirmed) {
-      dispatch(deleteInvoices(id))
-      setUpdate(true)
+      dispatch(deleteInvoices(id));
+      setUpdate(true);
     }
-  }
-  console.log(invoices)
+  };
+
   const handleSearch = (e) => {
-    setFilter(e.target.value)
-  }
+    setFilter(e.target.value);
+  };
 
   const handlePaid = (id) => {
-    dispatch(editInvoices(id, true))
-    setUpdate(true)
-  }
+    dispatch(editInvoices(id, true));
+    setUpdate(true);
+  };
 
   useEffect(() => {
-    if (filter && filter !== '') {
-      dispatch(searchInvoice(filter))
-    } else {
-      dispatch(fetchInvoices())
+    if (msgInvoice || errorInvoice) {
+      setPopupMessage(msgInvoice || errorInvoice);
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+        dispatch(resetInvoiceStatus());
+        setModal(false);
+      }, 3000);
     }
-  }, [filter, update, msg, status])
+  }, [msgInvoice, errorInvoice, dispatch]);
+
+  useEffect(() => {
+    if (filter) {
+      dispatch(searchInvoice(filter));
+    } else {
+      dispatch(fetchInvoices());
+    }
+  }, [filter, update, msg, status, dispatch]);
 
   const handleDropdownClick = (id) => {
-  setDropdownIndex(id === dropdownIndex ? null : id)
-  }
+    setDropdownIndex(id === dropdownIndex ? null : id);
+  };
+
   return (
     <>
+      {showPopup && (
+        <PopUp
+          message={popupMessage}
+          onClose={() => setShowPopup(false)}
+          isError={errorInvoice}
+        />
+      )}
       <div className="w-full h-full bg-white1">
-        <div className=" w-11/12 m-auto h-full flex flex-col gap-2  ">
+        <div className="w-11/12 m-auto h-full flex flex-col gap-2">
           <h1 className="font-bold pt-5 tracking-wider">DOCUMENTS / INVOICE</h1>
-          <div className="w-full h-full max-h-20 flex flex-col md:flex-row gap-2 py-5 items-center justify-between ">
+          <div className="w-full h-full max-h-20 flex flex-col md:flex-row gap-2 py-5 items-center justify-between">
             <div className="w-full md:w-fit">
               <SearchBar onSearch={handleSearch} />
             </div>
@@ -82,7 +105,7 @@ const Invoice = () => {
               {user?.role === 'Admin' && (
                 <button
                   onClick={() => setModal((prevState) => !prevState)}
-                  className="btn md:btn-wide w-1/2  bg-primary-color text-white hover:text-primary-color"
+                  className="btn md:btn-wide w-1/2 bg-primary-color text-white hover:text-primary-color"
                 >
                   <FaPlus />
                   Prepare Invoice
@@ -90,16 +113,16 @@ const Invoice = () => {
               )}
             </div>
           </div>
-          <div className="w-full h-full mt-10 md:mt-0 mb-5  pb-5">
+          <div className="w-full h-full mt-10 md:mt-0 mb-5 pb-5">
             <div className="relative w-full h-full max-h-[600px] lg:max-h-[660px] bg-white overflow-y-scroll border-primary-color border-l-4 border-b-4">
-              <table className="w-full h-auto  overflow-y-auto  ">
+              <table className="w-full h-auto overflow-y-auto">
                 <thead className="sticky top-0 bg-primary-color z-10">
                   <tr className="text-center text-xs md:text-base">
                     <th className="text-white p-3">Reference Number</th>
                     <th className="text-white p-3">Tenant</th>
                     <th className="text-white p-3">Unpaid Balance</th>
                     <th className="text-white p-3">Due Date</th>
-                    {status == true && (
+                    {status === true && (
                       <>
                         <th className="text-white p-3">Date Paid</th>
                         <th className="text-white p-3">Amount Paid</th>
@@ -119,21 +142,20 @@ const Invoice = () => {
                             className="text-center bg-white text-xs md:text-base"
                           >
                             <td className="text-primary-color font-regular p-2">
-                              {val?.pdf?.reference}
+                              {val?.pdf?.reference || '-'} {/* Add a fallback */}
                             </td>
                             <td className="text-xs md:text-base font-regular text-primary-color p-2">
-                              {val?.tenant_id?.user_id.name}
+                              {val?.tenant_id?.user_id?.name || '-'} {/* Add a fallback */}
                             </td>
                             <td className="p-2">
                               {(!val?.isPaid
                                 ? val?.tenant_id?.balance
-                                : val?.payment.unpaidBalance
+                                : val?.payment?.unpaidBalance
                               )?.toLocaleString('en-PH', {
                                 style: 'currency',
                                 currency: 'PHP',
                               })}
                             </td>
-
                             <td className="p-2">
                               {val?.due === null
                                 ? '-'
@@ -166,7 +188,7 @@ const Invoice = () => {
                             >
                               {val?.isPaid === false ? 'Unpaid' : 'Paid'}
                             </th>
-                            <td className=" text-primary-color p-2 flex justify-center">
+                            <td className="text-primary-color p-2 flex justify-center">
                               <div className="relative">
                                 <button
                                   className="relative focus:outline-none my-3"
@@ -176,14 +198,14 @@ const Invoice = () => {
                                 </button>
                                 {dropdownIndex === val?._id && (
                                   <ul
-                                    className={`absolute top-0 w-36 right-5 bg-white shadow-md rounded-md z-10 `}
+                                    className={`absolute top-0 w-36 right-5 bg-white shadow-md rounded-md z-auto`}
                                   >
                                     {val?.isPaid === false && (
                                       <>
                                         <li>
                                           <button
                                             onClick={() => handlePaid(val?._id)}
-                                            className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3 hover:bg-gray w-full"
+                                            className="px-4 py-2 text-sm text-primary-color flex items-center gap-3 hover:bg-gray w-full"
                                           >
                                             <FaCheck /> Paid
                                           </button>
@@ -193,7 +215,7 @@ const Invoice = () => {
                                             onClick={() =>
                                               handleDelete(val?._id)
                                             }
-                                            className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3  hover:bg-gray w-full"
+                                            className="px-4 py-2 text-sm text-primary-color flex items-center gap-3 hover:bg-gray w-full"
                                           >
                                             <RiDeleteBin6Line /> Delete
                                           </button>
@@ -226,10 +248,10 @@ const Invoice = () => {
                             className="text-center text-xs md:text-base"
                           >
                             <td className="text-primary-color font-regular p-3">
-                              {val?.pdf?.reference}
+                              {val?.pdf?.reference || '-'} {/* Add a fallback */}
                             </td>
                             <td className="text-sm md:text-base capitalize font-regular text-primary-color p-3">
-                              {val?.tenant_id?.user_id.name}
+                              {val?.tenant_id?.user_id?.name || '-'} {/* Add a fallback */}
                             </td>
                             <td className="p-3">
                               {(val?.tenant_id?.balance === 0
@@ -237,8 +259,7 @@ const Invoice = () => {
                                 : val?.tenant_id?.balance - val?.amount
                               ).toFixed(2)}
                             </td>
-
-                            <td className="p-2">{(val?.amount).toFixed(2)}</td>
+                            <td className="p-2">{val?.amount.toFixed(2)}</td>
                             <th
                               className={`font-semibold ${
                                 val?.isPaid === false
@@ -248,7 +269,7 @@ const Invoice = () => {
                             >
                               {val?.isPaid === false ? 'Unpaid' : 'Paid'}
                             </th>
-                            <td className=" text-primary-color p-3 flex justify-center">
+                            <td className="text-primary-color p-3 flex justify-center">
                               <div className="relative">
                                 <button
                                   className="relative focus:outline-none my-3"
@@ -258,14 +279,20 @@ const Invoice = () => {
                                 </button>
                                 {dropdownIndex === val?._id && (
                                   <ul
-                                    className={`absolute w-36 right-0 bg-white shadow-md rounded-md z-10 ${index === invoices.length - 1 ? 'bottom-12' : index === invoices.length - 2 ? 'bottom-24' : 'top-12'}`}
+                                    className={`absolute w-36 right-0 bg-white shadow-md rounded-md z-10 ${
+                                      index === invoices.length - 1
+                                        ? 'bottom-12'
+                                        : index === invoices.length - 2
+                                        ? 'bottom-24'
+                                        : 'top-12'
+                                    }`}
                                   >
                                     {val?.isPaid === false && (
                                       <>
                                         <li>
                                           <button
                                             onClick={() => handlePaid(val?._id)}
-                                            className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3 hover:bg-gray w-full"
+                                            className="px-4 py-2 text-sm text-primary-color flex items-center gap-3 hover:bg-gray w-full"
                                           >
                                             <FaCheck /> Paid
                                           </button>
@@ -275,7 +302,7 @@ const Invoice = () => {
                                             onClick={() =>
                                               handleDelete(val?._id)
                                             }
-                                            className=" px-4 py-2 text-sm text-primary-color flex items-center gap-3  hover:bg-gray w-full"
+                                            className="px-4 py-2 text-sm text-primary-color flex items-center gap-3 hover:bg-gray w-full"
                                           >
                                             <RiDeleteBin6Line /> Delete
                                           </button>
@@ -304,7 +331,7 @@ const Invoice = () => {
       </div>
       {modal && <ManualInovoice setModal={setModal} />}
     </>
-  )
-}
+  );
+};
 
-export default Invoice
+export default Invoice;
