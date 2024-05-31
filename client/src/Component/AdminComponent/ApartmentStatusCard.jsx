@@ -63,7 +63,7 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
             </span>{' '}
             / per month
           </p>
-          <div className="lg:justify-end lg:mr-5 md:justify-end md:mr-5  lg:mt-14 flex gap-2 mt-16 ml-44 pb-2">
+          <div className="justify-end mr-5   lg:mt-14 flex gap-2 mt-16 ml-44 pb-2 ">
             <button
               className="lg:p-2 hover:scale-105 hover:duration-300 hover:bg-blue/55 bg-blue p-1 rounded-md"
               onClick={toggleisEditApartmentUnit}

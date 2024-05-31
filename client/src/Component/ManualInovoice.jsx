@@ -1,23 +1,35 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { createInvoice } from '../features/invoice'
+import { createInvoice, resetInvoiceStatus } from '../features/invoice'
 import { fetchUsers } from '../features/user'
 import Select from 'react-select'
+import PopUp from "../Component/PopUp"
 
 const ManualInvoice = ({ setModal }) => {
   const dispatch = useDispatch()
   const [selectedUser, setSelectedUser] = useState(null)
-  const modal = useRef(null)
   const loading = useSelector((state) => state.invoice.loading)
   const error = useSelector((state) => state.invoice.error)
   const msg = useSelector((state) => state.invoice.msg)
   const users = useSelector((state) => state.user.data)
+  const [popupMessage, setPopupMessage] = useState('')
+  const [showPopup, setShowPopup] = useState(false)
+  const errorInvoice = useSelector((state) => state.invoice.error)
+  const msgInvoice = useSelector((state) => state.invoice.msg)
+  const [isDownloading, setIsDownloading] = useState(false)
 
   const handleInvoice = (e) => {
     e.preventDefault()
-    dispatch(createInvoice(selectedUser.value))
-    setModal((state) => !state)
+    if (selectedUser) {
+      dispatch(createInvoice(selectedUser.value))
+    }
   }
+
+useEffect(() => { 
+  console.log('msgInvoice', msgInvoice)
+  console.log('errorInvoice', errorInvoice)
+
+}, [msgInvoice, errorInvoice])
 
   useEffect(() => {
     const closeModal = (e) => {
@@ -31,11 +43,28 @@ const ManualInvoice = ({ setModal }) => {
     return () => {
       document.removeEventListener('keydown', closeModal)
     }
-  }, [])
+  }, [setModal])
 
   useEffect(() => {
     dispatch(fetchUsers())
-  }, [])
+  }, [dispatch])
+
+  useEffect(() => {
+    if (msgInvoice !== null) {
+      setPopupMessage(msgInvoice)
+    } else if (errorInvoice !== null) {
+      setPopupMessage(errorInvoice)
+    }
+
+    if (msgInvoice !== null || errorInvoice !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
+        dispatch(resetInvoiceStatus())
+        setModal(false)
+      }, 3000)
+    }
+  }, [msgInvoice, errorInvoice, dispatch, setModal])
 
   const options = users
     ? users.map((user) => ({
@@ -46,6 +75,13 @@ const ManualInvoice = ({ setModal }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-10">
+      {showPopup && (
+        <PopUp
+          message={popupMessage}
+          onClose={() => setShowPopup(false)}
+          isError={error}
+        />
+      )}
       <div
         onClick={() => setModal((state) => !state)}
         className="absolute inset-0 bg-black/20 backdrop-blur-sm"
@@ -65,7 +101,7 @@ const ManualInvoice = ({ setModal }) => {
               placeholder="Select Tenant"
               menuPortalTarget={document.body}
               styles={{
-                menuPortal: base => ({ ...base, zIndex: 9999 }),
+                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
               }}
             />
             <div className="flex mt-5 gap-2">

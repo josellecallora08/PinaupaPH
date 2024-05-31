@@ -29,7 +29,7 @@ const ApartmentProfile = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const units = useSelector((state) => state.unit.data)
-
+  const menu = useSelector((state) => state.toggle.sidebar)
   const toggleAddRoomForm = () => {
     setIsAddRoomFormOpen(!isAddRoomFormOpen)
   }
@@ -145,7 +145,7 @@ const ApartmentProfile = () => {
               Add Unit
             </button>
           </div>
-          <div className="lg:grid-cols-3 mt-5 grid grid-cols-1 gap-2 mx-5">
+          <div className={`${menu ? 'lg:grid-cols-2' : 'lg:grid-cols-3'} mt-5 md:grid-cols-2 grid grid-cols-1 gap-2 mx-5`}>
             {units?.map((val, key) => (
               <ApartmentStatusCard apartmentId={id} val={val} key={key}               update={update}
               setUpdate={setUpdate}/>

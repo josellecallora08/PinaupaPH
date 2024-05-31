@@ -17,6 +17,10 @@ const invoiceSlice = createSlice({
       state.error = null
       state.msg = null
     },
+    resetInvoiceStatus: (state) => {
+      state.msg = null
+      state.error = null
+    },
     fetchInvoicesSuccess: (state, action) => {
       state.loading = false
       state.data = action.payload
@@ -44,6 +48,10 @@ const invoiceSlice = createSlice({
       state.loading = false
       state.error = action.payload
     },
+    generateSuccess: (state, action) => {
+      state.loading = false
+      state.msg = action.payload
+    },
   },
 })
 
@@ -54,6 +62,9 @@ export const {
   editInvoicesSuccess,
   fetchFailed,
   deleteInvoiceSuccess,
+
+  generateSuccess,
+  resetInvoiceStatus
 } = invoiceSlice.actions
 
 export const tenantInvoice = () => async (dispatch) => {
