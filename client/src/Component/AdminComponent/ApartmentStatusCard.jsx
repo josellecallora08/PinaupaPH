@@ -154,7 +154,7 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
             </button> */}
           </div>
         </div>
-        {val.occupied ? (
+        {val?.occupied ? (
           <div className="absolute top-3 -right-9 w-28 h-8 bg-dark-blue text-white p-2 rotate-45">
             <p className="text-xs text-center text-white font-bold uppercase">
               Rented

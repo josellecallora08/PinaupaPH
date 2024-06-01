@@ -120,7 +120,7 @@ export const generateInvoice = (invoice_id) => async (dispatch) => {
     document.body.appendChild(link)
     link.click()
     link.remove()
-    dispatch(generateInvoice('Success'))
+    dispatch(generateSuccess('Success'))
   } catch (err) {
     dispatch(fetchFailed(err.message))
   }
