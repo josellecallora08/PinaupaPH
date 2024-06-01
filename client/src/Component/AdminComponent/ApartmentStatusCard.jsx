@@ -114,6 +114,8 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
             / per month
           </p>
           <p className="text-xs ml-5 mt-2 mr-2">
+            Current Tenant:{' '}
+            <span className='font-bold'>{val?.tenants.find((item) => item?.isCurrent)?.tenant_id?.user_id?.name}</span>
             
             {val?.tenants.find((item) => item.isCurrent) ? (
               <>
@@ -144,6 +146,12 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
             >
               <MdOutlineClose size={15} color="white" />
             </button>
+            {/* <button
+              onClick={downloadPDF}
+              className="bg-lime rounded hover:bg-lime/55 text-white px-4 py-2"
+            >
+              <img src={pdf} className="w-5 h-5" alt="" />
+            </button> */}
           </div>
         </div>
         {val.occupied ? (
@@ -218,7 +226,7 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
                           <td className="border px-4 py-2 lg:text-base text-xs">
                             {tenant?.moveOut
                               ? new Date(tenant?.moveOut).toDateString()
-                              : `${current}, today`}
+                              : ` not moved out`}
                           </td>
                           <td className="border px-4 py-2 lg:text-base text-xs lg:text-base text-xs">
                             {Math.floor(
