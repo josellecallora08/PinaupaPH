@@ -117,6 +117,21 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
             Current Tenant:{' '}
             <span className='font-bold'>{val?.tenants.find((item) => item?.isCurrent)?.tenant_id?.user_id?.name}</span>
             
+            {val?.tenants.find((item) => item.isCurrent) ? (
+              <>
+               
+                Current Tenant:
+                <span className="font-bold">
+                 
+                  {
+                    val.tenants.find((item) => item.isCurrent).tenant_id.user_id
+                      .name
+                  }
+                </span>
+              </>
+            ) : (
+              'Available Unit'
+            )}
           </p>
           <div className="justify-end mr-5 flex gap-2 mt-4 md:mt-16 ml-5 md:ml-44 pb-2">
             <button
@@ -182,8 +197,12 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
                   <table className="min-w-full bg-white">
                     <thead className="bg-primary-color text-white border-b-2 border-white sticky top-0">
                       <tr>
-                        <th className="py-2 px-4 border-white lg:text-base text-xs">Name</th>
-                        <th className="py-2 px-4 border-white lg:text-base text-xs">Move In Date</th>
+                        <th className="py-2 px-4 border-white lg:text-base text-xs">
+                          Name
+                        </th>
+                        <th className="py-2 px-4 border-white lg:text-base text-xs">
+                          Move In Date
+                        </th>
                         <th className="py-2 px-4 border-white lg:text-base text-xs">
                           Move Out Date
                         </th>
