@@ -1,6 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchInvoices, generateInvoice } from '../../features/invoice'
 
-const TenantTableTransaction = () => {
+const TenantTableTransaction = ({ tenant }) => {
+  const dispatch = useDispatch()
+  const invoices = useSelector((state) => state.invoice.data)
+  useEffect(() => {
+    dispatch(fetchInvoices())
+  }, [])
+
+  const handleDownload = async (id) => {
+    dispatch(generateInvoice(id))
+  }
   return (
     <div className="m-10">
       <div className="overflow-x-auto">
@@ -18,25 +29,64 @@ const TenantTableTransaction = () => {
             </tr>
           </thead>
           <tbody className="text-center">
-            <tr className="text-dark-blue">
-              <td className="border px-4 py-2 capitalize">IN01231231231</td>
-              <td className="border px-4 py-2 capitalize">Unpaid</td>
-              <td className="border px-4 py-2">11/23/2024</td>
-              <td className="border px-4 py-2">Not Paid</td>
-              <td className="border px-4 py-2">Unit -100</td>
-              <td className="border px-4 py-2 capitalize">Not Paid</td>
-              <td className="border px-4 py-2">Not Paid</td>
-              <td className="border px-4 py-2">
-                <button className="btn hover:text-primary-color flex gap-1 mx-auto items-center py-1 px-3 bg-dark-blue text-white rounded-md">
-                  <div>Download PDF</div>
-                </button>
-              </td>
-            </tr>
+            {(invoices &&
+              invoices
+                ?.filter(
+                  (item) =>
+                    item?.tenant_id?.user_id._id === tenant?.user_id._id,
+                )
+                .map((val, key) => (
+                  <tr key={key} className="text-dark-blue">
+                    <td className="border px-4 py-2 capitalize">
+                      {val?.pdf.reference}
+                    </td>
+                    <td className="border px-4 py-2 capitalize">
+                      {val?.status}
+                    </td>
+                    <td className="border px-4 py-2">
+                      {new Date(val?.tenant_id.monthly_due).toDateString()}
+                    </td>
+                    <td className="border px-4 py-2">
+                      {(val?.datePaid &&
+                        new Date(val?.datePaid).toDateString()) ||
+                        'Not yet paid.'}
+                    </td>
+                    <td className="border px-4 py-2">
+                      Unit - {val?.tenant_id?.unit_id?.unit_no}
+                    </td>
+                    <td className="border px-4 py-2 capitalize">
+                      {val?.payment?.method}
+                    </td>
+                    <td className="border px-4 py-2">
+                      {(val?.payment?.amountPaid).toLocaleString('en-PH', {
+                        style: 'currency',
+                        currency: 'PHP',
+                      })}
+                    </td>
+                    <td className="border px-4 py-2">
+                      <button
+                        onClick={() => handleDownload(val?._id)}
+                        className="btn hover:text-primary-color flex gap-1 mx-auto items-center py-1 px-3 bg-dark-blue text-white rounded-md"
+                      >
+                        <div>Download PDF</div>
+                      </button>
+                    </td>
+                  </tr>
+                ))) || (
+              <tr>
+                <td colSpan={8}>
+                  <span className="font-semibold font-primary">
+                    {' '}
+                    No data found
+                  </span>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TenantTableTransaction;
+export default TenantTableTransaction

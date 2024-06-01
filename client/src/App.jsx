@@ -58,7 +58,7 @@ function App() {
       <Route path="/contact" element={<ContactUsAdmin />} />
       <Route path="/otp-verify/:id" element={<OTPVerify />} />
       <Route path="/reset-password/:id" element={<ResetPass />} />
- 
+
       <Route
         path="/terms&condition"
         element={
@@ -79,7 +79,7 @@ function App() {
           </Layout>
         }
       />
-  <Route
+      <Route
         path="/tenanttransaction"
         element={
           <Layout className="bg-white1">
@@ -87,7 +87,7 @@ function App() {
           </Layout>
         }
       />
-     
+
       <Route
         path="/dashboard"
         element={
@@ -106,7 +106,7 @@ function App() {
           )
         }
       />
-           <Route
+      <Route
         path="/reportpayer"
         element={
           role?.role === 'Admin' ? (
@@ -240,7 +240,6 @@ function App() {
           )
         }
       />
-
 
       {/* Tenant Side */}
 
