@@ -17,9 +17,18 @@ const invoiceSlice = createSlice({
       state.error = null
       state.msg = null
     },
+    resetInvoiceStatus: (state) => {
+      state.msg = null
+      state.error = null
+    },
     fetchInvoicesSuccess: (state, action) => {
       state.loading = false
       state.data = action.payload
+    },
+    insertInvoiceSuccess: (state,action) => {
+      state.loading = false
+      state.data = [...state.data, action.payload.response]
+      state.msg = action.payload.msg
     },
     editInvoicesSuccess: (state, action) => {
       state.data = state.data.map((item) =>
@@ -36,13 +45,17 @@ const invoiceSlice = createSlice({
     },
     deleteInvoiceSuccess: (state, action) => {
       state.data = state.data.filter(
-        (item) => item?.pdf?.reference !== action.payload.pdf.reference,
+        (item) => item?.pdf?.reference !== action.payload.response.pdf.reference,
       )
       state.msg = action.payload?.msg
     },
     fetchFailed: (state, action) => {
       state.loading = false
       state.error = action.payload
+    },
+    generateSuccess: (state, action) => {
+      state.loading = false
+      state.msg = action.payload
     },
   },
 })
@@ -54,6 +67,9 @@ export const {
   editInvoicesSuccess,
   fetchFailed,
   deleteInvoiceSuccess,
+
+  generateSuccess,
+  resetInvoiceStatus
 } = invoiceSlice.actions
 
 export const tenantInvoice = () => async (dispatch) => {
@@ -250,6 +266,7 @@ export const deleteInvoices = (id) => async (dispatch) => {
       throw new Error(error)
     }
     const json = await response.json()
+    console.log(json)
     dispatch(deleteInvoiceSuccess(json))
   } catch (err) {
     dispatch(fetchFailed(err.message))

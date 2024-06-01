@@ -64,11 +64,11 @@ const AddLease = ({ setModal, selectedUser, setSelectedUser, handleLease }) => {
         onClick={() => setModal((state) => !state)}
         className="absolute inset-0 bg-black/20 backdrop-blur-sm"
       ></div>
-      <div className="w-full md:w-1/3 bg-white z-10 rounded-md shadow-md overflow-hidden">
+      <div className="w-full md:w-1/3  bg-white z-10 rounded-md shadow-md overflow-hidden">
         <h1 className="bg-primary-color uppercase font-bold tracking-wider text-white p-3">
           Create Lease
         </h1>
-        <div className="p-5 h-[13rem]">
+        <div className="p-5 h-[10rem]">
           <form onSubmit={handleLease} className="flex flex-col gap-4">
             <Select
               value={selectedUser}

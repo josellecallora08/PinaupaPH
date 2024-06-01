@@ -1,7 +1,6 @@
 import React from 'react';
 import Calendar from 'react-calendar';
 import './Calendar.css'; // Import the default calendar styles
-import money from '/money.svg';
 
 const Calendars = ({ user, invoice }) => {
   // Define a function to determine the class name for each date tile
@@ -37,37 +36,42 @@ const Calendars = ({ user, invoice }) => {
 
     if (date.getDate() === invoiceDatePaid.getDate() && date.getMonth() === invoiceDatePaid.getMonth()) {
       return (
-        <span className="" role="img" aria-label="money bag">
-        {invoiceDatePaid > invoiceDueDate ? '❗' : '💵'}
-        </span>
+        <div className="">
+          <span className="" role="img" aria-label="money bag">
+            {invoiceDatePaid > invoiceDueDate ? '❗' : '💵'}
+          </span>
+          <div className="paid-tooltip">
+            Payment Paid
+          </div>
+        </div>
       ); // Show money bag icon on the paid date
     }
 
     if (date.getDate() === userMonthlyDue.getDate()) {
       return (
-        <span className="" role="img" aria-label="money with wings">
-          🔔
-        </span>
-      ); // Show emoji on the monthly due date
+        <div>
+          <span className="" role="img" aria-label="bell">
+            🔔
+          </span>
+          <div className="duedate-tooltip">
+      
+            Due Date
+            
+          </div>
+        </div>
+      ); // Show emoji on the monthly due date with hover effect
     }
-
-    // if (date.getDate() === invoiceDueDate.getDate() && date.getMonth() === invoiceDueDate.getMonth()) {
-    //   return (
-    //     <span className="" role="img" aria-label="money with wings">
-    //       💵
-    //     </span>
-    //   ); // Show emoji on the invoice due date
-    // }
 
     return null; // No content for other dates
   };
 
   return (
-    <div className="w-11/12 m-auto">
+    <div className="w-11/12 m-auto ">
       <Calendar
-        className="w-full h-full"
+        className="w-full h-full tile"
         tileClassName={tileClassName} // Pass the tileClassName function to the Calendar component
-        tileContent={tileContent} // Pass the tileContent function to the Calendar component
+        tileContent={tileContent}
+         // Pass the tileContent function to the Calendar component
       />
     </div>
   );

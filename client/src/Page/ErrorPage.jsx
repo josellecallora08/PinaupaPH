@@ -14,7 +14,7 @@ const ErrorPage = () => {
                         <li>It may be a broken or outdated link.</li>
                     </ul>
                 </div>
-                <button className="bg-primary-color text-white rounded-md px-6 py-3 font-semibold hover:bg-primary-color-dark transition-colors duration-300">
+                <button onClick={() => window.location.href = '/'} className="bg-primary-color text-white rounded-md px-6 py-3 font-semibold hover:bg-primary-color-dark transition-colors duration-300">
                     Go to Home
                 </button>
             </div>

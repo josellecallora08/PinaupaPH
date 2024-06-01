@@ -29,7 +29,7 @@ const ApartmentProfile = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const units = useSelector((state) => state.unit.data)
-
+  const menu = useSelector((state) => state.toggle.sidebar)
   const toggleAddRoomForm = () => {
     setIsAddRoomFormOpen(!isAddRoomFormOpen)
   }
@@ -139,13 +139,13 @@ const ApartmentProfile = () => {
           <div className="flex justify-end gap-2 w-full">
             <button
               onClick={toggleAddRoomForm}
-              className="btn w-44 lg:text-base text-sm flex gap-2 items-center justify-center bg-primary-color hover:text-primary-color  text-white  lg:w-42 py-2   rounded-md lg:mr-2 mr-5  mt-5 "
+              className="lg:btn lg:w-44 w-full mx-5 lg:text-base text-sm flex gap-2 items-center justify-center lg:bg-primary-color lg:hover:text-primary-color  text-white  bg-primary-color hover:white   lg:text-white  lg:w-42 py-3   rounded-md lg:mr-2  mt-5 "
             >
               <FaPlus />
               Add Unit
             </button>
           </div>
-          <div className="lg:grid-cols-3 mt-5 grid grid-cols-1 gap-2 mx-5">
+          <div className={`${menu ? 'lg:grid-cols-2' : 'lg:grid-cols-3'} mt-5 md:grid-cols-2 grid grid-cols-1 gap-2 mx-5`}>
             {units?.map((val, key) => (
               <ApartmentStatusCard apartmentId={id} val={val} key={key}               update={update}
               setUpdate={setUpdate}/>

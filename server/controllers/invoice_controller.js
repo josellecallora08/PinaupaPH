@@ -3,6 +3,8 @@ const INVOICEMODEL = require('../models/invoice')
 const nodemailer = require('nodemailer')
 const httpStatusCodes = require('../constants/constants')
 const pdf_template = require('../template/invoice')
+const ejs = require('ejs')
+const path = require('path')
 const pdf = require('html-pdf')
 const axios = require('axios')
 const cloudinary = require('cloudinary').v2 // Import Cloudinary SDK
@@ -90,12 +92,16 @@ module.exports.createInvoice = async (req, res) => {
         .status(httpStatusCodes.FOUND)
         .json({ error: 'Invoice exists...' })
     }
+    // Update tenant's balance
+    tenant.balance += tenant.unit_id.rent
+    await tenant.save()
 
     const details = {
       pdf: {
         reference: reference,
       },
       status: false,
+      amount: tenant?.unit_id?.rent,
       tenant_id: {
         user_id: {
           username: tenant?.user_id.username,
@@ -122,139 +128,160 @@ module.exports.createInvoice = async (req, res) => {
       },
       createdAt: Date.now(),
     }
+    const templatePath = path.join(
+      __dirname,
+      '../template',
+      'invoice_report_template.ejs',
+    )
+    const htmlContent = await ejs.renderFile(templatePath, {
+      response: details,
+    })
 
-    // Generate PDF in memory
-    const pdfBuffer = await new Promise((resolve, reject) => {
-      pdf
-        .create(pdf_template({ response: details }), {
-          childProcessOptions: {
-            env: {
-              OPENSSL_CONF: '/dev/null',
-            },
+    pdf
+      .create(htmlContent, {
+        childProcessOptions: {
+          env: {
+            OPENSSL_CONF: '/dev/null',
+          },
+        },
+      })
+      .toBuffer(async (err, buffer) => {
+        if (err) {
+          return res
+            .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
+            .json({ error: 'Failed to generate PDF' })
+        }
+
+        const cloudinaryResponse = await new Promise((resolve, reject) => {
+          cloudinary.uploader
+            .upload_stream(
+              {
+                resource_type: 'raw',
+                format: 'pdf', // Specify resource type as 'raw' for PDF
+                folder: 'PinaupaPH/Invoices', // Folder in Cloudinary where PDF will be stored
+                overwrite: true, // Do not overwrite if file with the same name exists
+              },
+              (error, result) => {
+                if (error) reject(error)
+                else resolve(result)
+              },
+            )
+            .end(buffer)
+        })
+
+        if (!cloudinaryResponse || !cloudinaryResponse.public_id) {
+          return res
+            .status(httpStatusCodes.CONFLICT)
+            .json({ error: 'Failed to upload PDF to Cloudinary...' })
+        }
+
+        const dateDue = new Date(details.tenant_id.monthly_due).getDate()
+        const dueMonth = new Date().setDate(dateDue) //test at home
+        console.log(dueMonth)
+        // const invoice = await INVOICEMODEL.findOne({ tenant_id: tenant._id })
+        // if(invoice.some(item => new Date(item.due) === dueMonth)){
+
+        // }
+        const unpaid = tenant.balance + tenant.unit_id.rent
+        const response = await INVOICEMODEL.create({
+          tenant_id: tenant._id,
+          'pdf.public_id': cloudinaryResponse.public_id,
+          'pdf.pdf_url': cloudinaryResponse.secure_url,
+          'pdf.reference': reference,
+          amount: tenant.unit_id.rent,
+          due: new Date(dueMonth).toISOString(),
+          'payment.unpaidBalance': unpaid,
+        })
+
+        if (!response) {
+          return res
+            .status(httpStatusCodes.NOT_FOUND)
+            .json({ error: 'Failed to create invoice...' })
+        }
+
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: `${process.env.GOOGLE_EMAIL}`,
+            pass: `${process.env.GOOGLE_PASSWORD}`,
           },
         })
-        .toBuffer((err, buffer) => {
-          if (err) reject(err)
-          else resolve(buffer)
+
+        // Function to download the PDF from Cloudinary
+        const downloadPdfFromCloudinary = async () => {
+          const response = await axios.get(`${cloudinaryResponse.secure_url}`, {
+            responseType: 'stream',
+          })
+          return response.data
+        }
+
+        // Define the email options
+        const mailOptions = {
+          from: 'pinaupaph@gmail.com',
+          to: `${tenant?.user_id.email}`,
+          subject: `Urgent: Your Invoice for ${tenant?.user_id.name} is Due on ${new Date(response.due).toDateString()}!`,
+          html: `
+              <html>
+              <body>
+                <p>Dear ${tenant?.user_id.name},</p>
+                <p>I hope this email finds you well.</p>
+                <p>This is to inform you that an invoice has been sent your way for your <strong>Unit ${tenant?.unit_id.unit_no}</strong>.</p>
+                <p>Here's what you need to know:</p>
+                <ul>
+                  <li>Invoice Number: <strong>${reference} </strong></li>
+                  <li>Invoice Date: <strong>${new Date(response.createdAt).toDateString()}</strong></li>
+                  <li>Due Date: <strong>${new Date(response.due).toDateString()}</strong></li>
+                  <li>Total Payment: <strong>${(response?.amount).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
+                  <li>Previous Balance: <strong>${(response?.amount - response?.payment?.amountPaid).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
+                </ul>
+                <p>Attached to this email, you will find the invoice file for your reference and records.</p>
+                <p>If you have any questions or concerns regarding this invoice, please feel free to reach out to me.</p>
+                <p>Thank you for your prompt attention to this matter.</p>
+                <p>Best regards,</p>
+                <strong>Wendell C. Ibias</strong> <br/>
+                <strong>Apartment Owner</strong><br/>
+                <strong>09993541054</strong><br/>
+              </body>
+              </html>`,
+          attachments: [
+            {
+              filename: 'invoice.pdf',
+              content: await downloadPdfFromCloudinary(),
+            },
+          ],
+        }
+
+        // Send the email
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.log('Error:', error)
+          } else {
+            console.log('Email sent:', info.response)
+          }
         })
-    })
+
+        return res.status(httpStatusCodes.CREATED).json({
+          msg: 'Invoice has been created',
+          response,
+        })
+      })
+    // Generate PDF in memory
+    // const pdfBuffer = await new Promise((resolve, reject) => {
+    //   pdf
+    //     .create(pdf_template({ response: details }), {
+    //       childProcessOptions: {
+    //         env: {
+    //           OPENSSL_CONF: '/dev/null',
+    //         },
+    //       },
+    //     })
+    //     .toBuffer((err, buffer) => {
+    //       if (err) reject(err)
+    //       else resolve(buffer)
+    //     })
+    // })
 
     // Upload PDF to Cloudinary
-    const cloudinaryResponse = await new Promise((resolve, reject) => {
-      cloudinary.uploader
-        .upload_stream(
-          {
-            resource_type: 'raw',
-            format: 'pdf', // Specify resource type as 'raw' for PDF
-            folder: 'PinaupaPH/Invoices', // Folder in Cloudinary where PDF will be stored
-            overwrite: true, // Do not overwrite if file with the same name exists
-          },
-          (error, result) => {
-            if (error) reject(error)
-            else resolve(result)
-          },
-        )
-        .end(pdfBuffer)
-    })
-
-    if (!cloudinaryResponse || !cloudinaryResponse.public_id) {
-      return res
-        .status(httpStatusCodes.CONFLICT)
-        .json({ error: 'Failed to upload PDF to Cloudinary...' })
-    }
-
-    const dateDue = new Date(details.tenant_id.monthly_due).getDate()
-    const dueMonth = new Date().setDate(dateDue) //test at home
-    console.log(dueMonth)
-    // const invoice = await INVOICEMODEL.findOne({ tenant_id: tenant._id })
-    // if(invoice.some(item => new Date(item.due) === dueMonth)){
-
-    // }
-    const unpaid = tenant.balance + tenant.unit_id.rent
-    const response = await INVOICEMODEL.create({
-      tenant_id: tenant._id,
-      'pdf.public_id': cloudinaryResponse.public_id,
-      'pdf.pdf_url': cloudinaryResponse.secure_url,
-      'pdf.reference': reference,
-      amount: tenant.unit_id.rent,
-      due: new Date(dueMonth).toISOString(),
-      'payment.unpaidBalance': unpaid,
-    })
-
-    if (!response) {
-      return res
-        .status(httpStatusCodes.NOT_FOUND)
-        .json({ error: 'Failed to create invoice...' })
-    }
-
-    // Update tenant's balance
-    tenant.balance += tenant.unit_id.rent
-    await tenant.save()
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: `${process.env.GOOGLE_EMAIL}`,
-        pass: `${process.env.GOOGLE_PASSWORD}`,
-      },
-    })
-
-    // Function to download the PDF from Cloudinary
-    const downloadPdfFromCloudinary = async () => {
-      const response = await axios.get(`${cloudinaryResponse.secure_url}`, {
-        responseType: 'stream',
-      })
-      return response.data
-    }
-
-    // Define the email options
-    const mailOptions = {
-      from: 'pinaupaph@gmail.com',
-      to: `${tenant?.user_id.email}`,
-      subject: `Urgent: Your Invoice for ${tenant?.user_id.name} is Due on ${new Date(response.due).toDateString()}!`,
-      html: `
-          <html>
-          <body>
-            <p>Dear ${tenant?.user_id.name},</p>
-            <p>I hope this email finds you well.</p>
-            <p>This is to inform you that an invoice has been sent your way for your <strong>Unit ${tenant?.unit_id.unit_no}</strong>.</p>
-            <p>Here's what you need to know:</p>
-            <ul>
-              <li>Invoice Number: <strong>${reference} </strong></li>
-              <li>Invoice Date: <strong>${new Date(response.createdAt).toDateString()}</strong></li>
-              <li>Due Date: <strong>${new Date(response.due).toDateString()}</strong></li>
-              <li>Total Payment: <strong>${(response?.amount).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
-              <li>Previous Balance: <strong>${(response?.amount - response?.payment?.amountPaid).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
-            </ul>
-            <p>Attached to this email, you will find the invoice file for your reference and records.</p>
-            <p>If you have any questions or concerns regarding this invoice, please feel free to reach out to me.</p>
-            <p>Thank you for your prompt attention to this matter.</p>
-            <p>Best regards,</p>
-            <strong>Wendell C. Ibias</strong> <br/>
-            <strong>Apartment Owner</strong><br/>
-            <strong>09993541054</strong><br/>
-          </body>
-          </html>`,
-      attachments: [
-        {
-          filename: 'invoice.pdf',
-          content: await downloadPdfFromCloudinary(),
-        },
-      ],
-    }
-
-    // Send the email
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log('Error:', error)
-      } else {
-        console.log('Email sent:', info.response)
-      }
-    })
-
-    return res.status(httpStatusCodes.CREATED).json({
-      message: 'Created Invoice and Successfully saved to Database',
-      response,
-    })
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)

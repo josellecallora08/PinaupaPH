@@ -189,17 +189,17 @@ const ViewConcern = () => {
 
                 {isDotOpen && (
                   <div
-                    className={`absolute top-9 z-50 right-6 shadow-sm shadow-dark-gray bg-white rounded-md overflow-hidden animate-slideIn
-                    transition-transform transform origin-top`}
+                    className={`absolute top-9 z-50 right-6 shadow-sm shadow-dark-gray bg-white rounded-md overflow-hidden animate-slideIn transition-transform transform origin-top`}
                   >
-                    {concern?.status === false && (
-                      <div
-                        onClick={handleComplete}
-                        className="flex items-center  gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300 cursor-pointer"
-                      >
-                        <IoIosCheckboxOutline size={20} /> Resolve
-                      </div>
-                    )}
+                    {concern?.status === false &&
+                      user?.user_id?.role === 'Tenant' && (
+                        <div
+                          onClick={handleComplete}
+                          className="flex items-center  gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300 cursor-pointer"
+                        >
+                          <IoIosCheckboxOutline size={20} /> Resolve
+                        </div>
+                      )}
                     <div
                       onClick={handleDelete}
                       className="flex items-center  gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300 cursor-pointer"
@@ -216,7 +216,7 @@ const ViewConcern = () => {
                       </div>
                     )}
                   </div>
-                )}
+                )}  
               </div>
               {showEditForm && (
                 <EditReportForm
@@ -242,7 +242,7 @@ const ViewConcern = () => {
                 <div className="relative w-full h-full min-h-60 xl:h-[600px]">
                   {concern?.attached_image &&
                   concern?.attached_image?.length > 0 ? (
-                    <Carousel infiniteLoop={true} swipeable={true}>
+                    <Carousel infiniteLoop={true} swipeable={true} arrowStyle={{ color: 'red' }}>
                       {concern?.attached_image?.map((image, index) => (
                         <figure
                           className="w-full h-full max-w-[500px] lg:max-w-full m-auto xl:h-[600px]"

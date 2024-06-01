@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import banner from '/banner.svg';
-
+import { useSelector } from 'react-redux';
 const TenantCard = ({ data }) => {
+  const ApartmentName = useSelector((state) => state.apartment.data);
+  const apartmentName = ApartmentName?.find(apartment => apartment.units.some(unit => unit._id === data?.unit_id?._id))?.name;
   return (
     <Link to={`/tenantprofile/${data?.user_id?._id}`} className="relative block">
       <div className="flex lg:px-1 px-2 pl-3 lg:ml-0  flex-row bg-white h-[9.5rem] w-full rounded-md text-xs shadow-sm shadow-light-gray hover:scale-105 hover:z-10 hover:duration-300">
@@ -19,8 +21,11 @@ const TenantCard = ({ data }) => {
             {data?.user_id?.name}
 
           </p>
-          <p className="md:text-base text-sm font-semibold">
-            {data?.user_id?.phone}
+          <p className='text-xs'>
+            {}
+          </p>
+          <p className=" text-xs  ">
+            {apartmentName}
           </p>
           <p className="bg-primary-color text-white font-regular text-sm rounded-md p-2 mt-2 hover:opacity-70 w-fit">
             Balance: ₱ <span className="font-semibold ">{data?.balance || 0}</span>

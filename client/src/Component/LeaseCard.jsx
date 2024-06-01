@@ -8,11 +8,12 @@ const LeaseCard = ({ val, handleDelete }) => {
       to={`/agreement/${val._id}/${val.pdf.reference}`}
       className="relative hover:scale-105 hover:duration-300 cursor-pointer flex flex-row shadow-sm shadow-light-gray rounded-md items-center bg-white"
     >
-      <div className="w-[95%] flex gap-2 items-center m-auto">
-        <figure className="w-[70px] items-center">
+      <div className="w-[95%] flex gap-2 items-center  m-auto">
+        <figure className="w-[100px] items-center ">
           <img
             src={val?.tenant_id?.user_id?.profile_image?.image_url}
             alt="Profile"
+            className=' rounded-full'
           />
         </figure>
         <div className="py-6 align-middle">
