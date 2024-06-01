@@ -11,57 +11,52 @@ const pdf_template = require('../template/invoice')
 const cloudinary = require('cloudinary').v2 // Import Cloudinary SDK
 const pdf = require('html-pdf')
 const DAY_IN_MS = 24 * 60 * 60 * 1000 // Number of milliseconds in a day
+const ejs = require('ejs');
+const path = require('path');
 
 module.exports.scheduledInvoice = () => {
-  let hasRun = false // Initialize hasRun flag
+  let hasRun = false; // Initialize hasRun flag
 
-  cron.schedule('* * * * * *', async () => {
-    // Run every minute, adjust as needed
+  cron.schedule('0 0 * * * *', async () => {
+    // Run every hour, adjust as needed
     if (!hasRun) {
-      hasRun = true
+      hasRun = true;
 
-      const current_date = new Date()
-      const day = current_date.getDate()
-      const month = current_date.getMonth()
-      const year = current_date.getFullYear() // Use getFullYear() instead of getYear()
+      const current_date = new Date();
+      const day = current_date.getDate();
+      const month = current_date.getMonth() + 1; // Corrected to get the actual month
+      const year = current_date.getFullYear();
 
       try {
-        const response1 = await TENANTMODEL.find().populate(
-          'user_id unit_id apartment_id',
-        )
+        const tenants = await TENANTMODEL.find().populate('user_id unit_id apartment_id');
 
-        for (const item of response1) {
-          if (!item.unit_id._id) {
-            console.log('Unit not found for tenant:', item.unit_id._id)
-            continue // Skip processing if unit_id not found
+        for (const tenant of tenants) {
+          if (!tenant.unit_id._id) {
+            console.log('Unit not found for tenant:', tenant.unit_id._id);
+            continue; // Skip processing if unit_id not found
           }
 
-          const due = new Date(item.monthly_due)
-          due.setFullYear(
-            current_date.getFullYear(),
-            current_date.getMonth(),
-            due.getDate(),
-          )
+          const due = new Date(tenant.monthly_due);
+          due.setFullYear(current_date.getFullYear(), current_date.getMonth(), due.getDate());
+
           // Calculate the difference in days between current date and due date
-          const daysDifference = Math.floor((due - current_date) / DAY_IN_MS)
+          const daysDifference = Math.floor((due - current_date) / (1000 * 60 * 60 * 24));
 
-          if (daysDifference === 7 && !(item.user_id.isDelete)) {
-            // Check if the due date is today
-            const ref_user = item.user_id._id.toString().slice(-3)
-            const ref_unit = item.unit_id.unit_no
-
-            const reference = `INV${day}${month}${year}${ref_unit}${ref_user}`
+          if (daysDifference === 7 && !tenant.user_id.isDelete) {
+            const ref_user = tenant.user_id._id.toString().slice(-3);
+            const ref_unit = tenant.unit_id.unit_no;
+            const reference = `INV${day}${month}${year}${ref_unit}${ref_user}`;
 
             const exist = await INVOICEMODEL.findOne({
               'pdf.reference': reference,
-            })
+            });
             if (exist) {
-              console.log('Existing invoice already:', reference)
-              continue
+              console.log('Existing invoice already:', reference);
+              continue;
             }
 
-            const amount = item.unit_id.rent || 6000
-            item.balance += amount
+            const amount = tenant.unit_id.rent || 6000;
+            tenant.balance += amount;
             const details = {
               pdf: {
                 reference: reference,
@@ -69,36 +64,39 @@ module.exports.scheduledInvoice = () => {
               status: false,
               tenant_id: {
                 user_id: {
-                  username: item?.user_id.username,
-                  name: item?.user_id.name,
-                  email: item?.user_id.email,
-                  mobile_no: item?.user_id.mobile_no,
+                  username: tenant.user_id.username,
+                  name: tenant.user_id.name,
+                  email: tenant.user_id.email,
+                  mobile_no: tenant.user_id.mobile_no,
                 },
                 unit_id: {
-                  unit_no: item?.unit_id.unit_no,
-                  rent: item?.unit_id.rent,
+                  unit_no: tenant.unit_id.unit_no,
+                  rent: tenant.unit_id.rent,
                 },
                 apartment_id: {
-                  name: item?.apartment_id.name,
-                  address: item?.apartment_id.address,
-                  barangay: item?.apartment_id.barangay,
-                  province: item?.apartment_id.province,
+                  name: tenant.apartment_id.name,
+                  address: tenant.apartment_id.address,
+                  barangay: tenant.apartment_id.barangay,
+                  province: tenant.apartment_id.province,
                   image: {
-                    apartment_image_url:
-                      item?.apartment_id.image.apartment_image_url,
-                    apartment_public_id:
-                      item?.apartment_id.image.apartment_public_id,
+                    apartment_image_url: tenant.apartment_id.image.apartment_image_url,
+                    apartment_public_id: tenant.apartment_id.image.apartment_public_id,
                   },
                 },
-                balance: item?.balance,
-                monthly_due: item?.monthly_due,
+                balance: tenant.balance,
+                monthly_due: tenant.monthly_due,
               },
               createdAt: Date.now(),
-            }
+            };
+
+            const templatePath = path.join(__dirname, '../template', 'invoice_report_template.ejs');
+            const htmlContent = await ejs.renderFile(templatePath, {
+              response: details,
+            });
 
             const pdfBuffer = await new Promise((resolve, reject) => {
               pdf
-                .create(pdf_template({ response: details }), {
+                .create(htmlContent, {
                   childProcessOptions: {
                     env: {
                       OPENSSL_CONF: '/dev/null',
@@ -106,10 +104,10 @@ module.exports.scheduledInvoice = () => {
                   },
                 })
                 .toBuffer((err, buffer) => {
-                  if (err) reject(err)
-                  else resolve(buffer)
-                })
-            })
+                  if (err) reject(err);
+                  else resolve(buffer);
+                });
+            });
 
             // Upload PDF to Cloudinary
             const cloudinaryResponse = await new Promise((resolve, reject) => {
@@ -122,98 +120,97 @@ module.exports.scheduledInvoice = () => {
                     overwrite: true, // Do not overwrite if file with the same name exists
                   },
                   (error, result) => {
-                    if (error) reject(error)
-                    else resolve(result)
+                    if (error) reject(error);
+                    else resolve(result);
                   },
                 )
-                .end(pdfBuffer)
-            })
+                .end(pdfBuffer);
+            });
 
-            const dateDue = new Date(item.monthly_due).getDate()
-            const dueMonth = new Date().setDate(dateDue)
+            const dateDue = new Date(tenant.monthly_due).getDate();
+            const dueMonth = new Date().setDate(dateDue);
             const response = await INVOICEMODEL.create({
-              tenant_id: item._id,
+              tenant_id: tenant._id,
               'pdf.public_id': cloudinaryResponse.public_id,
               'pdf.pdf_url': cloudinaryResponse.secure_url,
               'pdf.reference': reference,
               due: new Date(dueMonth).toISOString(),
               amount,
-            })
+            });
 
             const transporter = nodemailer.createTransport({
               service: 'gmail',
               auth: {
-                user: `${process.env.GOOGLE_EMAIL}`,
-                pass: `${process.env.GOOGLE_PASSWORD}`,
+                user: process.env.GOOGLE_EMAIL,
+                pass: process.env.GOOGLE_PASSWORD,
               },
-            })
+            });
 
             // Function to download the PDF from Cloudinary
             const downloadPdfFromCloudinary = async () => {
-              const response = await axios.get(
-                `${cloudinaryResponse.secure_url}`,
-                {
-                  responseType: 'stream',
-                },
-              )
-              return response.data
-            }
+              const response = await axios.get(cloudinaryResponse.secure_url, {
+                responseType: 'stream',
+              });
+              return response.data;
+            };
 
             // Define the email options
             const mailOptions = {
               from: 'pinaupaph@gmail.com',
-              to: `${item?.user_id.email}`,
-              subject: `Urgent: Your Invoice for ${item?.unit_id.unit_no} is Due Soon!`,
+              to: tenant.user_id.email,
+              subject: `Urgent: Your Invoice for ${tenant.unit_id.unit_no} is Due Soon!`,
               html: `
-        <html>
-        <body>
-          <p>Dear ${item?.user_id.name},</p>
-          <p>I hope this email finds you well.</p>
-          <p>This is to inform you that an invoice has been sent your way for your <strong>Unit ${item?.unit_id.unit_no}</strong>.</p>
-          <p>Here's what you need to know:</p>
-          <ul>
-            <li>Invoice Number: <strong>${reference} </strong></li>
-            <li>Invoice Date: <strong>${new Date(response.createdAt).toDateString()}</strong></li>
-            <li>Due Date: <strong>${new Date(item?.monthly_due).toDateString()}</strong></li>
-            <li>Total Amount: <strong>${(response?.amount).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
-            <li>Previous Balance: <strong>${(item?.balance - response.amount).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
-          </ul>
-          <p>Attached to this email, you will find the invoice file for your reference and records.</p>
-          <p>If you have any questions or concerns regarding this invoice, please feel free to reach out to me.</p>
-          <p>Thank you for your prompt attention to this matter.</p>
-          <p>Best regards,</p>
-          <strong>Wendell C. Ibias</sitem
-          <strong>Apartment Owner</strong>
-          <strong>09993541054</strong>
-        </body>
-        </html>`,
+                <html>
+                <body>
+                  <p>Dear ${tenant.user_id.name},</p>
+                  <p>I hope this email finds you well.</p>
+                  <p>This is to inform you that an invoice has been sent your way for your <strong>Unit ${tenant.unit_id.unit_no}</strong>.</p>
+                  <p>Here's what you need to know:</p>
+                  <ul>
+                    <li>Invoice Number: <strong>${reference}</strong></li>
+                    <li>Invoice Date: <strong>${new Date(response.createdAt).toDateString()}</strong></li>
+                    <li>Due Date: <strong>${new Date(tenant.monthly_due).toDateString()}</strong></li>
+                    <li>Total Amount: <strong>${(response.amount).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
+                    <li>Previous Balance: <strong>${(tenant.balance - response.amount).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
+                  </ul>
+                  <p>Attached to this email, you will find the invoice file for your reference and records.</p>
+                  <p>If you have any questions or concerns regarding this invoice, please feel free to reach out to me.</p>
+                  <p>Thank you for your prompt attention to this matter.</p>
+                  <p>Best regards,</p>
+                  <strong>Wendell C. Ibias</strong><br/>
+                  <strong>Apartment Owner</strong><br/>
+                  <strong>09993541054</strong><br/>
+                </body>
+                </html>`,
               attachments: [
                 {
                   filename: 'invoice.pdf',
                   content: await downloadPdfFromCloudinary(),
                 },
               ],
-            }
+            };
 
             // Send the email
             transporter.sendMail(mailOptions, (error, info) => {
               if (error) {
-                console.log('Error:', error)
+                console.log('Error:', error);
               } else {
-                console.log('Email sent:', info.response)
+                console.log('Email sent:', info.response);
               }
-            })
-            await item.save()
+            });
+
+            await tenant.save();
           }
         }
       } catch (error) {
-        console.error('Error in scheduledInvoice:', error)
+        console.error('Error in scheduledInvoice:', error);
       } finally {
-        hasRun = false
+        hasRun = false;
       }
     }
-  })
-}
+  });
+};
+
 
 module.exports.deleteOTP = () => {
   cron.schedule('* * * * *', async () => {

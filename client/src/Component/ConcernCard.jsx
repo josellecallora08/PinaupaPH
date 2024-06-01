@@ -34,7 +34,7 @@ const ConcernCard = ({ val, num }) => {
             </figure>
             <div className="">
               <div className="font-bold text-lg">
-                {val?.sender_id?.user_id.name}
+                {val?.sender_id?.user_id?.name}
               </div>
               <div className="text-sm w-fit text-dark-gray truncate-title">
                 {val.title}
