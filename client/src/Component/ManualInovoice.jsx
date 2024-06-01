@@ -1,77 +1,79 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { createInvoice, resetInvoiceStatus } from '../features/invoice'
-import { fetchUsers } from '../features/user'
-import Select from 'react-select'
-import PopUp from "../Component/PopUp"
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { createInvoice, resetInvoiceStatus } from '../features/invoice';
+import { fetchUsers } from '../features/user';
+import Select from 'react-select';
+import PopUp from "../Component/PopUp";
+import Lottie from 'lottie-react';
+import Whiteloading from '../Page/Whiteloading.json';
 
 const ManualInvoice = ({ setModal }) => {
-  const dispatch = useDispatch()
-  const [selectedUser, setSelectedUser] = useState(null)
-  const loading = useSelector((state) => state.invoice.loading)
-  const error = useSelector((state) => state.invoice.error)
-  const msg = useSelector((state) => state.invoice.msg)
-  const users = useSelector((state) => state.user.data)
-  const [popupMessage, setPopupMessage] = useState('')
-  const [showPopup, setShowPopup] = useState(false)
-  const errorInvoice = useSelector((state) => state.invoice.error)
-  const msgInvoice = useSelector((state) => state.invoice.msg)
-  const [isDownloading, setIsDownloading] = useState(false)
+  const dispatch = useDispatch();
+  const [selectedUser, setSelectedUser] = useState(null);
+  const loading = useSelector((state) => state.invoice.loading);
+  const error = useSelector((state) => state.invoice.error);
+  const msg = useSelector((state) => state.invoice.msg);
+  const users = useSelector((state) => state.user.data);
+  const [popupMessage, setPopupMessage] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+ 
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const handleInvoice = (e) => {
-    e.preventDefault()
-    if (selectedUser) {
-      dispatch(createInvoice(selectedUser.value))
+    e.preventDefault();
+    if (selectedUser && !loading) {
+      dispatch(createInvoice(selectedUser.value));
     }
   }
+  
+  useEffect(() => {
+    if (msg !== null) {
+      setPopupMessage(msg)
+    } else if (error !== null) {
+      setPopupMessage(error)
+    }
 
-useEffect(() => { 
-  console.log('msgInvoice', msgInvoice)
-  console.log('errorInvoice', errorInvoice)
+    if (msg !== null || error !== null) {
+      setShowPopup(true)
+      setTimeout(() => {
+        setShowPopup(false)
 
-}, [msgInvoice, errorInvoice])
+        setModal(false)
+      }, 3000)
+    }
+  }, [dispatch, handleInvoice, msg, error])
+
+  useEffect(() => {
+    console.log('msgInvoice', msg);
+    console.log('errorInvoice', error);
+  }, [msg, error]);
 
   useEffect(() => {
     const closeModal = (e) => {
       if (e.key === 'Escape') {
-        setModal((state) => !state)
+        setModal((state) => !state);
       }
     }
 
-    document.addEventListener('keydown', closeModal)
+    document.addEventListener('keydown', closeModal);
 
     return () => {
-      document.removeEventListener('keydown', closeModal)
+      document.removeEventListener('keydown', closeModal);
     }
-  }, [setModal])
+  }, [setModal]);
 
   useEffect(() => {
-    dispatch(fetchUsers())
-  }, [dispatch])
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
-  useEffect(() => {
-    if (msgInvoice !== null) {
-      setPopupMessage(msgInvoice)
-    } else if (errorInvoice !== null) {
-      setPopupMessage(errorInvoice)
-    }
 
-    if (msgInvoice !== null || errorInvoice !== null) {
-      setShowPopup(true)
-      setTimeout(() => {
-        setShowPopup(false)
-        dispatch(resetInvoiceStatus())
-        setModal(false)
-      }, 3000)
-    }
-  }, [msgInvoice, errorInvoice, dispatch, setModal])
 
   const options = users
     ? users.map((user) => ({
         value: user.user_id._id,
         label: user.user_id.name,
       }))
-    : []
+    : [];
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-10">
@@ -107,9 +109,17 @@ useEffect(() => {
             <div className="flex mt-5 gap-2">
               <button
                 type="submit"
-                className="flex-1 border border-primary-color text-white rounded-md bg-primary-color py-2"
+                className="flex-1 border  border-primary-color text-white rounded-md bg-primary-color  py-2"
+                disabled={loading} // Disable button when loading
               >
-                {loading ? 'Downloading...' : 'Submit'}
+                {loading ? (
+                  <div className='cursor-wait flex justify-center items-center'>
+                    <span >Processing</span>
+                    <Lottie animationData={Whiteloading} className="w-6 ml-2" />
+                  </div>
+                ) : (
+                  'Submit'
+                )}
               </button>
               <button
                 type="button"
@@ -123,7 +133,7 @@ useEffect(() => {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default ManualInvoice
