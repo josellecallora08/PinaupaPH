@@ -306,7 +306,6 @@ const Dashboard = () => {
                     </div> */}
                         <div className=" w-full flex flex-col gap-2">
                           {/* Select Tag That can Search */}
-
                           <div className="w-11/12 h-full flex flex-col pt-2 items-center justify-center ">
                             <Select
                               value={selectedOption}
@@ -350,14 +349,21 @@ const Dashboard = () => {
                             />
                           </div>
 
-                          <p className="text-[#9e9e9e] text-sm ml-1 mb-1  xl:text-base ">
-                            Available Room:{' '}
-                            <span>
-                              {units?.filter((unit) => !unit.occupied).length ||
-                                0}
-                              / {units?.length}
-                            </span>
-                          </p>
+                          {/* Conditionally render based on whether a room is selected */}
+                          {selectedOption ? (
+                            <p className="text-[#9e9e9e] text-sm ml-1 mb-1   ">
+                              Available Room:{' '}
+                              <span>
+                                {units?.filter((unit) => !unit.occupied)
+                                  .length || 0}
+                                / {units?.length}
+                              </span>
+                            </p>
+                          ) : (
+                            <p className="text-[#9e9e9e] text-sm ml-1 mb-1  ">
+                              No room selected
+                            </p>
+                          )}
                         </div>
                       </div>
                     </div>

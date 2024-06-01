@@ -31,6 +31,7 @@ import LeaseView from './Page/Admin/LeaseView'
 import SuperAdmin from './Page/SuperAdmin'
 import PaymentStatus from './Component/LoadingComponent/PaymentStatus'
 import PayerReport from './Component/AdminComponent/PayerReport'
+
 function App() {
   const user = useSelector((state) => state.auth.isAuthenticated)
   const role = useSelector((state) => state.auth.user)

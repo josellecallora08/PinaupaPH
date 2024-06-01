@@ -64,7 +64,7 @@ const TenantProfile = () => {
   const navigate = useNavigate()
   const [showPopup, setShowPopup] = useState(false)
   const [popupMessage, setPopupMessage] = useState('')
-
+  const ApartmentName = useSelector((state) => state.apartment.data)
   const dropdownRef = useRef(null)
   const handleDeleteTenant = () => {
     const isConfirmed = window.confirm(
@@ -450,11 +450,15 @@ const TenantProfile = () => {
                     <div className=" mb-4 text-sm mt-3 ml-2 ">
                       <div className="flex gap-14">
                         <div className="lg:text-lg ">
+                          <p>Apartment Building</p>
                           <p>Apartment Unit</p>
                           <p>Deposit</p>
                           <p>Date of Move-in</p>
                         </div>
                         <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
+                          <p className="">
+                           {tenant?.apartment_id?.name}
+                          </p>
                           <p className="">Unit - {tenant?.unit_id?.unit_no}</p>
                           <p className="">
                             {tenant?.deposit?.toLocaleString('en-PH', {

@@ -692,3 +692,33 @@ input[type=number] {
 
   font-size: 0.8rem; /* Adjust font size for smaller text */
 }
+.tile {
+  position: relative;
+  display: inline-block;
+}
+
+.duedate-tooltip, .paid-tooltip {
+  visibility: hidden;
+  width: 120px;
+  background-color: #f33333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.paid-tooltip {
+  background-color: #4caf50; /* Green background for payment paid */
+}
+
+.react-calendar__tile:hover .duedate-tooltip,
+.react-calendar__tile:hover .paid-tooltip {
+  visibility: visible;
+  opacity: 1;
+}

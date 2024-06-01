@@ -31,7 +31,7 @@ const Invoice = () => {
   const invoices = useSelector((state) => state.invoice.data);
   const errorInvoice = useSelector((state) => state.invoice.error);
   const msgInvoice = useSelector((state) => state.invoice.msg);
-
+ 
   const handleDelete = async (id) => {
     const confirmed = window.confirm('Are you sure you want to delete this item?');
     if (confirmed) {
@@ -188,10 +188,10 @@ const Invoice = () => {
                             >
                               {val?.isPaid === false ? 'Unpaid' : 'Paid'}
                             </th>
-                            <td className="text-primary-color p-2 flex justify-center">
+                            <td className= "text-primary-color p-2 flex justify-center">
                               <div className="relative">
                                 <button
-                                  className="relative focus:outline-none my-3"
+                                  className=" focus:outline-none my-3"
                                   onClick={() => handleDropdownClick(val?._id)}
                                 >
                                   <BsThreeDotsVertical size={25} />

@@ -3,11 +3,11 @@ import {
   MdOutlineModeEditOutline,
   MdOutlineClose,
   MdInfoOutline,
+  MdFileDownload,
 } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteUnit, fetchUnit } from '../../features/unit'
 import EditApartmentUnit from './EditApartmentUnit'
-import pdf from '/pdf.svg'
 import { generatePreviousTenants } from '../../features/report'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas-pro'
@@ -20,6 +20,7 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
   const loading = useSelector((state) => state.unit.loading)
   const current = new Date().toLocaleDateString()
   const [updateTenants, setUpdateTenants] = useState(false)
+
   useEffect(() => {
     if (updateTenants) {
       dispatch(fetchUnit(apartmentId, val._id))
@@ -90,10 +91,10 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
 
   return (
     <>
-      <div className="relative flex overflow-hidden shadow-md shadow-gray rounded-lg">
+      <div className="relative flex flex-row overflow-hidden shadow-md shadow-gray rounded-lg">
         <div
           onClick={handleTenants}
-          className="relative text-white flex items-center justify-center w-32 px-5 bg-dark-blue hover:bg-primary-color/85 group cursor-pointer"
+          className="relative text-white flex items-center justify-center w-1/4 md:w-32 px-5 bg-dark-blue hover:bg-primary-color/85 group cursor-pointer md:flex-shrink-0"
         >
           <h1 className="text-2xl font-black group-hover:hidden">
             {val?.unit_no}
@@ -104,7 +105,7 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
         </div>
         <div className="relative pt-8 flex-grow bg-white">
           <p>
-            <span className="text-2xl font-black ml-5">
+            <span className="text-xl md:text-2xl font-black ml-5">
               {val?.rent?.toLocaleString('en-PH', {
                 style: 'currency',
                 currency: 'PHP',
@@ -112,25 +113,23 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
             </span>{' '}
             / per month
           </p>
-          <div className="justify-end mr-5   lg:mt-14 flex gap-2 mt-16 ml-44 pb-2 ">
-
+          <p className="text-xs ml-5 mt-2 mr-2">
+            Current Tenant:{' '}
+            <span className='font-bold'>{val?.tenants.find((item) => item.isCurrent).tenant_id.user_id.name}</span>
+            
+          </p>
+          <div className="justify-end mr-5 flex gap-2 mt-4 md:mt-16 ml-5 md:ml-44 pb-2">
             <button
-              className="lg:p-2 hover:scale-105 hover:duration-300 hover:bg-blue/55 bg-blue p-1 rounded-md"
+              className="p-2 hover:scale-105 hover:duration-300 hover:bg-blue/55 bg-blue rounded-md"
               onClick={toggleIsEditApartmentUnit}
             >
               <MdOutlineModeEditOutline size={15} color="white" />
             </button>
             <button
               onClick={() => handleDelete(val?._id)}
-              className="lg:p-2 hover:scale-105 hover:duration-300 hover:bg-red/55 bg-red p-1 rounded-md"
+              className="p-2 hover:scale-105 hover:duration-300 hover:bg-red/55 bg-red rounded-md"
             >
               <MdOutlineClose size={15} color="white" />
-            </button>
-            <button
-              onClick={generateReport}
-              className="bg-lime rounded hover:bg-lime/55 text-white px-4 py-2"
-            >
-              <img src={pdf} className="w-5 h-5" alt="" />
             </button>
           </div>
         </div>
@@ -145,7 +144,7 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
         )}
         {isEditApartmentUnit && (
           <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="lg:w-auto lg:h-auto mt-12 bg-white rounded-lg">
+            <div className="w-full max-w-lg mt-12 bg-white rounded-lg">
               <EditApartmentUnit
                 apartmentId={apartmentId}
                 val={val}
@@ -156,17 +155,17 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
         )}
         {isTenantInfoOpen && (
           <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="lg:w-[50rem] lg:h-auto mt-12 bg-white rounded-md pb-2">
-              <div className="flex p-5 rounded-tl-md justify-between bg-primary-color">
+            <div className="w-full max-w-3xl mt-12 bg-white rounded-md pb-2">
+              <div className="flex p-5 rounded-tl-md justify-between items-center bg-primary-color">
                 <div className="p-2 font-bold text-lg text-white bg-primary-color rounded-tl-md rounded-tr-md">
                   Previous Tenant of {val?.unit_no}
                 </div>
-                <button
+                <div
                   onClick={downloadPDF}
-                  className="border-white border px-5 font-bold text-lg text-white bg-primary-color rounded-md rounded-tr-md"
+                  className="border-2 rounded-full p-1 cursor-pointer hover:scale-110 text-white"
                 >
-                  Generate Report
-                </button>
+                  <MdFileDownload />
+                </div>
               </div>
               <div>
                 <div
@@ -177,12 +176,12 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
                   <table className="min-w-full bg-white">
                     <thead className="bg-primary-color text-white border-b-2 border-white sticky top-0">
                       <tr>
-                        <th className="py-2 px-4 border-white">Name</th>
-                        <th className="py-2 px-4 border-white">Move In Date</th>
-                        <th className="py-2 px-4 border-white">
+                        <th className="py-2 px-4 border-white lg:text-base text-xs">Name</th>
+                        <th className="py-2 px-4 border-white lg:text-base text-xs">Move In Date</th>
+                        <th className="py-2 px-4 border-white lg:text-base text-xs">
                           Move Out Date
                         </th>
-                        <th className="py-2 px-4 border-white">
+                        <th className="py-2 px-4 border-white lg:text-base text-xs">
                           Stay Duration (days)
                         </th>
                       </tr>
@@ -191,20 +190,20 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
                       {previousTenants?.tenants?.map((tenant, index) => (
                         <tr
                           key={tenant?.tenant_id?.user_id?._id || index}
-                          className="text-center"
+                          className="text-center lg:text-base text-xs"
                         >
-                          <td className="border px-4 py-2">
+                          <td className="border px-4 py-2 lg:text-base text-xs">
                             {tenant?.tenant_id?.user_id?.name}
                           </td>
-                          <td className="border px-4 py-2">
+                          <td className="border px-4 py-2 lg:text-base text-xs">
                             {new Date(tenant?.moveIn).toDateString()}
                           </td>
-                          <td className="border px-4 py-2">
+                          <td className="border px-4 py-2 lg:text-base text-xs">
                             {tenant?.moveOut
                               ? new Date(tenant?.moveOut).toDateString()
                               : `${current}, today`}
                           </td>
-                          <td className="border px-4 py-2">
+                          <td className="border px-4 py-2 lg:text-base text-xs lg:text-base text-xs">
                             {Math.floor(
                               (tenant?.moveOut
                                 ? new Date(tenant?.moveOut) -
@@ -221,7 +220,7 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
               </div>
               <div className="mt-4 mb-2 mx-4 flex justify-between items-center">
                 <div className="text-lg">
-                  Number of tenants: {previousTenants?.tenants?.length}
+                  Total tenants: {previousTenants?.tenants?.length}
                 </div>
                 <button
                   onClick={() => setIsTenantInfoOpen((prevState) => !prevState)}
