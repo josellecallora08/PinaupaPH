@@ -1,60 +1,60 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { toggleCloseSidebar, toggleDocs } from '../features/menu'
-import { isLogout } from '../features/authentication'
-import logo from '/logo.svg'
-import m_logo from '/m_logo.svg'
-import dashboard from '/dashboard.svg'
-import dashboard_ from '/dashboard_white.svg'
-import tenant from '/Tenant_black.svg'
-import tenant_ from '/tenant_white.svg'
-import apartment from '/apartment.svg'
-import apartment_ from '/apartment_white.svg'
-import security from '/Cctv_black.svg'
-import security_ from '/Cctv_white.svg'
-import documents from '/Document_black.svg'
-import document_ from '/document_white.svg'
-import concern from '/concern.svg'
-import concern_ from '/concern_white.svg'
-import down from '/down.svg'
-import Report_ from '/Report-white.svg'
-import Report from '/Report-black.svg'
-import logout from '/logout.svg'
-import announcement from '/announcement.svg'
-import announcement_ from '/announcement_.svg'
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { toggleCloseSidebar, toggleDocs } from '../features/menu';
+import { isLogout } from '../features/authentication';
+import logo from '/logo.svg';
+import m_logo from '/m_logo.svg';
+import dashboard from '/dashboard.svg';
+import dashboard_ from '/dashboard_white.svg';
+import tenant from '/Tenant_black.svg';
+import tenant_ from '/tenant_white.svg';
+import apartment from '/apartment.svg';
+import apartment_ from '/apartment_white.svg';
+import security from '/Cctv_black.svg';
+import security_ from '/Cctv_white.svg';
+import documents from '/Document_black.svg';
+import document_ from '/document_white.svg';
+import concern from '/concern.svg';
+import concern_ from '/concern_white.svg';
+import down from '/down.svg';
+import Report_ from '/Report-white.svg';
+import Report from '/Report-black.svg';
+import logout from '/logout.svg';
+import announcement from '/announcement.svg';
+import announcement_ from '/announcement_.svg';
+import payment_ from '/Payment-white.svg';
+import payment from '/Payment-black.svg';
 
-const Sidebar = ({sidebarRef, handleOutsideClick}) => {
-  const menu = useSelector((state) => state.toggle.sidebar)
-  const docs = useSelector((state) => state.toggle.doc_dropdown)
-  const user = useSelector((state) => state.auth.user)
-  const location = useLocation()
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-
-  
+const Sidebar = ({ sidebarRef, handleOutsideClick }) => {
+  const menu = useSelector((state) => state.toggle.sidebar);
+  const docs = useSelector((state) => state.toggle.doc_dropdown);
+  const user = useSelector((state) => state.auth.user);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleOutsideClick)
+    document.addEventListener('mousedown', handleOutsideClick);
     return () => {
-      document.removeEventListener('mousedown', handleOutsideClick)
-    }
-  }, [])
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, []);
 
   const handleDocs = () => {
-    dispatch(toggleDocs())
-  }
+    dispatch(toggleDocs());
+  };
 
   const handleLogout = () => {
-    const isConfirmed = window.confirm('Continue Logging out?')
+    const isConfirmed = window.confirm('Continue Logging out?');
     if (isConfirmed) {
-      dispatch(isLogout(navigate))
+      dispatch(isLogout(navigate));
     }
-  }
+  };
 
   const isActive = (route) => {
-    return location.pathname === route
-  }
+    return location.pathname === route;
+  };
 
   return (
     <div
@@ -164,6 +164,7 @@ const Sidebar = ({sidebarRef, handleOutsideClick}) => {
                     )}
                   </Link>
                 </li>
+               
                 <li className="w-full h-fit">
                   <Link
                     to={'/tenant'}
@@ -300,6 +301,7 @@ const Sidebar = ({sidebarRef, handleOutsideClick}) => {
                 </div>
               </li>
             )}
+            
             {user?.role === 'Admin' && (
               <li className="w-full h-fit">
                 <Link
@@ -331,6 +333,35 @@ const Sidebar = ({sidebarRef, handleOutsideClick}) => {
                 </Link>
               </li>
             )}
+             {user?.role !== 'Admin' && (
+                  <li className="w-full h-fit">
+                    <Link
+                      to={'/tenanttransaction'}
+                      className={`flex items-center ${!menu && 'justify-center'} w-4/5 gap-5 m-auto h-full hover:bg-primary-color/40 rounded-md ${
+                        menu ? 'p-3 md:p-5' : 'p-3'
+                      } ${isActive('/tenanttransaction') ? 'bg-primary-color' : ''}`}
+                    >
+                      <figure
+                        className={`${menu ? '' : 'flex justify-center'} max-w-5 max-h-5 w-full h-full`}
+                      >
+                        <img
+                           src={isActive('/tenanttransaction') ? payment_ : payment}
+                          alt=""
+                          className="size-full object-contain"
+                        />
+                      </figure>
+                      {menu ? (
+                        <span
+                          className={`lg:font-semibold text-primary-color ${isActive('/payment') && 'text-white'}`}
+                        >
+                          Payment History
+                        </span>
+                      ) : (
+                        ''
+                      )}
+                    </Link>
+                  </li>
+                )}
             {user?.role !== 'Superadmin' && (
               <li className="w-full h-fit">
                 <Link
@@ -391,7 +422,7 @@ const Sidebar = ({sidebarRef, handleOutsideClick}) => {
       </div>
       {/* Add an empty div to create padding at the bottom */}
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

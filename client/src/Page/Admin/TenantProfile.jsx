@@ -342,9 +342,10 @@ const TenantProfile = () => {
                   {/*Profile Content */}
                   {/*Account */}
                   <div>
+                    {/* Account Details */}
                     <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
                       <div>
-                        <h1 className="lg:text-xl font-bold ">Account</h1>
+                        <h1 className="lg:text-xl font-bold">Account</h1>
                       </div>
                       <div>
                         <FaEdit
@@ -354,123 +355,131 @@ const TenantProfile = () => {
                       </div>
                     </div>
 
-                    <div className="mb-4 text-sm mt-3 ml-2 flex flex-col items-start">
-                      <p className="lg:text-lg flex gap-[4.8rem] items-center">
-                        Username
-                        <span className="lg:text-base lg:ml-7 ml-6">
-                          {tenant?.user_id?.username}
-                        </span>
-                      </p>
-                      <p className="lg:text-lg flex gap-20 items-center">
-                        Password
-                        <span className="lg:text-base lg:ml-7 ml-6 ">
-                          ******************
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                  {isEditTenantAccountForm && (
-                    <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50">
-                      <div className="lg:w-1/2 bg-white rounded-lg">
-                        <EditTenantAccount
-                          setIsEditTenantAccountForm={
-                            setIsEditTenantAccountForm
-                          }
-                          tenant={tenant}
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {/*Personal Details */}
-
-                  <div>
-                    <div className="flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <h1 className="lg:p-3 lg:pl-2 lg:border-2 lg:border-dark-blue lg:text-xl font-bold ">
-                        Personal Details
-                      </h1>
-                      <FaEdit
-                        className="lg:text-2xl lg:mr-3 text-lg cursor-pointer hover:scale-125"
-                        onClick={toggleEditTenantDetailForm}
-                      />
-                    </div>
-
-                    <div className="mb-4 text-sm mt-3 ml-2 ">
-                      <div className=" flex gap-20">
-                        <div className="lg:text-lg">
-                          <p>Name</p>
-                          <p>Date of Birth</p>
-                          <p>Contact</p>
-                          <p>Email</p>
-                        </div>
-                        <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
-                          <p className="">{tenant?.user_id?.name}</p>
-                          <p className="">{birthday}</p>
-                          <p className="">{tenant?.user_id?.mobile_no}</p>
-                          <p className="">{tenant?.user_id?.email}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {isEditTenantDetailForm && (
-                    <div className="fixed top-0 left-0 w-full z-50 h-full flex items-center justify-center bg-black bg-opacity-50">
-                      <div className="lg:w-1/2 lg:h-[30rem] h-auto bg-white  rounded-lg">
-                        <EditTenantDetails
-                          setIsEditTenantDetailForm={setIsEditTenantDetailForm}
-                          tenant={tenant}
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {/*Apartment Details */}
-                  <div>
-                    <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <h1 className="lg:text-xl font-bold ">
-                        Apartment Details
-                      </h1>
-                      <FaEdit
-                        className="lg:text-2xl text-lg cursor-pointer hover:scale-125"
-                        onClick={() =>
-                          setIsEditApartmentForm(!isEditApartmentForm)
-                        }
-                      />
-                    </div>
-                    {isEditApartmentForm && (
-                      <div className="fixed top-0 left-0 w-full z-50 h-full flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="lg:w-1/2   h-auto bg-white  rounded-lg">
-                          <EditApartment
-                            setIsEditApartmentForm={setIsEditApartmentForm}
+                    {isEditTenantAccountForm && (
+                      <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50">
+                        <div className="lg:w-1/2 bg-white rounded-lg">
+                          <EditTenantAccount
+                            setIsEditTenantAccountForm={
+                              setIsEditTenantAccountForm
+                            }
                             tenant={tenant}
                           />
                         </div>
                       </div>
                     )}
 
-                    <div className=" mb-4 text-sm mt-3 ml-2 ">
-                      <div className="flex gap-14">
-                        <div className="lg:text-lg ">
-                          <p>Apartment Building</p>
-                          <p>Apartment Unit</p>
-                          <p>Deposit</p>
-                          <p>Date of Move-in</p>
+                    <div className="mb-4  mt-3 ml-2 grid grid-cols-2 gap-4 lg:gap-20">
+                      <div className="lg:text-lg">
+                        <p>Username</p>
+                        <p>Password</p>
+                      </div>
+                      <div className="lg:text-lg">
+                        <p className="flex items-center gap-4.8rem">
+                          {tenant?.user_id?.username}
+                        </p>
+                        <p className="flex items-center gap-20">
+                          ******************
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Personal Details */}
+                    <div>
+                      <div className="flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
+                        <h1 className="lg:p-3 lg:pl-2 lg:border-2 lg:border-dark-blue lg:text-xl font-bold">
+                          Personal Details
+                        </h1>
+                        <FaEdit
+                          className="lg:text-2xl lg:mr-3 text-lg cursor-pointer hover:scale-125"
+                          onClick={toggleEditTenantDetailForm}
+                        />
+                      </div>
+
+                      <div className="mb-4 text-sm mt-3 ml-2">
+                        <div className="grid grid-cols-2 gap-4 lg:gap-20">
+                          <div className="lg:text-lg space-y-2">
+                            <p>Name</p>
+                            <p>Date of Birth</p>
+                            <p>Contact</p>
+                            <p>Email</p>
+                          </div>
+                          <div className="lg:text-lg space-y-2">
+                            <p>{tenant?.user_id?.name}</p>
+                            <p>{birthday}</p>
+                            <p>{tenant?.user_id?.mobile_no}</p>
+                            <p className="overflow-hidden text-ellipsis whitespace-nowrap">
+                              {tenant?.user_id?.email}
+                            </p>
+                          </div>
                         </div>
-                        <div className="lg:text-base lg:flex lg:flex-col lg:gap-1">
-                          <p className="">
-                           {tenant?.apartment_id?.name}
-                          </p>
-                          <p className="">Unit - {tenant?.unit_id?.unit_no}</p>
-                          <p className="">
-                            {tenant?.deposit?.toLocaleString('en-PH', {
-                              style: 'currency',
-                              currency: 'PHP',
-                            })}
-                          </p>
-                          <p className="">
-                            {new Date(
-                              tenant?.monthly_due,
-                            )?.toLocaleDateString()}
-                          </p>
+                      </div>
+                    </div>
+
+                    {isEditTenantDetailForm && (
+                      <div className="fixed top-0 left-0 w-full z-50 h-full flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="lg:w-1/2 lg:h-[30rem] h-auto bg-white rounded-lg">
+                          <EditTenantDetails
+                            setIsEditTenantDetailForm={
+                              setIsEditTenantDetailForm
+                            }
+                            tenant={tenant}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Apartment Details */}
+                    <div>
+                      <div className="lg:p-3 lg:border-2 lg:border-dark-blue flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
+                        <h1 className="lg:text-xl font-bold">
+                          Apartment Details
+                        </h1>
+                        <FaEdit
+                          className="lg:text-2xl text-lg cursor-pointer hover:scale-125"
+                          onClick={() =>
+                            setIsEditApartmentForm(!isEditApartmentForm)
+                          }
+                        />
+                      </div>
+
+                      {isEditApartmentForm && (
+                        <div className="fixed top-0 left-0 w-full z-50 h-full flex items-center justify-center bg-black bg-opacity-50">
+                          <div className="lg:w-1/2 h-auto bg-white rounded-lg">
+                            <EditApartment
+                              setIsEditApartmentForm={setIsEditApartmentForm}
+                              tenant={tenant}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="mb-4 text-sm mt-3 ml-2">
+                        <div className="grid grid-cols-2 gap-4 lg:gap-14">
+                          <div className="lg:text-lg space-y-2">
+                            <p className="whitespace-nowrap">
+                              Apartment Building
+                            </p>
+                            <p>Apartment Unit</p>
+                            <p>Deposit</p>
+                            <p>Date of Move-in</p>
+                          </div>
+                          <div className="lg:text-lg space-y-2">
+                            <p className="whitespace-nowrap">
+                              {tenant?.apartment_id?.name}
+                            </p>
+                            <p>Unit - {tenant?.unit_id?.unit_no}</p>
+                            <p>
+                              {tenant?.deposit?.toLocaleString('en-PH', {
+                                style: 'currency',
+                                currency: 'PHP',
+                              })}
+                            </p>
+                            <p>
+                              {new Date(
+                                tenant?.monthly_due,
+                              ).toLocaleDateString()}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -479,23 +488,28 @@ const TenantProfile = () => {
                 {/* Right profile */}
                 <div className="lg:w-1/2   lg:overflow-y-auto lg:origin-left lg:border-l-4 lg:border-dark-blue ">
                   {/*Family Members */}
-                  <div className="relative lg:h-[20rem] h-[15rem] lg:mb-3">
-                    <div className="lg:p-3 relative flex items-center justify-between px-2 py-1 bg-dark-blue text-white">
-                      <h1 className="lg:text-xl font-bold">
+                  <div>
+                    <div className=" flex items-center justify-between px-2 py-1 bg-dark-blue text-white lg:p-3 lg:border-2 lg:border-dark-blue">
+                      <h1 className="text-lg font-bold lg:text-xl">
                         Household Details
                       </h1>
+
+                      <div className='relative'>
                       <RxDotsVertical
-                        className="lg:text-2xl text-lg cursor-pointer"
+                        className="  text-lg cursor-pointer lg:text-2xl hover:scale-125"
                         onClick={() => toggleDropdown('household')}
                       />
+                      </div>
+                     
                     </div>
+
                     {isHousedotOpen && (
-                      <div
-                        ref={dropdownRef}
-                        className="absolute right-0 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400 animate-slideIn"
-                      >
+                     <div
+                     ref={dropdownRef}
+                     className="absolute right-20 top-15 flex flex-col items-center bg-white w-32 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400 animate-slideIn"
+                   >
                         <div
-                          className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center transition duration-300"
+                          className="flex items-center justify-center w-full gap-2 p-2 text-center transition duration-300 hover:bg-dark-blue hover:text-white"
                           onClick={() => {
                             setIsEditFamilyMemForm(!isEditFamilyMemForm)
                             setIsHouseDotOpen(false)
@@ -505,7 +519,7 @@ const TenantProfile = () => {
                           View
                         </div>
                         <div
-                          className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center transition duration-300"
+                          className="flex items-center justify-center w-full gap-2 p-2 text-center transition duration-300 hover:bg-dark-blue hover:text-white"
                           onClick={() => {
                             setIsAddHouseholdForm(!isAddHouseholdForm)
                             setIsHouseDotOpen(false)
@@ -517,34 +531,60 @@ const TenantProfile = () => {
                       </div>
                     )}
 
-                    <div className="text-sm md:text-base p-3 flex flex-col gap-5 overflow-y-auto h-[12rem] md:h-[16rem] lg:h-[18rem] ">
-                      {households?.map((val, key) => (
-                        <div
-                          key={key}
-                          className="w-full flex flex-col md:gap-2"
-                        >
-                          <div className="flex gap-5">
-                            <p className="w-1/4">Name:</p>
-                            <span className="w-3/4">{val.name}</span>
-                          </div>
-                          <div className="flex gap-5">
-                            <p className="w-1/4">Mobile:</p>
-                            <span className="w-3/4">{val.mobile}</span>
-                          </div>
-                          <div className="flex gap-5">
-                            <p className="w-1/4">Birthday:</p>
-                            <span className="w-3/4">
-                              {new Date(val.birthday).toLocaleDateString()}
-                            </span>
-                          </div>
-                          <div className="flex gap-5">
-                            <p className="w-1/4">Relationship:</p>
-                            <span className="w-3/4">{val.relationship}</span>
-                          </div>
+                    <div className="mb-4 text-sm mt-3 ml-2">
+                      <div className="grid grid-cols-2 gap-4 lg:gap-14">
+                        {/* Labels */}
+                        <div className="space-y-2 lg:text-lg">
+                          {households?.map((val, key) => (
+                            <div key={key} className="flex gap-5">
+                              <p className="w-full">Name:</p>
+                            </div>
+                          ))}
+                          {households?.map((val, key) => (
+                            <div key={key} className="flex gap-5">
+                              <p className="w-full">Mobile:</p>
+                            </div>
+                          ))}
+                          {households?.map((val, key) => (
+                            <div key={key} className="flex gap-5">
+                              <p className="w-full">Birthday:</p>
+                            </div>
+                          ))}
+                          {households?.map((val, key) => (
+                            <div key={key} className="flex gap-5">
+                              <p className="w-full">Relationship:</p>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                        {/* Information */}
+                        <div className="space-y-2 lg:text-lg">
+                          {households?.map((val, key) => (
+                            <div key={key} className="flex gap-5">
+                              <span className="w-full">{val.name}</span>
+                            </div>
+                          ))}
+                          {households?.map((val, key) => (
+                            <div key={key} className="flex gap-5">
+                              <span className="w-full">{val.mobile}</span>
+                            </div>
+                          ))}
+                          {households?.map((val, key) => (
+                            <div key={key} className="flex gap-5">
+                              <span className="w-full">
+                                {new Date(val.birthday).toLocaleDateString()}
+                              </span>
+                            </div>
+                          ))}
+                          {households?.map((val, key) => (
+                            <div key={key} className="flex gap-5">
+                              <span className="w-full">{val.relationship}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
+
                   {isEditFamilyMemForm && (
                     <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50 ">
                       <div className="lg:w-9/12 bg-white  rounded-lg relative">
@@ -583,7 +623,7 @@ const TenantProfile = () => {
                     {isPetdotOpen && (
                       <div
                         ref={dropdownRef}
-                        className="absolute right-0 top-15 flex flex-col items-center bg-white w-36 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400 animate-slideIn"
+                        className="absolute right-0 top-15 flex flex-col items-center bg-white w-32 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400 animate-slideIn"
                       >
                         <div
                           className="flex items-center justify-center gap-2 w-full hover:bg-dark-blue hover:text-white p-2 text-center transition duration-300"
@@ -608,30 +648,59 @@ const TenantProfile = () => {
                       </div>
                     )}
 
-                    <div className="text-sm md:text-base p-3 flex flex-col gap-5 overflow-y-auto h-[14rem] ">
-                      {pets &&
-                        pets.length > 0 &&
-                        pets.map((pet, index) => (
-                          <div
-                            key={index}
-                            className="w-full flex flex-col md:gap-2"
-                          >
-                            <div className="flex gap-5">
-                              <p className="w-1/4">Name:</p>
-                              <span className="w-3/4">{pet.name}</span>
-                            </div>
-                            <div className="flex gap-5">
-                              <p className="w-1/4">Species:</p>
-                              <span className="w-3/4">{pet.species}</span>
-                            </div>
-                            <div className="flex gap-5">
-                              <p className="w-1/4">Birthday:</p>
-                              <span className="w-3/4">
-                                {new Date(pet.birthday).toLocaleDateString()}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
+                    <div className="text-sm md:text-base p-3 overflow-y-auto h-[14rem]">
+                      <div className="grid grid-cols-2 gap-4 lg:gap-14">
+                        {/* Labels */}
+                        <div className="space-y-2 lg:text-lg">
+                          {pets &&
+                            pets.length > 0 &&
+                            pets.map((pet, index) => (
+                              <div key={index} className="flex gap-5">
+                                <p className="w-full">Name:</p>
+                              </div>
+                            ))}
+                          {pets &&
+                            pets.length > 0 &&
+                            pets.map((pet, index) => (
+                              <div key={index} className="flex gap-5">
+                                <p className="w-full">Species:</p>
+                              </div>
+                            ))}
+                          {pets &&
+                            pets.length > 0 &&
+                            pets.map((pet, index) => (
+                              <div key={index} className="flex gap-5">
+                                <p className="w-full">Birthday:</p>
+                              </div>
+                            ))}
+                        </div>
+                        {/* Information */}
+                        <div className="space-y-2 lg:text-lg">
+                          {pets &&
+                            pets.length > 0 &&
+                            pets.map((pet, index) => (
+                              <div key={index} className="flex gap-5">
+                                <span className="w-full">{pet.name}</span>
+                              </div>
+                            ))}
+                          {pets &&
+                            pets.length > 0 &&
+                            pets.map((pet, index) => (
+                              <div key={index} className="flex gap-5">
+                                <span className="w-full">{pet.species}</span>
+                              </div>
+                            ))}
+                          {pets &&
+                            pets.length > 0 &&
+                            pets.map((pet, index) => (
+                              <div key={index} className="flex gap-5">
+                                <span className="w-full">
+                                  {new Date(pet.birthday).toLocaleDateString()}
+                                </span>
+                              </div>
+                            ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                   {isEditPetForm && (

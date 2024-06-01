@@ -121,7 +121,7 @@ const Invoice = () => {
                     <th className="text-white p-3">Reference Number</th>
                     <th className="text-white p-3">Tenant</th>
                     <th className="text-white p-3">Unpaid Balance</th>
-                    <th className="text-white p-3">Due Date</th>
+                    <th className="text-white py-3 px-10">Due Date</th>
                     {status === true && (
                       <>
                         <th className="text-white p-3">Date Paid</th>
@@ -156,7 +156,7 @@ const Invoice = () => {
                                 currency: 'PHP',
                               })}
                             </td>
-                            <td className="p-2">
+                            <td className="p-2 md:text-base text-xs">
                               {val?.due === null
                                 ? '-'
                                 : new Date(val?.due)?.toDateString()}

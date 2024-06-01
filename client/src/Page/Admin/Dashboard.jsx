@@ -147,14 +147,14 @@ const Dashboard = () => {
                     <p className="font-bold text-[#9e9e9e] lg:text-xl">
                       Revenue Overview
                     </p>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 mt-2">
                       <div className="border-2 p-2  rounded-xl shadow-md bg-white">
                         <input
                           type="month"
                           name="date"
                           value={date}
                           onChange={(e) => setDate(e.target.value)}
-                          className="w-fit px-2 h-full outline-none"
+                          className="w-fit px-2 h-full outline-none rounded-xl"
                         />
                       </div>
                     </div>
@@ -257,7 +257,7 @@ const Dashboard = () => {
                     </div> */}
                         <div className=" w-full flex flex-col gap-2 xl:gap-5 py-2">
                           <div className="w-11/12 m-auto flex justify-between">
-                            <p className="text-[#9e9e9e] text-xs text-center xl:text-base font-semibold">
+                            <p className="text-[#9e9e9e]  text-center font-semibold">
                               Total Paid
                             </p>
                             <p className="font-bold text-center text-base xl:text-2xl">
@@ -381,14 +381,14 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <div className="w-full h-full">
-                      <div className="relative w-11/12 m-auto h-full flex items-center">
+                      <div className="relative w-11/12 md:py-0 py-4 m-auto h-full flex items-center">
                         {/* <span className='absolute md:top-2 right-0 text-end text-[#9e9e9e] text-xs font-semibold xl:text-sm 2xl:text-lg'>Deliquency Rate</span>
                     <div className='w-full h-full flex items-center justify-center'>
                       <span className='text-lg md:text-4xl lg:text-5xl font-bold'>96%</span>
                     </div> */}
                         <div className=" w-full flex flex-col gap-2 xl:gap-5 py-2">
                           <div className="w-11/12 m-auto flex justify-between">
-                            <p className="text-[#9e9e9e] text-xs text-center xl:text-base font-semibold">
+                            <p className="text-[#9e9e9e]  text-center font-semibold">
                               Occupancy Rate
                             </p>
                             <p className="font-bold text-center text-base xl:text-2xl">
@@ -422,14 +422,14 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <div className="w-full h-full">
-                      <div className="relative w-11/12 m-auto h-full flex items-center">
+                      <div className="relative w-11/12 m-auto h-full md:py-0 py-4 flex items-center">
                         {/* <span className='absolute md:top-2 right-0 text-end text-[#9e9e9e] text-xs font-semibold xl:text-sm 2xl:text-lg'>Deliquency Rate</span>
                     <div className='w-full h-full flex items-center justify-center'>
                       <span className='text-lg md:text-4xl lg:text-5xl font-bold'>96%</span>
                     </div> */}
                         <div className=" w-full flex flex-col gap-2 xl:gap-5 py-2">
                           <div className="w-11/12 m-auto flex justify-between">
-                            <p className="text-[#9e9e9e] text-xs text-center xl:text-base font-semibold">
+                            <p className="text-[#9e9e9e] text-center font-semibold">
                               Good Payer
                             </p>
                             <p className="font-bold text-center text-base xl:text-2xl">

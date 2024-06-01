@@ -18,6 +18,7 @@ const TenantHome = () => {
   const invoice = useSelector((state) => state.invoice.single)
   const announcement = useSelector((state) => state.announcement.single)
   const concern = useSelector((state) => state.concern.data)
+
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(isLoggedin())
@@ -234,8 +235,8 @@ const TenantHome = () => {
 
             {/* Calendar Card */}
             <div className="md:order-none col-span-1 row-span-1 bg-white h-fit order-last ">
-              <div className="flex items-center text-lg   w-full h-[3.8rem] bg-primary-color text-white p-2">
-                Calendar
+              <div className="flex items-center justify-between text-lg   w-full h-[3.8rem] bg-primary-color text-white p-2">
+              Calendar 
               </div>
               <div className="w-full h-full">
                 <Calendar user={user} invoice={invoice} />
