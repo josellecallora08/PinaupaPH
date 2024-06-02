@@ -3,19 +3,24 @@ import Calendar from 'react-calendar';
 import './Calendar.css'; // Import the default calendar styles
 
 const Calendars = ({ user, invoice }) => {
+  // Helper function to convert date to Philippine Time
+  const toPhilippineTime = (dateString) => {
+    return new Date(dateString).toLocaleString("en-US", { timeZone: "Asia/Manila" });
+  };
+
   // Define a function to determine the class name for each date tile
   const tileClassName = ({ date, view }) => {
     if (view !== 'month') return ''; // Apply styles only on month view
 
-    const invoiceDueDate = new Date(invoice?.due);
-    const invoiceDatePaid = new Date(invoice?.datePaid);
+    const invoiceDueDate = new Date(toPhilippineTime(invoice?.due));
+    const invoiceDatePaid = new Date(toPhilippineTime(invoice?.datePaid));
 
     // Check if the date is a Sunday
     if (date.getDay() === 0) {
       return 'weekend'; // Apply the 'weekend' class name for Sundays
     }
 
-    if (date.getDate() === invoiceDueDate.getDate() && date.getMonth() === invoiceDueDate.getMonth()) {
+    if (date.getDate() === invoiceDueDate.getDate() && date.getMonth() === invoiceDueDate.getMonth() && date.getFullYear() === invoiceDueDate.getFullYear()) {
       return 'border-2 border-red bg-red/55 rounded-md shadow-lg'; // Apply styles for the due date
     }
 
@@ -30,9 +35,9 @@ const Calendars = ({ user, invoice }) => {
   const tileContent = ({ date, view }) => {
     if (view !== 'month') return null; // Render content only on month view
 
-    const invoiceDueDate = new Date(invoice?.due);
-    const invoiceDatePaid = new Date(invoice?.datePaid);
-    const userMonthlyDue = new Date(user?.monthly_due);
+    const invoiceDueDate = new Date(toPhilippineTime(invoice?.due));
+    const invoiceDatePaid = new Date(toPhilippineTime(invoice?.datePaid));
+    const userMonthlyDue = new Date(toPhilippineTime(user?.monthly_due));
 
     if (date.getDate() === invoiceDatePaid.getDate() && date.getMonth() === invoiceDatePaid.getMonth()) {
       return (
@@ -54,9 +59,7 @@ const Calendars = ({ user, invoice }) => {
             🔔
           </span>
           <div className="duedate-tooltip">
-      
             Due Date
-            
           </div>
         </div>
       ); // Show emoji on the monthly due date with hover effect

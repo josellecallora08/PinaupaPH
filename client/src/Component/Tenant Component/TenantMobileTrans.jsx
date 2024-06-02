@@ -1,22 +1,17 @@
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchInvoices, generateInvoice } from './../features/invoice'
 import { MdCloudDownload } from 'react-icons/md'
-
-const TransactionMobile = ({ tenant }) => {
+import { fetchInvoices, generateInvoice } from '../../features/invoice'
+import { useDispatch, useSelector } from 'react-redux'
+const TenantMobileTrans = ({ tenant }) => {
   const dispatch = useDispatch()
   const invoices = useSelector((state) => state.invoice.data)
-
   useEffect(() => {
     dispatch(fetchInvoices())
-  }, [dispatch])
+  }, [])
 
   const handleDownload = async (id) => {
-    if (confirm('Continue download invoice pdf?')) {
-      dispatch(generateInvoice(id))
-    }
+    dispatch(generateInvoice(id))
   }
-
   return (
     <div>
       {invoices &&
@@ -75,4 +70,4 @@ const TransactionMobile = ({ tenant }) => {
   )
 }
 
-export default TransactionMobile
+export default TenantMobileTrans
