@@ -494,20 +494,19 @@ const TenantProfile = () => {
                         Household Details
                       </h1>
 
-                      <div className='relative'>
-                      <RxDotsVertical
-                        className="  text-lg cursor-pointer lg:text-2xl hover:scale-125"
-                        onClick={() => toggleDropdown('household')}
-                      />
+                      <div className="relative">
+                        <RxDotsVertical
+                          className="  text-lg cursor-pointer lg:text-2xl hover:scale-125"
+                          onClick={() => toggleDropdown('household')}
+                        />
                       </div>
-                     
                     </div>
 
                     {isHousedotOpen && (
-                     <div
-                     ref={dropdownRef}
-                     className="absolute right-20 top-15 flex flex-col items-center bg-white w-32 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400 animate-slideIn"
-                   >
+                      <div
+                        ref={dropdownRef}
+                        className="absolute right-20 top-15 flex flex-col items-center bg-white w-32 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400 animate-slideIn"
+                      >
                         <div
                           className="flex items-center justify-center w-full gap-2 p-2 text-center transition duration-300 hover:bg-dark-blue hover:text-white"
                           onClick={() => {
@@ -531,57 +530,39 @@ const TenantProfile = () => {
                       </div>
                     )}
 
-                    <div className="mb-4 text-sm mt-3 ml-2">
-                      <div className="grid grid-cols-2 gap-4 lg:gap-14">
-                        {/* Labels */}
-                        <div className="space-y-2 lg:text-lg">
-                          {households?.map((val, key) => (
-                            <div key={key} className="flex gap-5">
-                              <p className="w-full">Name:</p>
+                    <div className="mb-4 h-64 text-sm overflow-y-auto mt-3 ml-2">
+                      {households && households.length > 0 ? (
+                        households.map((val, key) => (
+                          <div
+                            key={key}
+                            className="flex mb-2 flex-col space-y-2 lg:text-lg"
+                          >
+                            <div className="flex gap-5">
+                              <p className="w-1/4">Name:</p>
+                              <span className="w-3/4">{val.name}</span>
                             </div>
-                          ))}
-                          {households?.map((val, key) => (
-                            <div key={key} className="flex gap-5">
-                              <p className="w-full">Mobile:</p>
+                            <div className="flex gap-5">
+                              <p className="w-1/4">Mobile:</p>
+                              <span className="w-3/4">{val.mobile}</span>
                             </div>
-                          ))}
-                          {households?.map((val, key) => (
-                            <div key={key} className="flex gap-5">
-                              <p className="w-full">Birthday:</p>
-                            </div>
-                          ))}
-                          {households?.map((val, key) => (
-                            <div key={key} className="flex gap-5">
-                              <p className="w-full">Relationship:</p>
-                            </div>
-                          ))}
-                        </div>
-                        {/* Information */}
-                        <div className="space-y-2 lg:text-lg">
-                          {households?.map((val, key) => (
-                            <div key={key} className="flex gap-5">
-                              <span className="w-full">{val.name}</span>
-                            </div>
-                          ))}
-                          {households?.map((val, key) => (
-                            <div key={key} className="flex gap-5">
-                              <span className="w-full">{val.mobile}</span>
-                            </div>
-                          ))}
-                          {households?.map((val, key) => (
-                            <div key={key} className="flex gap-5">
-                              <span className="w-full">
+                            <div className="flex gap-5">
+                              <p className="w-1/4">Birthday:</p>
+                              <span className="w-3/4">
                                 {new Date(val.birthday).toLocaleDateString()}
                               </span>
                             </div>
-                          ))}
-                          {households?.map((val, key) => (
-                            <div key={key} className="flex gap-5">
-                              <span className="w-full">{val.relationship}</span>
+                            <div className="flex gap-5">
+                              <p className="w-1/4">Relationship:</p>
+                              <span className="w-3/4">{val.relationship}</span>
                             </div>
-                          ))}
+                            <div className="w-full border-dashed border-b border-dark-gray my-2"></div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="col-span-2 flex justify-center items-center h-full">
+                          <p className="text-2xl">No Household</p>
                         </div>
-                      </div>
+                      )}
                     </div>
                   </div>
 
@@ -648,59 +629,35 @@ const TenantProfile = () => {
                       </div>
                     )}
 
-                    <div className="text-sm md:text-base p-3 overflow-y-auto h-[14rem]">
-                      <div className="grid grid-cols-2 gap-4 lg:gap-14">
-                        {/* Labels */}
-                        <div className="space-y-2 lg:text-lg">
-                          {pets &&
-                            pets.length > 0 &&
-                            pets.map((pet, index) => (
-                              <div key={index} className="flex gap-5">
-                                <p className="w-full">Name:</p>
-                              </div>
-                            ))}
-                          {pets &&
-                            pets.length > 0 &&
-                            pets.map((pet, index) => (
-                              <div key={index} className="flex gap-5">
-                                <p className="w-full">Species:</p>
-                              </div>
-                            ))}
-                          {pets &&
-                            pets.length > 0 &&
-                            pets.map((pet, index) => (
-                              <div key={index} className="flex gap-5">
-                                <p className="w-full">Birthday:</p>
-                              </div>
-                            ))}
+                    <div className="text-sm md:text-base p-3 overflow-y-auto h-[20rem]">
+                      {pets && pets.length > 0 ? (
+                        pets.map((pet, index) => (
+                          <div
+                            key={index}
+                            className="flex flex-col mb-5 space-y-2 lg:text-lg"
+                          >
+                            <div className="flex gap-5">
+                              <p className="w-1/4">Name:</p>
+                              <span className="w-3/4">{pet.name}</span>
+                            </div>
+                            <div className="flex gap-5">
+                              <p className="w-1/4">Species:</p>
+                              <span className="w-3/4">{pet.species}</span>
+                            </div>
+                            <div className="flex gap-5">
+                              <p className="w-1/4">Birthday:</p>
+                              <span className="w-3/4">
+                                {new Date(pet.birthday).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <div className="w-full border-dashed border-b border-dark-gray "></div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="col-span-2 flex justify-center items-center h-full">
+                          <p className="text-2xl">No Pets</p>
                         </div>
-                        {/* Information */}
-                        <div className="space-y-2 lg:text-lg">
-                          {pets &&
-                            pets.length > 0 &&
-                            pets.map((pet, index) => (
-                              <div key={index} className="flex gap-5">
-                                <span className="w-full">{pet.name}</span>
-                              </div>
-                            ))}
-                          {pets &&
-                            pets.length > 0 &&
-                            pets.map((pet, index) => (
-                              <div key={index} className="flex gap-5">
-                                <span className="w-full">{pet.species}</span>
-                              </div>
-                            ))}
-                          {pets &&
-                            pets.length > 0 &&
-                            pets.map((pet, index) => (
-                              <div key={index} className="flex gap-5">
-                                <span className="w-full">
-                                  {new Date(pet.birthday).toLocaleDateString()}
-                                </span>
-                              </div>
-                            ))}
-                        </div>
-                      </div>
+                      )}
                     </div>
                   </div>
                   {isEditPetForm && (

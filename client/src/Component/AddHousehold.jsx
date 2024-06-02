@@ -84,6 +84,7 @@ const AddHousehold = ({
           </label>
           <input
             type="text"
+            maxLength={11}
             name="mobile"
             value={fields.mobile}
             onChange={handleInput}

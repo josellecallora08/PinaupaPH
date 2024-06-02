@@ -352,7 +352,7 @@ const Sidebar = ({ sidebarRef, handleOutsideClick }) => {
                       </figure>
                       {menu ? (
                         <span
-                          className={`lg:font-semibold text-primary-color ${isActive('/payment') && 'text-white'}`}
+                          className={`lg:font-semibold text-primary-color ${isActive('/tenanttransaction') && 'text-white'}`}
                         >
                           Payment History
                         </span>

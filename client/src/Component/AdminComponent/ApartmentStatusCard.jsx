@@ -114,8 +114,8 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
             / per month
           </p>
           <p className="text-xs ml-5 mt-2 mr-2">
-            Current Tenant:{' '}
-            <span className='font-bold'>{val?.tenants.find((item) => item?.isCurrent)?.tenant_id?.user_id?.name}</span>
+            {/* Current Tenant:{' '}
+            <span className='font-bold'>{val?.tenants.find((item) => item?.isCurrent)?.tenant_id?.user_id?.name}</span> */}
             
             {val?.tenants.find((item) => item.isCurrent) ? (
               <>
@@ -124,7 +124,7 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
                 <span className="font-bold">
                  
                   {
-                    val.tenants.find((item) => item.isCurrent).tenant_id.user_id
+                    val.tenants.find((item) => item.isCurrent)?.tenant_id?.user_id
                       .name
                   }
                 </span>

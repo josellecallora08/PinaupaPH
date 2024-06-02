@@ -23,6 +23,7 @@ module.exports.scheduledInvoice = () => {
       hasRun = true;
 
       const current_date = new Date();
+      current_date.setHours(0, 0, 0, 0);
       const day = current_date.getDate();
       const month = current_date.getMonth() + 1; // Corrected to get the actual month
       const year = current_date.getFullYear();
@@ -38,7 +39,7 @@ module.exports.scheduledInvoice = () => {
 
           const due = new Date(tenant.monthly_due);
           due.setFullYear(current_date.getFullYear(), current_date.getMonth(), due.getDate());
-
+          due.setHours(0, 0, 0, 0);
           // Calculate the difference in days between current date and due date
           const daysDifference = Math.floor((due - current_date) / (1000 * 60 * 60 * 24));
 
