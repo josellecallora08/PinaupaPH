@@ -248,37 +248,13 @@ const TenantProfile = () => {
 
   const birthday = new Date(tenant?.user_id.birthday).toLocaleDateString()
   return (
-    <div className="bg-white1  w-full h-full overflow-y-auto ">
+    <div className="bg-white1  w-full  h-full overflow-y-auto ">
       {/* Tenant Profile Header */}
       <div className="lg:flex lg:items-center lg:justify-between">
-        <div className="lg:mt-2 lg:ml-10 uppercase font-bold  p-5 mx-4">
+        <div className="lg:mt-2 pl-16  uppercase font-bold  p-5 mx-4">
           <h1 className="">Tenant/Profile</h1>
         </div>
-
-        {/* Tab Navigation */}
-        <div className=" lg:mt-0 lg:mr-14 lg:text-dark-gray flex justify-evenly gap-3 ">
-          <button
-            onClick={() => handleTabClick('profile')}
-            className={
-              activeTab === 'profile'
-                ? ' text-white py-2 px-5 bg-primary-color rounded-full '
-                : ''
-            }
-          >
-            Profile
-          </button>
-          <button
-            onClick={() => handleTabClick('transaction')}
-            className={
-              activeTab === 'transaction'
-                ? 'text-white py-2 px-5 bg-primary-color rounded-full'
-                : ''
-            }
-          >
-            Transaction
-          </button>
-        </div>
-      </div>{' '}
+      </div>
       {changeModal ? (
         <ChangePd
           userImage={tenant?.user_id?.profile_image.image_url}
@@ -291,9 +267,9 @@ const TenantProfile = () => {
       ) : (
         ''
       )}
-      <div className=" m-auto rounded-md">
-        {activeTab === 'profile' && (
-          <div className=" lg:mt-5 mt-10   ">
+      <div className="lg:w-11/12 lg:m-auto rounded-md">
+  
+          <div className="     ">
             {TenantProfileInfo.map((profile, index) => (
               <div className="lg:flex lg:gap-5 p-5 lg:pb-2" key={index}>
                 <div className="lg:w-1/2  lg:rounded-lg lg:origin-left  ">
@@ -638,18 +614,6 @@ const TenantProfile = () => {
               </div>
             ))}
           </div>
-        )}
-
-        {activeTab === 'transaction' && (
-          <div className="h-full w-full">
-            <div className="lg:block hidden">
-              <TransactionTable tenant={tenant} />
-            </div>
-            <div className="lg:hidden">
-              <TransactionMobile tenant={tenant} />
-            </div>
-          </div>
-        )}
         {showPopup && (
           <PopUp
             message={popupMessage}
