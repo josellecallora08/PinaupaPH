@@ -65,11 +65,11 @@ const PayerReport = () => {
 
       // Add title
       pdf.setFontSize(18);
-      pdf.text(selectedReport, pdf.internal.pageSize.getWidth() / 2, 20, { align: 'left' });
+      pdf.text(selectedReport, pdf.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
 
 
 
-      // Add table image
+      // Add table image\
       pdf.addImage(imgData, 'PNG', marginLeft, 40, pdfWidth, pdfHeight);
 
       // Add signature area

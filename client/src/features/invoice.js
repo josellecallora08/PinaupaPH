@@ -67,7 +67,7 @@ export const {
   editInvoicesSuccess,
   fetchFailed,
   deleteInvoiceSuccess,
-
+  insertInvoiceSuccess,
   generateSuccess,
   resetInvoiceStatus
 } = invoiceSlice.actions
@@ -172,7 +172,7 @@ export const createInvoice = (user_id) => async (dispatch) => {
 
     const json = await response.json()
     console.log(json)
-    dispatch(fetchInvoices())
+    dispatch(insertInvoiceSuccess(json))
   } catch (err) {
     dispatch(fetchFailed(err.message))
   }
