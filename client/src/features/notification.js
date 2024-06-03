@@ -70,7 +70,8 @@ export const readNotification = (notif_id, navigate) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    dispatch(editNotifSuccess(json.response))
+    console.log(json)
+    dispatch(editNotifSuccess(json))
     navigate(`${json.response.url}`)
   } catch (err) {
     dispatch(fetchNotifFailed(err.message))
