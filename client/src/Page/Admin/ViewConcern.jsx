@@ -80,7 +80,6 @@ const ViewConcern = () => {
     ) // Submit the comment
     setComments(null)
   }
-  console.log(concern)
   useEffect(() => {
     const sendMessage = (e) => {
       if (e.key === 'Enter') {
@@ -113,8 +112,11 @@ const ViewConcern = () => {
 
   useEffect(() => {
     dispatch(isLoggedin())
-    dispatch(fetchConcern(id))
     dispatch(fetchComments(id))
+  }, [])
+
+  useEffect(() => {
+    dispatch(fetchConcern(id))
   }, [])
 
   useEffect(() => {

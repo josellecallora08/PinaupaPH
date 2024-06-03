@@ -232,7 +232,7 @@ export const editConcern = (concern_id, fields) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    console.log(json)
+    console.log("Edit",json)
     dispatch(editConcernSuccess(json))
   } catch (err) {
     console.log(err.message)

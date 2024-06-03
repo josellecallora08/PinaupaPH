@@ -70,14 +70,14 @@ const AnnouncementForm = ({
                   <option hidden>Select Type</option>
                   <option value="announcement">General Announcement</option>
                   <option value="maintenance">Maintenance</option>
-                  <option value="rentIncrease">Rent Increase</option>
-                  <option value="policyChange">Policy Change</option>
+                  <option value="Rent Increase">Rent Increase</option>
+                  <option value="Policy Change">Policy Change</option>
                   <option value="event">Event</option>
                   <option value="emergency">Emergency</option>
                   <option value="reminder">Reminder</option>
                   <option value="renovation">Renovation</option>
                   <option value="inspection">Inspection</option>
-                  <option value="leaseRenewal">Lease Renewal</option>
+                  <option value="Lease Renewal">Lease Renewal</option>
                   <option value="noise">Noise</option>
                   <option value="parking">Parking</option>
                   <option value="amenities">Amenities</option>
