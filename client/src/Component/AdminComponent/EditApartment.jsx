@@ -15,7 +15,7 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
   const [showPopup, setShowPopup] = useState(false)
   const [popupMessage, setPopupMessage] = useState('')
 
-  const [apartmentBldg, setApartmentBldg] = useState('')
+  const [apartmentBldg, setApartmentBldg] = useState(tenant.apartment_id._id || '')
   const [fields, setFields] = useState({
     unit_no: tenant?.unit_id?.unit_no || '',
     deposit:
@@ -86,7 +86,7 @@ const EditApartment = ({ setIsEditApartmentForm, tenant }) => {
               onChange={(e) => setApartmentBldg(e.target.value)}
               className="w-full py-2 px-3 border-2 border-[#9e9e9e] rounded"
             >
-              <option className="rounded-none">Select Apartment</option>
+              <option className="rounded-none" value={apartmentBldg}>{tenant.apartment_id.name}</option>
               {apartment
                 ?.filter((item) => item.units.some((unit) => !unit.occupied))
                 ?.map((val, key) => (

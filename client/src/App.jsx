@@ -206,12 +206,13 @@ function App() {
         }
       />
 
-      <Route
-        path="/security"
+ 
+            <Route
+         path="/security"
         element={
-          user ? (
+          role?.role === 'Admin' ? (
             <Layout className="bg-white1">
-              <Security />
+               <Security />
             </Layout>
           ) : (
             <Navigate to="/" />

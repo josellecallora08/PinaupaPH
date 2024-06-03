@@ -194,7 +194,7 @@ const Sidebar = ({ sidebarRef, handleOutsideClick }) => {
                 </li>
               </>
             )}
-            {user?.role !== 'Superadmin' && (
+            {user?.role === 'Admin' && (
               <li className="w-full h-fit">
                 <Link
                   to={`/security`}
