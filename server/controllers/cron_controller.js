@@ -238,3 +238,85 @@ module.exports.deleteOTP = () => {
     }
   })
 }
+
+
+module.exports.scheduledOverdueReminder = () => {
+  cron.schedule('0 0 * * *', async () => {
+    // Run daily ast midnight
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    try {
+      const tenants = await TENANTMODEL.find().populate('user_id unit_id apartment_id');
+
+      for (const tenant of tenants) {
+        if (!tenant.unit_id._id || tenant.user_id.isDelete) {
+          continue; // Skip processing if unit_id not found or user is deleted
+        }
+        console.log("proceed")
+        const dueDate = new Date(tenant.monthly_due);
+        dueDate.setFullYear(currentDate.getFullYear(), currentDate.getMonth(), dueDate.getDate());
+        dueDate.setHours(0, 0, 0, 0);
+
+        if (currentDate > dueDate) {
+          const invoices = await INVOICEMODEL.find({
+            tenant_id: tenant._id,
+            due: { $lte: currentDate },
+            isPaid: false, // Unpaid invoices
+          });
+          console.log(invoices)
+
+          if (invoices.length > 0) {
+            const latestInvoice = invoices[0]; // Assuming the latest unpaid invoice
+            console.log(tenant.user_id.email)
+
+            const transporter = nodemailer.createTransport({
+              service: 'gmail',
+              auth: {
+                user: process.env.GOOGLE_EMAIL,
+                pass: process.env.GOOGLE_PASSWORD,
+              },
+            }); 
+            console.log("s")
+            const mailOptions = {
+              from: 'pinaupaph@gmail.com',
+              to: tenant.user_id.email,
+              subject: `Urgent: Payment Overdue for Unit ${tenant.unit_id.unit_no}`,
+              html: `
+                <html>
+                <body>
+                  <p>Dear ${tenant.user_id.name},</p>
+                  <p>This is a reminder that your payment for <strong>Unit ${tenant.unit_id.unit_no}</strong> is overdue.</p>
+                  <p>Details of the overdue invoice:</p>
+                  <ul>
+                    <li>Invoice Number: <strong>${latestInvoice.pdf.reference}</strong></li>
+                    <li>Invoice Date: <strong>${new Date(latestInvoice.createdAt).toDateString()}</strong></li>
+                    <li>Due Date: <strong>${new Date(latestInvoice.due).toDateString()}</strong></li>
+                    <li>Total Amount: <strong>${(latestInvoice.amount).toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</strong></li>
+                  </ul>
+                  <p>Please make the payment at your earliest convenience to avoid any late fees or disruption of services.</p>
+                  <p>If you have already made the payment, kindly ignore this reminder.</p>
+                  <p>Thank you for your prompt attention to this matter.</p>
+                  <p>Best regards,</p>
+                  <strong>Wendell C. Ibias</strong><br/>
+                  <strong>Apartment Owner</strong><br/>
+                  <strong>09993541054</strong><br/>
+                </body>
+                </html>`,
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                console.log('Error:', error);
+              } else {
+                console.log('Overdue reminder email sent:', info.response);
+              }
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error in scheduledOverdueReminder:', error);
+    }
+  });
+};
