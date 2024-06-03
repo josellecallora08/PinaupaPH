@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useDispatch, useSelector } from 'react-redux';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas-pro';
+import 'jspdf-autotable';
 import {
   fetchDelinquencyReport,
   fetchGoodpayerReport,
@@ -49,37 +49,50 @@ const PayerReport = () => {
   };
 
   const downloadPDF = () => {
-    const input = document.getElementById('reportTable');
+    const doc = new jsPDF('p', 'mm', 'a4');
     const generationDate = new Date().toLocaleDateString(); // Get current date
 
-    html2canvas(input).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth() * 0.8;
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      const marginLeft = (pdf.internal.pageSize.getWidth() - pdfWidth) / 2;
+    // Add generation date
+    doc.setFontSize(12);
+    doc.text(`Generated on: ${generationDate}`, 14, 30);
 
-      // Add generation date
-      pdf.setFontSize(12);
-      pdf.text(`Generated on: ${generationDate}`, marginLeft, 30);
+    // Add title
+    doc.setFontSize(18);
+    doc.text(selectedReport, doc.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
 
-      // Add title
-      pdf.setFontSize(18);
-      pdf.text(selectedReport, pdf.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
+    // Add table
+    const tableColumn = ["Tenant", "Unit No.", "Apartment Name", "Due Date", "Date Paid", "Amount", "Amount Paid"];
+    const tableRows = [];
 
-
-
-      // Add table image\
-      pdf.addImage(imgData, 'PNG', marginLeft, 40, pdfWidth, pdfHeight);
-
-      // Add signature area
-      const finalY = pdf.previousAutoTable ? pdf.previousAutoTable.finalY + 10 : pdfHeight + 50;
-      pdf.setFontSize(12);
-      pdf.text("Owner's Signature:", marginLeft, finalY + 20);
-      pdf.line(marginLeft + 50, finalY + 20, pdf.internal.pageSize.getWidth() - marginLeft, finalY + 20); // Extend signature line
-
-      pdf.save('report.pdf');
+    report?.filter(item => item.isPaid && item.datePaid).forEach(val => {
+      const rowData = [
+        val.tenant_id.user_id.name,
+        val.tenant_id.unit_id.unit_no,
+        val.tenant_id.apartment_id.name.toUpperCase(),
+        new Date(val.due).toLocaleDateString(),
+        val.datePaid && new Date(val.datePaid).toLocaleDateString(),
+        val.amount,
+        val.payment.amountPaid
+      ];
+      tableRows.push(rowData);
     });
+
+    doc.autoTable({
+      head: [tableColumn],
+      body: tableRows,
+      startY: 40,
+      theme: 'striped',
+      headStyles: { fillColor: [0, 57, 107] }, // Customize table header color
+      margin: { top: 10 },
+    });
+
+    // Add signature area
+    const finalY = doc.autoTable.previous.finalY;
+    doc.setFontSize(12);
+    doc.text("Owner's Signature:", 14, finalY + 20);
+    doc.line(60, finalY + 20, doc.internal.pageSize.getWidth() - 14, finalY + 20); // Extend signature line
+
+    doc.save('report.pdf');
   };
 
   return (

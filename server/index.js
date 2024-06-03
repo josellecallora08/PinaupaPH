@@ -23,7 +23,7 @@ const notification_route = require('./routes/notification')
 const dashboard_route = require('./routes/dashboard')
 const report_route = require('./routes/report')
 
-const { scheduledInvoice, deleteOTP } = require('./controllers/cron_controller')
+const { scheduledInvoice, deleteOTP, scheduledOverdueReminder } = require('./controllers/cron_controller')
 const { createContract } = require('./controllers/document_controller')
 
 const app = express()
@@ -118,6 +118,7 @@ deleteOTP()
 // Schedule Monthly Invoice Creation
 scheduledInvoice()
 
+scheduledOverdueReminder()
 // Routes
 app.use('/api/user', user_route)
 app.use('/api/cctv', cctv_route)
