@@ -224,7 +224,7 @@ module.exports.create_apartment_unit = async (req, res) => {
     await apartment.save()
     return res
       .status(httpStatusCodes.CREATED)
-      .json({ msg: 'Created Apartment Unit', response }) //updated today 5-14
+      .json({ msg: 'Apartment unit has been created', response }) //updated today 5-14
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -278,7 +278,7 @@ module.exports.edit_apartment_unit = async (req, res) => {
     }
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: `Updated ${details.unit_no}`, response })
+      .json({ msg: `Apartment unit has been updated`, response })
   } catch (err) {
     console.error({ error: err.message })
     return res
@@ -332,7 +332,7 @@ module.exports.delete_apartment_unit = async (req, res) => {
 
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: `Apartment Unit has been deleted`, response })
+      .json({ msg: `Apartment unit has been deleted`, response })
   } catch (err) {
     console.error({ error: err.message })
     return res
