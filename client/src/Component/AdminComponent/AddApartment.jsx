@@ -83,7 +83,23 @@ const AddApartment = ({
               className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
-
+          <div className="mt-2">
+            <label
+              htmlFor="barangay"
+              className="block text-gray-700 text-sm font-bold mb-2 "
+            >
+              Barangay
+            </label>
+            <input
+              type="text"
+              id="barangay"
+              name="barangay"
+              value={fields.barangay}
+              onChange={handleInput}
+              placeholder="Enter your barangay"
+              className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </div>
           <div className="">
             <label
               htmlFor="province"
@@ -102,23 +118,7 @@ const AddApartment = ({
             />
           </div>
 
-          <div className="mt-2">
-            <label
-              htmlFor="barangay"
-              className="block text-gray-700 text-sm font-bold mb-2 "
-            >
-              Barangay
-            </label>
-            <input
-              type="text"
-              id="barangay"
-              name="barangay"
-              value={fields.barangay}
-              onChange={handleInput}
-              placeholder="Enter your barangay"
-              className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            />
-          </div>
+  
         </div>
         <div className="flex justify-end mt-2 gap-3">
           <button
