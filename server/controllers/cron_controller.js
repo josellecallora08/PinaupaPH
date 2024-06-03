@@ -241,7 +241,7 @@ module.exports.deleteOTP = () => {
 
 
 module.exports.scheduledOverdueReminder = () => {
-  cron.schedule('* * * * *', async () => {
+  cron.schedule('0 0 * * *', async () => {
     // Run daily ast midnight
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
@@ -268,7 +268,7 @@ module.exports.scheduledOverdueReminder = () => {
 
           if (invoices.length > 0) {
             const latestInvoice = invoices[0]; // Assuming the latest unpaid invoice
-            console.log("proceed3")
+            console.log(tenant.user_id.email)
 
             const transporter = nodemailer.createTransport({
               service: 'gmail',

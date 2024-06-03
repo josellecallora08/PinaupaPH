@@ -223,7 +223,7 @@ const AddTenantForm = ({
             Deposit
           </label>
           <input
-            type="text"
+            type="number"
             id="deposit"
             onChange={handleInput}
             required
