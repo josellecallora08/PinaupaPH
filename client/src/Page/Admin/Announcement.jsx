@@ -20,8 +20,8 @@ const Announcement = () => {
   const announcement = useSelector((state) => state.announcement.data)
   const [update, setUpdate] = useState(false)
   const [searchItem, setSearchItem] = useState('')
-  const error = useSelector((state) => state.announcement.error);
-  const msg = useSelector((state) => state.announcement.msg);
+  const error = useSelector((state) => state.announcement.error)
+  const msg = useSelector((state) => state.announcement.msg)
   const [value, setValue] = useState('')
   const [filter, setFilter] = useState('All')
   const [isAddAnnouncementFormOpen, setisAddAnnouncementFormOpen] =
@@ -36,17 +36,17 @@ const Announcement = () => {
     title: '',
     type: '',
     description: '',
-  });
+  })
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-      dispatch(createAnnouncement(formData));
-      setisAddAnnouncementFormOpen(false);
-  };
+    e.preventDefault()
+    dispatch(createAnnouncement(formData))
+    setisAddAnnouncementFormOpen(false)
+  }
 
   useEffect(() => {
     if (msg !== null) {
@@ -128,8 +128,8 @@ const Announcement = () => {
           </button>
         </div>
         {/* Tabs */}
-        <div className="flex items-center bg-white gap-7 p-2  pt-5 pl-7 mt-5 rounded-tl-lg rounded-tr-lg   ">
-          <div className="flex gap-7 lg:w-1/2 no-scrollbar overflow-x-auto with-scrollbar w-full px-2 ">
+        <div className="flex items-center bg-white gap-7 p-2 pt-5 pl-7 mt-5 rounded-tl-lg rounded-tr-lg">
+          <div className="flex gap-7 lg:w-1/2 no-scrollbar overflow-x-auto with-scrollbar w-full px-2">
             {/* Filter Tabs */}
             <button
               className={`filter-tab ${filter === 'All' ? 'active' : ''}`}
@@ -150,7 +150,7 @@ const Announcement = () => {
               ].map((word, index) => (
                 <button
                   key={index}
-                  className={`capitalize filter-tab  ${filter === `${word}` ? 'active' : ''}`}
+                  className={`capitalize filter-tab ${filter === `${word}` ? 'active' : ''}`}
                   onClick={() => setFilter(word.toUpperCase())}
                   style={{
                     color:
@@ -167,6 +167,7 @@ const Announcement = () => {
               ))}
           </div>
         </div>
+
         {/* Body of Announcement Tab */}
         <div className=" md:h-[25rem] min-[1440px]:h-[45rem] min-[1280px]:h-[45rem] min-[1366px]:h-[19rem] w-full h-[30rem] overflow-x-auto px-8 rounded-bl-lg rounded-br-lg bg-white">
           {/* Announcement Cards */}

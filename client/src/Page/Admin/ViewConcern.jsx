@@ -177,16 +177,18 @@ const ViewConcern = () => {
                     </p>
                   </div>
                 </div>
-                <div className=" col-span-1 xl:w-full xl:mb-4 items-center  text-sm xl:text-base flex justify-end ">
-                  <p className="xl:mt-1  text-xs">
+                <div className="col-span-1 xl:w-full xl:mb-4 items-center text-sm xl:text-base flex justify-end">
+                  <p className="xl:mt-1 text-xs">
                     {new Date(concern?.createdAt).toDateString()}
                   </p>
-                  <div className="">
-                    <BsThreeDotsVertical
-                      className="  w-7 h-auto ml-10 cursor-pointer text-primary-color"
-                      onClick={toggleDot}
-                    />
-                  </div>
+                  {(user?.role !== 'Admin' || concern?.status) && (
+                    <div>
+                      <BsThreeDotsVertical
+                        className="w-7 h-auto ml-10 cursor-pointer text-primary-color"
+                        onClick={toggleDot}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {isDotOpen && (
@@ -218,7 +220,7 @@ const ViewConcern = () => {
                       </div>
                     )}
                   </div>
-                )}  
+                )}
               </div>
               {showEditForm && (
                 <EditReportForm
@@ -244,7 +246,11 @@ const ViewConcern = () => {
                 <div className="relative w-full h-full min-h-60 xl:h-[600px]">
                   {concern?.attached_image &&
                   concern?.attached_image?.length > 0 ? (
-                    <Carousel infiniteLoop={true} swipeable={true} arrowStyle={{ color: 'red' }}>
+                    <Carousel
+                      infiniteLoop={true}
+                      swipeable={true}
+                      arrowStyle={{ color: 'red' }}
+                    >
                       {concern?.attached_image?.map((image, index) => (
                         <figure
                           className="w-full h-full max-w-[500px] lg:max-w-full m-auto xl:h-[600px]"

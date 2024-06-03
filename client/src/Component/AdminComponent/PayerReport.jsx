@@ -92,7 +92,7 @@ const PayerReport = () => {
     doc.text("Owner's Signature:", 14, finalY + 20);
     doc.line(60, finalY + 20, doc.internal.pageSize.getWidth() - 14, finalY + 20); // Extend signature line
 
-    doc.save('report.pdf');
+    doc.save(`${selectedReport+" " +'(' + dateRange.from + ' to ' + dateRange.to + ') '}.pdf`);
   };
 
   return (
