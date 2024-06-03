@@ -66,7 +66,7 @@ module.exports.createAnnouncement = async (req, res) => {
 
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Announcement has been sent to all tenants.', response })
+      .json({ msg: 'Announcement has been sent.', response })
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
@@ -136,7 +136,7 @@ module.exports.editAnnouncement = async (req, res) => {
 
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Announcement has been edited to all tenants.', response })
+      .json({ msg: 'Announcement has been edited.', response })
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
@@ -156,7 +156,7 @@ module.exports.deleteAnnouncement = async (req, res) => {
 
     return res
       .status(httpStatusCodes.OK)
-      .json({ msg: 'Announcement has been deleted to all tenants.', response })
+      .json({ msg: 'Announcement has been deleted.', response })
   } catch (err) {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
