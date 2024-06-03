@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useDispatch, useSelector } from 'react-redux';
 import jsPDF from 'jspdf';
+
 import html2canvas from 'html2canvas-pro';
 import {
   fetchDelinquencyReport,
@@ -65,11 +66,11 @@ const PayerReport = () => {
 
       // Add title
       pdf.setFontSize(18);
-      pdf.text(selectedReport, pdf.internal.pageSize.getWidth() / 2, 20, { align: 'center' });
+      pdf.text(selectedReport, pdf.internal.pageSize.getWidth() / 2, 20, { align: 'left' });
 
 
 
-      // Add table image\
+      // Add table image
       pdf.addImage(imgData, 'PNG', marginLeft, 40, pdfWidth, pdfHeight);
 
       // Add signature area
