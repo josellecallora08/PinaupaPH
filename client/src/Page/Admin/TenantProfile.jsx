@@ -486,17 +486,17 @@ const TenantProfile = () => {
                   </div>
                 </div>
                 {/* Right profile */}
-                <div className="lg:w-1/2   lg:overflow-y-auto lg:origin-left lg:border-l-4 lg:border-dark-blue ">
+                <div className="lg:w-1/2 relative lg:overflow-y-auto lg:origin-left lg:border-l-4 lg:border-dark-blue ">
                   {/*Family Members */}
                   <div>
                     <div className=" flex items-center justify-between px-2 py-1 bg-dark-blue text-white lg:p-3 lg:border-2 lg:border-dark-blue">
-                      <h1 className="text-lg font-bold lg:text-xl">
+                      <h1 className="  text-lg font-bold lg:text-xl">
                         Household Details
                       </h1>
 
-                      <div className="relative">
+                      <div className="">
                         <RxDotsVertical
-                          className="  text-lg cursor-pointer lg:text-2xl hover:scale-125"
+                          className=" text-lg cursor-pointer lg:text-2xl hover:scale-125"
                           onClick={() => toggleDropdown('household')}
                         />
                       </div>
@@ -505,7 +505,7 @@ const TenantProfile = () => {
                     {isHousedotOpen && (
                       <div
                         ref={dropdownRef}
-                        className="absolute right-20 top-15 flex flex-col items-center bg-white w-32 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400 animate-slideIn"
+                        className="absolute right-0 top-15 flex flex-col items-center bg-white w-32 h-auto cursor-pointer gap-3 rounded-bl-md rounded-br-md shadow-md shadow-gray-400 animate-slideIn"
                       >
                         <div
                           className="flex items-center justify-center w-full gap-2 p-2 text-center transition duration-300 hover:bg-dark-blue hover:text-white"

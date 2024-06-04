@@ -300,10 +300,10 @@ const TenantProfile = () => {
                   {isDropDownOpen && (
                     <div className="absolute right-5 mt-10 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 w-max animate-slideIn">
                       <div className="py-1">
-                        <button className="flex items-center  gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300">
+                        {/* <button className="flex items-center  gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300">
                           <IoEyeOutline size={20} className="inline mr-2" />{' '}
                           View Lease
-                        </button>
+                        </button> */}
                         <button
                           onClick={handleDownload}
                           className="flex items-center justify-between gap-4 px-4 py-2 text-primary-color hover:bg-primary-color hover:text-white rounded-md w-full focus:outline-none transition duration-300"
@@ -384,7 +384,7 @@ const TenantProfile = () => {
                       <div className="lg:text-base text-xs lg:flex lg:flex-col lg:gap-1">
                         <p>{tenant?.user_id.name}</p>
                         <p>{birthday}</p>
-                        <p>+63{tenant?.user_id.mobile_no}</p>
+                        <p>{tenant?.user_id.mobile_no}</p>
                         <p className="overflow-hidden text-ellipsis whitespace-nowrap w-full sm:w-48 md:w-64 lg:w-80">
                           {tenant?.user_id.email}
                         </p>
