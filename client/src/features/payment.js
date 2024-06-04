@@ -447,4 +447,37 @@ export const createPayment =
     }
   }
 
+export const createCashPayment = (invoice_id, amountPaid, method) => async (dispatch) => {
+  try {
+    console.log(invoice_id)
+    console.log(amountPaid)
+    console.log(method)
+    const token = Cookies.get('token')
+    const response = await fetch(`${import.meta.env.VITE_URL}/api/payment/cash_payment?invoice_id=${invoice_id}`, {
+      method: "POST",
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        amountPaid,
+        method
+      })
+    })
+    console.log('riun')
+    if (!response.ok) {
+      const json = await response.json()
+      console.log(json)
+      throw new Error(json.error)
+    }
+
+    const json = await response.json()
+    console.log(json)
+    dispatch(paymentSuccess(json))
+  } catch (err) {
+    dispatch(actionFailed(err.message))
+  }
+}
+
+
 export default paymentSlice.reducer
