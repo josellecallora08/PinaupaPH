@@ -258,7 +258,7 @@ const Dashboard = () => {
                         <div className=" w-full flex flex-col gap-2 xl:gap-5 py-2">
                           <div className="w-11/12 m-auto flex justify-between">
                             <p className="text-[#9e9e9e]  text-center font-semibold">
-                              Total Paid
+                              Revenue
                             </p>
                             <p className="font-bold text-center text-base xl:text-2xl">
                               {(totalPaid &&
@@ -389,7 +389,7 @@ const Dashboard = () => {
                         <div className=" w-full flex flex-col gap-2 xl:gap-5 py-2">
                           <div className="w-11/12 m-auto flex justify-between">
                             <p className="text-[#9e9e9e]  text-center font-semibold">
-                              Occupancy Rate
+                              Total Occupancy
                             </p>
                             <p className="font-bold text-center text-base xl:text-2xl">
                               {totalOccupancy?.occupied}/{totalOccupancy?.total}

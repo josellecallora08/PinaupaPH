@@ -395,7 +395,7 @@ module.exports.search_user = async (req, res) => {
     if (!search || search.length <= 0) {
       return res
         .status(httpStatusCodes.NOT_FOUND)
-        .json({ msg: 'No matching records..' })
+        .json({ error: 'No matching records..' })
     }
 
     return res.status(httpStatusCodes.OK).json({ response: search })
