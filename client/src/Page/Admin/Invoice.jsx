@@ -59,6 +59,11 @@ const Invoice = () => {
     setUpdate(true);
     setPaymentModal(false);
   };
+  const handleCashSubmit = (e) => {
+    e.preventDefault()
+    dispatch(createCashPayment(paymentId, amount, method))
+    setPaymentModal(prevState => !prevState)
+  }
 
   useEffect(() => {
     if (msgInvoice || errorInvoice) {
@@ -84,10 +89,6 @@ const Invoice = () => {
     setDropdownIndex(id === dropdownIndex ? null : id);
   };
 
-  const handleCashSubmit = async (e) => {
-    e.preventDefault()
-    dispatch(createCashPayment(paymentId, amount, method))
-  }
 
   return (
     <>
@@ -197,8 +198,8 @@ const Invoice = () => {
                           )}
                           <th
                             className={`capitalize font-semibold ${val?.isPaid === false
-                                ? 'text-red'
-                                : 'text-lime'
+                              ? 'text-red'
+                              : 'text-lime'
                               } p-2 w-1/5`}
                           >
                             {val?.isPaid === false ? 'Unpaid' : 'Paid'}
@@ -277,8 +278,8 @@ const Invoice = () => {
                           <td className="p-2">{val?.amount.toFixed(2)}</td>
                           <th
                             className={`font-semibold ${val?.isPaid === false
-                                ? 'text-red'
-                                : 'text-primary-color'
+                              ? 'text-red'
+                              : 'text-primary-color'
                               } p-3 w-1/5`}
                           >
                             {val?.isPaid === false ? 'Unpaid' : 'Paid'}
@@ -294,10 +295,10 @@ const Invoice = () => {
                               {dropdownIndex === val?._id && (
                                 <ul
                                   className={`absolute w-36 right-0 bg-white shadow-md rounded-md z-10 ${index === invoices.length - 1
-                                      ? 'bottom-12'
-                                      : index === invoices.length - 2
-                                        ? 'bottom-24'
-                                        : 'top-12'
+                                    ? 'bottom-12'
+                                    : index === invoices.length - 2
+                                      ? 'bottom-24'
+                                      : 'top-12'
                                     }`}
                                 >
                                   {val?.isPaid === false && (

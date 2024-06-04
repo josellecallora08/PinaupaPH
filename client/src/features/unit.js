@@ -43,6 +43,7 @@ const unitSlice = createSlice({
       state.data = state.data.map((unit) =>
         unit._id === action.payload ? action.payload.response : unit,
       )
+      state.single = {...state.single, ...action.payload.response}
       state.msg = action.payload.msg
     },
     deleteUnitSuccess: (state, action) => {

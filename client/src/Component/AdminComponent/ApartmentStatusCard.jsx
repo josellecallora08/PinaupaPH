@@ -165,7 +165,7 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
         )}
         {isEditApartmentUnit && (
           <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="w-full max-w-lg mt-12 bg-white rounded-lg">
+            <div className="w-full max-w-lg mt-12 mx-5 bg-white rounded-lg">
               <EditApartmentUnit
                 apartmentId={apartmentId}
                 val={val}
