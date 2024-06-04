@@ -304,7 +304,7 @@ const ViewConcern = () => {
                 <div className="w-full h-[300px] lg:h-full ">
                   <div
                     ref={messageContainerRef}
-                    className={`w-full h-auto md:max-h-[500px] lg:max-h-[350px] max-h-[300px]    font-regular  gap-2 px-5 ${concern?.comments?.length > 5 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}
+                    className={`w-full h-auto md:max-h-[500px] lg:max-h-full max-h-[300px] font-regular  gap-2 px-5 ${concern?.comments?.length > 5 ? 'hover:overflow-y-scroll' : ''} overflow-hidden`}
                   >
                     {convo?.map((val, key) => (
                       <div

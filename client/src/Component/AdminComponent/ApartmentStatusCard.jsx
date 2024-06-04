@@ -176,8 +176,8 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
         )}
         {isTenantInfoOpen && (
           <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="w-full max-w-3xl mt-12 bg-white rounded-md pb-2">
-              <div className="flex p-5 rounded-tl-md justify-between items-center bg-primary-color">
+            <div className="w-full max-w-3xl mx-5 mt-12 bg-white rounded-md pb-2">
+              <div className="flex p-5 rounded-tl-md rounded-tr-md justify-between items-center bg-primary-color">
                 <div className="p-2 font-bold text-lg text-white bg-primary-color rounded-tl-md rounded-tr-md">
                   Previous Tenant of {val?.unit_no}
                 </div>
@@ -194,7 +194,7 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
                   style={{ maxHeight: '300px' }}
                   id="tenantsTable"
                 >
-                  <table className="min-w-full bg-white">
+                  <table className="min-w-full  bg-white">
                     <thead className="bg-primary-color text-white border-b-2 border-white sticky top-0">
                       <tr>
                         <th className="py-2 px-4 border-white lg:text-base text-xs">
@@ -228,7 +228,7 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
                               ? new Date(tenant?.moveOut).toDateString()
                               : ` not moved out`}
                           </td>
-                          <td className="border px-4 py-2 lg:text-base text-xs lg:text-base text-xs">
+                          <td className="border px-4 py-2  text-xs lg:text-base text-xs">
                             {Math.floor(
                               (tenant?.moveOut
                                 ? new Date(tenant?.moveOut) -
