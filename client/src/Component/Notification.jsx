@@ -13,7 +13,7 @@ const Notification = ({ user, data, notifBg }) => {
     <>
       <div
         ref={notifBg}
-        className={`fixed left-0 md:left-auto top-20 md:right-20 w-full h-fit md:max-w-[300px] md:max-h-[250px] shadow-xl bg-white rounded-md hover:overflow-y-scroll overflow-hidden p-2`}
+        className={`fixed left-0 md:left-auto top-20 md:right-20 w-full h-[20rem] md:max-w-[300px] md:max-h-[250px] shadow-xl bg-white rounded-md hover:overflow-y-scroll overflow-hidden p-2`}
       >
         {(data &&
           data
