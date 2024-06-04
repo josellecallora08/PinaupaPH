@@ -76,7 +76,7 @@ const EditApartmentUnit = ({ apartmentId, val, setIsEditApartmentUnit }) => {
         <div className="relative w-full flex py-4 rounded-tl-lg rounded-tr-lg bg-dark-blue text-white items-center ">
           <h1 className="lg:text-xl ml-5 text-lg font-bold ">Edit Apartment Unit</h1>
         </div>
-        <form onSubmit={handleSubmit} className="lg:w-[30rem] w-[22rem] h-auto pt-5 px-4 overflow-y-auto ">
+        <form onSubmit={handleSubmit} className="lg:w-full w-full h-auto py-5 px-4 overflow-y-auto ">
           <button className="absolute top-4 right-6">
             <IoMdClose
               onClick={() => setIsEditApartmentUnit((prevState) => !prevState)}
