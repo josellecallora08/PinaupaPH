@@ -350,23 +350,32 @@ module.exports.cashPayment = async (req, res) => {
     const { invoice_id } = req.query;
     const { amountPaid, method } = req.body;
     console.log(req.body)
+    // Retrieve the current invoice document
+    let invoice = await INVOICEMODEL.findById(invoice_id);
+
+    // Calculate the new unpaid balance by subtracting the amount paid
+    let newUnPaidBalance = invoice.payment.unpaidBalance - amountPaid;
+
+    // Update the invoice with the new values
     let invoiceUpdate = {
       'payment.amountPaid': amountPaid,
       'payment.method': method,
+      'payment.unpaidBalance': newUnPaidBalance,
       isPaid: true,
       datePaid: Date.now(),
       status: 'succeeded'
     };
 
+    // Perform the update operation
     let response = await INVOICEMODEL.findByIdAndUpdate(invoice_id, invoiceUpdate, { new: true }).populate({
       path: 'tenant_id',
       populate: 'user_id unit_id apartment_id',
     });
 
+
     if (!response) {
       return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'Failed to manually create payment.' });
     }
-
     const templatePath = path.join(__dirname, '../template', 'invoice_report_template.ejs');
     const htmlContent = await ejs.renderFile(templatePath, { response });
 

@@ -182,7 +182,9 @@ module.exports.createInvoice = async (req, res) => {
         // if(invoice.some(item => new Date(item.due) === dueMonth)){
 
         // }
-        const unpaid = tenant.balance + tenant.unit_id.rent
+      
+        const unpaid = tenant.balance
+        console.log(unpaid)
         const response = await INVOICEMODEL.create({
           tenant_id: tenant._id,
           'pdf.public_id': cloudinaryResponse.public_id,
