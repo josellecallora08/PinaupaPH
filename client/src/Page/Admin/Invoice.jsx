@@ -62,6 +62,7 @@ const Invoice = () => {
   const handleCashSubmit = (e) => {
     e.preventDefault()
     dispatch(createCashPayment(paymentId, amount, method))
+    setPaymentModal(prevState => !prevState)
   }
 
   useEffect(() => {
