@@ -40,7 +40,7 @@ const Notification = ({ user, data, notifBg }) => {
                       New {val?.type}
                     </span>
                     <span className="text-xs text-start max-w-[150px] lg:max-w-[150px] md:max-w-[500px] text-ellipsis text-nowrap overflow-hidden">
-                      {val?.description}
+                      {val?.title}
                     </span>
                   </div>
                   <div className="text-xs">
