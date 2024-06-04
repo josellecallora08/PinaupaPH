@@ -37,7 +37,7 @@ const ManualInvoice = ({ setModal }) => {
       setShowPopup(true)
       setTimeout(() => {
         setShowPopup(false)
-
+        dispatch(resetInvoiceStatus())
         setModal(false)
       }, 3000)
     }
