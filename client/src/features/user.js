@@ -98,7 +98,7 @@ export const handleSearchUser = (filter) => async (dispatch) => {
     console.log(json)
     dispatch(fetchUserSuccess(json.response))
   } catch (err) {
-    dispatch(actionUserFailed(err.message))
+    console.log(err.message)
   }
 }
 
