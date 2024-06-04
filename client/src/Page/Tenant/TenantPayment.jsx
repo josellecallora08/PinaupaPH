@@ -51,6 +51,11 @@ const TenantPayment = () => {
   };
 
   const handlePayment = async () => {
+    const confirmed = window.confirm("Are you sure you want to proceed with the payment?");
+    if (!confirmed) {
+      return;
+    }
+
     if (formData.method !== null && formData.method !== '') {
       setLocalLoading(true);
       await dispatch(createPaymentIntent(id, formData));
@@ -93,6 +98,17 @@ const TenantPayment = () => {
     );
   };
 
+  const isFormValid = () => {
+    console.log('Checking if form is valid', formData);
+    return (
+      formData.name &&
+      formData.mobile_no &&
+      formData.email &&
+      formData.amount &&
+      formData.method
+    );
+  };
+
   return (
     <>
       <div className="w-full h-full bg-white1 px-5 overflow-y-scroll">
@@ -118,10 +134,11 @@ const TenantPayment = () => {
                     id="ewallet"
                     value="ewallet"
                     checked={true}
+                    hidden
                     onChange={() => {}}
                     className="mr-2 cursor-pointer"
                   />
-                  <label htmlFor="ewallet" className="cursor-pointer text-lg">
+                  <label htmlFor="ewallet" hidden className="cursor-pointer text-lg">
                     E-wallet
                   </label>
                 </div>
@@ -211,6 +228,7 @@ const TenantPayment = () => {
                         value={formData.name}
                         onChange={handleChange}
                         autoComplete="off"
+                        required
                         className="mt-1 px-4 py-3 text-xl text-primary-color border bg-white border-dark-gray rounded-md w-full"
                       />
                     </div>
@@ -226,6 +244,7 @@ const TenantPayment = () => {
                         placeholder="Enter Contact Number"
                         id="mobile_no"
                         name="mobile_no"
+                        required
                         value={formData.mobile_no}
                         onChange={handleChange}
                         autoComplete="off"
@@ -244,6 +263,7 @@ const TenantPayment = () => {
                         placeholder="Enter amount"
                         id="amount"
                         name="amount"
+                        required
                         value={formData.amount}
                         onChange={handleChange}
                         autoComplete="off"
@@ -262,6 +282,7 @@ const TenantPayment = () => {
                         placeholder="Enter Email"
                         id="email"
                         name="email"
+                        required
                         value={formData.email}
                         onChange={handleChange}
                         autoComplete="off"
@@ -333,7 +354,10 @@ const TenantPayment = () => {
                   ) : (
                     <button
                       onClick={handlePayment}
-                      className="lg:mt-0 md:mt-4 w-full lg:mb-8 bg-primary-color text-white mb-5 py-3 rounded-md hover:opacity-80"
+                      disabled={!isFormValid()}
+                      className={`lg:mt-0 md:mt-4 w-full lg:mb-8 text-white mb-5 py-3 rounded-md ${
+                        isFormValid() ? 'bg-primary-color hover:opacity-80' : 'bg-primary-color cursor-not-allowed'
+                      }`}
                     >
                       Pay
                     </button>
