@@ -384,7 +384,7 @@ const TenantProfile = () => {
                       <div className="lg:text-base text-xs lg:flex lg:flex-col lg:gap-1">
                         <p>{tenant?.user_id.name}</p>
                         <p>{birthday}</p>
-                        <p>+63{tenant?.user_id.mobile_no}</p>
+                        <p>{tenant?.user_id.mobile_no}</p>
                         <p className="overflow-hidden text-ellipsis whitespace-nowrap w-full sm:w-48 md:w-64 lg:w-80">
                           {tenant?.user_id.email}
                         </p>
