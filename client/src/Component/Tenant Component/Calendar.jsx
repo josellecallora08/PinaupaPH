@@ -45,8 +45,9 @@ const Calendars = ({ user, invoice }) => {
           <span className="" role="img" aria-label="money bag">
             {invoiceDatePaid > invoiceDueDate ? '❗' : '💵'}
           </span>
+         
           <div className="paid-tooltip">
-            Payment Paid
+          {invoiceDatePaid > invoiceDueDate ? ' Paid Overdue' : 'Paid'}
           </div>
         </div>
       ); // Show money bag icon on the paid date
