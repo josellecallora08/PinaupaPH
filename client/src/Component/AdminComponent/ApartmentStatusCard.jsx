@@ -96,8 +96,9 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
           onClick={handleTenants}
           className="relative text-white flex items-center justify-center w-1/4 md:w-32 px-5 bg-dark-blue hover:bg-primary-color/85 group cursor-pointer md:flex-shrink-0"
         >
-          <h1 className="text-2xl font-black group-hover:hidden">
-            {val?.unit_no}
+          <h1 className="text-2xl font-black group-hover:hidden flex flex-col items-center">
+            <div>Unit</div>
+            <div> {val?.unit_no}</div>
           </h1>
           <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <MdInfoOutline size={50} />
@@ -116,16 +117,14 @@ const ApartmentStatusCard = ({ apartmentId, val, update, setUpdate }) => {
           <p className="text-xs ml-5 mt-2 mr-2">
             {/* Current Tenant:{' '}
             <span className='font-bold'>{val?.tenants.find((item) => item?.isCurrent)?.tenant_id?.user_id?.name}</span> */}
-            
+
             {val?.tenants.find((item) => item.isCurrent) ? (
               <>
-               
                 Current Tenant:
                 <span className="font-bold">
-                 
                   {
-                    val.tenants.find((item) => item.isCurrent)?.tenant_id?.user_id
-                      .name
+                    val.tenants.find((item) => item.isCurrent)?.tenant_id
+                      ?.user_id.name
                   }
                 </span>
               </>

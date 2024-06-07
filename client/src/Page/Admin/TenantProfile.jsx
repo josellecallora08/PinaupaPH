@@ -35,6 +35,8 @@ import {
 } from '../../features/household'
 import { fetchPets, resetPetStatus } from '../../features/pet'
 import { generateDocument, resetDocumentStatus } from '../../features/documents'
+import Requirements from './Requirements'
+import RequirementCard from '../../Component/AdminComponent/RequirementCard'
 
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile')
@@ -271,6 +273,16 @@ const TenantProfile = () => {
             >
               Transaction
             </button>
+            <button
+              onClick={() => handleTabClick('requirement')}
+              className={
+                activeTab === 'requirement'
+                  ? 'text-white py-2 px-5 bg-primary-color rounded-full'
+                  : ''
+              }
+            >
+              Requirements
+            </button>
           </div>
         </div>
 
@@ -461,6 +473,7 @@ const TenantProfile = () => {
                             </p>
                             <p>Apartment Unit</p>
                             <p>Deposit</p>
+                            <p>Month of Advance</p>
                             <p>Date of Move-in</p>
                           </div>
                           <div className="lg:text-lg space-y-2">
@@ -474,6 +487,7 @@ const TenantProfile = () => {
                                 currency: 'PHP',
                               })}
                             </p>
+                            <p>1 month</p>
                             <p>
                               {new Date(
                                 tenant?.monthly_due,
@@ -644,12 +658,7 @@ const TenantProfile = () => {
                               <p className="w-1/4">Species:</p>
                               <span className="w-3/4">{pet.species}</span>
                             </div>
-                            <div className="flex gap-5">
-                              <p className="w-1/4">Birthday:</p>
-                              <span className="w-3/4">
-                                {new Date(pet.birthday).toLocaleDateString()}
-                              </span>
-                            </div>
+
                             <div className="w-full border-dashed border-b border-dark-gray "></div>
                           </div>
                         ))
@@ -695,6 +704,20 @@ const TenantProfile = () => {
               </div>
               <div className="lg:hidden">
                 <TransactionMobile tenant={tenant} />
+              </div>
+            </div>
+          )}
+          {activeTab === 'requirement' && (
+            <div className="h-full w-full">
+              <Requirements />
+              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+                <RequirementCard />
+                <RequirementCard />
+                <RequirementCard />
+                <RequirementCard />
+                <RequirementCard />
+                <RequirementCard />
+                
               </div>
             </div>
           )}
