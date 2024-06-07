@@ -37,7 +37,6 @@ const ViewConcern = () => {
   const [isDotOpen, setIsDotOpen] = useState(false)
   const navigate = useNavigate()
   const [popupMessage, setPopupMessage] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
   const [showPopup, setShowPopup] = useState(false)
   const msgConcern = useSelector((state) => state.concern.msg)
   const errorConcern = useSelector((state) => state.concern.error)
@@ -251,18 +250,23 @@ const ViewConcern = () => {
                       swipeable={true}
                       arrowStyle={{ color: 'red' }}
                     >
-                      {concern?.attached_image?.map((image, index) => (
-                        <figure
-                          className="w-full h-full max-w-[500px] lg:max-w-full m-auto xl:h-[600px]"
-                          key={index}
-                        >
-                          <img
-                            src={image?.image_url}
-                            className="w-full h-full object-contain"
-                            alt=""
-                          />
-                        </figure>
-                      ))}
+                     {concern?.attached_image?.map((media, index) => (
+  <div key={index} className="w-full h-full max-w-[500px] lg:max-w-full m-auto xl:h-[600px]">
+    {media.type === 'image' ? (
+      <img
+        src={media.image_url}
+        className="w-full h-full object-contain"
+        alt={`Image ${index}`}
+      />
+    ) : media.type === 'video' ? (
+      <video controls className="w-full h-full object-contain">
+        <source src={media.image_url} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    ) : null}
+  </div>
+))}
+
                     </Carousel>
                   ) : (
                     <img

@@ -182,7 +182,7 @@ module.exports.createInvoice = async (req, res) => {
         // if(invoice.some(item => new Date(item.due) === dueMonth)){
 
         // }
-      
+
         const unpaid = tenant.balance
         console.log(unpaid)
         const response = await INVOICEMODEL.create({
@@ -547,5 +547,34 @@ module.exports.tenantInvoice = async (req, res) => {
     return res
       .status(httpStatusCodes.INTERNAL_SERVER_ERROR)
       .json({ error: err.message })
+  }
+}
+
+
+
+module.exports.transactionDates = async (req, res) => {
+  try {
+    const user_id = req.user.id
+    const { from, to } = req.query
+
+    const fromDate = new Date(from)
+    const toDate = new Date(to)
+
+    const tenant = await TENANTMODEL.findOne({user_id:user_id})
+    console.log(tenant)
+    const response = await INVOICEMODEL.find({tenant_id: tenant._id}).populate({
+      path: 'tenant_id',
+      populate: 'user_id unit_id apartment_id'
+    })
+    if (!response) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: "Unable to fetch transactions" })
+    }
+    console.log(response)
+    // const filteredTransaction = response.filter((item) => new Date(item.due) >= fromDate && new Date(item.due) <= toDate)
+
+    return res.status(httpStatusCodes.OK).json({ response, tenant })
+  } catch (err) {
+    return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({error: err.message})
+  
   }
 }

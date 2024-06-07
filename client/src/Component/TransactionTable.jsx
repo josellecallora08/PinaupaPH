@@ -39,7 +39,7 @@ const TransactionTable = ({ tenant }) => {
                   </td>
                   <td className="border px-4 py-2 capitalize">{val?.status}</td>
                   <td className="border px-4 py-2">
-                    {new Date(val?.tenant_id.monthly_due).toDateString()}
+                    {new Date(val?.due).toDateString()}
                   </td>
                   <td className="border px-4 py-2">
                     {(val?.datePaid &&
