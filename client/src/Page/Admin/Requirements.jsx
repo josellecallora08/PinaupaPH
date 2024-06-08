@@ -6,9 +6,9 @@ const Requirements = () => {
   const [isAddRequirementForm, setIsAddRequirementForm] = useState(false)
   return (
     <>
-      <div className="m-10">
+      <div className=" ml-4 mt-5 mb-4">
         <div className="flex justify-between">
-          <h1 className="text-3xl font-bold">Requirements</h1>
+          <h1 className="text-xl font-semibold">Requirements</h1>
           <button onClick={() => setIsAddRequirementForm(true)} className="bg-primary-color text-white  py-2 px-4 rounded-md hover:bg-primary-color/80">
             Add Requirement
           </button>

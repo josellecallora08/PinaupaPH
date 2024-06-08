@@ -62,7 +62,7 @@ const CreateTicket = ({
     <div className="fixed top-10 left-1/4 w-1/2 h-auto flex items-center justify-center bg-opacity-50 z-50">
       <div ref={modalRef} className="lg:w-9/12 bg-white rounded-lg relative">
         <div className="relative w-full flex py-4 rounded-tl-lg rounded-tr-lg bg-dark-blue text-white items-center">
-          <h1 className="lg:text-xl ml-5 text-lg font-bold">Create Ticket</h1>
+          <h1 className="lg:text-xl ml-5 text-lg font-bold">Create Concern</h1>
         </div>
         <form
           onSubmit={handleSubmit}

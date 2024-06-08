@@ -37,6 +37,7 @@ import { fetchPets, resetPetStatus } from '../../features/pet'
 import { generateDocument, resetDocumentStatus } from '../../features/documents'
 import Requirements from './Requirements'
 import RequirementCard from '../../Component/AdminComponent/RequirementCard'
+import DepositReq from '../../Component/AdminComponent/DepositReq'
 
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile')
@@ -282,6 +283,16 @@ const TenantProfile = () => {
               }
             >
               Requirements
+            </button>
+            <button
+              onClick={() => handleTabClick('request')}
+              className={
+                activeTab === 'request'
+                  ? 'text-white py-2 px-5 bg-primary-color rounded-full'
+                  : ''
+              }
+            >
+              Deposit Request
             </button>
           </div>
         </div>
@@ -700,6 +711,10 @@ const TenantProfile = () => {
           {activeTab === 'transaction' && (
             <div className="h-full w-full">
               <div className="lg:block hidden">
+                <div className="flex flex-col gap-1 mt-1 mb-5 mx-auto w-11/12 font-semibold text-lg">
+                  <p>Unit - {tenant?.unit_id?.unit_no}</p>
+                  <p>Apartment : {tenant?.apartment_id?.name}</p>
+                </div>
                 <TransactionTable tenant={tenant} />
               </div>
               <div className="lg:hidden">
@@ -710,14 +725,21 @@ const TenantProfile = () => {
           {activeTab === 'requirement' && (
             <div className="h-full w-full">
               <Requirements />
-              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 <RequirementCard />
                 <RequirementCard />
                 <RequirementCard />
                 <RequirementCard />
                 <RequirementCard />
                 <RequirementCard />
-                
+              </div>
+            </div>
+          )}
+               {activeTab === 'request' && (
+            <div className="h-full w-full">
+              <DepositReq />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+             
               </div>
             </div>
           )}
