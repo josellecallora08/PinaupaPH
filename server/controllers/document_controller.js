@@ -9,6 +9,77 @@ const axios = require('axios')
 const path = require('path')
 const ejs = require('ejs')
 
+module.exports.uploadRequirements = async (req, res) => {
+  try {
+    const { user_id } = req.query;
+    let fileNames = req.body.fileNames; // Handle single or multiple filenames
+
+    // Normalize fileNames to an array
+    if (typeof fileNames === 'string') {
+      fileNames = [fileNames];
+    } else if (Array.isArray(fileNames)) {
+      fileNames = fileNames;
+    } else {
+      fileNames = []; // Default to empty array if neither
+    }
+
+    const requirements = req.files; // Files parsed by multer
+
+    if (!requirements || requirements.length === 0) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'No files uploaded' });
+    }
+
+    if (!fileNames || fileNames.length !== requirements.length) {
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'File names count should match files count' });
+    }
+
+    const uploadResults = [];
+
+    for (let i = 0; i < requirements.length; i++) {
+      const file = requirements[i];
+      const fileName = fileNames[i];
+
+      const bufferBase64 = file.buffer.toString('base64');
+      const bufferString = `data:${file.mimetype};base64,${bufferBase64}`;
+      const result = await cloudinary.uploader.upload(bufferString, {
+        resource_type: 'auto',
+        public_id: fileName,
+        folder: `PinaupaPH/Requirements/${user_id}`
+      });
+
+      uploadResults.push({
+        url: result.secure_url,
+        public_id: result.public_id,
+        name: fileName
+      });
+    }
+
+    const tenant = await TENANTMODEL.findOne({ user_id }).populate('user_id unit_id apartment_id');
+    tenant.documents.push(...uploadResults);
+    await tenant.save();
+
+    
+
+    res.status(httpStatusCodes.OK).json({ msg: 'Documents uploaded successfully', response: uploadResults });
+  } catch (err) {
+    res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Failed to upload documents', err });
+  }
+};
+
+module.exports.fetchRequirements = async (req, res) => {
+  try {
+    const { user_id } = req.query;
+
+    const tenant = await TENANTMODEL.findOne({ user_id }).populate('user_id unit_id apartment_id');
+    
+    res.status(httpStatusCodes.OK).json({ response: tenant.documents });
+  } catch (err) {
+    res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Failed to upload documents', err });
+  }
+};
+
+
+
 module.exports.fetchContracts = async (req, res) => {
   try {
     const response = await CONTRACTMODEL.find({}).populate({
@@ -230,20 +301,20 @@ module.exports.createContract = async (req, res) => {
             )
             .end(buffer)
         })
-  
+
         if (!cloudinaryResponse || !cloudinaryResponse.public_id) {
           return res
             .status(httpStatusCodes.CONFLICT)
             .json({ error: 'Failed to upload PDF to Cloudinary...' })
         }
-  
+
         const downloadPdfFromCloudinary = async () => {
           const response = await axios.get(cloudinaryResponse.secure_url, {
             responseType: 'stream',
           })
           return response.data
         }
-  
+
         const transporter = nodemailer.createTransport({
           service: 'gmail',
           auth: {
@@ -311,7 +382,7 @@ module.exports.createContract = async (req, res) => {
             },
           ],
         }
-  
+
         transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
             console.log('Error:', error)
@@ -319,7 +390,7 @@ module.exports.createContract = async (req, res) => {
             console.log('Email sent:', info.response)
           }
         })
-  
+
         const contractResponse = await CONTRACTMODEL.create({
           tenant_id: response?._id,
           'pdf.public_id': cloudinaryResponse.public_id,
@@ -327,19 +398,19 @@ module.exports.createContract = async (req, res) => {
           'pdf.reference': reference,
         })
         // To Follow up the Push for Witnesses
-  
+
         if (!contractResponse)
           return res
             .status(httpStatusCodes.NOT_FOUND)
             .json({ error: 'Contract Not found' })
-  
+
         const contract = await CONTRACTMODEL.findById(
           contractResponse._id,
         ).populate({
           path: 'tenant_id',
           populate: 'user_id unit_id apartment_id',
         })
-  
+
         return res.status(httpStatusCodes.CREATED).json({
           msg: 'Successfully Created Contract!',
           response: contract,
@@ -360,7 +431,7 @@ module.exports.createContract = async (req, res) => {
     //       })
     //   })
 
-      
+
   } catch (err) {
     console.error({ error: err.message })
     return res

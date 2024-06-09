@@ -12,7 +12,7 @@ const AddTenantForm = ({
   const unit = useSelector((state) => state.unit.data)
   const apartment = useSelector((state) => state.apartment.data)
   const modalRef = useRef(null)
-  console.log(apartment)
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -26,6 +26,7 @@ const AddTenantForm = ({
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [setIsAddTenantFormOpen])
+
   return (
     <div className="relative" ref={modalRef}>
       <div className="lg:w-[500px] flex py-4 rounded-tl-lg rounded-tr-lg px-2  bg-dark-blue text-white items-center ">
@@ -37,7 +38,7 @@ const AddTenantForm = ({
         onSubmit={handleSubmit}
         method="POST"
         className="lg:w-full w-[20rem] h-[25rem] p-3 mt-2 overflow-y-auto"
-      >
+      > 
         {error && (
           <div className="  w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
             {error}
@@ -177,9 +178,7 @@ const AddTenantForm = ({
               Select Apartment Building
             </option>
             {apartment
-              ?.filter((item) =>
-                item.units.some((unit) => !unit.occupied),
-              )
+              ?.filter((item) => item.units.some((unit) => !unit.occupied))
               .map((val, key) => (
                 <option key={key} className="rounded-none" value={`${val._id}`}>
                   {val.name}
@@ -232,12 +231,37 @@ const AddTenantForm = ({
             className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="advance_months"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Months to Advance
+          </label>
+          <select
+            id="advance_months"
+            name="advance_months"
+            onChange={handleInput}
+            required
+            className="w-full py-2 px-3 border-2 border-[#9e9e9e] rounded"
+          >
+            <option value="" hidden>
+              Select number of months
+            </option>
+            {[...Array(12).keys()].map((month) => (
+              <option key={month} value={month + 1}>
+                {month + 1} {month === 0 ? 'month' : 'months'}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="mb-4">
           <label
             htmlFor="dateofin"
             className="block text-gray-700 text-sm font-bold mb-2 "
           >
-            Date of Occupant In
+            Date of Move in
           </label>
           <input
             type="date"
@@ -249,6 +273,7 @@ const AddTenantForm = ({
             className="text-sm shadow appearance-none border-2 border-[#9e9e9e] rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
         </div>
+
         <div className="flex justify-end my-2 gap-3">
           <button
             type="submit"

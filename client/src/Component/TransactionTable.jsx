@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchInvoices, generateInvoice } from './../features/invoice'
+
 const TransactionTable = ({ tenant }) => {
   const dispatch = useDispatch()
   const invoices = useSelector((state) => state.invoice.data)
+
   useEffect(() => {
     dispatch(fetchInvoices())
   }, [])
@@ -11,16 +13,14 @@ const TransactionTable = ({ tenant }) => {
   const handleDownload = async (id) => {
     dispatch(generateInvoice(id))
   }
+
   return (
-    <div className=" m-10 h-full  ">
+    <div className=" mx-10  h-full  ">
       <table className="table-auto w-full   ">
         <thead>
           <tr className="text-white bg-dark-blue">
-            <th className="px-4 py-2">Transaction No.</th>
-            <th className="px-4 py-2">Status</th>
-            <th className="px-4 py-2">Due Dates</th>
             <th className="px-4 py-2">Date Paid</th>
-            <th className="px-4 py-2">Apartment Unit No.</th>
+            <th className="px-4 py-2">Apply to</th>
             <th className="px-4 py-2">Payment Method</th>
             <th className="px-4 py-2">Total Paid</th>
             <th className="px-4 py-2">Action</th>
@@ -37,18 +37,27 @@ const TransactionTable = ({ tenant }) => {
                   <td className="border px-4 py-2 capitalize">
                     {val?.pdf.reference}
                   </td>
-                  <td className="border px-4 py-2 capitalize">{val?.status}</td>
-                  <td className="border px-4 py-2">
-                    {new Date(val?.tenant_id.monthly_due).toDateString()}
+                  {/* <td className="border px-4 py-2 capitalize">{val?.status}</td> */}
+                  {/* <td className="border px-4 py-2">
+                    {new Date(val?.due).toDateString()}
                   </td>
                   <td className="border px-4 py-2">
                     {(val?.datePaid &&
                       new Date(val?.datePaid).toDateString()) ||
                       'Not yet paid.'}
-                  </td>
+                  </td> */}
                   <td className="border px-4 py-2">
-                    Unit - {val?.tenant_id?.unit_id?.unit_no}
+                    {val?.due ? (
+                      <p>
+                        {new Date(val.due).toDateString()} -
+                        {new Date(new Date(val.due).setMonth(new Date(val.due).getMonth() + 1)).toDateString()}
+                      </p>
+                    ) : (
+                      <p>No due date</p>
+                    )}
                   </td>
+
+
                   <td className="border px-4 py-2 capitalize">
                     {val?.payment?.method}
                   </td>
@@ -68,15 +77,15 @@ const TransactionTable = ({ tenant }) => {
                   </td>
                 </tr>
               ))) || (
-            <tr>
-              <td colSpan={8}>
-                <span className="font-semibold font-primary">
-                  {' '}
-                  No data found
-                </span>
-              </td>
-            </tr>
-          )}
+              <tr>
+                <td colSpan={5}>
+                  <span className="font-semibold font-primary">
+                    {' '}
+                    No data found
+                  </span>
+                </td>
+              </tr>
+            )}
         </tbody>
       </table>
     </div>

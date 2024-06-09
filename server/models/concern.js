@@ -43,6 +43,9 @@ const REPORTMODEL = new mongoose.Schema(
         image_url: {
           type: String,
         },
+        type: {
+          type: String
+        }
       },
     ],
     comments: [COMMENTMODEL],

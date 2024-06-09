@@ -140,10 +140,13 @@ module.exports.createConcern = async (req, res) => {
       for (const file of attached_image) {
         const b64 = Buffer.from(file.buffer).toString('base64')
         let dataURI = 'data:' + file.mimetype + ';base64,' + b64
+
+        const resourceType = file.mimetype.startsWith('video/') ? 'video' : 'image';
+
         const imageUpload = await cloudinary.uploader.upload(dataURI, {
           quality: 'auto:low',
           folder: 'PinaupaPH/Concerns',
-          resource_type: 'auto',
+          resource_type: resourceType,
         })
 
         if (!imageUpload || !imageUpload.secure_url) {
@@ -151,10 +154,12 @@ module.exports.createConcern = async (req, res) => {
             .status(httpStatusCodes.BAD_REQUEST)
             .json({ error: 'Failed to upload one or more images.' })
         }
+        console.log(imageUpload)
 
         imageUploads.push({
           public_id: imageUpload.public_id,
           image_url: imageUpload.secure_url,
+          type: imageUpload.resource_type
         })
       }
     }

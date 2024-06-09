@@ -8,6 +8,7 @@ const {
   generateInvoice,
   editInvoice,
   tenantInvoice,
+  transactionDates,
 } = require('../controllers/invoice_controller')
 const requireAuth = require('../middleware/requireAuth')
 
@@ -20,5 +21,5 @@ router.get('/search', searchInvoice)
 router.get('/list/v1', fetchInvoice)
 router.delete('/delete', requireAuth, deleteInvoice)
 router.patch('/update', editInvoice)
-
+router.get('/filter/transaction',requireAuth, transactionDates)
 module.exports = router

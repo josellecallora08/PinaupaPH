@@ -16,6 +16,7 @@ import notifReducer from '../features/notification'
 import announcementReducer from '../features/announcement'
 import dashboardReducer from '../features/dashboard'
 import reportReducer from '../features/report'
+import requirementReducer from '../features/requirements'
 
 
 export const store = configureStore({
@@ -36,6 +37,7 @@ export const store = configureStore({
     notif: notifReducer,
     announcement: announcementReducer,
     dash: dashboardReducer,
-    report: reportReducer
+    report: reportReducer,
+    req: requirementReducer
   },
 })
