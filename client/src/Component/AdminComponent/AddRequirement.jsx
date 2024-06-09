@@ -1,43 +1,35 @@
 import React, { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
+import { useDispatch, useSelector } from 'react-redux'
+import { uploadRequirements } from '../../features/requirements';
 
-const AddRequirement = ({ setIsAddRequirementForm }) => {
-  const [requirements, setRequirements] = useState({});
+const AddRequirement = ({ setIsAddRequirementForm, user_id }) => {
+  const [requirements, setRequirements] = useState([]);
   const [newRequirement, setNewRequirement] = useState('');
-  const [error, setError] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
-
-  const handleChange = (e) => {
-    const { name, files } = e.target;
-    setRequirements({
-      ...requirements,
-      [name]: files[0]
+  const dispatch = useDispatch()
+  const error = useSelector(state => state.docs.error)
+  const msg = useSelector(state => state.docs.msg)
+  const handleChange = (e, index) => {
+    const files = e.target.files;
+    setRequirements(prevRequirements => {
+      const updatedRequirements = [...prevRequirements];
+      updatedRequirements[index].file = files[0];
+      return updatedRequirements;
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (Object.keys(requirements).length === 0) {
-      setError('Please add at least one requirement.');
-      setShowPopup(true);
-    } else {
-      setError('');
-      setPopupMessage('Requirements submitted successfully!');
-      setShowPopup(true);
-      // Handle form submission logic here
-      console.log('Requirements submitted:', requirements);
+  const handleAddRequirement = () => {
+    if (newRequirement && !requirements.some(req => req.name === newRequirement)) {
+      setRequirements([...requirements, { name: newRequirement, file: null }]);
+      setNewRequirement('');
     }
   };
 
-  const handleAddRequirement = () => {
-    if (newRequirement && !requirements[newRequirement]) {
-      setRequirements({
-        ...requirements,
-        [newRequirement]: null
-      });
-      setNewRequirement('');
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(uploadRequirements(user_id, requirements))
   };
 
   return (
@@ -51,7 +43,7 @@ const AddRequirement = ({ setIsAddRequirementForm }) => {
       >
         <button className="absolute top-4 right-6" type="button">
           <IoMdClose
-           onClick={() => setIsAddRequirementForm((prevState) => !prevState)}
+            onClick={() => setIsAddRequirementForm((prevState) => !prevState)}
             size={25}
             color="white"
           />
@@ -63,20 +55,20 @@ const AddRequirement = ({ setIsAddRequirementForm }) => {
           </div>
         )}
         <h1 className="text-base font-bold mb-2 lg:mt-0 mt-4">Add Requirement Details</h1>
-        {Object.keys(requirements).map((req) => (
-          <div className="mb-4" key={req}>
+        {requirements.map((req, index) => (
+          <div className="mb-4" key={index}>
             <label
-              htmlFor={req}
+              htmlFor={`file-${index}`}
               className="block text-sm font-bold mb-2 text-dark-gray"
             >
-              {req}
+              {req.name}
             </label>
             <input
               type="file"
-              id={req}
-              name={req}
+              id={`file-${index}`}
+              name={req.name}
               accept="application/pdf, image/*"
-              onChange={handleChange}
+              onChange={(e) => handleChange(e, index)}
               className="text-sm shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
@@ -113,7 +105,19 @@ const AddRequirement = ({ setIsAddRequirementForm }) => {
           </button>
         </div>
       </form>
-
+      {showPopup && (
+        <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <p>{error || popupMessage}</p>
+            <button
+              className="mt-4 bg-dark-blue text-white py-2 px-4 rounded"
+              onClick={() => setShowPopup(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

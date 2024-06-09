@@ -19,8 +19,8 @@ const multer = require('multer')
 const storage = multer.memoryStorage()
 const upload = multer({ storage })
 
-  
-router.post('/create',upload.array('attached_image', 10), createConcern)
+
+router.post('/create', upload.array('attached_image', 10), createConcern)
 router.patch('/update', editConcern)
 router.patch('/update/v1', resolveConcern)
 router.delete('/v1', deleteConcern)

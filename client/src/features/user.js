@@ -145,7 +145,6 @@ export const fetchUser = (userId) => async (dispatch) => {
       throw new Error(json.error)
     }
     const json = await response.json()
-    console.log(json)
     dispatch(fetchSingleUser(json.response))
   } catch (err) {
     dispatch(actionUserFailed(err.message))

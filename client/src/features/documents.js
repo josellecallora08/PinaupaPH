@@ -74,6 +74,7 @@ export const {
   generateSuccess,
 } = documentSlice.actions
 
+
 // ? Tested
 export const generateDocument = (contract_id) => async (dispatch) => {
   try {
