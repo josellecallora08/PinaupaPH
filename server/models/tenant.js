@@ -24,7 +24,7 @@ const TENANTMODEL = new mongoose.Schema({
   unit_id: { type: mongoose.Schema.Types.ObjectId, ref: 'units' },
   apartment_id: { type: mongoose.Schema.Types.ObjectId, ref: 'apartments' },
   deposit: { type: Number, default: 0 },
-  advance: { type: Number, default: 0 },
+  advance: { type: Date, default: null },
   balance: { type: Number, default: 0 },
   monthly_due: { type: Date, default: Date.now },
   household: [HOUSEHOLDMODEL],

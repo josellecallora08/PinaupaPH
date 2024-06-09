@@ -38,7 +38,7 @@ const AddTenantForm = ({
         onSubmit={handleSubmit}
         method="POST"
         className="lg:w-full w-[20rem] h-[25rem] p-3 mt-2 overflow-y-auto"
-      >
+      > 
         {error && (
           <div className="  w-auto bg-light-red text-dark-blue p-4 m-4 rounded ">
             {error}

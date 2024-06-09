@@ -37,6 +37,8 @@ import { fetchPets, resetPetStatus } from '../../features/pet'
 import { generateDocument, resetDocumentStatus } from '../../features/documents'
 import Requirements from './Requirements'
 import RequirementCard from '../../Component/AdminComponent/RequirementCard'
+import DepositReq from '../../Component/AdminComponent/DepositReq'
+import { fetchRequirements } from '../../features/requirements'
 
 const TenantProfile = () => {
   const [activeTab, setActiveTab] = useState('profile')
@@ -57,6 +59,7 @@ const TenantProfile = () => {
   const errorDocument = useSelector((state) => state.docs.error)
   const msgDocument = useSelector((state) => state.docs.msg)
   const msgHousehold = useSelector((state) => state.household.msg)
+  const requirements = useSelector((state) => state.req.data)
   const errorHousehold = useSelector((state) => state.household.error)
   const msgPet = useSelector((state) => state.pet.msg)
   const errorPet = useSelector((state) => state.pet.error)
@@ -126,9 +129,9 @@ const TenantProfile = () => {
 
   useEffect(() => {
     if (msgDocument !== null) {
-      setPopupMessage('Successfully generated Agreement')
+      setPopupMessage(msgDocument)
     } else if (errorDocument !== null) {
-      setPopupMessage('Failed to generate Agreement')
+      setPopupMessage(errorDocument)
     }
 
     if (msgDocument !== null || errorDocument !== null) {
@@ -175,6 +178,7 @@ const TenantProfile = () => {
     dispatch(fetchHouseholds(id))
     dispatch(fetchPets(id))
     dispatch(fetchUser(id))
+    dispatch(fetchRequirements(id))
   }, [])
 
   useEffect(() => {
@@ -282,6 +286,16 @@ const TenantProfile = () => {
               }
             >
               Requirements
+            </button>
+            <button
+              onClick={() => handleTabClick('request')}
+              className={
+                activeTab === 'request'
+                  ? 'text-white py-2 px-5 bg-primary-color rounded-full'
+                  : ''
+              }
+            >
+              Deposit Request
             </button>
           </div>
         </div>
@@ -487,7 +501,7 @@ const TenantProfile = () => {
                                 currency: 'PHP',
                               })}
                             </p>
-                            <p>1 month</p>
+                            <p>{new Date(tenant?.advance).toDateString()}</p>
                             <p>
                               {new Date(
                                 tenant?.monthly_due,
@@ -700,6 +714,10 @@ const TenantProfile = () => {
           {activeTab === 'transaction' && (
             <div className="h-full w-full">
               <div className="lg:block hidden">
+                <div className="flex flex-col gap-1 mt-1 mb-5 mx-auto w-11/12 font-semibold text-lg">
+                  <p>Unit - {tenant?.unit_id?.unit_no}</p>
+                  <p>Apartment : {tenant?.apartment_id?.name}</p>
+                </div>
                 <TransactionTable tenant={tenant} />
               </div>
               <div className="lg:hidden">
@@ -709,15 +727,19 @@ const TenantProfile = () => {
           )}
           {activeTab === 'requirement' && (
             <div className="h-full w-full">
-              <Requirements />
-              <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
-                <RequirementCard />
-                <RequirementCard />
-                <RequirementCard />
-                <RequirementCard />
-                <RequirementCard />
-                <RequirementCard />
-                
+              <Requirements id={id} />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                {requirements?.map((val, key) => (
+                  <RequirementCard val={val} key={key}/>
+                ))}
+              </div>
+            </div>
+          )}
+          {activeTab === 'request' && (
+            <div className="h-full w-full">
+              <DepositReq />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+
               </div>
             </div>
           )}

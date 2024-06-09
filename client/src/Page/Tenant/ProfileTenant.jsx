@@ -416,6 +416,7 @@ const TenantProfile = () => {
                       <div className="lg:text-lg text-xs ">
                         <p>Apartment Unit</p>
                         <p>Deposit</p>
+                        <p>Month of Advance</p>
                         <p>Date of Move-in</p>
                       </div>
                       <div className="lg:text-base text-xs lg:flex lg:flex-col lg:gap-1">
@@ -426,6 +427,7 @@ const TenantProfile = () => {
                             currency: 'PHP',
                           })}
                         </p>
+                        <p>{new Date(tenant?.advance).toDateString()}</p>
                         <p className="">
                           {new Date(tenant?.monthly_due)?.toLocaleDateString()}
                         </p>

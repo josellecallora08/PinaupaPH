@@ -5,6 +5,7 @@ const httpStatusCodes = require('../constants/constants')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const OTPMODEL = require('../models/otp')
+const moment = require('moment');
 const nodemailer = require('nodemailer')
 const { emailContent } = require('../template/emailTemplate')
 const cloudinary = require('cloudinary').v2
@@ -139,9 +140,10 @@ module.exports.sign_up = async (req, res) => {
       unit_id,
       deposit,
       occupancy,
+      advance_months,
       apartment_id,
     } = req.body
-
+    
     // Validation for email and mobile number
     const emailRegex = /^\S+@\S+\.\S+$/
     const mobileRegex = /^[0-9]{10}$/
@@ -229,13 +231,14 @@ module.exports.sign_up = async (req, res) => {
     })
 
     if (response.role === 'Tenant') {
-      const tenant = await TENANTMODEL.create({
-        user_id: response._id,
-        unit_id,
-        apartment_id,
-        deposit,
-        monthly_due: occupancy,
-      })
+        const tenant = await TENANTMODEL.create({
+          user_id: response._id,
+          unit_id,
+          apartment_id,
+          advance: moment(occupancy).add(advance_months, 'months').toDate(),
+          deposit,
+          monthly_due: occupancy,
+        })
       if (!tenant) {
         return res
           .status(httpStatusCodes.BAD_REQUEST)

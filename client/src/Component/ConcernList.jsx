@@ -2,15 +2,22 @@ import React, { useEffect, useState } from 'react'
 import SearchBar from '../Component/SearchBar'
 import ConcernCard from './ConcernCard'
 import { useDispatch, useSelector } from 'react-redux'
-import { createConcern, fetchConcerns, resetConcernStatus, searchConcern } from '../features/concern'
+import {
+  createConcern,
+  fetchConcerns,
+  resetConcernStatus,
+  searchConcern,
+} from '../features/concern'
 import Loading from './LoadingComponent/Loading'
 import { FaPlus } from 'react-icons/fa6'
 import CreateTicket from './Tenant Component/CreateTicket'
 import PopUp from './PopUp'
+import CreateDepositReq from './Tenant Component/CreateDepositReq'
 
 const ConcernList = () => {
   // /view-concern/:id
   const [isCreateTicket, setisCreateTicket] = useState(false)
+  const [isCreateDepositReq, setisCreateDepositReq] = useState(false)
   const [searchItem, setSearchItem] = useState('')
   const [type, setSelectedType] = useState('')
   const [description, setDescription] = useState('')
@@ -28,9 +35,9 @@ const ConcernList = () => {
   const [popupMessage, setPopupMessage] = useState('')
 
   const handleImageChange = (event) => {
-    const files = Array.from(event.target.files); // Convert FileList to an array
-    setImage((prevImages) => [...prevImages, ...files]); // Append new files to the existing array
-  };
+    const files = Array.from(event.target.files) // Convert FileList to an array
+    setImage((prevImages) => [...prevImages, ...files]) // Append new files to the existing array
+  }
 
   const handleDescriptionChange = (event) => {
     setDescription(event.target.value)
@@ -42,11 +49,16 @@ const ConcernList = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     dispatch(
-      createConcern(user?.user_id._id, title, description, attached_image, type),
+      createConcern(
+        user?.user_id._id,
+        title,
+        description,
+        attached_image,
+        type,
+      ),
     )
     setisCreateTicket((prevState) => !prevState)
   }
-
 
   useEffect(() => {
     if (msg !== null) {
@@ -99,6 +111,9 @@ const ConcernList = () => {
             </select>
             {user && user?.user_id?.role === 'Tenant' ? (
               <>
+                <button  onClick={() => setisCreateDepositReq((prevState) => !prevState)}  className="btn lg:btn-wide bg-primary-color font-bold uppercase text-white hover:text-primary-color">
+                  Deposit Request
+                </button>
                 <button
                   onClick={() => setisCreateTicket((prevState) => !prevState)}
                   className="btn lg:btn-wide bg-primary-color font-bold uppercase text-white hover:text-primary-color"
@@ -106,6 +121,16 @@ const ConcernList = () => {
                   <FaPlus />
                   Add Concern
                 </button>
+
+                {isCreateDepositReq && (
+                  <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50">
+                    <div className="lg:w-9/12 bg-white rounded-lg relative">
+                      <CreateDepositReq
+                        setisCreateDepositReq={setisCreateDepositReq}
+                      />
+                    </div>
+                  </div>
+                )}
 
                 {isCreateTicket && (
                   <div className="fixed top-0 left-0 w-full h-full flex z-50 items-center justify-center bg-black bg-opacity-50">
@@ -139,10 +164,8 @@ const ConcernList = () => {
         <div
           className={`${menu ? 'lg:grid-cols-2' : 'lg:grid-cols-3'}   grid grid-cols-1 md:mr-10 gap-4 pb-5`}
         >
-
-          {user && user?.role === 'Admin' ? (
-            (
-              concerns
+          {user && user?.role === 'Admin'
+            ? concerns
                 ?.filter((item) =>
                   selected === 'all'
                     ? item.status.toString()
@@ -151,26 +174,23 @@ const ConcernList = () => {
                 .map((val, key) => (
                   <ConcernCard key={key} val={val} num={key} />
                 ))
-            )
-          ) : user?.user_id.role === 'Tenant' ? (
-            (
-              concerns
-                ?.filter((item) =>
-                  selected === 'all'
-                    ? item?.sender_id?.user_id?._id === user?.user_id?._id
-                    : item?.sender_id?.user_id?._id === user?.user_id?._id &&
-                    selected !== 'all' &&
-                    item.status.toString() === selected.toString(),
-                )
-                .map((val, key) => (
-                  <ConcernCard key={key} val={val} num={key} />
-                ))
-            )
-          ) : (
-            concerns
-              ?.filter((item) => item.status === selected)
-              .map((val, key) => <ConcernCard key={key} val={val} num={key} />)
-          )}
+            : user?.user_id.role === 'Tenant'
+              ? concerns
+                  ?.filter((item) =>
+                    selected === 'all'
+                      ? item?.sender_id?.user_id?._id === user?.user_id?._id
+                      : item?.sender_id?.user_id?._id === user?.user_id?._id &&
+                        selected !== 'all' &&
+                        item.status.toString() === selected.toString(),
+                  )
+                  .map((val, key) => (
+                    <ConcernCard key={key} val={val} num={key} />
+                  ))
+              : concerns
+                  ?.filter((item) => item.status === selected)
+                  .map((val, key) => (
+                    <ConcernCard key={key} val={val} num={key} />
+                  ))}
         </div>
       </div>
       {showPopup && (

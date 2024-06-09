@@ -12,15 +12,25 @@ const ejs = require('ejs')
 module.exports.uploadRequirements = async (req, res) => {
   try {
     const { user_id } = req.query;
-    let { fileNames } = req.body; // Expecting an array of file names corresponding to the files
-    const requirements = req.files; // Assuming multer is used for file handling
+    let fileNames = req.body.fileNames; // Handle single or multiple filenames
+
+    // Normalize fileNames to an array
+    if (typeof fileNames === 'string') {
+      fileNames = [fileNames];
+    } else if (Array.isArray(fileNames)) {
+      fileNames = fileNames;
+    } else {
+      fileNames = []; // Default to empty array if neither
+    }
+
+    const requirements = req.files; // Files parsed by multer
 
     if (!requirements || requirements.length === 0) {
-      return res.status(httpStatusCodes.BAD_REQUEST).json({ message: 'No files uploaded' });
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'No files uploaded' });
     }
 
     if (!fileNames || fileNames.length !== requirements.length) {
-      return res.status(httpStatusCodes.BAD_REQUEST).json({ message: 'File names count should match files count' });
+      return res.status(httpStatusCodes.BAD_REQUEST).json({ error: 'File names count should match files count' });
     }
 
     const uploadResults = [];
@@ -31,11 +41,10 @@ module.exports.uploadRequirements = async (req, res) => {
 
       const bufferBase64 = file.buffer.toString('base64');
       const bufferString = `data:${file.mimetype};base64,${bufferBase64}`;
-      // Upload to Cloudinary with the provided file name
       const result = await cloudinary.uploader.upload(bufferString, {
-        resource_type: 'auto', // auto-detect the file type
-        public_id: fileName, // use the provided file name as public_id
-        folder: `PinaupaPH/Requirements/${user_id}` // optional: organize by tenantId
+        resource_type: 'auto',
+        public_id: fileName,
+        folder: `PinaupaPH/Requirements/${user_id}`
       });
 
       uploadResults.push({
@@ -45,16 +54,31 @@ module.exports.uploadRequirements = async (req, res) => {
       });
     }
 
-    // Update tenant document
     const tenant = await TENANTMODEL.findOne({ user_id }).populate('user_id unit_id apartment_id');
     tenant.documents.push(...uploadResults);
     await tenant.save();
 
-    res.status(httpStatusCodes.OK).json({ msg: 'Documents uploaded successfully', response: tenant });
-  } catch (error) {
-    res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Failed to upload documents', error });
+    
+
+    res.status(httpStatusCodes.OK).json({ msg: 'Documents uploaded successfully', response: uploadResults });
+  } catch (err) {
+    res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Failed to upload documents', err });
   }
-}
+};
+
+module.exports.fetchRequirements = async (req, res) => {
+  try {
+    const { user_id } = req.query;
+
+    const tenant = await TENANTMODEL.findOne({ user_id }).populate('user_id unit_id apartment_id');
+    
+    res.status(httpStatusCodes.OK).json({ response: tenant.documents });
+  } catch (err) {
+    res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Failed to upload documents', err });
+  }
+};
+
+
 
 module.exports.fetchContracts = async (req, res) => {
   try {

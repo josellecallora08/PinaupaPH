@@ -8,6 +8,7 @@ const {
   createContract,
   generateContract,
   uploadRequirements,
+  fetchRequirements,
 } = require('../controllers/document_controller')
 
 const router = Router()
@@ -21,6 +22,7 @@ router.get('/list', fetchContracts)
 router.get('/list/v1', fetchContract)
 router.patch('/update', editContract)
 router.delete('/delete', deleteContract)
-router.post('/documents', upload.array('requirements', 10), uploadRequirements)
+router.post('/documents', upload.array('requirements'), uploadRequirements)
+router.get('/documents/list', fetchRequirements)
 
 module.exports = router
