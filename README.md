@@ -7,6 +7,15 @@ This is our Academic Capstone Project.
 ## LOGO
 ![PinaupaPH](./client/public/pinaupa-logo.svg)
 
+## TEST ACCOUNTS
+# Admin
+- Username/Email: admin
+- Password: qwe123qwe
+
+# Tenant
+- Username/Email: jsllcllr
+- Password: qwe123qwe
+
 ## Members
 - **Joselle E. Callora**
   - Project Manager/Lead Programmer
